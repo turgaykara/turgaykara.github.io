@@ -110,6 +110,31 @@
     .search-suggestion.highlight {
       background: var(--glass);
     }
+    .search-bar {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%; /* Ekledim: Tam genişlik sağla /
+    box-sizing: border-box; / Ekledim: Padding ve border'ı genişliğe dahil et */
+    }
+    .search-bar input {
+    width: 100%;
+    padding: 12px 44px 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-sizing: border-box; /* Ekledim: Input için de border-box uygula, taşmayı önle */
+    }
+    .search-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+    }
     /* Filtreleme için hidden class */
     .hidden {
       display: none !important;
@@ -1811,4 +1836,3 @@ sources: {
   </script>
 </body>
 </html>
-
