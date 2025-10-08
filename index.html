@@ -479,7 +479,7 @@ for link in js_links:
 
 
       bac: {
-        menuName: 'Broken Access Control',
+        menuName: 'BAC',
         icon: '🔐',
         parent: 'vulnerabilities',
         title: 'BAC - Broken Access Control',
@@ -841,6 +841,88 @@ ssrf: {
     }
   ]
 },
+
+informationDisclosure: {
+    menuName: 'Information Disclosure',
+    icon: '🎯',
+    parent: 'vulnerabilities',
+    title: 'Information Disclosure',
+    description: 'Hedef sistemlerde bilgi sızıntılarını tespit etmek ve kritik dosyaları keşfetmek için adım adım uygulamalı rehber ve teorik bilgiler.',
+    sections: [
+      {
+        title: 'Wayback Machine CDX Sorgusu',
+        content: `
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+              Wayback Machine üzerinden hedef siteye ait eski URL'leri çeker. 'example.com' kısmını hedef siteyle değiştirin.
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                <pre style="margin:0;white-space:pre-wrap">https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original</pre>
+                <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                  onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+              </div>
+            </li>
+          </ul>
+        `
+      },
+      {
+        title: 'Kritik Dosya Türlerini Ara',
+        content: `
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+              URL listesinde kritik uzantıları Ctrl + F ile aratın. Bu uzantılar hassas bilgi içerebilecek dosyaları gösterir.
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                <pre style="margin:0;white-space:pre-wrap">pdf doc docx xls xlsx ppt pptx txt csv xml json log html htm php asp aspx js css bak old backup config zip rar tar gz jpg jpeg png gif svg</pre>
+              </div>
+            </li>
+          </ul>
+        `
+      },
+      {
+        title: 'Normal Erişilebilirlik Kontrolü',
+        content: `
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+              Dosyayı normal tarayıcıda açmayı deneyin. Erişilebiliyorsa sızıntı olmayabilir (hala canlıdır).
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                <pre style="margin:0;white-space:pre-wrap">Bulunan URL'yi tarayıcıda doğrudan açın (örneğin: https://example.com/dosya.pdf)</pre>
+              </div>
+            </li>
+          </ul>
+        `
+      },
+      {
+        title: 'Bulunan URL\'leri Wayback Machinede Aç',
+        content: `
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+              Erişim yoksa, URL'yi Wayback'e yapıştırın ve arşivlenmiş içeriği inceleyin.
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                <pre style="margin:0;white-space:pre-wrap">https://web.archive.org/</pre>
+                <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                  onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+              </div>
+            </li>
+          </ul>
+        `
+      },
+      {
+        title: 'Ekstra İpuçları ve Analiz',
+        content: `
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+              Arşiv dosyalarını indirip analiz edin. Her içerik potansiyel sızıntıdır; odak:<br>
+              1) Config'lerde API key'ler, DB info'lar - arşivde olup canlıda yoksa sızıntı.<br>
+              2) Kaynak kodlarda hardcoded veriler - strings/grep ile tarayın.<br>
+              3) Belgelerde meta/içerik verileri (e-posta, raporlar) - halka açık olmamalıysa sızıntı.<br>
+              4) Log/yedeklerde hatalar, konfig'ler - zayıflık gösterir.<br>
+              Veri güvenlik tehlikesiyse sızıntıdır. Sorguyu subdomain'lerle genişletin. Raporlayın, etik olun.
+            </li>
+          </ul>
+        `
+      }
+    ]
+},
+
 file_inclusion: {
   menuName: 'File Inclusion',
   icon: '📂',
@@ -944,7 +1026,7 @@ directory_traversal: {
   menuName: 'Directory Traversal',
   icon: '🧭',
   parent: 'vulnerabilities',
-  title: 'Directory Traversal - Path Traversal',
+  title: 'Directory & Path Traversal',
   description: 'Dizin gezdirme (../) ile uygulamanın izin dışı dosya/dizinlere eriştirilmesi. Kısa, PoC odaklı ve bypass teknikleri içerir.',
   sections: [
     {
@@ -1033,7 +1115,7 @@ authentication_bypass: {
   menuName: 'Authentication Bypass',
   icon: '🔓',
   parent: 'vulnerabilities',
-  title: 'Authentication Bypass - Username Enumeration / Brute Force / Logic Flaw / Cookie Tampering',
+  title: 'Authentication Bypass',
   description: 'Kullanıcı doğrulama akışında açıklar: username enumeration, brute force, mantık hatası ve cookie manipülasyonu. Kısa, PoC ve exploit odaklı.',
   sections: [
     {
