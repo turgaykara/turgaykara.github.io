@@ -139,6 +139,60 @@
     .hidden {
       display: none !important;
     }
+    /* ======== KART TASARIMI İÇİN GEREKLİ STİLLER ======== */
+    .tool-grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+    }
+    .tool-card {
+        background-color: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 20px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        cursor: pointer;
+    }
+    .tool-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+    }
+    .tool-icon {
+        font-size: 24px;
+        color: var(--muted);
+        margin-bottom: 14px;
+        pointer-events: none;
+    }
+    .tool-title {
+        font-size: 1.1em;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: #e6eef6;
+        pointer-events: none;
+    }
+    .tool-description {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0 0 16px 0;
+        flex-grow: 1; 
+        pointer-events: none;
+    }
+    .tool-link {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--accent);
+        transition: color 0.2s ease;
+        pointer-events: none;
+    }
+    .tool-card:hover .tool-link {
+        color: #fff;
+    }
+    /* ======== STİLLERİN SONU ======== */
   </style>
 </head>
 <body>
@@ -1151,20 +1205,6 @@ tools: {
   description: 'Siber güvenlik çalışmalarında kullanılan araçların listesi ve kısa kullanım notları.',
   sections: [
     {
-      title: 'Subdomain Finder',
-      content: `
-        <p class="small" style="margin-bottom:12px;">Bir alan adını girin ve ilişkili alt alan adlarını keşfedin.</p>
-        <div class="search-bar" style="max-width: 500px;">
-          <input type="text" id="domainInput" placeholder="example.com" autocomplete="off" />
-        </div>
-        <button id="scanButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">
-          Taramayı Başlat
-        </button>
-        <h3 style="margin-top:20px;">Tarama Sonuçları:</h3>
-        <pre id="resultsOutput" style="min-height: 150px; background-color: #0b1220;">Sonuçlar burada görünecek...</pre>
-      `
-    },
-    {
       title: 'Burp Suite',
       content: `
       <div style="display:flex;align-items:center;gap:8px">
@@ -1448,6 +1488,26 @@ tools: {
     }
   ]
 },
+
+
+
+// CONTENT objesinin içindeki eski "toolbox" kısmını silip bunu yapıştır.
+// CONTENT objesi içindeki SADECE toolbox kısmını bununla değiştir.
+toolbox: {
+    menuName: 'ToolBox',
+    icon: '🔥',
+    title: 'Siber Güvenlik Araçları',
+    description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.',
+    // Araçlarımızı basit bir liste olarak burada tutuyoruz.
+    tools: [
+        { id: 'subdomainfinder', icon: 'fa-solid fa-magnifying-glass', title: 'Subdomain Finder', description: 'Bir alan adının gizli alt alan adlarını keşfedin.' },
+        { id: 'portscanner', icon: 'fa-solid fa-network-wired', title: 'Port Scanner', description: 'Ağdaki açık portları tarayın ve güvenlik açıklarını tespit edin.' },
+        { id: 'hashgenerator', icon: 'fa-solid fa-hashtag', title: 'Hash Generator', description: 'Metinleri popüler hash algoritmalarıyla anında şifreleyin.' },
+        { id: 'encoderdecoder', icon: 'fa-solid fa-code', title: 'Base64 Encoder/Decoder', description: 'Metinleri Base64 formatına çevirin veya çözümleyin.' }
+    ]
+},
+
+
 sources: {
   menuName: 'Kaynaklar',
   icon: '📚',
@@ -1703,269 +1763,122 @@ sources: {
       });
     }
 
-    function showPage(pageId) {
-      document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
-      document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
-      
-      const main = document.getElementById('mainContent');
-      const page = CONTENT[pageId];
-
-      if (pageId === 'home') {
-        main.innerHTML = `
-          <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Konu, araç veya zafiyet ara..." aria-label="Ara" autocomplete="off" />
-            <span class="search-icon">🔍</span>
-            <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
-          </div>
-          <div class="hero">
-            <h1>${page.title}</h1>
-            <p class="subtitle">${page.subtitle}</p>
-          </div>
-          <div class="stats">
-            <div class="stat-card">
-              <div class="stat-number">15+</div>
-              <div class="stat-label">Vulnerability Türü</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">30+</div>
-              <div class="stat-label">Araç & Komut</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">100%</div>
-              <div class="stat-label">Ücretsiz İçerik</div>
-            </div>
-          </div>
-          <div style="margin-bottom:12px"><h2>Hızlı Başlangıç</h2></div>
-          <div class="quick-links" id="quickLinks"></div>
-          <div style="margin-bottom:12px"><h2>Popüler Kaynaklar</h2></div>
-          <div class="resource-grid">
-            <div class="resource-card">
-              <div class="resource-title">🎯 PortSwigger Academy</div>
-              <div class="resource-desc">Ücretsiz interaktif web security eğitimi ve lab'ları</div>
-            </div>
-            <div class="resource-card">
-              <div class="resource-title">📖 HackerOne Hacktivity</div>
-              <div class="resource-desc">Gerçek bug bounty raporlarını inceleyin</div>
-            </div>
-            <div class="resource-card">
-              <div class="resource-title">🔧 OWASP Top 10</div>
-              <div class="resource-desc">En kritik web güvenlik risklerini öğrenin</div>
-            </div>
-            <div class="resource-card">
-              <div class="resource-title">💻 TryHackMe</div>
-              <div class="resource-desc">Pratik yapabileceğiniz güvenlik lab'ları</div>
-            </div>
-          </div>
-          <div class="footer">Hazırlayan: Turgay Kara &lt;!&gt; Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.</div>
-        `;
-        
-        const quickLinks = document.getElementById('quickLinks');
-        quickLinks.innerHTML = '';
-        Object.keys(CONTENT).forEach(key => {
-          if (key === 'home') return;
-          const item = CONTENT[key];
-          quickLinks.innerHTML += `
-            <div class="quick-link" data-page="${key}">
-              <div class="quick-link-icon">${item.icon || '📄'}</div>
-              <div class="quick-link-title">${item.title}</div>
-              <div class="quick-link-desc">${item.description || ''}</div>
-            </div>
-          `;
-        });
-        
-        document.querySelectorAll('#quickLinks [data-page]').forEach(el => {
-          el.addEventListener('click', () => showPage(el.dataset.page));
-        });
-
-        // Arama fonksiyonelliği ekle
-        const searchInput = document.getElementById('searchInput');
-        const suggestionsDiv = document.getElementById('searchSuggestions');
-        let selectedIndex = -1;
-
-        if (searchInput) {
-          // Önceki listener'ı kaldır (double-bind önleme)
-          searchInput.removeEventListener('input', window.__bb_search_handler);
-          searchInput.removeEventListener('keydown', window.__bb_key_handler);
-          suggestionsDiv.removeEventListener('click', window.__bb_suggestion_click);
-
-          // Öneri handler
-          window.__bb_search_handler = function(e) {
-            const query = e.target.value.trim().toLowerCase();
-            suggestionsDiv.innerHTML = '';
-            suggestionsDiv.classList.remove('visible');
-            selectedIndex = -1;
-
-            if (query === '') return;
-
-            // CONTENT'ten eşleşen sayfaları topla
-            Object.keys(CONTENT).forEach(key => {
-              if (key === 'home') return;
-              const item = CONTENT[key];
-              const searchText = `${item.menuName || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
-              let sectionMatches = '';
-              if (item.sections) {
-                item.sections.forEach(sec => {
-                  const secText = `${sec.title || ''}`.toLowerCase();
-                  if (secText.includes(query)) {
-                    sectionMatches += ` - ${sec.title}`;
-                  }
-                });
-              }
-
-              if (searchText.includes(query) || sectionMatches) {
-                const suggestion = document.createElement('div');
-                suggestion.classList.add('search-suggestion');
-                suggestion.dataset.page = key;
-                suggestion.innerHTML = `${item.icon || '📄'} ${item.menuName || item.title}${sectionMatches}`;
-                suggestionsDiv.appendChild(suggestion);
-              }
-            });
-
-            if (suggestionsDiv.children.length > 0) {
-              suggestionsDiv.classList.add('visible');
-            }
-          };
-
-          searchInput.addEventListener('input', window.__bb_search_handler);
-
-          // Klavye navigasyonu (arrow up/down, enter)
-          window.__bb_key_handler = function(e) {
-            const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
-            if (suggestions.length === 0) return;
-
-            if (e.key === 'ArrowDown') {
-              selectedIndex = (selectedIndex + 1) % suggestions.length;
-              updateHighlight(suggestions);
-            } else if (e.key === 'ArrowUp') {
-              selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
-              updateHighlight(suggestions);
-            } else if (e.key === 'Enter') {
-              if (selectedIndex >= 0) {
-                const selected = suggestions[selectedIndex];
-                showPage(selected.dataset.page);
-                clearSearch();
-              }
-            } else if (e.key === 'Escape') {
-              clearSearch();
-            }
-          };
-
-          searchInput.addEventListener('keydown', window.__bb_key_handler);
-
-          // Tıklama handler
-          window.__bb_suggestion_click = function(e) {
-            if (e.target.classList.contains('search-suggestion')) {
-              showPage(e.target.dataset.page);
-              clearSearch();
-            }
-          };
-
-          suggestionsDiv.addEventListener('click', window.__bb_suggestion_click);
-
-          // Highlight güncelle
-          function updateHighlight(suggestions) {
-            suggestions.forEach((sug, idx) => {
-              sug.classList.toggle('highlight', idx === selectedIndex);
-            });
-          }
-
-          // Arama temizle
-          function clearSearch() {
-            searchInput.value = '';
-            suggestionsDiv.innerHTML = '';
-            suggestionsDiv.classList.remove('visible');
-            selectedIndex = -1;
-          }
-
-          // Dış tıklama ile kapat
-          document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
-              clearSearch();
-            }
-          });
+// ESKİ showPage fonksiyonunu silip BUNU YAPIŞTIR.
+function showPage(pageId) {
+    document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
+    const activeEl = document.querySelector(`[data-page="${pageId}"]`);
+    if (activeEl) {
+        activeEl.classList.add('active');
+        if (activeEl.closest('details')) {
+            activeEl.closest('details').open = true;
         }
-        
-      } else {
-        let html = `
-          <h1>${page.title}</h1>
-          <p class="lead">${page.description || ''}</p>
-        `;
-        
-        if (page.sections) {
-          page.sections.forEach(section => {
-            html += `
-              <div class="card">
-                <h3>${section.title}</h3>
-                ${section.content}
-              </div>
-            `;
-          });
-        }
-        
-      html += '<div class="footer">Hazırlayan: Turgay Kara &lt;!&gt; Eğitim amaçlı içeriktir.</div>';
-      main.innerHTML = html;
     }
+    
+    const main = document.getElementById('mainContent');
+    const page = CONTENT[pageId];
 
-    // ==========================================================
-    // 🎯 YENİ EKLENEN KOD BAŞLANGICI - BURAYA YAPIŞTIRIN
-    // ==========================================================
-    if (pageId === 'tools') {
-      const scanButton = document.getElementById('scanButton');
-      const domainInput = document.getElementById('domainInput');
-      const resultsOutput = document.getElementById('resultsOutput');
+    if (!page) return;
 
-      scanButton.addEventListener('click', async () => {
+    // ÖZEL DURUM: TOOLBOX SAYFASI
+    if (pageId === 'toolbox') {
+        let cardsHtml = page.tools.map(tool => `
+            <div class="tool-card" data-tool-id="${tool.id}">
+                <i class="${tool.icon} tool-icon"></i>
+                <h3 class="tool-title">${tool.title}</h3>
+                <p class="tool-description">${tool.description}</p>
+                <span class="tool-link">Aracı Aç →</span>
+            </div>
+        `).join('');
+
+        main.innerHTML = `
+            <h1>${page.title}</h1>
+            <p class="lead">${page.description || ''}</p>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+            <div class="tool-grid-container">${cardsHtml}</div>
+        `;
+        
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.addEventListener('click', () => openTool(card.dataset.toolId));
+        });
+    }
+    // DİĞER TÜM NORMAL SAYFALAR (Senin eski kodunla aynı)
+    else {
+        let html = `<h1>${page.title || ''}</h1><p class="lead">${page.description || ''}</p>`;
+        if (page.sections) {
+            page.sections.forEach(section => {
+                html += `<div class="card"><h3>${section.title}</h3>${section.content}</div>`;
+            });
+        }
+        main.innerHTML = html;
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+// YUKARIDAKİ showPage FONKSİYONUNDAN SONRA, renderMenu() satırından ÖNCE bu iki fonksiyonu ekle.
+
+function activateSubfinder() {
+    const scanButton = document.getElementById('scanButton');
+    const domainInput = document.getElementById('domainInput');
+    const resultsOutput = document.getElementById('resultsOutput');
+    if (!scanButton) return;
+    scanButton.addEventListener('click', async () => {
         const domain = domainInput.value.trim();
         if (!domain) {
-          resultsOutput.textContent = 'Lütfen geçerli bir alan adı girin.';
-          return;
+            resultsOutput.textContent = 'Lütfen geçerli bir alan adı girin.';
+            return;
         }
-        
         resultsOutput.textContent = `"${domain}" için tarama yapılıyor, lütfen bekleyin...`;
         scanButton.disabled = true;
         scanButton.textContent = 'Taranıyor...';
-
         try {
-          // Backend API'mize istek atıyoruz
-          const response = await fetch('https://admin3131.pythonanywhere.com/scan', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ domain: domain }),
-          });
-
-          if (!response.ok) {
-            throw new Error('Sunucu hatası oluştu.');
-          }
-
-          const data = await response.json();
-          
-          if (data.subdomains && data.subdomains.length > 0) {
-            resultsOutput.textContent = data.subdomains.join('\n');
-          } else {
-            resultsOutput.textContent = 'Hiçbir alt alan adı bulunamadı.';
-          }
-
+            const response = await fetch('http://admin3131.pythonanywhere.com/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain: domain }),
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: 'Sunucu hatası oluştu.' }));
+                throw new Error(errorData.error || 'Sunucuya bağlanılamadı.');
+            }
+            const data = await response.json();
+            resultsOutput.textContent = (data.subdomains && data.subdomains.length > 0) ? data.subdomains.join('\n') : (data.message || 'Hiçbir alt alan adı bulunamadı.');
         } catch (error) {
-          console.error('Tarama sırasında hata:', error);
-          resultsOutput.textContent = 'Tarama sırasında bir hata oluştu. Lütfen backend sunucusunun çalıştığından emin olun.';
+            console.error('Tarama sırasında hata:', error);
+            resultsOutput.textContent = `Tarama sırasında bir hata oluştu: ${error.message}`;
         } finally {
-          scanButton.disabled = false;
-          scanButton.textContent = 'Taramayı Başlat';
+            scanButton.disabled = false;
+            scanButton.textContent = 'Taramayı Başlat';
         }
-      });
-    }
-    // ==========================================================
-    // 🎯 YENİ EKLENEN KOD SONU
-    // ==========================================================
-    
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+    });
+}
 
+function openTool(toolId) {
+    const main = document.getElementById('mainContent');
+    const tool = CONTENT.toolbox.tools.find(t => t.id === toolId);
+    let html = '';
+    if (toolId === 'subdomainfinder') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir alan adını girin ve ilişkili alt alan adlarını keşfedin.</p>
+            <div class="search-bar" style="max-width: 500px;"><input type="text" id="domainInput" placeholder="example.com" autocomplete="off" /></div>
+            <button id="scanButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
+            <h3 style="margin-top:20px;">Tarama Sonuçları:</h3>
+            <pre id="resultsOutput" style="min-height: 150px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateSubfinder(); 
+    } else if (tool) {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="lead">Bu araç şu anda geliştirilme aşamasındadır.</p>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
   renderMenu();
   showPage('home');
 </script>
 </body>
 </html>
-
