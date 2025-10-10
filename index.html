@@ -1603,8 +1603,8 @@ toolbox: {
             categoryTitle: '📡 1. Keşif ve Bilgi Toplama',
             tools: [
                 { id: 'subdomainfinder', icon: 'fa-solid fa-magnifying-glass', title: 'Subdomain Finder', description: 'Bir alan adının gizli alt alan adlarını keşfedin.' },
-                { id: 'dnslookup', icon: 'fa-solid fa-book-atlas', title: 'DNS Kayıt Sorgulama', description: 'Bir domainin DNS kayıtlarını (A, MX, CNAME vb.) sorgulayın.' },
-                { id: 'whois', icon: 'fa-solid fa-user-secret', title: 'Whois Sorgulama', description: 'Domain sahiplik ve kayıt bilgilerini anında öğrenin.' },
+                { id: 'dnslookup', icon: 'fa-solid fa-book-atlas', title: 'DNS Kayıt Sorgulama ❌', description: 'Bir domainin DNS kayıtlarını (A, MX, CNAME vb.) sorgulayın.' },
+                { id: 'whois', icon: 'fa-solid fa-user-secret', title: 'Whois Sorgulama ❌', description: 'Domain sahiplik ve kayıt bilgilerini anında öğrenin.' },
                 { id: 'techdetect', icon: 'fa-solid fa-microchip', title: 'Teknoloji Tespiti', description: 'Bir web sitesinin hangi teknolojilerle yapıldığını analiz edin.' }
             ]
         },
@@ -2078,6 +2078,638 @@ try {
         }
     });
 }
+function activatePortScanner() {
+    const scanButton = document.getElementById('scanPortButton');
+    const targetInput = document.getElementById('targetInput');
+    const resultsOutput = document.getElementById('portResultsOutput');
+
+    if (!scanButton) return;
+
+    // Port input alanını gizleyelim çünkü API en yaygın portları kendi tarıyor
+    const portsInput = document.getElementById('portsInput');
+    if(portsInput) {
+        portsInput.parentElement.style.display = 'none';
+    }
+
+    scanButton.addEventListener('click', async () => {
+        const target = targetInput.value.trim();
+
+        if (!target) {
+            resultsOutput.textContent = 'Lütfen bir hedef girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${target}" için API üzerinden tarama yapılıyor, bu işlem biraz sürebilir...`;
+        scanButton.disabled = true;
+        scanButton.textContent = 'Taranıyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/portscan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ target: target }),
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                 throw new Error(data.error);
+            }
+            
+            // ==========================================================
+            // HATA BURADAYDI: "data.response.ports" yerine "data.response.port" olmalı
+            // ==========================================================
+            if (data.response && data.response.port && data.response.port.length > 0) {
+                
+                // API bazen kapalı portları da listeliyor, sadece açık olanları filtreleyelim.
+                const openPorts = data.response.port.filter(p => p.status === 'open');
+
+                if (openPorts.length > 0) {
+                    let formattedResults = `Hedef: ${target}\n\n`;
+                    formattedResults += `Bulunan Açık Portlar:\n------------------------------------\n`;
+                    
+                    openPorts.forEach(portInfo => {
+                        formattedResults += `PORT     : ${portInfo.number}\n`; // "port_number" yerine "number"
+                        formattedResults += `SERVİS   : ${portInfo.service}\n`;  // "service_name" yerine "service"
+                        // Bu API versiyon bilgisi vermiyor, o yüzden o satırı kaldırdık.
+                        formattedResults += `------------------------------------\n`;
+                    });
+                    resultsOutput.textContent = formattedResults;
+                } else {
+                    resultsOutput.textContent = `"${target}" için açık bir port bulunamadı.`;
+                }
+
+            } else {
+                resultsOutput.textContent = `"${target}" için tarama sonucu alınamadı veya API sonucu boş döndü.`;
+            }
+
+        } catch (error) {
+            console.error('Port tarama sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            scanButton.disabled = false;
+            scanButton.textContent = 'Portları Tara';
+        }
+    });
+}
+// Eski activateHeaderAnalyzer fonksiyonunu sil ve bunu yapıştır
+
+function activateHeaderAnalyzer() {
+    const analyzeButton = document.getElementById('analyzeHeadersButton');
+    const urlInput = document.getElementById('urlInput');
+    const resultsOutput = document.getElementById('headersResultOutput');
+
+    if (!analyzeButton) return;
+
+    analyzeButton.addEventListener('click', async () => {
+        const url = urlInput.value.trim();
+        if (!url) {
+            resultsOutput.textContent = 'Lütfen analiz edilecek bir URL girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${url}" için başlıklar analiz ediliyor...`;
+        analyzeButton.disabled = true;
+        analyzeButton.textContent = 'Analiz Ediliyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/header', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            let formattedResults = "--- GÜVENLİK ANALİZ RAPORU ---\n\n";
+
+            // Yeni Güvenlik Analizi bölümünü formatla
+            if (data.security_analysis) {
+                data.security_analysis.forEach(item => {
+                    const statusIcon = item.status === 'MEVCUT' ? '✅' : '❌';
+                    formattedResults += `${statusIcon} ${item.name}\n`;
+                    formattedResults += `   Durum: ${item.status}\n`;
+                    if (item.value) {
+                       formattedResults += `   Değer: ${item.value}\n`;
+                    }
+                    formattedResults += `   Bilgi: ${item.info}\n\n`;
+                });
+            }
+
+            formattedResults += "\n--- TÜM HAM BAŞLIKLAR ---\n\n";
+            formattedResults += `İstek Yapılan Son URL: ${data.final_url}\n`;
+            formattedResults += `Durum Kodu: ${data.status_code}\n`;
+            formattedResults += `------------------------------------\n`;
+
+            if (data.headers) {
+                for (const key in data.headers) {
+                    formattedResults += `${key}: ${data.headers[key]}\n`;
+                }
+            }
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            console.error('Başlık analizi sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            analyzeButton.disabled = false;
+            analyzeButton.textContent = 'Başlıkları Analiz Et';
+        }
+    });
+}
+function activateDnsLookup() {
+    const queryButton = document.getElementById('queryDnsButton');
+    const domainInput = document.getElementById('domainInput');
+    const resultsOutput = document.getElementById('dnsResultOutput');
+
+    if (!queryButton) return;
+
+    queryButton.addEventListener('click', async () => {
+        const domain = domainInput.value.trim();
+        if (!domain) {
+            resultsOutput.textContent = 'Lütfen sorgulanacak bir alan adı girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${domain}" için DNS kayıtları sorgulanıyor...`;
+        queryButton.disabled = true;
+        queryButton.textContent = 'Sorgulanıyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/dns', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain: domain }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            let formattedResults = "";
+            for (const recordType in data) {
+                formattedResults += `--- ${recordType} KAYITLARI ---\n`;
+                if (data[recordType] && data[recordType].length > 0) {
+                    formattedResults += data[recordType].join('\n');
+                } else {
+                    formattedResults += "Bulunamadı.";
+                }
+                formattedResults += "\n\n";
+            }
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            console.error('DNS sorgusu sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            queryButton.disabled = false;
+            queryButton.textContent = 'Kayıtları Sorgula';
+        }
+    });
+}
+function activateWhoisLookup() {
+    const queryButton = document.getElementById('queryWhoisButton');
+    const domainInput = document.getElementById('domainInput');
+    const resultsOutput = document.getElementById('whoisResultOutput');
+
+    if (!queryButton) return;
+
+    queryButton.addEventListener('click', async () => {
+        const domain = domainInput.value.trim();
+        if (!domain) {
+            resultsOutput.textContent = 'Lütfen sorgulanacak bir alan adı girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${domain}" için Whois bilgileri sorgulanıyor...`;
+        queryButton.disabled = true;
+        queryButton.textContent = 'Sorgulanıyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/whois', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain: domain }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            let formattedResults = "";
+            for (const key in data) {
+                if (data[key]) { // Sadece dolu olan alanları göster
+                    let value = data[key];
+                    // Eğer değer bir dizi ise (örn: İsim Sunucuları), elemanları alt alta yaz
+                    if (Array.isArray(value)) {
+                        value = '\n' + value.map(item => `   - ${item}`).join('\n');
+                    }
+                    formattedResults += `${key}: ${value}\n\n`;
+                }
+            }
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            console.error('Whois sorgusu sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            queryButton.disabled = false;
+            queryButton.textContent = 'Bilgileri Getir';
+        }
+    });
+}
+function activateIpLookup() {
+    const queryButton = document.getElementById('queryIpButton');
+    const targetInput = document.getElementById('targetInput');
+    const resultsOutput = document.getElementById('ipResultOutput');
+
+    if (!queryButton) return;
+
+    queryButton.addEventListener('click', async () => {
+        const target = targetInput.value.trim();
+        if (!target) {
+            resultsOutput.textContent = 'Lütfen sorgulanacak bir IP veya alan adı girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${target}" için IP bilgileri getiriliyor...`;
+        queryButton.disabled = true;
+        queryButton.textContent = 'Sorgulanıyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/iplookup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ target: target }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Gelen JSON'daki her bir anahtar/değer çiftini formatlayalım
+            let formattedResults = "";
+            const keyTranslations = {
+                query: "Sorgulanan IP",
+                status: "Durum",
+                country: "Ülke",
+                countryCode: "Ülke Kodu",
+                regionName: "Bölge",
+                city: "Şehir",
+                zip: "Posta Kodu",
+                lat: "Enlem",
+                lon: "Boylam",
+                timezone: "Saat Dilimi",
+                isp: "İnternet Sağlayıcı",
+                org: "Organizasyon",
+                as: "AS Numarası"
+            };
+
+            for (const key in data) {
+                // Sadece çevirisi olan ve değeri olan anahtarları gösterelim
+                if (keyTranslations[key] && data[key]) {
+                    formattedResults += `${keyTranslations[key]}: ${data[key]}\n`;
+                }
+            }
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            console.error('IP sorgusu sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            queryButton.disabled = false;
+            queryButton.textContent = 'Sorgula';
+        }
+    });
+}
+function activateHibp() {
+    const checkButton = document.getElementById('checkHibpButton');
+    const passwordInput = document.getElementById('passwordInput');
+    const resultsOutput = document.getElementById('hibpResultOutput');
+
+    checkButton.addEventListener('click', async () => {
+        const password = passwordInput.value;
+        if (!password) {
+            resultsOutput.textContent = 'Lütfen kontrol edilecek bir parola girin.';
+            return;
+        }
+        resultsOutput.textContent = `Parola kontrol ediliyor...`;
+        checkButton.disabled = true;
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/hibp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password }),
+            });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+
+            if (data.found) {
+                resultsOutput.style.color = '#ff4d4d'; // Kırmızı renk
+                resultsOutput.textContent = `❌ BU PAROLA GÜVENLİ DEĞİL!\n\nBu parola, bilinen veri sızıntılarında en az ${data.count} kez bulundu. Kesinlikle kullanmayın!`;
+            } else {
+                resultsOutput.style.color = '#00ff88'; // Yeşil renk
+                resultsOutput.textContent = `✅ BU PAROLA GÜVENLİ GÖRÜNÜYOR.\n\nBu parola, bilinen büyük veri sızıntılarında bulunamadı.`;
+            }
+        } catch (error) {
+            resultsOutput.style.color = '#ff4d4d';
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            checkButton.disabled = false;
+        }
+    });
+}
+
+// ESKİ activateCveSearch FONKSİYONUNU SİL VE BUNU YAPIŞTIR
+
+function activateCveSearch() {
+    const searchButton = document.getElementById('searchCveButton');
+    const cveInput = document.getElementById('cveInput');
+    const resultsOutput = document.getElementById('cveResultOutput');
+
+    searchButton.addEventListener('click', async () => {
+        const cveId = cveInput.value.trim().toUpperCase();
+        if (!cveId) {
+            resultsOutput.textContent = 'Lütfen bir CVE kimliği girin.';
+            return;
+        }
+        resultsOutput.textContent = `${cveId} için bilgiler getiriliyor...`;
+        searchButton.disabled = true;
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/cve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cve_id: cveId }),
+            });
+            const data = await response.json();
+            console.log("CVE API'sinden gelen veri:", data); 
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // ---- YENİ VERİ İŞLEME MANTIĞI ----
+            const metadata = data.cveMetadata;
+            const cnaContainer = data.containers?.cna; // ?. operatörü ile obje yoksa hata vermesini önle
+
+            let formattedResults = "";
+            let cvssScore = "N/A";
+
+            // CVSS skorunu bulmaya çalış
+            if (cnaContainer?.metrics?.length > 0) {
+                // Genellikle en güncel skor (v3.1) aranır
+                const metrics = cnaContainer.metrics[0];
+                if (metrics.cvssV3_1) {
+                    cvssScore = `${metrics.cvssV3_1.baseScore} (${metrics.cvssV3_1.baseSeverity})`;
+                } else if (metrics.cvssV3_0) {
+                    cvssScore = `${metrics.cvssV3_0.baseScore} (${metrics.cvssV3_0.baseSeverity})`;
+                }
+            }
+            
+            if (metadata?.cveId) {
+                formattedResults += `ID: ${metadata.cveId}\n`;
+            }
+            formattedResults += `CVSS Skoru: ${cvssScore}\n`;
+
+            if (metadata?.datePublished) {
+                formattedResults += `Yayınlanma Tarihi: ${new Date(metadata.datePublished).toLocaleDateString()}\n`;
+            }
+
+            formattedResults += `------------------------------------\n\n`;
+
+            if (cnaContainer?.descriptions?.length > 0) {
+                // İngilizce açıklamayı al
+                const description = cnaContainer.descriptions.find(d => d.lang === 'en')?.value || cnaContainer.descriptions[0].value;
+                formattedResults += `ÖZET:\n${description}\n\n`;
+            }
+            
+            if (cnaContainer?.references?.length > 0) {
+                formattedResults += `REFERANSLAR (ilk 5):\n` + cnaContainer.references.slice(0, 5).map(ref => ref.url).join('\n');
+            }
+            
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            searchButton.disabled = false;
+        }
+    });
+}
+function activateTechDetect() {
+    const detectButton = document.getElementById('detectTechButton');
+    const urlInput = document.getElementById('urlInput');
+    const resultsOutput = document.getElementById('techResultOutput');
+
+    if (!detectButton) return;
+
+    detectButton.addEventListener('click', async () => {
+        const url = urlInput.value.trim();
+        if (!url) {
+            resultsOutput.textContent = 'Lütfen bir URL girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${url}" için teknolojiler tespit ediliyor...`;
+        detectButton.disabled = true;
+        detectButton.textContent = 'Tespit Ediliyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/tech', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            let formattedResults = "";
+            for (const category in data) {
+                // Kategorinin başlığını daha güzel yazdıralım (örn: "javascript-frameworks" -> "Javascript Frameworks")
+                const categoryTitle = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                formattedResults += `--- ${categoryTitle} ---\n`;
+                
+                if (data[category] && data[category].length > 0) {
+                    formattedResults += data[category].join('\n');
+                }
+                formattedResults += "\n\n";
+            }
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            console.error('Teknoloji tespiti sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            detectButton.disabled = false;
+            detectButton.textContent = 'Teknolojileri Tespit Et';
+        }
+    });
+}
+function activateSslAnalyzer() {
+    const analyzeButton = document.getElementById('analyzeSslButton');
+    const hostnameInput = document.getElementById('hostnameInput');
+    const resultsOutput = document.getElementById('sslResultOutput');
+
+    if (!analyzeButton) return;
+
+    analyzeButton.addEventListener('click', async () => {
+        const hostname = hostnameInput.value.trim();
+        if (!hostname) {
+            resultsOutput.textContent = 'Lütfen bir alan adı girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `"${hostname}" için SSL sertifikası analiz ediliyor...`;
+        analyzeButton.disabled = true;
+        analyzeButton.textContent = 'Analiz Ediliyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/ssl', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ hostname: hostname }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            let formattedResults = "";
+            for (const key in data) {
+                if (data[key]) {
+                    let value = data[key];
+                    if (Array.isArray(value)) { // Kapsanan alan adları gibi listeleri formatla
+                        value = '\n' + value.map(item => `   - ${item}`).join('\n');
+                    } else if (typeof value === 'object') { // Konu ve Sağlayıcı gibi objeleri formatla
+                        let objStr = "";
+                        for(const objKey in value) {
+                            objStr += `\n   - ${objKey}: ${value[objKey]}`;
+                        }
+                        value = objStr;
+                    }
+                    formattedResults += `${key}:\n${value}\n\n`;
+                }
+            }
+            resultsOutput.textContent = formattedResults;
+
+        } catch (error) {
+            console.error('SSL analizi sırasında hata:', error);
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            analyzeButton.disabled = false;
+            analyzeButton.textContent = 'Sertifikayı Analiz Et';
+        }
+    });
+}
+function activateDirScanner() {
+    const scanButton = document.getElementById('scanDirButton');
+    const urlInput = document.getElementById('urlInput');
+    const wordlistInput = document.getElementById('wordlistInput');
+    const resultsOutput = document.getElementById('dirResultOutput');
+
+    scanButton.addEventListener('click', async () => {
+        const url = urlInput.value.trim();
+        const wordlist = wordlistInput.value;
+        if (!url || !wordlist) {
+            resultsOutput.textContent = 'Lütfen URL ve kelime listesi girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `Tarama başlatıldı, bu işlem uzun sürebilir...`;
+        scanButton.disabled = true;
+        scanButton.textContent = 'Taranıyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/scanner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, wordlist: wordlist }),
+            });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+
+            if (data.found && data.found.length > 0) {
+                let formattedResults = "Bulunan Potansiyel Yollar:\n\n";
+                data.found.forEach(item => {
+                    formattedResults += `[${item.status}] - ${item.path}\n`;
+                });
+                resultsOutput.textContent = formattedResults;
+            } else {
+                resultsOutput.textContent = "Hiçbir yol bulunamadı.";
+            }
+        } catch (error) {
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            scanButton.disabled = false;
+            scanButton.textContent = 'Taramayı Başlat';
+        }
+    });
+}
+
+function activateParamFinder() {
+    const findButton = document.getElementById('findParamButton');
+    const urlInput = document.getElementById('urlInput');
+    const paramlistInput = document.getElementById('paramlistInput');
+    const resultsOutput = document.getElementById('paramResultOutput');
+
+    findButton.addEventListener('click', async () => {
+        const url = urlInput.value.trim();
+        const wordlist = paramlistInput.value;
+        if (!url || !wordlist) {
+            resultsOutput.textContent = 'Lütfen URL ve parametre listesi girin.';
+            return;
+        }
+
+        resultsOutput.textContent = `Parametreler taranıyor, bu işlem uzun sürebilir...`;
+        findButton.disabled = true;
+        findButton.textContent = 'Aranıyor...';
+
+        try {
+            const response = await fetch('https://admin3131.pythonanywhere.com/paramfinder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, wordlist: wordlist }),
+            });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+
+            if (data.found && data.found.length > 0) {
+                let formattedResults = `Baz Yanıt: Durum Kodu ${data.base_status}, Uzunluk ${data.base_length}\n\n`;
+                formattedResults += "Farklı Yanıt Veren Potansiyel Parametreler:\n\n";
+                data.found.forEach(item => {
+                    formattedResults += `[PARAMETRE: ${item.param}] - Durum: ${item.status}, Uzunluk: ${item.length}\n   URL: ${item.url}\n\n`;
+                });
+                resultsOutput.textContent = formattedResults;
+            } else {
+                resultsOutput.textContent = "Hiçbir potansiyel parametre bulunamadı.";
+            }
+        } catch (error) {
+            resultsOutput.textContent = `Hata: ${error.message}`;
+        } finally {
+            findButton.disabled = false;
+            findButton.textContent = 'Parametreleri Keşfet';
+        }
+    });
+}
 function activateEncoderDecoder() {
     // --- Sekme Yönetimi ---
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -2187,92 +2819,328 @@ function activateEncoderDecoder() {
         setTimeout(() => { document.getElementById('btnCopyDecodeOutput').textContent = 'Çıktıyı Kopyala'; }, 1500);
     });
   }
+// ESKİ openTool FONKSİYONUNU SİL VE BUNU YAPIŞTIR
+
 function openTool(toolId) {
     const main = document.getElementById('mainContent');
     let tool = null;
+    // Aracı CONTENT objesinden bul
     for (const category of CONTENT.toolbox.categories) {
         const foundTool = category.tools.find(t => t.id === toolId);
-        if (foundTool) { tool = foundTool; break; }
+        if (foundTool) {
+            tool = foundTool;
+            break;
+        }
     }
     if (!tool) return;
+
     let html = '';
+
+    // =======================================================
+    // ARAÇ YÖNLENDİRİCİSİ (ROUTER) - DÜZENLENMİŞ HALİ
+    // =======================================================
+
     if (toolId === 'subdomainfinder') {
-        html = `<h1><i class="${tool.icon}"></i> ${tool.title}</h1><p class="small" style="margin-bottom:12px;">Bir alan adını girin ve ilişkili alt alan adlarını keşfedin.</p><div class="search-bar" style="max-width: 500px;"><input type="text" id="domainInput" placeholder="example.com" autocomplete="off" /></div><button id="scanButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button><h3 style="margin-top:20px;">Tarama Sonuçları:</h3><pre id="resultsOutput" style="min-height: 150px; background-color: var(--card);">Sonuçlar burada görünecek...</pre><button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>`;
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir alan adını girin ve ilişkili alt alan adlarını keşfedin.</p>
+            <div class="search-bar" style="max-width: 500px;">
+                <input type="text" id="domainInput" placeholder="example.com" autocomplete="off" />
+            </div>
+            <button id="scanButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
+            <h3 style="margin-top:20px;">Tarama Sonuçları:</h3>
+            <pre id="resultsOutput" style="min-height: 150px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
         main.innerHTML = html;
-        activateSubfinder(); 
-} else if (toolId === 'encoderdecoder') {
-    html = `
-        <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-        <p class="lead">${tool.description}</p>
-        
-        <div class="tool-tabs">
-            <button class="tab-button active" data-tab="tab-identifier">🔍 Tespit Et</button>
-            <button class="tab-button" data-tab="tab-encoder">⚙️ Encode / Hash</button>
-            <button class="tab-button" data-tab="tab-decoder">🛠️ Decode</button>
-        </div>
+        activateSubfinder();
 
-        <div id="tab-identifier" class="tab-content active">
-            <h3>Format Tespit Aracı</h3>
-            <p class="small" style="margin-bottom:12px;">Bir metin girin ve olası şifreleme/kodlama formatını anında öğrenin.</p>
-            <textarea id="identifierInput" placeholder="Tespit edilecek metni buraya yapıştırın..." style="width: 100%; min-height: 120px;"></textarea>
-            <div id="identifierOutput" class="identifier-result"></div>
-        </div>
-
-        <div id="tab-encoder" class="tab-content">
-            <h3>Encode / Hash (Kodlama)</h3>
-            <div class="tool-io-grid">
-                <div>
-                    <h4>Girdi Metni</h4>
-                    <textarea id="encodeInput" placeholder="Kodlanacak metni buraya girin..."></textarea>
+    } else if (toolId === 'portscanner') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir IP adresi veya alan adı girerek en yaygın portları ve servis bilgilerini tarayın.</p>
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <label for="targetInput" style="font-size:14px; display:block; margin-bottom:6px; position: absolute; left: -9999px;">Hedef (IP / Domain):</label>
+                    <input type="text" id="targetInput" placeholder="example.com veya 8.8.8.8" />
                 </div>
-                <div>
-                    <h4>İşlenmiş Çıktı</h4>
-                    <textarea id="encodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
-                    <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
+                <div style="margin-bottom: 16px; display: none;">
+                    <label for="portsInput">Portlar:</label>
+                    <textarea id="portsInput"></textarea>
+                </div>
+                <button id="scanPortButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Portları Tara</button>
+            </div>
+            <h3 style="margin-top:20px;">Tarama Sonuçları:</h3>
+            <pre id="portResultsOutput" style="min-height: 150px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activatePortScanner();
+
+    } else if (toolId === 'sslanalyzer') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir alan adının SSL/TLS sertifika detaylarını ve geçerliliğini kontrol edin.<br>(Sunucuya 5$ veremediğim için şimdilik sadece popüler sitelerde çalışıyor :p)</p>
+            
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="hostnameInput" placeholder="google.com" />
+                </div>
+                <button id="analyzeSslButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Sertifikayı Analiz Et</button>
+            </div>
+
+            <h3 style="margin-top:20px;">Sertifika Detayları:</h3>
+            <pre id="sslResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateSslAnalyzer(); 
+
+// ... fonksiyonun geri kalanı
+    } else if (toolId === 'headeranalyzer') {
+        // ----- İSTEDİĞİN DEĞİŞİKLİK BURADA -----
+        html = `
+            <h1><i class="${tool.icon}"></i> HTTP Başlık Analizörü</h1>
+            <p class="small" style="margin-bottom:12px;">
+                <strong>HSTS, CSP, X-Frame-Options ve X-Content-Type-Options</strong> gibi kritik başlıkları kontrol ederek dijital zayıflıkları tespit eder.<br>
+                (Sunucuya 5$ veremediğim için şimdilik sadece popüler sitelerde çalışıyor :p)
+            </p>
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="urlInput" placeholder="github.com" />
+                </div>
+                <button id="analyzeHeadersButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Başlıkları Analiz Et</button>
+            </div>
+            <h3 style="margin-top:20px;">Analiz Sonuçları:</h3>
+            <pre id="headersResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateHeaderAnalyzer();
+// ... openTool içinde, headeranalyzer'dan sonra
+
+    } else if (toolId === 'dnslookup') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir alan adının A, MX, CNAME gibi temel DNS kayıtlarını sorgulayın.</p>
+            
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="domainInput" placeholder="google.com" />
+                </div>
+                <button id="queryDnsButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Kayıtları Sorgula</button>
+            </div>
+
+            <h3 style="margin-top:20px;">DNS Kayıtları:</h3>
+            <pre id="dnsResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateDnsLookup(); 
+
+    } else if (toolId === 'whois') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir alan adının sahiplik ve kayıt bilgilerini (Whois) sorgulayın.</p>
+            
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="domainInput" placeholder="google.com" />
+                </div>
+                <button id="queryWhoisButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Bilgileri Getir</button>
+            </div>
+
+            <h3 style="margin-top:20px;">Whois Bilgileri:</h3>
+            <pre id="whoisResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateWhoisLookup(); 
+// ... openTool içinde, whois'ten sonra
+
+    } else if (toolId === 'iplookup') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir IP adresi veya alan adının coğrafi konumunu ve sağlayıcı bilgilerini bulun.</p>
+            
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="targetInput" placeholder="8.8.8.8 veya google.com" />
+                </div>
+                <button id="queryIpButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Sorgula</button>
+            </div>
+
+            <h3 style="margin-top:20px;">IP Bilgileri:</h3>
+            <pre id="ipResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateIpLookup(); 
+} else if (toolId === 'hibp') {
+        html = `
+            <h1><i class="${tool.icon}"></i> Parola Sızıntı Kontrolü</h1>
+            <p class="small" style="margin-bottom:12px;">Bir parolanın daha önceki veri sızıntılarında yer alıp almadığını 'Have I Been Pwned' veritabanı üzerinden güvenli bir şekilde kontrol edin.</p>
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="password" id="passwordInput" placeholder="Kontrol edilecek parola" />
+                </div>
+                <button id="checkHibpButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Parolayı Kontrol Et</button>
+            </div>
+            <h3 style="margin-top:20px;">Sonuç:</h3>
+            <pre id="hibpResultOutput" style="min-height: 50px; background-color: var(--card);">Sonuç burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateHibp(); 
+
+    } else if (toolId === 'cvesearch') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir CVE kimliği (örn: CVE-2021-44228) girerek bilinen zafiyetler hakkındaki detayları sorgulayın.</p>
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="cveInput" placeholder="CVE-2021-44228" />
+                </div>
+                <button id="searchCveButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">CVE Ara</button>
+            </div>
+            <h3 style="margin-top:20px;">CVE Detayları:</h3>
+            <pre id="cveResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuç burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateCveSearch(); 
+    } else if (toolId === 'techdetect') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir web sitesinin hangi sunucu, framework ve kütüphaneleri kullandığını tespit edin.</p>
+            
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="urlInput" placeholder="example.com" />
+                </div>
+                <button id="detectTechButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Teknolojileri Tespit Et</button>
+            </div>
+
+            <h3 style="margin-top:20px;">Tespit Edilen Teknolojiler:</h3>
+            <pre id="techResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateTechDetect(); 
+// ... openTool içinde, en sondaki "else" bloğundan önce
+
+    } else if (toolId === 'dirscanner') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Hedef sitede yaygın dizin ve dosyaları (örn: /admin, /.git) bularak gizli kalmış sayfaları keşfedin.</p>
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="urlInput" placeholder="https://example.com" />
+                </div>
+                <label class="small">Kelime Listesi (Her satıra bir tane, en fazla 200):</label>
+                <textarea id="wordlistInput" class="tool-io-grid" style="width:100%; height:120px; margin-top:4px; margin-bottom:16px;">admin\nlogin\npanel\ndashboard\n.git\n.env\nbackup\nsecret</textarea>
+                <button id="scanDirButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
+            </div>
+            <h3 style="margin-top:20px;">Bulunan Yollar:</h3>
+            <pre id="dirResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateDirScanner();
+
+    } else if (toolId === 'paramfinder') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="small" style="margin-bottom:12px;">Bir URL üzerinde gizli veya unutulmuş parametreleri (örn: ?debug=true) bularak yeni saldırı yüzeyleri keşfedin.</p>
+            <div class="card" style="max-width: 600px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <input type="text" id="urlInput" placeholder="https://example.com/profile.php" />
+                </div>
+                <label class="small">Parametre Listesi (Her satıra bir tane, en fazla 200):</label>
+                <textarea id="paramlistInput" class="tool-io-grid" style="width:100%; height:120px; margin-top:4px; margin-bottom:16px;">id\nuser\nadmin\ndebug\nredirect\nurl\nfile\nview</textarea>
+                <button id="findParamButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Parametreleri Keşfet</button>
+            </div>
+            <h3 style="margin-top:20px;">Potansiyel Parametreler:</h3>
+            <pre id="paramResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateParamFinder();
+
+
+    } else if (toolId === 'encoderdecoder') {
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="lead">${tool.description}</p>
+            <div class="tool-tabs">
+                <button class="tab-button active" data-tab="tab-identifier">🔍 Tespit Et</button>
+                <button class="tab-button" data-tab="tab-encoder">⚙️ Encode / Hash</button>
+                <button class="tab-button" data-tab="tab-decoder">🛠️ Decode</button>
+            </div>
+            <div id="tab-identifier" class="tab-content active">
+                <h3>Format Tespit Aracı</h3>
+                <p class="small" style="margin-bottom:12px;">Bir metin girin ve olası şifreleme/kodlama formatını anında öğrenin.</p>
+                <textarea id="identifierInput" placeholder="Tespit edilecek metni buraya yapıştırın..." style="width: 100%; min-height: 120px;"></textarea>
+                <div id="identifierOutput" class="identifier-result"></div>
+            </div>
+            <div id="tab-encoder" class="tab-content">
+                <h3>Encode / Hash (Kodlama)</h3>
+                <div class="tool-io-grid">
+                    <div>
+                        <h4>Girdi Metni</h4>
+                        <textarea id="encodeInput" placeholder="Kodlanacak metni buraya girin..."></textarea>
+                    </div>
+                    <div>
+                        <h4>İşlenmiş Çıktı</h4>
+                        <textarea id="encodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
+                        <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
+                    </div>
+                </div>
+                <div class="tool-buttons" style="margin-top:16px;">
+                    <button id="btnB64Encode">Base64</button>
+                    <button id="btnUrlEncode">URL</button>
+                    <button id="btnHexEncode">Hex</button>
+                    <button id="btnHtmlEncode">HTML Entities</button>
+                    <button id="btnMd5">MD5</button>
+                    <button id="btnSha1">SHA1</button>
+                    <button id="btnSha256">SHA256</button>
                 </div>
             </div>
-            <div class="tool-buttons" style="margin-top:16px;">
-                <button id="btnB64Encode">Base64</button>
-                <button id="btnUrlEncode">URL</button>
-                <button id="btnHexEncode">Hex</button>
-                <button id="btnHtmlEncode">HTML Entities</button>
-                <button id="btnMd5">MD5</button>
-                <button id="btnSha1">SHA1</button>
-                <button id="btnSha256">SHA256</button>
-            </div>
-        </div>
-
-        <div id="tab-decoder" class="tab-content">
-            <h3>Decode (Çözümleme)</h3>
-            <div class="tool-io-grid">
-                <div>
-                    <h4>Kodlanmış Girdi</h4>
-                    <textarea id="decodeInput" placeholder="Çözülecek metni buraya girin..."></textarea>
+            <div id="tab-decoder" class="tab-content">
+                <h3>Decode (Çözümleme)</h3>
+                <div class="tool-io-grid">
+                    <div>
+                        <h4>Kodlanmış Girdi</h4>
+                        <textarea id="decodeInput" placeholder="Çözülecek metni buraya girin..."></textarea>
+                    </div>
+                    <div>
+                        <h4>Çözülmüş Çıktı</h4>
+                        <textarea id="decodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
+                         <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
+                    </div>
                 </div>
-                <div>
-                    <h4>Çözülmüş Çıktı</h4>
-                    <textarea id="decodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
-                    <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
+                <div class="tool-buttons" style="margin-top:16px;">
+                    <button id="btnB64Decode">Base64</button>
+                    <button id="btnUrlDecode">URL</button>
+                    <button id="btnHexDecode">Hex</button>
+                    <button id="btnHtmlDecode">HTML Entities</button>
                 </div>
             </div>
-            <div class="tool-buttons" style="margin-top:16px;">
-                <button id="btnB64Decode">Base64</button>
-                <button id="btnUrlDecode">URL</button>
-                <button id="btnHexDecode">Hex</button>
-                <button id="btnHtmlDecode">HTML Entities</button>
-            </div>
-        </div>
-        
-        <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Araçlar Menüsüne Geri Dön</button>
-    `;
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
+        main.innerHTML = html;
+        activateEncoderDecoder();
 
-    main.innerHTML = html;
-    activateEncoderDecoder(); // İşlevsellik için bu fonksiyonu çağırıyoruz
-    
-} else {
-        html = `<h1><i class="${tool.icon}"></i> ${tool.title}</h1><p class="lead">Bu araç şu anda geliştirilme aşamasındadır.</p><button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>`;
+    } else {
+        // Henüz yapılmamış diğer tüm araçlar için varsayılan mesaj
+        html = `
+            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+            <p class="lead">Bu araç şu anda geliştirilme aşamasındadır.</p>
+            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+        `;
         main.innerHTML = html;
     }
+
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
   renderMenu();
