@@ -246,6 +246,29 @@
     min-height: 1.5em;
     transition: all 0.3s;
 }
+.wordlist-box {
+    width: 100%;
+    min-height: 120px;
+    background: #071226; /* Darker background for prominence */
+    border: 1px solid var(--accent); /* Accent border for focus */
+    border-radius: 8px;
+    color: #d6f4ff; /* Light color for text */
+    padding: 12px;
+    font-family: ui-monospace, monospace;
+    font-size: 14px;
+    box-sizing: border-box;
+    resize: vertical;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+}
+.wordlist-box:focus {
+    outline: 2px solid #fff; /* White glow on focus */
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+
+
 /* ========================================================== */
     @media(min-width: 768px) { .tool-io-grid { grid-template-columns: 1fr 1fr; } }
 /* ======== IDENTIFIER ARACI GÜZELLEŞTİRME ======== */
@@ -289,9 +312,140 @@
     white-space: pre-wrap;
     word-break: break-word;
 }
+
 #identifierOutput.found {
     color: var(--accent); /* Format bulununca vurgulu renk */
     font-weight: 600;
+}
+/* ======== CHATBOT WIDGET STİLLERİ ======== */
+/* ======== MİNİ-FORM WIDGET STİLLERİ ======== */
+#chat-widget-container {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 1000;
+}
+
+#chat-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+#chat-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+#chat-toggle-btn svg {
+    fill: white;
+}
+
+#chat-window {
+    width: 320px;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--glass);
+    position: absolute;
+    bottom: 80px; /* Butonun üstünde konumlanır */
+    right: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#chat-window.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.chat-header {
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+#close-chat-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.chat-messages {
+    padding: 16px;
+}
+
+.chat-welcome-message {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.chat-input-area {
+    padding: 16px;
+    background: #071226;
+}
+
+.chat-input-area form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-input-area input,
+.chat-input-area textarea {
+    width: 100%;
+    border: 1px solid var(--glass);
+    background: #0f1724;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.chat-input-area input:focus,
+.chat-input-area textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.chat-input-area textarea {
+    resize: vertical;
+}
+
+.chat-input-area button {
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
 }
     /* ======== STİLLERİN SONU ======== */
   </style>
@@ -3027,42 +3181,57 @@ function openTool(toolId) {
         `;
         main.innerHTML = html;
         activateTechDetect(); 
-// ... openTool içinde, en sondaki "else" bloğundan önce
 
-    } else if (toolId === 'dirscanner') {
-        html = `
-            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-            <p class="small" style="margin-bottom:12px;">Hedef sitede yaygın dizin ve dosyaları (örn: /admin, /.git) bularak gizli kalmış sayfaları keşfedin.</p>
-            <div class="card" style="max-width: 600px;">
-                <div class="search-bar" style="margin-bottom: 16px;">
-                    <input type="text" id="urlInput" placeholder="https://example.com" />
-                </div>
-                <label class="small">Kelime Listesi (Her satıra bir tane, en fazla 200):</label>
-                <textarea id="wordlistInput" class="tool-io-grid" style="width:100%; height:120px; margin-top:4px; margin-bottom:16px;">admin\nlogin\npanel\ndashboard\n.git\n.env\nbackup\nsecret</textarea>
-                <button id="scanDirButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
-            </div>
-            <h3 style="margin-top:20px;">Bulunan Yollar:</h3>
-            <pre id="dirResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
-            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
-        `;
-        main.innerHTML = html;
-        activateDirScanner();
+} else if (toolId === 'dirscanner') {
+      html = `
+        <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+        <p class="small" style="margin-bottom:12px;">Hedef sitede yaygın dizin ve dosyaları (örn: /admin, /.git) bularak gizli kalmış sayfaları keşfedin.</p>
+        <div class="card" style="max-width: 600px;">
+        <div class="search-bar" style="margin-bottom: 16px;">
+          <input type="text" id="urlInput" placeholder="https://example.com" />
+        </div>
+        <label class="small" for="wordlistInput" style="display: block; margin-bottom: 4px;">Kelime Listesi (Her satıra bir tane, en fazla 200):</label>
+        <textarea id="wordlistInput" class="wordlist-box" placeholder="admin\nlogin\npanel\ndashboard\n.git\n.env\nbackup\nsecret">admin
+login
+panel
+dashboard
+.git
+.env
+backup
+secret</textarea>
+      <button id="scanDirButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
+      </div>
+      <h3 style="margin-top:20px;">Bulunan Yollar:</h3>
+      <pre id="dirResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+      <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+      `;
+      main.innerHTML = html;
+      activateDirScanner();
+
+// ... openTool içinde, dirscanner'dan sonra
 
     } else if (toolId === 'paramfinder') {
         html = `
-            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-            <p class="small" style="margin-bottom:12px;">Bir URL üzerinde gizli veya unutulmuş parametreleri (örn: ?debug=true) bularak yeni saldırı yüzeyleri keşfedin.</p>
-            <div class="card" style="max-width: 600px;">
-                <div class="search-bar" style="margin-bottom: 16px;">
-                    <input type="text" id="urlInput" placeholder="https://example.com/profile.php" />
-                </div>
-                <label class="small">Parametre Listesi (Her satıra bir tane, en fazla 200):</label>
-                <textarea id="paramlistInput" class="tool-io-grid" style="width:100%; height:120px; margin-top:4px; margin-bottom:16px;">id\nuser\nadmin\ndebug\nredirect\nurl\nfile\nview</textarea>
-                <button id="findParamButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Parametreleri Keşfet</button>
+          <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+          <p class="small" style="margin-bottom:12px;">Bir URL üzerinde gizli veya unutulmuş parametreleri (örn: ?debug=true) bularak yeni saldırı yüzeyleri keşfedin.</p>
+          <div class="card" style="max-width: 600px;">
+          <div class="search-bar" style="margin-bottom: 16px;">
+            <input type="text" id="urlInput" placeholder="https://example.com/profile.php" />
             </div>
-            <h3 style="margin-top:20px;">Potansiyel Parametreler:</h3>
-            <pre id="paramResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
-            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+            <label class="small" for="paramlistInput" style="display: block; margin-bottom: 4px;">Parametre Listesi (Her satıra bir tane, en fazla 200):</label>
+            <textarea id="paramlistInput" class="wordlist-box" placeholder="id\nuser\nadmin\ndebug\nredirect\nurl\nfile\nview">id
+user
+admin
+debug
+redirect
+url
+file
+view</textarea>
+              <button id="findParamButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Parametreleri Keşfet</button>
+            </div>
+          <h3 style="margin-top:20px;">Potansiyel Parametreler:</h3>
+          <pre id="paramResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+          <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
         `;
         main.innerHTML = html;
         activateParamFinder();
@@ -3145,6 +3314,50 @@ function openTool(toolId) {
 }
   renderMenu();
   showPage('home');
+// ============================================
+//      CHATBOT MANTIĞI VE FONKSİYONLARI
+// ============================================
+// ============================================
+//      MİNİ-FORM AÇ/KAPA FONKSİYONU
+// ============================================
+document.addEventListener('DOMContentLoaded', (event) => {
+    const chatWindow = document.getElementById('chat-window');
+    const toggleBtn = document.getElementById('chat-toggle-btn');
+    const closeBtn = document.getElementById('close-chat-btn');
+
+    if (toggleBtn && chatWindow && closeBtn) {
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.classList.toggle('hidden');
+        });
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+        });
+    }
+});
 </script>
-</body>
+ <div id="chat-widget-container">
+        <div id="chat-window" class="hidden">
+            <div class="chat-header">
+                <h4>Mesaj Gönder</h4>
+                <button id="close-chat-btn">&times;</button>
+            </div>
+            <div class="chat-messages">
+                <p class="chat-welcome-message">Merhaba! Aşağıdaki formu doldurarak site sahibine doğrudan ulaşabilirsiniz. Size en kısa sürede geri dönüş yapılacaktır.</p>
+            </div>
+            <div class="chat-input-area">
+                <form action="https://formsubmit.co/your@email.com" method="POST">
+                    <input type="email" name="email" placeholder="E-posta Adresiniz (Cevap için Gerekli)" required>
+                    <textarea name="message" placeholder="Mesajınız..." rows="6" required></textarea>
+                    <input type="text" name="_honey" style="display:none">
+                    <input type="hidden" name="_next" value="https://YOUR-SITE-URL/thanks.html">
+                    <button type="submit">Gönder</button>
+                </form>
+            </div>
+        </div>
+        <button id="chat-toggle-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28px" height="28px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </button>
+    </div>
+
+  </body>
 </html>
