@@ -387,7 +387,7 @@ javascriptrecon: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">Hedef domaine ait subdomainleri bulur ve sonuçları subdomains.txt dosyasına kaydeder.</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">Hedef domaine ait subdomainleri bulur ve sonuçları subdomains.txt dosyasına kaydeder.</div>
           </li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <strong>2- Canlı Subdomain Kontrolü:</strong><br>
@@ -396,7 +396,7 @@ javascriptrecon: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">Subdomain listesindeki canlı subdomainleri tespit eder ve live_subdomains.txt dosyasına kaydeder.</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">Subdomain listesindeki canlı subdomainleri tespit eder ve live_subdomains.txt dosyasına kaydeder.</div>
           </li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <strong>3- Endpoint Keşfi (FFUF):</strong><br>
@@ -405,7 +405,7 @@ javascriptrecon: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">Belirtilen URL'de 200, 302 ve 403 durum kodlarına sahip endpointleri keşfeder.</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">Belirtilen URL'de 200, 302 ve 403 durum kodlarına sahip endpointleri keşfeder.</div>
           </li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <strong>4- JS dosyalari ile Endpoint Çekme</strong><br>
@@ -414,7 +414,7 @@ javascriptrecon: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">JS dosyasından endpointleri çıkarır (kaynak kodunda .js dosyalarını bulmak için CTRL + U kullanın).</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">JS dosyasından endpointleri çıkarır (kaynak kodunda .js dosyalarını bulmak için CTRL + U kullanın).</div>
           </li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <strong>5- Google Dork ile PDF Arama:</strong><br>
@@ -423,7 +423,7 @@ javascriptrecon: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">Hedef sitedeki PDF dosyalarını bulur, www ile başlayanları hariç tutar.</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">Hedef sitedeki PDF dosyalarını bulur, www ile başlayanları hariç tutar.</div>
           </li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <strong>6- Wayback Machine ile URL Keşfi:</strong><br>
@@ -432,7 +432,7 @@ javascriptrecon: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">Wayback Machine üzerinden hedef siteye ait eski URL'leri çeker.</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">Wayback Machine üzerinden hedef siteye ait eski URL'leri çeker.</div>
           </li>
           <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
             <strong>LinkFinder için Otomatik Script:</strong><br>
@@ -456,7 +456,7 @@ for link in js_links:
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
             </div>
-            <div style="margin-top:6px;font-size:13px;color:#555">Bu script, .js dosyalarını otomatik tarayarak endpointleri çeker.</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu script, .js dosyalarını otomatik tarayarak endpointleri çeker.</div>
           </li>
         </ul>
       `
@@ -1312,7 +1312,7 @@ tools: {
       <div style="display:flex;align-items:center;gap:8px">
         <pre style="margin:0;white-space:pre-wrap"># Tarayıcıyı proxy'ye yönlendir, Intercept açıkken istekleri yakala</pre>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu araç: tarayıcı trafiğini Burp proxy üzerinden yakalamaya başlamak ve istekleri manuel/otomatik incelemek için kullanılır.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu araç: tarayıcı trafiğini Burp proxy üzerinden yakalamaya başlamak ve istekleri manuel/otomatik incelemek için kullanılır.</div>
       `
     },
 
@@ -1324,7 +1324,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hedef URL'de otomatik SQLi taraması yapar ve veritabanı listesi (dbs) almaya çalışır.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hedef URL'de otomatik SQLi taraması yapar ve veritabanı listesi (dbs) almaya çalışır.</div>
       `
     },
     {
@@ -1335,7 +1335,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: CLI ile hızlı dizin keşfi yapar; verilen wordlist'i kullanarak URL'de bulunan dizinleri listeler.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: CLI ile hızlı dizin keşfi yapar; verilen wordlist'i kullanarak URL'de bulunan dizinleri listeler.</div>
       `
     },
 
@@ -1352,7 +1352,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: bir PHP webshell dosyası oluşturur ve/veya yüklenmiş shell'e bağlanarak uzaktan komut çalıştırmayı sağlar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: bir PHP webshell dosyası oluşturur ve/veya yüklenmiş shell'e bağlanarak uzaktan komut çalıştırmayı sağlar.</div>
       `
     },
 
@@ -1364,7 +1364,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: HTTP parametreleri üzerinden komut enjeksiyonu açıklıklarını tespit etmeye ve istismara çalışır.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: HTTP parametreleri üzerinden komut enjeksiyonu açıklıklarını tespit etmeye ve istismara çalışır.</div>
       `
     },
 
@@ -1376,7 +1376,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hedef web sunucusunu bilinen zafiyetlere, tehlikeli header'lara ve yapılandırma problemlerine karşı tarar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hedef web sunucusunu bilinen zafiyetlere, tehlikeli header'lara ve yapılandırma problemlerine karşı tarar.</div>
       `
     },
 
@@ -1388,7 +1388,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: 403 Forbidden kısıtlamalarını atlatmak için bilinen teknikleri deneyen bir script'i çalıştırır.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: 403 Forbidden kısıtlamalarını atlatmak için bilinen teknikleri deneyen bir script'i çalıştırır.</div>
       `
     },
 
@@ -1400,7 +1400,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: verilen hash değerinin olası türlerini (MD5, SHA1, bcrypt vb.) tahmin etmeye yardımcı olur.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: verilen hash değerinin olası türlerini (MD5, SHA1, bcrypt vb.) tahmin etmeye yardımcı olur.</div>
       `
     },
 
@@ -1412,7 +1412,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: fotoğrafın EXIF meta verilerini (konum, cihaz, tarih vb.) gösterir.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: fotoğrafın EXIF meta verilerini (konum, cihaz, tarih vb.) gösterir.</div>
       `
     },
 
@@ -1424,7 +1424,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: kullanıcı/parola listeleriyle web formu veya diğer protokoller üzerinde brute-force denemeleri yapar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: kullanıcı/parola listeleriyle web formu veya diğer protokoller üzerinde brute-force denemeleri yapar.</div>
       `
     },
 
@@ -1436,7 +1436,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: WordPress sitelerini bilinen zafiyetler, eklenti/tema sürümleri ve zayıf kullanıcı/parolalara karşı tarar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: WordPress sitelerini bilinen zafiyetler, eklenti/tema sürümleri ve zayıf kullanıcı/parolalara karşı tarar.</div>
       `
     },
 
@@ -1448,7 +1448,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hedefin açık portlarını, hizmet sürümlerini ve bilinen zafiyetleri taramak için kullanılır.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hedefin açık portlarını, hizmet sürümlerini ve bilinen zafiyetleri taramak için kullanılır.</div>
       `
     },
 
@@ -1460,7 +1460,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hızlı ve pasif subdomain keşfi yapar; çeşitli kaynaklardan subdomain toplar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hızlı ve pasif subdomain keşfi yapar; çeşitli kaynaklardan subdomain toplar.</div>
       `
     },
 
@@ -1477,7 +1477,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hem pasif kaynakları hem de brute-force yöntemini kullanarak domain'in alt domainlerini keşfeder.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hem pasif kaynakları hem de brute-force yöntemini kullanarak domain'in alt domainlerini keşfeder.</div>
       `
     },
 
@@ -1489,7 +1489,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hızlı içerik fuzzing ve virtual-host keşfi (vhost probing) için kullanılır.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hızlı içerik fuzzing ve virtual-host keşfi (vhost probing) için kullanılır.</div>
       `
     },
 
@@ -1501,7 +1501,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: Certificate Transparency kayıtlarından domain/subdomain bilgisi toplayarak keşif yapar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: Certificate Transparency kayıtlarından domain/subdomain bilgisi toplayarak keşif yapar.</div>
       `
     },
 
@@ -1513,7 +1513,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: farklı pasif kaynaklardan hızlıca subdomain toplayıp birleştirir.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: farklı pasif kaynaklardan hızlıca subdomain toplayıp birleştirir.</div>
       `
     },
 
@@ -1525,7 +1525,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: büyük ağlarda çok hızlı port taraması yapar; sonuçları daha sonra detaylı tarama için Nmap'e verebilirsin.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: büyük ağlarda çok hızlı port taraması yapar; sonuçları daha sonra detaylı tarama için Nmap'e verebilirsin.</div>
       `
     },
 
@@ -1537,7 +1537,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hedef domain için e-posta adresleri, host isimleri ve diğer kamuya açık bilgileri toplar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hedef domain için e-posta adresleri, host isimleri ve diğer kamuya açık bilgileri toplar.</div>
       `
     },
 
@@ -1549,7 +1549,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: listelenen hostların ekran görüntülerini alır ve görsel olarak hızlı inceleme sağlar.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: listelenen hostların ekran görüntülerini alır ve görsel olarak hızlı inceleme sağlar.</div>
       `
     },
 
@@ -1561,7 +1561,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: hedef hostların ekran görüntülerini alır, servis bilgilerini toplayıp raporlar üretir.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hedef hostların ekran görüntülerini alır, servis bilgilerini toplayıp raporlar üretir.</div>
       `
     },
 
@@ -1573,7 +1573,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: DNS kayıtlarını, NS sunucularını ve olası zone transfer açıklıklarını kontrol eder.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: DNS kayıtlarını, NS sunucularını ve olası zone transfer açıklıklarını kontrol eder.</div>
       `
     },
 
@@ -1585,7 +1585,7 @@ tools: {
               <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                 onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:#555">Bu komut: DNS üzerinde çeşitli testler (brute, reverse, zone transfer vb.) gerçekleştirir.</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: DNS üzerinde çeşitli testler (brute, reverse, zone transfer vb.) gerçekleştirir.</div>
       `
     }
   ]
