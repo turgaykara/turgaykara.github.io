@@ -1,16 +1,14 @@
-  <!doctype html>
-  <html lang="tr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>BugBounty Roadmap — Kısa Rehber</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pentest Library</title>
+  <link rel="icon" type="image/png" href="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png">
+  <link rel="apple-touch-icon" href="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png">
     <style>
       :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--glass: rgba(255,255,255,0.03);}
       html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#071021 0%, #071726 100%);color:#e6eef6}
       .wrap{display:grid;grid-template-columns:260px 1fr;gap:20px;min-height:100vh;padding:28px}
       .sidebar{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
-      .brand{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-      .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700}
       .nav{display:flex;flex-direction:column;gap:6px}
       .nav a{padding:10px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:14px;transition:all 0.2s}
       .nav a:hover{background:var(--glass)}
@@ -65,8 +63,8 @@
         .resource-grid{grid-template-columns:1fr}
       }
       pre {
-        background: #0d1117;   /* koyu arka plan */
-        color: #00ff88;        /* yeşil yazı */
+        background: #0d1117;
+        color: #00ff88;
         padding: 10px;
         border-radius: 6px;
         font-size: 14px;
@@ -76,7 +74,6 @@
       code {
         font-family: monospace;
       }
-      /* Yeni eklenen stiller: Öneri dropdown */
       .search-suggestions {
         position: absolute;
         top: 100%;
@@ -113,8 +110,7 @@
       .search-bar {
       position: relative;
       margin-bottom: 20px;
-      width: 100%; /* Ekledim: Tam genişlik sağla /
-      box-sizing: border-box; / Ekledim: Padding ve border'ı genişliğe dahil et */
+      width: 100%; 
       }
       .search-bar input {
       width: 100%;
@@ -125,7 +121,7 @@
       color: #fff;
       font-size: 14px;
       transition: all 0.2s;
-      box-sizing: border-box; /* Ekledim: Input için de border-box uygula, taşmayı önle */
+      box-sizing: border-box;
       }
       .search-icon {
       position: absolute;
@@ -135,11 +131,11 @@
       color: var(--muted);
       pointer-events: none;
       }
-      /* Filtreleme için hidden class */
+      
       .hidden {
         display: none !important;
       }
-      /* ======== KART TASARIMI İÇİN GEREKLİ STİLLER ======== */
+    
       .tool-grid-container {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -192,7 +188,7 @@
       .tool-card:hover .tool-link {
           color: #fff;
       }
-      /* Encoder/Decoder aracı için stiller */
+    
       .tool-container { display: flex; flex-direction: column; gap: 16px; }
       .tool-io-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
       .tool-io-grid textarea { width: 100%; min-height: 150px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #e6eef6; padding: 10px; font-family: ui-monospace, monospace; font-size: 14px; box-sizing: border-box; }
@@ -201,7 +197,7 @@
       .tool-buttons button, .tool-container button { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: var(--muted); padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
       .tool-buttons button:hover, .tool-container button:hover { background: var(--accent); color: white; border-color: var(--accent); }
       .copy-button { margin-top: 8px; align-self: flex-start; }
-      /* ======== SEKME VE YENİ ARAÇ TASARIMI İÇİN STİLLER ======== */
+
   .tool-tabs {
       display: flex;
       gap: 8px;
@@ -224,10 +220,10 @@
       border-bottom-color: var(--accent);
   }
   .tab-content {
-      display: none; /* Başlangıçta tüm sekmeler gizli */
+      display: none;
   }
   .tab-content.active {
-      display: block; /* Sadece aktif olan sekme görünür */
+      display: block;
       animation: fadeIn 0.5s ease;
   }
   @keyframes fadeIn {
@@ -249,10 +245,10 @@
   .wordlist-box {
       width: 100%;
       min-height: 120px;
-      background: #071226; /* Darker background for prominence */
-      border: 1px solid var(--accent); /* Accent border for focus */
+      background: #071226;
+      border: 1px solid var(--accent);
       border-radius: 8px;
-      color: #d6f4ff; /* Light color for text */
+      color: #d6f4ff;
       padding: 12px;
       font-family: ui-monospace, monospace;
       font-size: 14px;
@@ -262,16 +258,13 @@
       transition: all 0.3s;
   }
   .wordlist-box:focus {
-      outline: 2px solid #fff; /* White glow on focus */
+      outline: 2px solid #fff;
       border-color: #fff;
       box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
   }
-
-
-
-  /* ========================================================== */
+  
       @media(min-width: 768px) { .tool-io-grid { grid-template-columns: 1fr 1fr; } }
-  /* ======== IDENTIFIER ARACI GÜZELLEŞTİRME ======== */
+
   #tab-identifier .card {
       background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(124, 58, 237, 0.05));
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -279,7 +272,6 @@
   }
 
   #identifierInput {
-      /* Diğer araçlardaki textarea ile aynı stil */
       width: 100%;
       min-height: 120px;
       background: rgba(0,0,0,0.3);
@@ -304,7 +296,7 @@
       background: var(--glass);
       border-radius: 8px;
       border-left: 3px solid var(--accent);
-      color: var(--muted); /* Başlangıçta soluk renk */
+      color: var(--muted);
       font-weight: 500;
       font-family: ui-monospace, monospace;
       min-height: 24px;
@@ -314,11 +306,10 @@
   }
 
   #identifierOutput.found {
-      color: var(--accent); /* Format bulununca vurgulu renk */
+      color: var(--accent);
       font-weight: 600;
   }
-  /* ======== CHATBOT WIDGET STİLLERİ ======== */
-  /* ======== MİNİ-FORM WIDGET STİLLERİ ======== */
+
   #chat-widget-container {
       position: fixed;
       bottom: 25px;
@@ -358,7 +349,7 @@
       overflow: hidden;
       border: 1px solid var(--glass);
       position: absolute;
-      bottom: 80px; /* Butonun üstünde konumlanır */
+      bottom: 80px;
       right: 0;
       transition: opacity 0.3s ease, transform 0.3s ease;
   }
@@ -447,7 +438,7 @@
       font-weight: 600;
       font-size: 15px;
   }
-/* ======== FORM GÖNDERİM SONRASI MESAJ STİLLERİ ======== */
+
 .form-success-message, .form-error-message {
     text-align: center;
     padding: 20px;
@@ -456,28 +447,245 @@
     line-height: 1.6;
 }
 .form-success-message {
-    color: #34d399; /* Yeşilimsi bir renk */
+    color: #34d399;
 }
 .form-error-message {
-    color: #f87171; /* Kırmızımsı bir renk */
+    color: #f87171;
 }
 
+.logo {
+    width: 80px;
+    height: 80px;
+    background: var(--glass);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+.logo img {
+    width: 95%;
+    height: 95%;
+    object-fit: cover;
+    border-radius: 50%;
+}
 
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
 
-      /* ======== STİLLERİN SONU ======== */
+.sidebar-logo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 16px auto;
+    display: block;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #e6eef6;
+    margin-bottom: 4px;
+}
+
+.sidebar-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.accordion-menu summary {
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.accordion-menu summary::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ABABAB' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.2s ease-in-out;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.accordion-menu[open] > summary::after {
+    transform: rotate(180deg);
+}
+.accordion-menu .accordion-icon {
+    font-size: 16px;
+}
+
+.accordion-menu[open] > summary {
+    background: var(--glass);
+    color: #fff;
+}
+
+.accordion-menu .accordion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding-left: 12px;
+    border-left: 2px solid var(--glass);
+}
+.nav a, .accordion-menu summary, .accordion-menu .subitem {
+    display: flex;
+    align-items: center;
+}
+
+.nav a::before, .accordion-menu summary::before, .accordion-menu .subitem::before, .quick-link-icon::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+.icon-home::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81zM12 3L2 12h3v8h6v-6h2v6h6v-8h3z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81zM12 3L2 12h3v8h6v-6h2v6h6v-8h3z'/%3E%3C/svg%3E"); 
+}
+.icon-rocket::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9.5 12c-.5 2.5-2.2 4-4.5 4s-4-1.5-4.5-4c.5-2.5 2.2-4 4.5-4s4 1.5 4.5 4m14-3.5c-.2-.7-.5-1.4-.9-2c-.4-.6-.9-1.2-1.5-1.7c-1.2-1.1-2.9-1.8-4.6-1.8H13c-.6 0-1 .4-1 1s.4 1 1 1h3.5c1.1 0 2.2.5 3 1.2c.5.4.9 1 1.2 1.7c.3.7.4 1.4.4 2.1s-.1 1.4-.4 2.1c-.3.7-.7 1.3-1.2 1.7c-.8.7-1.8 1.2-3 1.2H13c-.6 0-1 .4-1 1s.4 1 1 1h3.5c1.7 0 3.4-.7 4.6-1.8c.6-.5 1.1-1.1 1.5-1.7c.4-.6.7-1.3.9-2c.2-.7.3-1.4.3-2.1s-.1-1.4-.3-2.1m-9.2-5.5C12.8 1.5 11.2 0 9.5 0S6.2 1.5 5.3 3c-.9 1.5-1 3.2-.8 4.8l-2.6 2.6c-.6.6-.9 1.3-.9 2.1s.3 1.5.9 2.1l2.6 2.6c.2 1.6.1 3.3-.8 4.8C6.2 22.5 7.8 24 9.5 24s3.3-1.5 4.2-3c.9-1.5 1-3.2.8-4.8l2.6-2.6c.6-.6.9-1.3.9-2.1s-.3-1.5-.9-2.1l-2.6-2.6c-.2-1.6-.1-3.3.8-4.8Z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9.5 12c-.5 2.5-2.2 4-4.5 4s-4-1.5-4.5-4c.5-2.5 2.2-4 4.5-4s4 1.5 4.5 4m14-3.5c-.2-.7-.5-1.4-.9-2c-.4-.6-.9-1.2-1.5-1.7c-1.2-1.1-2.9-1.8-4.6-1.8H13c-.6 0-1 .4-1 1s.4 1 1 1h3.5c1.1 0 2.2.5 3 1.2c.5.4.9 1 1.2 1.7c.3.7.4 1.4.4 2.1s-.1 1.4-.4 2.1c-.3.7-.7 1.3-1.2 1.7c-.8.7-1.8 1.2-3 1.2H13c-.6 0-1 .4-1 1s.4 1 1 1h3.5c1.7 0 3.4-.7 4.6-1.8c.6-.5 1.1-1.1 1.5-1.7c.4-.6.7-1.3.9-2c.2-.7.3-1.4.3-2.1s-.1-1.4-.3-2.1m-9.2-5.5C12.8 1.5 11.2 0 9.5 0S6.2 1.5 5.3 3c-.9 1.5-1 3.2-.8 4.8l-2.6 2.6c-.6.6-.9 1.3-.9 2.1s.3 1.5.9 2.1l2.6 2.6c.2 1.6.1 3.3-.8 4.8C6.2 22.5 7.8 24 9.5 24s3.3-1.5 4.2-3c.9-1.5 1-3.2.8-4.8l2.6-2.6c.6-.6.9-1.3.9-2.1s-.3-1.5-.9-2.1l-2.6-2.6c-.2-1.6-.1-3.3.8-4.8Z'/%3E%3C/svg%3E");
+}
+.icon-search::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9.5 16q-2.71 0-4.605-1.895T3 9.5q0-2.71 1.895-4.605T9.5 3q2.71 0 4.605 1.895T16 9.5q0 1.1-.35 2.075T14.7 13.3l5.6 5.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.88 0 3.19-1.31T14 9.5q0-1.88-1.31-3.19T9.5 5Q7.62 5 6.31 6.31T5 9.5q0 1.88 1.31 3.19T9.5 14'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9.5 16q-2.71 0-4.605-1.895T3 9.5q0-2.71 1.895-4.605T9.5 3q2.71 0 4.605 1.895T16 9.5q0 1.1-.35 2.075T14.7 13.3l5.6 5.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.88 0 3.19-1.31T14 9.5q0-1.88-1.31-3.19T9.5 5Q7.62 5 6.31 6.31T5 9.5q0 1.88 1.31 3.19T9.5 14'/%3E%3C/svg%3E");
+}
+.icon-shield::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 21.4q-3.6 0-6.75-1.575t-5.125-4.2q-1.975-2.625-1.975-5.925V4.6l7.85-2.1l7.85 2.1v5.1q0 3.3-1.975 5.925t-5.125 4.2Q15.6 21.4 12 21.4m0-2q3.05 0 5.675-1.425t4.225-3.8q1.6-2.375 1.6-5.075V5.9l-6.5-1.75L6 5.9v5.1q0 2.7 1.6 5.075t4.225 3.8Q14.45 21.2 12 21.2'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 21.4q-3.6 0-6.75-1.575t-5.125-4.2q-1.975-2.625-1.975-5.925V4.6l7.85-2.1l7.85 2.1v5.1q0 3.3-1.975 5.925t-5.125 4.2Q15.6 21.4 12 21.4m0-2q3.05 0 5.675-1.425t4.225-3.8q1.6-2.375 1.6-5.075V5.9l-6.5-1.75L6 5.9v5.1q0 2.7 1.6 5.075t4.225 3.8Q14.45 21.2 12 21.2'/%3E%3C/svg%3E");
+}
+.icon-code::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m9.4 16.6l-4.2-4.2l4.2-4.2l1.4 1.4l-2.8 2.8l2.8 2.8zM14.6 16.6l4.2-4.2l-4.2-4.2l-1.4 1.4l2.8 2.8l-2.8 2.8z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m9.4 16.6l-4.2-4.2l4.2-4.2l1.4 1.4l-2.8 2.8l2.8 2.8zM14.6 16.6l4.2-4.2l-4.2-4.2l-1.4 1.4l2.8 2.8l-2.8 2.8z'/%3E%3C/svg%3E");
+}
+.icon-key::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M17 14h-4.35c.2.15.4.3.55.5c.4.4.8.8.8 1.5s-.4 1.1-.8 1.5c-.15.2-.35.35-.55.5H17c.55 0 1 .45 1 1s-.45 1-1 1h-4.35c-.2.15-.4.3-.55.5c-.4.4-.8.8-.8 1.5s.4 1.1.8 1.5c.15.2.35.35.55.5H17c1.65 0 3-1.35 3-3s-1.35-3-3-3m-6.4-5.2c-1 .6-1.6 1.8-1.6 3.2h.9c0-1.1.5-2 1.2-2.5c.8-.5 1.8-.5 2.6 0c.8.5 1.2 1.4 1.2 2.5V13c-1.05 0-2.05.5-2.7 1.25c-.25.3-.45.6-.6 1c-.15.35-.2.75-.2 1.25h-1c0-.75.15-1.45.45-2.05c.3-.65.75-1.2 1.25-1.65c.7-.6 1.6-1 2.6-1.05V11c0-1.65-.7-3-2-3.8c-1.3-.75-2.9-.75-4.2 0C6.7 8 6 9.65 6 11.3V13H5v-1.7C5 9.25 6.35 7.2 8.6 6.2c1.9-1.15 4.3-1.15 6.2 0c.25.15.45.3.65.5c.25.2.45.4.65.65c.15.2.3.45.4.65c.1.25.2.5.25.8c.05.3.1.6.1.9h-1c0-.3-.05-.55-.1-.8c-.05-.25-.15-.45-.25-.7c-.1-.2-.2-.4-.3-.55c-.15-.2-.3-.35-.45-.5c-.2-.2-.4-.35-.6-.5c-1.3-.75-2.9-.75-4.2 0'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M17 14h-4.35c.2.15.4.3.55.5c.4.4.8.8.8 1.5s-.4 1.1-.8 1.5c-.15.2-.35.35-.55.5H17c.55 0 1 .45 1 1s-.45 1-1 1h-4.35c-.2.15-.4.3-.55.5c-.4.4-.8.8-.8 1.5s.4 1.1.8 1.5c.15.2.35.35.55.5H17c1.65 0 3-1.35 3-3s-1.35-3-3-3m-6.4-5.2c-1 .6-1.6 1.8-1.6 3.2h.9c0-1.1.5-2 1.2-2.5c.8-.5 1.8-.5 2.6 0c.8.5 1.2 1.4 1.2 2.5V13c-1.05 0-2.05.5-2.7 1.25c-.25.3-.45.6-.6 1c-.15.35-.2.75-.2 1.25h-1c0-.75.15-1.45.45-2.05c.3-.65.75-1.2 1.25-1.65c.7-.6 1.6-1 2.6-1.05V11c0-1.65-.7-3-2-3.8c-1.3-.75-2.9-.75-4.2 0C6.7 8 6 9.65 6 11.3V13H5v-1.7C5 9.25 6.35 7.2 8.6 6.2c1.9-1.15 4.3-1.15 6.2 0c.25.15.45.3.65.5c.25.2.45.4.65.65c.15.2.3.45.4.65c.1.25.2.5.25.8c.05.3.1.6.1.9h-1c0-.3-.05-.55-.1-.8c-.05-.25-.15-.45-.25-.7c-.1-.2-.2-.4-.3-.55c-.15-.2-.3-.35-.45-.5c-.2-.2-.4-.35-.6-.5c-1.3-.75-2.9-.75-4.2 0'/%3E%3C/svg%3E");
+}
+.icon-lock-open::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2m-6 9c-1.1 0-2-.9-2-2s.9-2 2-2s2 .9 2 2s-.9 2-2 2M9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3h-1c0-1.11-.89-2-2-2s-2 .89-2 2v2z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2m-6 9c-1.1 0-2-.9-2-2s.9-2 2-2s2 .9 2 2s-.9 2-2 2M9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3h-1c0-1.11-.89-2-2-2s-2 .89-2 2v2z'/%3E%3C/svg%3E");
+}
+.icon-database::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4s8-1.79 8-4s-3.58-4-8-4m0 9c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4m0 5c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4s8-1.79 8-4s-3.58-4-8-4m0 9c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4m0 5c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4'/%3E%3C/svg%3E");
+}
+.icon-refresh::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z'/%3E%3C/svg%3E");
+}
+.icon-globe::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 17.93c-3.95-.49-7-3.85-7-7.93s3.05-7.44 7-7.93zm2 0v-7.93c0-3.32-1.93-6.22-4.72-7.53c4.1.92 7.22 4.31 7.22 8.71c0 4.79-3.9 8.69-8.69 8.69c-.06 0-.12 0-.18-.01c.42-.32.8-.71 1.13-1.16z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 17.93c-3.95-.49-7-3.85-7-7.93s3.05-7.44 7-7.93zm2 0v-7.93c0-3.32-1.93-6.22-4.72-7.53c4.1.92 7.22 4.31 7.22 8.71c0 4.79-3.9 8.69-8.69 8.69c-.06 0-.12 0-.18-.01c.42-.32.8-.71 1.13-1.16z'/%3E%3C/svg%3E");
+}
+.icon-file-export::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M6 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H8v-2h2zm4 0h-2v-2h2zm0-4h-2v-2h2zm2-4h-2V8h2zm-4-1V3.5L16.5 9z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M6 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H8v-2h2zm4 0h-2v-2h2zm0-4h-2v-2h2zm2-4h-2V8h2zm-4-1V3.5L16.5 9z'/%3E%3C/svg%3E");
+}
+.icon-folder-open::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2m0 12H4V6h5.17l2 2H20z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2m0 12H4V6h5.17l2 2H20z'/%3E%3C/svg%3E");
+}
+.icon-folder-tree::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8zM4 18V6h6v4h8v8z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8zM4 18V6h6v4h8v8z'/%3E%3C/svg%3E");
+}
+.icon-user-slash::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M21.1 22.5L1.5 2.9L2.9 1.5l19.6 19.6zm-11.2-4.6c-2.3 0-6.1 1.2-6.1 3.6V23h11.2c-1.3-1.1-3-2.5-5.1-3.6M12 12c1.7 0 3-1.3 3-3s-1.3-3-3-3s-3 1.3-3 3s1.3 3 3 3'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M21.1 22.5L1.5 2.9L2.9 1.5l19.6 19.6zm-11.2-4.6c-2.3 0-6.1 1.2-6.1 3.6V23h11.2c-1.3-1.1-3-2.5-5.1-3.6M12 12c1.7 0 3-1.3 3-3s-1.3-3-3-3s-3 1.3-3 3s1.3 3 3 3'/%3E%3C/svg%3E");
+}
+.icon-wrench::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9C10.2 1.2 7.2 1 5.3 2.8L2.8 5.3c-1.9 1.9-2.1 4.9-.4 6.8c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4m-10-5.2L4.2 5.3c-.6-.6-.6-1.5 0-2.1L6.3 1c.6-.6 1.5-.6 2.1 0c1.3 1.3 1.4 3.5.3 4.8l-1.8 1.8c-.6.6-.6 1.5 0 2.1c.6.6 1.5.6 2.1 0l1.8-1.8c1.3-1.3 3.5-1.2 4.8-.3c.6.6.6 1.5 0 2.1l-2.1 2.1c-.6.6-1.5.6-2.1 0z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9C10.2 1.2 7.2 1 5.3 2.8L2.8 5.3c-1.9 1.9-2.1 4.9-.4 6.8c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4m-10-5.2L4.2 5.3c-.6-.6-.6-1.5 0-2.1L6.3 1c.6-.6 1.5-.6 2.1 0c1.3 1.3 1.4 3.5.3 4.8l-1.8 1.8c-.6.6-.6 1.5 0 2.1c.6.6 1.5.6 2.1 0l1.8-1.8c1.3-1.3 3.5-1.2 4.8-.3c.6.6.6 1.5 0 2.1l-2.1 2.1c-.6.6-1.5.6-2.1 0z'/%3E%3C/svg%3E");
+}
+.icon-toolbox::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 6h-2.18c.11-.31.18-.65.18-1c0-1.66-1.34-3-3-3s-3 1.34-3 3c0 .35.07.69.18 1H6c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2m-5-2c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1M6 12h14v7c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1zm14-2H6V8h14z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 6h-2.18c.11-.31.18-.65.18-1c0-1.66-1.34-3-3-3s-3 1.34-3 3c0 .35.07.69.18 1H6c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2m-5-2c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1M6 12h14v7c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1zm14-2H6V8h14z'/%3E%3C/svg%3E");
+}
+.icon-book::before { 
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-5 18H6V4h7z'/%3E%3C/svg%3E"); 
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-5 18H6V4h7z'/%3E%3C/svg%3E");
+}
+.accordion-menu .subitem {
+    padding: 8px 12px;
+    margin-left: 0;
+    font-size: 13px;
+}
+
+.nav a::before, .accordion-menu summary::before, .accordion-menu .subitem::before, .quick-link-icon::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+.quick-link-icon::before {
+    width: 28px;
+    height: 28px;
+    background-color: var(--accent);
+    margin-right: 0;
+}
+.quick-link-icon {
+    font-size: initial;
+    height: 28px;
+}
+
+.quick-link-icon::before {
+    width: 28px;
+    height: 28px;
+    background-color: var(--accent);
+    margin-right: 0;
+}
+
+.quick-link-icon {
+    font-size: 0;
+    height: 28px;
+}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   </head>
   <body>
     <div class="wrap">
       <aside class="sidebar">
-        <div class="brand">
-          <div class="logo">BB</div>
-          <div>
-            <div style="font-weight:700">BugBounty Roadmap</div>
-            <div style="font-size:13px;color:var(--muted)">Hızlı Rehber</div>
-          </div>
-        </div>
+<div class="sidebar-header">
+        <img src="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png" alt="Bug Bounty Logo" class="sidebar-logo">
+        <div class="sidebar-title">Bug Bounty Akademi</div>
+        <div class="sidebar-subtitle">Sızma Testi Kütüphanesi</div>
+      </div>
+
         <nav class="nav" id="nav"></nav>
         <div style="margin-top:14px">
           <div class="small">Roadmap seviye</div>
@@ -492,27 +700,17 @@
     </div>
 
     <script>
-      // ============================================
-      // 🎯 BURAYA İÇERİKLERİNİ EKLE - SADECE BURASI!
-      // ============================================
       const CONTENT = {
-        
-        // Ana Sayfa (özel sayfa - değiştirme)
         home: {
           type: 'home',
-          title: 'Bug Bounty Roadmap',
+          title: 'Bug Bounty Akademi',
           subtitle: 'Sıfırdan ileri seviyeye kapsamlı bug bounty eğitimi. Gerçek dünya senaryoları, pratik araçlar ve adım adım metodolojiler ile zafiyet avcısı olun.'
         },
-
-        // ============================================
-        // YENİ KONU EKLEMEK İÇİN KOPYALA-YAPIŞTIR:
-        // ============================================
-        
         baslangic: {
-          menuName: 'Giriş',
-          icon: '🚀',
-          title: 'Siber Güvenliğe Giriş',
-          description: 'Siber Güvenlik - Alanlar ',
+        menuName: 'Giriş',
+        icon: 'icon-rocket',
+        title: 'Siber Güvenliğe Giriş',
+        description: 'Siber Güvenlik Alanları',
   "sections": [
         {
           "title": "",
@@ -543,7 +741,7 @@
 
   javascriptrecon: {
     menuName: 'Recon',
-    icon: '🔍',
+    icon: 'icon-search',
     title: 'Recon - Keşif Süreci',
     description: 'Hedef sistemlerde bilgi toplama ve keşif için adım adım uygulamalı rehber ve teorik bilgiler.',
     sections: [
@@ -669,7 +867,7 @@
   },
         xss: {
           menuName: 'XSS',
-          icon: '⚡',
+          icon: 'icon-code',
           parent: 'vulnerabilities',
           title: 'XSS - Cross Site Scripting',
           description: 'Reflected, Stored, DOM XSS için kısa metodoloji.',
@@ -732,7 +930,7 @@
         },
         idor: {
           menuName: 'IDOR',
-          icon: '🔑',
+          icon: 'icon-key',
           parent: 'vulnerabilities',
           title: 'IDOR - Insecure Direct Object Reference',
           description: 'IDOR testleri, access control mantığı.',
@@ -789,7 +987,7 @@
 
         bac: {
           menuName: 'BAC',
-          icon: '🔐',
+          icon: 'icon-lock-open',
           parent: 'vulnerabilities',
           title: 'BAC - Broken Access Control',
           description: 'Sunucu tarafında yeterli yetkilendirme/erişim kontrolü yapılmaması sonucu yetkisiz erişim veya işlem yapılabilmesine sebep olan güvenlik açığı sınıfı.',
@@ -897,7 +1095,7 @@
         },
         sqli: {
           menuName: 'SQLi',
-          icon: '🧨',
+          icon: 'icon-database',
           parent: 'vulnerabilities',
           title: 'SQLi - SQL Injection',
           description: 'Error-based, Union, Boolean (blind), Time-based ve OOB SQLi için kısa metodoloji.',
@@ -973,7 +1171,7 @@
 
   csrf: {
     menuName: 'CSRF',
-    icon: '🔁',
+    icon: 'icon-refresh',
     parent: 'vulnerabilities',
     title: 'CSRF - Cross-Site Request Forgery',
     description: 'Classical CSRF, CSRF via missing SameSite, Login CSRF, CSRF token predictable/broken ve CORS kaynaklı CSRF bypass için kısa metodoloji.',
@@ -1049,7 +1247,7 @@
 
   ssrf: {
     menuName: 'SSRF',
-    icon: '🌐',
+    icon: 'icon-globe',
     parent: 'vulnerabilities',
     title: 'SSRF - Server Side Request Forgery',
     description: 'Sunucunun başkası adına HTTP/URI istekleri yapmasını sağlayarak internal servisleri, metadata ve portları keşfetme / bilgi sızdırma. Normal ve Blind varyantları kısa metodoloji ve PoC içerir.',
@@ -1153,7 +1351,7 @@
 
   informationDisclosure: {
       menuName: 'Information Disclosure',
-      icon: '🎯',
+      icon: 'icon-file-export',
       parent: 'vulnerabilities',
       title: 'Information Disclosure',
       description: 'Hedef sistemlerde bilgi sızıntılarını tespit etmek ve kritik dosyaları keşfetmek için adım adım uygulamalı rehber ve teorik bilgiler.',
@@ -1234,7 +1432,7 @@
 
   file_inclusion: {
     menuName: 'File Inclusion',
-    icon: '📂',
+    icon: 'icon-folder-open',
     parent: 'vulnerabilities',
     title: 'File Inclusion - LFI / RFI / Path Traversal',
     description: 'LFI (local), RFI (remote) ve path traversal özetleri + hızlı PoC, bypassler ve kritik dosyalar. Kısa, direkt ve exploit odaklı.',
@@ -1333,7 +1531,7 @@
   },
   directory_traversal: {
     menuName: 'Directory Traversal',
-    icon: '🧭',
+    icon: 'icon-folder-tree',
     parent: 'vulnerabilities',
     title: 'Directory & Path Traversal',
     description: 'Dizin gezdirme (../) ile uygulamanın izin dışı dosya/dizinlere eriştirilmesi. Kısa, PoC odaklı ve bypass teknikleri içerir.',
@@ -1422,7 +1620,7 @@
 
   authentication_bypass: {
     menuName: 'Authentication Bypass',
-    icon: '🔓',
+    icon: 'icon-user-slash',
     parent: 'vulnerabilities',
     title: 'Authentication Bypass',
     description: 'Kullanıcı doğrulama akışında açıklar: username enumeration, brute force, mantık hatası ve cookie manipülasyonu. Kısa, PoC ve exploit odaklı.',
@@ -1473,7 +1671,7 @@
 
   tools: {
     menuName: 'Araçlar',
-    icon: '🛠️',
+    icon: 'icon-wrench',
     title: 'Araçlar ve Kullanımları',
     description: 'Siber güvenlik çalışmalarında kullanılan araçların listesi ve kısa kullanım notları.',
     sections: [
@@ -1675,7 +1873,17 @@
         <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: Certificate Transparency kayıtlarından domain/subdomain bilgisi toplayarak keşif yapar.</div>
         `
       },
-
+      {
+        title: 'WhatWeb',
+        content: `
+        <div style="display:flex;align-items:center;gap:8px">
+          <pre style="margin:0;white-space:pre-wrap">whatweb https://target.com/</pre>
+                <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                  onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+        </div>
+        <div style="margin-top:6px;font-size:13px;color:var(--muted)">Hedef sitenin teknolojilerini ve HTTP başlıklarındaki zayıflıkları bularak saldırı yüzeyini ortaya çıkarır.</div>
+        `
+      },
       {
         title: 'Sublist3r',
         content: `
@@ -1762,13 +1970,11 @@
     ]
   },
 
-
-  // ESKİ toolbox objesini silip, yerine bu YENİ ve TAM listeyi yapıştır.
   toolbox: {
       menuName: 'ToolBox',
-      icon: '🔥',
+      icon: 'icon-toolbox',
       title: 'Siber Güvenlik Araçları',
-      description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.',
+      description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.<br><br>',
       categories: [
           {
               categoryTitle: '📡 1. Keşif ve Bilgi Toplama',
@@ -1826,7 +2032,7 @@
 
   sources: {
     menuName: 'Kaynaklar',
-    icon: '📚',
+    icon: 'icon-book',
     title: 'Bug Bounty Kaynakları',
     description: 'Bug bounty avcılığı için önerilen eğitim platformları, araçlar, bloglar, topluluklar, payload koleksiyonları ve çeşitli referanslar.',
     sections: [
@@ -1854,6 +2060,28 @@
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <a href="https://ctftime.org" target="_blank" style="color:#34d399;text-decoration:none">CTFtime</a>: Capture The Flag yarışmaları ve etkinlikleri için kaynak.
+            </li>
+          </ul>
+        `
+      },
+      {
+        title: 'Tarayıcı Eklentileri (Browser Extensions)',
+        content: `
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <a href="https://chrome.google.com/webstore/detail/wappalyzer-technology-pro/gppongmhjkpfnbhagpmjfkannfbllamg" target="_blank" style="color:#34d399;text-decoration:none">Wappalyzer</a>: Bir web sitesinde kullanılan teknolojileri (framework, CMS, kütüphane vb.) tespit eder.
+            </li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <a href="https://chromewebstore.google.com/detail/link-gopher/bpjdkodgnbfalgghnbeggfbfjpcfamkf?hl=en" target="_blank" style="color:#34d399;text-decoration:none">Link Gopher</a>: Bir sayfadaki tüm linkleri ve endpointleri çıkararak keşif sürecini hızlandırır.
+            </li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <a href="https://chromewebstore.google.com/detail/retirejs/moibopkbhjceeedibkbkbchbjnkadmom/related" target="_blank" style="color:#34d399;text-decoration:none">Retire.js</a>: Sitede kullanılan ve bilinen zafiyetleri olan JavaScript kütüphanelerini tespit eder.
+            </li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <a href="https://chrome.google.com/webstore/detail/shodan/jjalcfnidlmpjhdfepjhjbhnhkbgleap" target="_blank" style="color:#34d399;text-decoration:none">Shodan</a>: Ziyaret edilen sitenin IP'si hakkında açık portlar, servisler ve potansiyel zafiyetler hakkında hızlı bilgi verir.
+            </li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <a href="https://chrome.google.com/webstore/detail/open-multiple-urls/oifijhaokejakekmnjmphonojcfkpbbh" target="_blank" style="color:#34d399;text-decoration:none">Open Multiple URLs</a>: Keşif sonrası bulunan subdomain veya URL listesini tek tıkla birden çok sekmede açar.
             </li>
           </ul>
         `
@@ -2034,54 +2262,43 @@
     },
   }
 
-
-
-
-
-      // ============================================
-      // 🚫 AŞAĞIYI DEĞİŞTİRME - OTOMATİK ÇALIŞIR
-      // ============================================
-
-      function renderMenu() {
-        const nav = document.getElementById('nav');
-        nav.innerHTML = '<a href="#home" class="active" data-page="home">Ana Sayfa</a>';
-        
-        const vulnerabilities = [];
-        const regular = [];
-        
-        Object.keys(CONTENT).forEach(key => {
-          if (key === 'home') return;
-          const item = CONTENT[key];
-          if (item.parent === 'vulnerabilities') {
+function renderMenu() {
+    const nav = document.getElementById('nav');
+    nav.innerHTML = '<a href="#home" class="active icon-home" data-page="home">Ana Sayfa</a>';
+    
+    const vulnerabilities = [];
+    const regular = [];
+    
+    Object.keys(CONTENT).forEach(key => {
+        if (key === 'home') return;
+        const item = CONTENT[key];
+        if (item.parent === 'vulnerabilities') {
             vulnerabilities.push({key, ...item});
-          } else {
+        } else {
             regular.push({key, ...item});
-          }
-        });
-
-        regular.forEach(item => {
-          nav.innerHTML += `<a href="#${item.key}" data-page="${item.key}">${item.icon || '•'} ${item.menuName}</a>`;
-        });
-
-        if (vulnerabilities.length > 0) {
-          nav.innerHTML += '<details><summary>Vulnerabilities ▾</summary>';
-          vulnerabilities.forEach(item => {
-            nav.innerHTML += `<div class="subitem" data-page="${item.key}">${item.icon || '•'} ${item.menuName}</div>`;
-          });
-          nav.innerHTML += '</details>';
         }
+    });
 
-        document.querySelectorAll('[data-page]').forEach(el => {
-          el.addEventListener('click', e => {
+    regular.forEach(item => {
+        nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
+    });
+
+    if (vulnerabilities.length > 0) {
+        let vulnerabilitiesHtml = '<details class="accordion-menu"><summary class="icon-shield">Vulnerabilities</summary><div class="accordion-content">';
+        vulnerabilities.sort((a, b) => a.menuName.localeCompare(b.menuName)).forEach(item => {
+            vulnerabilitiesHtml += `<a href="#${item.key}" class="subitem ${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
+        });
+        vulnerabilitiesHtml += '</div></details>';
+        nav.innerHTML += vulnerabilitiesHtml;
+    }
+
+    document.querySelectorAll('[data-page]').forEach(el => {
+        el.addEventListener('click', e => {
             e.preventDefault();
             showPage(el.dataset.page);
-          });
         });
-      }
-  // SİLDİĞİN YERE BUNLARI YAPIŞTIR
-
-  // ESKİ showPage fonksiyonunu silip SADECE BUNU YAPIŞTIR.
-  // ---> ESKİ showPage FONKSİYONUNU SİL, YERİNE BUNU YAPIŞTIR <---
+    });
+}
 
   function showPage(pageId) {
       document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
@@ -2097,8 +2314,7 @@
       const page = CONTENT[pageId];
 
       if (!page) return;
-
-      // ANA SAYFA (ARAMA ÇUBUĞU KODU EKLENMİŞ VE DÜZELTİLMİŞ HALİ)
+      
       if (pageId === 'home') {
           main.innerHTML = `
               <div class="search-bar">
@@ -2112,19 +2328,21 @@
               <div class="footer">Hazırlayan: Turgay Kara &lt;!&gt; Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.</div>
           `;
           const quickLinks = document.getElementById('quickLinks');
-          if(quickLinks) {
-              quickLinks.innerHTML = '';
-              Object.keys(CONTENT).forEach(key => { if (key === 'home' || !CONTENT[key].menuName) return; const item = CONTENT[key]; quickLinks.innerHTML += `<div class="quick-link" data-page="${key}"><div class="quick-link-icon">${item.icon || '📄'}</div><div class="quick-link-title">${item.title}</div><div class="quick-link-desc">${item.description || ''}</div></div>`; });
-              document.querySelectorAll('#quickLinks [data-page]').forEach(el => { el.addEventListener('click', () => showPage(el.dataset.page)); });
-          }
+if(quickLinks) {
+    quickLinks.innerHTML = '';
+    Object.keys(CONTENT).forEach(key => { 
+        if (key === 'home' || !CONTENT[key].menuName) return; 
+        const item = CONTENT[key]; 
+        quickLinks.innerHTML += `<div class="quick-link" data-page="${key}"><div class="quick-link-icon ${item.icon || 'icon-book'}"></div><div class="quick-link-title">${item.title}</div><div class="quick-link-desc">${item.description || ''}</div></div>`; 
+    });
+    document.querySelectorAll('#quickLinks [data-page]').forEach(el => { el.addEventListener('click', () => showPage(el.dataset.page)); });
+}
 
-          // --- SENİN ORİJİNAL, ÇALIŞAN ARAMA ÇUBUĞU KODUN ---
           const searchInput = document.getElementById('searchInput');
           const suggestionsDiv = document.getElementById('searchSuggestions');
           let selectedIndex = -1;
 
           if (searchInput) {
-              // Öneri handler
               const searchHandler = function(e) {
                   const query = e.target.value.trim().toLowerCase();
                   suggestionsDiv.innerHTML = '';
@@ -2153,8 +2371,6 @@
                   if (suggestionsDiv.children.length > 0) suggestionsDiv.classList.add('visible');
               };
               searchInput.addEventListener('input', searchHandler);
-
-              // Klavye navigasyonu
               const keyHandler = function(e) {
                   const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
                   if (suggestions.length === 0) return;
@@ -2166,7 +2382,6 @@
               };
               searchInput.addEventListener('keydown', keyHandler);
 
-              // Tıklama handler
               const suggestionClickHandler = function(e) {
                   const targetSuggestion = e.target.closest('.search-suggestion');
                   if (targetSuggestion) {
@@ -2184,7 +2399,7 @@
               }
           }
       }
-      // TOOLBOX SAYFASI
+
       else if (pageId === 'toolbox') {
           let toolboxHtml = `<h1>${page.title}</h1><p class="lead">${page.description || ''}</p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">`;
           page.categories.forEach(category => {
@@ -2197,7 +2412,6 @@
               card.addEventListener('click', () => openTool(card.dataset.toolId));
           });
       }
-      // DİĞER TÜM SAYFALAR
       else {
           let html = `<h1>${page.title || ''}</h1><p class="lead">${page.description || ''}</p>`;
           if (page.sections) {
@@ -2208,55 +2422,71 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
-  function activateSubfinder() {
-      const scanButton = document.getElementById('scanButton');
-      const domainInput = document.getElementById('domainInput');
-      const resultsOutput = document.getElementById('resultsOutput');
-      if (!scanButton) return;
-      scanButton.addEventListener('click', async () => {
-          const domain = domainInput.value.trim();
-          if (!domain) { resultsOutput.textContent = 'Lütfen geçerli bir alan adı girin.'; return; }
-          resultsOutput.textContent = `"${domain}" için tarama yapılıyor, lütfen bekleyin...`;
-          scanButton.disabled = true; scanButton.textContent = 'Taranıyor...';
-  try {
-            // Backend API'mize istek atıyoruz
-            const response = await fetch('https://admin3131.pythonanywhere.com/scan', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ domain: domain }),
-            });
+function activateSubfinder() {
+const scanButton = document.getElementById('scanButton');
+const domainInput = document.getElementById('domainInput');
+const resultsOutput = document.getElementById('resultsOutput');
+if (!scanButton) return;
 
-            if (!response.ok) {
-              throw new Error('Sunucu hatası oluştu.');
-            }
+scanButton.addEventListener('click', async () => {
+const domain = domainInput.value.trim();
+if (!domain) { resultsOutput.textContent = 'Lütfen geçerli bir alan adı girin.'; return; }
+        const existingCopyBtn = document.getElementById('copySubfinderResultsBtn');
+        if (existingCopyBtn) {
+            existingCopyBtn.remove();
+        }
 
-            const data = await response.json();
-            
-            if (data.subdomains && data.subdomains.length > 0) {
-              resultsOutput.textContent = data.subdomains.join('\n');
-            } else {
-              resultsOutput.textContent = 'Hiçbir alt alan adı bulunamadı.';
-            }
+resultsOutput.textContent = `"${domain}" için tarama yapılıyor, lütfen bekleyin...`;
+scanButton.disabled = true; scanButton.textContent = 'Taranıyor...';
 
-          } catch (error) {
-            console.error('Tarama sırasında hata:', error);
-            resultsOutput.textContent = 'Tarama sırasında bir hata oluştu. Lütfen backend sunucusunun çalıştığından emin olun.';
-          } finally {
-            scanButton.disabled = false;
-            scanButton.textContent = 'Taramayı Başlat';
-          }
-      });
-  }
+        try {
+const response = await fetch('https://admin3131.pythonanywhere.com/scan', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ domain: domain }),
+});
+
+if (!response.ok) {
+throw new Error('Sunucu hatası oluştu.');
+}
+
+const data = await response.json();
+
+if (data.subdomains && data.subdomains.length > 0) {
+resultsOutput.textContent = data.subdomains.join('\n');
+              const copyButton = document.createElement('button');
+              copyButton.id = 'copySubfinderResultsBtn';
+              copyButton.className = 'copybtn';
+              copyButton.textContent = 'Sonuçları Kopyala';
+              copyButton.style.cssText = "margin-top: 12px; background: var(--glass); padding: 8px 12px; border-radius: 6px;";
+
+              copyButton.addEventListener('click', () => {
+                  navigator.clipboard.writeText(resultsOutput.textContent).then(() => {
+                      copyButton.textContent = 'Kopyalandı!';
+                      setTimeout(() => { copyButton.textContent = 'Sonuçları Kopyala'; }, 1500);
+                  });
+              });
+              
+              resultsOutput.insertAdjacentElement('afterend', copyButton);
+} else {
+resultsOutput.textContent = 'Hiçbir alt alan adı bulunamadı.';
+}
+
+} catch (error) {
+console.error('Tarama sırasında hata:', error);
+resultsOutput.textContent = 'Tarama sırasında bir hata oluştu. Lütfen backend sunucusunun çalıştığından emin olun.';
+} finally {
+scanButton.disabled = false;
+scanButton.textContent = 'Taramayı Başlat';
+}
+});
+}
   function activatePortScanner() {
       const scanButton = document.getElementById('scanPortButton');
       const targetInput = document.getElementById('targetInput');
       const resultsOutput = document.getElementById('portResultsOutput');
 
       if (!scanButton) return;
-
-      // Port input alanını gizleyelim çünkü API en yaygın portları kendi tarıyor
       const portsInput = document.getElementById('portsInput');
       if(portsInput) {
           portsInput.parentElement.style.display = 'none';
@@ -2286,13 +2516,9 @@
               if (data.error) {
                   throw new Error(data.error);
               }
-              
-              // ==========================================================
-              // HATA BURADAYDI: "data.response.ports" yerine "data.response.port" olmalı
-              // ==========================================================
+
               if (data.response && data.response.port && data.response.port.length > 0) {
                   
-                  // API bazen kapalı portları da listeliyor, sadece açık olanları filtreleyelim.
                   const openPorts = data.response.port.filter(p => p.status === 'open');
 
                   if (openPorts.length > 0) {
@@ -2300,9 +2526,8 @@
                       formattedResults += `Bulunan Açık Portlar:\n------------------------------------\n`;
                       
                       openPorts.forEach(portInfo => {
-                          formattedResults += `PORT     : ${portInfo.number}\n`; // "port_number" yerine "number"
-                          formattedResults += `SERVİS   : ${portInfo.service}\n`;  // "service_name" yerine "service"
-                          // Bu API versiyon bilgisi vermiyor, o yüzden o satırı kaldırdık.
+                          formattedResults += `PORT     : ${portInfo.number}\n`;
+                          formattedResults += `SERVİS   : ${portInfo.service}\n`;
                           formattedResults += `------------------------------------\n`;
                       });
                       resultsOutput.textContent = formattedResults;
@@ -2323,7 +2548,6 @@
           }
       });
   }
-  // Eski activateHeaderAnalyzer fonksiyonunu sil ve bunu yapıştır
 
   function activateHeaderAnalyzer() {
       const analyzeButton = document.getElementById('analyzeHeadersButton');
@@ -2358,7 +2582,6 @@
 
               let formattedResults = "--- GÜVENLİK ANALİZ RAPORU ---\n\n";
 
-              // Yeni Güvenlik Analizi bölümünü formatla
               if (data.security_analysis) {
                   data.security_analysis.forEach(item => {
                       const statusIcon = item.status === 'MEVCUT' ? '✅' : '❌';
@@ -2477,9 +2700,9 @@
 
               let formattedResults = "";
               for (const key in data) {
-                  if (data[key]) { // Sadece dolu olan alanları göster
+                  if (data[key]) {
                       let value = data[key];
-                      // Eğer değer bir dizi ise (örn: İsim Sunucuları), elemanları alt alta yaz
+                      
                       if (Array.isArray(value)) {
                           value = '\n' + value.map(item => `   - ${item}`).join('\n');
                       }
@@ -2528,7 +2751,6 @@
                   throw new Error(data.error);
               }
 
-              // Gelen JSON'daki her bir anahtar/değer çiftini formatlayalım
               let formattedResults = "";
               const keyTranslations = {
                   query: "Sorgulanan IP",
@@ -2547,7 +2769,6 @@
               };
 
               for (const key in data) {
-                  // Sadece çevirisi olan ve değeri olan anahtarları gösterelim
                   if (keyTranslations[key] && data[key]) {
                       formattedResults += `${keyTranslations[key]}: ${data[key]}\n`;
                   }
@@ -2587,10 +2808,10 @@
               if (data.error) throw new Error(data.error);
 
               if (data.found) {
-                  resultsOutput.style.color = '#ff4d4d'; // Kırmızı renk
+                  resultsOutput.style.color = '#ff4d4d';
                   resultsOutput.textContent = `❌ BU PAROLA GÜVENLİ DEĞİL!\n\nBu parola, bilinen veri sızıntılarında en az ${data.count} kez bulundu. Kesinlikle kullanmayın!`;
               } else {
-                  resultsOutput.style.color = '#00ff88'; // Yeşil renk
+                  resultsOutput.style.color = '#00ff88';
                   resultsOutput.textContent = `✅ BU PAROLA GÜVENLİ GÖRÜNÜYOR.\n\nBu parola, bilinen büyük veri sızıntılarında bulunamadı.`;
               }
           } catch (error) {
@@ -2602,8 +2823,7 @@
       });
   }
 
-  // ESKİ activateCveSearch FONKSİYONUNU SİL VE BUNU YAPIŞTIR
-
+ 
   function activateCveSearch() {
       const searchButton = document.getElementById('searchCveButton');
       const cveInput = document.getElementById('cveInput');
@@ -2631,16 +2851,14 @@
                   throw new Error(data.error);
               }
 
-              // ---- YENİ VERİ İŞLEME MANTIĞI ----
               const metadata = data.cveMetadata;
-              const cnaContainer = data.containers?.cna; // ?. operatörü ile obje yoksa hata vermesini önle
+              const cnaContainer = data.containers?.cna;
 
               let formattedResults = "";
               let cvssScore = "N/A";
 
-              // CVSS skorunu bulmaya çalış
+
               if (cnaContainer?.metrics?.length > 0) {
-                  // Genellikle en güncel skor (v3.1) aranır
                   const metrics = cnaContainer.metrics[0];
                   if (metrics.cvssV3_1) {
                       cvssScore = `${metrics.cvssV3_1.baseScore} (${metrics.cvssV3_1.baseSeverity})`;
@@ -2661,7 +2879,6 @@
               formattedResults += `------------------------------------\n\n`;
 
               if (cnaContainer?.descriptions?.length > 0) {
-                  // İngilizce açıklamayı al
                   const description = cnaContainer.descriptions.find(d => d.lang === 'en')?.value || cnaContainer.descriptions[0].value;
                   formattedResults += `ÖZET:\n${description}\n\n`;
               }
@@ -2712,7 +2929,6 @@
 
               let formattedResults = "";
               for (const category in data) {
-                  // Kategorinin başlığını daha güzel yazdıralım (örn: "javascript-frameworks" -> "Javascript Frameworks")
                   const categoryTitle = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                   
                   formattedResults += `--- ${categoryTitle} ---\n`;
@@ -2768,9 +2984,9 @@
               for (const key in data) {
                   if (data[key]) {
                       let value = data[key];
-                      if (Array.isArray(value)) { // Kapsanan alan adları gibi listeleri formatla
+                      if (Array.isArray(value)) {
                           value = '\n' + value.map(item => `   - ${item}`).join('\n');
-                      } else if (typeof value === 'object') { // Konu ve Sağlayıcı gibi objeleri formatla
+                      } else if (typeof value === 'object') {
                           let objStr = "";
                           for(const objKey in value) {
                               objStr += `\n   - ${objKey}: ${value[objKey]}`;
@@ -2882,30 +3098,24 @@
       });
   }
   function activateEncoderDecoder() {
-      // --- Sekme Yönetimi ---
       const tabButtons = document.querySelectorAll('.tab-button');
       const tabContents = document.querySelectorAll('.tab-content');
 
       tabButtons.forEach(button => {
           button.addEventListener('click', () => {
-              // Tüm aktif sınıflarını kaldır
               tabButtons.forEach(btn => btn.classList.remove('active'));
               tabContents.forEach(content => content.classList.remove('active'));
-              // Tıklanan sekmeyi ve içeriğini aktif et
               button.classList.add('active');
               document.getElementById(button.dataset.tab).classList.add('active');
           });
       });
 
-  // ... activateEncoderDecoder fonksiyonu içindesiniz ...
-
-      // --- Format Tespit Aracı ---
       const identifierInput = document.getElementById('identifierInput');
       const identifierOutput = document.getElementById('identifierOutput');
       if (identifierInput) {
           identifierInput.addEventListener('input', () => {
               const value = identifierInput.value.trim();
-              identifierOutput.classList.remove('found'); // Vurguyu sıfırla
+              identifierOutput.classList.remove('found');
 
               if (value === '') {
                   identifierOutput.textContent = 'Olası formatlar burada görünecek...';
@@ -2913,7 +3123,6 @@
               }
               
               let results = [];
-              // ... (Regex kontrolleri aynı kalıyor, dokunma)
               if (/^[a-f0-9]{32}$/i.test(value)) results.push('MD5 Hash');
               if (/^[a-f0-9]{40}$/i.test(value)) results.push('SHA1 Hash');
               if (/^[a-f0-9]{64}$/i.test(value)) results.push('SHA256 Hash');
@@ -2928,16 +3137,13 @@
 
               if (results.length > 0) {
                   identifierOutput.innerHTML = `Olası Format(lar): <strong>${results.join(', ')}</strong>`;
-                  identifierOutput.classList.add('found'); // Vurgu ekle
+                  identifierOutput.classList.add('found');
               } else {
                   identifierOutput.textContent = 'Format tespit edilemedi.';
               }
           });
       }
 
-  // ... fonksiyonun geri kalanı aynı ...
-
-      // --- Helper Fonksiyonlar (Kodlama/Çözümleme için) ---
       const stringToHex = str => str.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
       const hexToString = hex => {
           let str = '';
@@ -2955,7 +3161,6 @@
           return temp.value;
       };
 
-      // --- Element Seçimleri ve Olay Atamaları ---
       const setupListener = (id, action) => {
           const button = document.getElementById(id);
           if (button) button.addEventListener('click', action);
@@ -2965,7 +3170,6 @@
       const decodeInput = document.getElementById('decodeInput');
       const decodeOutput = document.getElementById('decodeOutput');
 
-      // Encode/Hash Butonları
       setupListener('btnB64Encode', () => { encodeOutput.value = btoa(encodeInput.value); });
       setupListener('btnUrlEncode', () => { encodeOutput.value = encodeURIComponent(encodeInput.value); });
       setupListener('btnHexEncode', () => { encodeOutput.value = stringToHex(encodeInput.value); });
@@ -2979,7 +3183,6 @@
           setTimeout(() => { document.getElementById('btnCopyEncodeOutput').textContent = 'Çıktıyı Kopyala'; }, 1500);
       });
 
-      // Decode Butonları
       setupListener('btnB64Decode', () => { try { decodeOutput.value = atob(decodeInput.value); } catch (e) { decodeOutput.value = 'Hata: Geçersiz Base64 dizesi.'; } });
       setupListener('btnUrlDecode', () => { try { decodeOutput.value = decodeURIComponent(decodeInput.value); } catch (e) { decodeOutput.value = 'Hata: Geçersiz URL formatı.'; } });
       setupListener('btnHexDecode', () => { try { decodeOutput.value = hexToString(decodeInput.value); } catch (e) { decodeOutput.value = 'Hata: Geçersiz Hex dizesi.'; } });
@@ -2990,12 +3193,11 @@
           setTimeout(() => { document.getElementById('btnCopyDecodeOutput').textContent = 'Çıktıyı Kopyala'; }, 1500);
       });
     }
-  // ESKİ openTool FONKSİYONUNU SİL VE BUNU YAPIŞTIR
-
+  
   function openTool(toolId) {
       const main = document.getElementById('mainContent');
       let tool = null;
-      // Aracı CONTENT objesinden bul
+      
       for (const category of CONTENT.toolbox.categories) {
           const foundTool = category.tools.find(t => t.id === toolId);
           if (foundTool) {
@@ -3006,10 +3208,6 @@
       if (!tool) return;
 
       let html = '';
-
-      // =======================================================
-      // ARAÇ YÖNLENDİRİCİSİ (ROUTER) - DÜZENLENMİŞ HALİ
-      // =======================================================
 
       if (toolId === 'subdomainfinder') {
           html = `
@@ -3067,9 +3265,7 @@
           main.innerHTML = html;
           activateSslAnalyzer(); 
 
-  // ... fonksiyonun geri kalanı
       } else if (toolId === 'headeranalyzer') {
-          // ----- İSTEDİĞİN DEĞİŞİKLİK BURADA -----
           html = `
               <h1><i class="${tool.icon}"></i> HTTP Başlık Analizörü</h1>
               <p class="small" style="margin-bottom:12px;">
@@ -3088,7 +3284,6 @@
           `;
           main.innerHTML = html;
           activateHeaderAnalyzer();
-  // ... openTool içinde, headeranalyzer'dan sonra
 
       } else if (toolId === 'dnslookup') {
           html = `
@@ -3127,7 +3322,6 @@
           `;
           main.innerHTML = html;
           activateWhoisLookup(); 
-  // ... openTool içinde, whois'ten sonra
 
       } else if (toolId === 'iplookup') {
           html = `
@@ -3199,126 +3393,123 @@
           main.innerHTML = html;
           activateTechDetect(); 
 
-  } else if (toolId === 'dirscanner') {
-        html = `
-          <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-          <p class="small" style="margin-bottom:12px;">Hedef sitede yaygın dizin ve dosyaları (örn: /admin, /.git) bularak gizli kalmış sayfaları keşfedin.</p>
-          <div class="card" style="max-width: 600px;">
-          <div class="search-bar" style="margin-bottom: 16px;">
-            <input type="text" id="urlInput" placeholder="https://example.com" />
-          </div>
-          <label class="small" for="wordlistInput" style="display: block; margin-bottom: 4px;">Kelime Listesi (Her satıra bir tane, en fazla 200):</label>
-          <textarea id="wordlistInput" class="wordlist-box" placeholder="admin\nlogin\npanel\ndashboard\n.git\n.env\nbackup\nsecret">admin
-  login
-  panel
-  dashboard
-  .git
-  .env
-  backup
-  secret</textarea>
-        <button id="scanDirButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
-        </div>
-        <h3 style="margin-top:20px;">Bulunan Yollar:</h3>
-        <pre id="dirResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
-        <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
-        `;
-        main.innerHTML = html;
-        activateDirScanner();
+ } else if (toolId === 'dirscanner') {
+    html = `
+     <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+     <p class="small" style="margin-bottom:12px;">Hedef sitede yaygın dizin ve dosyaları (örn: /admin, /.git) bularak gizli kalmış sayfaları keşfedin.</p>
+     <div class="card" style="max-width: 600px;">
+     <div class="search-bar" style="margin-bottom: 16px;">
+      <input type="text" id="urlInput" placeholder="https://example.com" />
+     </div>
+     <label class="small" for="wordlistInput" style="display: block; margin-bottom: 4px;">Kelime Listesi (Her satıra bir tane, en fazla 200):</label>
+     <textarea id="wordlistInput" class="wordlist-box" placeholder="admin\nlogin\npanel\ndashboard\n.git\n.env\nbackup\nsecret">admin
+login
+panel
+dashboard
+.git
+.env
+backup
+secret</textarea>
+    <button id="scanDirButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Taramayı Başlat</button>
+    </div>
+    <h3 style="margin-top:20px;">Bulunan Yollar:</h3>
+    <pre id="dirResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+    <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+    `;
+    main.innerHTML = html;
+    activateDirScanner();
 
-  // ... openTool içinde, dirscanner'dan sonra
-
-      } else if (toolId === 'paramfinder') {
-          html = `
-            <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-            <p class="small" style="margin-bottom:12px;">Bir URL üzerinde gizli veya unutulmuş parametreleri (örn: ?debug=true) bularak yeni saldırı yüzeyleri keşfedin.</p>
-            <div class="card" style="max-width: 600px;">
-            <div class="search-bar" style="margin-bottom: 16px;">
-              <input type="text" id="urlInput" placeholder="https://example.com/profile.php" />
-              </div>
-              <label class="small" for="paramlistInput" style="display: block; margin-bottom: 4px;">Parametre Listesi (Her satıra bir tane, en fazla 200):</label>
-              <textarea id="paramlistInput" class="wordlist-box" placeholder="id\nuser\nadmin\ndebug\nredirect\nurl\nfile\nview">id
-  user
-  admin
-  debug
-  redirect
-  url
-  file
-  view</textarea>
-                <button id="findParamButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Parametreleri Keşfet</button>
-              </div>
-            <h3 style="margin-top:20px;">Potansiyel Parametreler:</h3>
-            <pre id="paramResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
-            <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
-          `;
-          main.innerHTML = html;
-          activateParamFinder();
+   } else if (toolId === 'paramfinder') {
+     html = `
+      <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+      <p class="small" style="margin-bottom:12px;">Bir URL üzerinde gizli veya unutulmuş parametreleri (örn: ?debug=true) bularak yeni saldırı yüzeyleri keşfedin.</p>
+      <div class="card" style="max-width: 600px;">
+      <div class="search-bar" style="margin-bottom: 16px;">
+       <input type="text" id="urlInput" placeholder="https://example.com/profile.php" />
+       </div>
+       <label class="small" for="paramlistInput" style="display: block; margin-bottom: 4px;">Parametre Listesi (Her satıra bir tane, en fazla 200):</label>
+       <textarea id="paramlistInput" class="wordlist-box" placeholder="id\nuser\nadmin\ndebug\nredirect\nurl\nfile\nview">id
+user
+admin
+debug
+redirect
+url
+file
+view</textarea>
+        <button id="findParamButton" class="copybtn" style="background:var(--accent); color:white; padding: 10px 15px; border-radius:8px;">Parametreleri Keşfet</button>
+       </div>
+      <h3 style="margin-top:20px;">Potansiyel Parametreler:</h3>
+      <pre id="paramResultOutput" style="min-height: 250px; background-color: var(--card);">Sonuçlar burada görünecek...</pre>
+      <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+     `;
+     main.innerHTML = html;
+     activateParamFinder();
 
 
-      } else if (toolId === 'encoderdecoder') {
-          html = `
-              <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-              <p class="lead">${tool.description}</p>
-              <div class="tool-tabs">
-                  <button class="tab-button active" data-tab="tab-identifier">🔍 Tespit Et</button>
-                  <button class="tab-button" data-tab="tab-encoder">⚙️ Encode / Hash</button>
-                  <button class="tab-button" data-tab="tab-decoder">🛠️ Decode</button>
-              </div>
-              <div id="tab-identifier" class="tab-content active">
-                  <h3>Format Tespit Aracı</h3>
-                  <p class="small" style="margin-bottom:12px;">Bir metin girin ve olası şifreleme/kodlama formatını anında öğrenin.</p>
-                  <textarea id="identifierInput" placeholder="Tespit edilecek metni buraya yapıştırın..." style="width: 100%; min-height: 120px;"></textarea>
-                  <div id="identifierOutput" class="identifier-result"></div>
-              </div>
-              <div id="tab-encoder" class="tab-content">
-                  <h3>Encode / Hash (Kodlama)</h3>
-                  <div class="tool-io-grid">
-                      <div>
-                          <h4>Girdi Metni</h4>
-                          <textarea id="encodeInput" placeholder="Kodlanacak metni buraya girin..."></textarea>
-                      </div>
-                      <div>
-                          <h4>İşlenmiş Çıktı</h4>
-                          <textarea id="encodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
-                          <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
-                      </div>
-                  </div>
-                  <div class="tool-buttons" style="margin-top:16px;">
-                      <button id="btnB64Encode">Base64</button>
-                      <button id="btnUrlEncode">URL</button>
-                      <button id="btnHexEncode">Hex</button>
-                      <button id="btnHtmlEncode">HTML Entities</button>
-                      <button id="btnMd5">MD5</button>
-                      <button id="btnSha1">SHA1</button>
-                      <button id="btnSha256">SHA256</button>
-                  </div>
-              </div>
-              <div id="tab-decoder" class="tab-content">
-                  <h3>Decode (Çözümleme)</h3>
-                  <div class="tool-io-grid">
-                      <div>
-                          <h4>Kodlanmış Girdi</h4>
-                          <textarea id="decodeInput" placeholder="Çözülecek metni buraya girin..."></textarea>
-                      </div>
-                      <div>
-                          <h4>Çözülmüş Çıktı</h4>
-                          <textarea id="decodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
-                          <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
-                      </div>
-                  </div>
-                  <div class="tool-buttons" style="margin-top:16px;">
-                      <button id="btnB64Decode">Base64</button>
-                      <button id="btnUrlDecode">URL</button>
-                      <button id="btnHexDecode">Hex</button>
-                      <button id="btnHtmlDecode">HTML Entities</button>
-                  </div>
-              </div>
-              <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
-          `;
-          main.innerHTML = html;
-          activateEncoderDecoder();
+} else if (toolId === 'encoderdecoder') {
+html = `
+ <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
+ <p class="lead">${tool.description}</p>
+ <div class="tool-tabs">
+  <button class="tab-button active" data-tab="tab-identifier">🔍 Tespit Et</button>
+  <button class="tab-button" data-tab="tab-encoder">⚙️ Encode / Hash</button>
+  <button class="tab-button" data-tab="tab-decoder">🛠️ Decode</button>
+ </div>
+ <div id="tab-identifier" class="tab-content active">
+  <h3>Format Tespit Aracı</h3>
+  <p class="small" style="margin-bottom:12px;">Bir metin girin ve olası şifreleme/kodlama formatını anında öğrenin.</p>
+  <textarea id="identifierInput" placeholder="Tespit edilecek metni buraya yapıştırın..." style="width: 100%; min-height: 120px;"></textarea>
+  <div id="identifierOutput" class="identifier-result"></div>
+ </div>
+ <div id="tab-encoder" class="tab-content">
+  <h3>Encode / Hash (Kodlama)</h3>
+  <div class="tool-io-grid">
+ <div>
+  <h4>Girdi Metni</h4>
+  <textarea id="encodeInput" placeholder="Kodlanacak metni buraya girin..."></textarea>
+ </div>
+ <div>
+  <h4>İşlenmiş Çıktı</h4>
+  <textarea id="encodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
+  <button id="btnCopyEncodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
+ </div>
+  </div>
+  <div class="tool-buttons" style="margin-top:16px;">
+ <button id="btnB64Encode">Base64</button>
+ <button id="btnUrlEncode">URL</button>
+ <button id="btnHexEncode">Hex</button>
+ <button id="btnHtmlEncode">HTML Entities</button>
+ <button id="btnMd5">MD5</button>
+ <button id="btnSha1">SHA1</button>
+ <button id="btnSha256">SHA256</button>
+  </div>
+ </div>
+ <div id="tab-decoder" class="tab-content">
+  <h3>Decode (Çözümleme)</h3>
+  <div class="tool-io-grid">
+ <div>
+  <h4>Kodlanmış Girdi</h4>
+  <textarea id="decodeInput" placeholder="Çözülecek metni buraya girin..."></textarea>
+ </div>
+ <div>
+  <h4>Çözülmüş Çıktı</h4>
+  <textarea id="decodeOutput" readonly placeholder="Sonuç burada görünecek..."></textarea>
+  <button id="btnCopyDecodeOutput" class="copybtn" style="margin-top:20px;">Çıktıyı Kopyala</button>
+ </div>
+  </div>
+  <div class="tool-buttons" style="margin-top:16px;">
+ <button id="btnB64Decode">Base64</button>
+ <button id="btnUrlDecode">URL</button>
+ <button id="btnHexDecode">Hex</button>
+ <button id="btnHtmlDecode">HTML Entities</button>
+  </div>
+ </div>
+ <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+`;
+main.innerHTML = html;
+activateEncoderDecoder();
 
       } else {
-          // Henüz yapılmamış diğer tüm araçlar için varsayılan mesaj
           html = `
               <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
               <p class="lead">Bu araç şu anda geliştirilme aşamasındadır.</p>
@@ -3331,15 +3522,7 @@
   }
     renderMenu();
     showPage('home');
-  // ============================================
-  //      CHATBOT MANTIĞI VE FONKSİYONLARI
-  // ============================================
-  // ============================================
-  //      MİNİ-FORM AÇ/KAPA FONKSİYONU
-  // ============================================
-// ============================================
-//      AJAX FORM GÖNDERME VE AÇ/KAPA FONKSİYONU
-// ============================================
+
 document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.getElementById('chat-window');
     const toggleBtn = document.getElementById('chat-toggle-btn');
@@ -3347,7 +3530,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ajaxForm = document.getElementById('ajax-contact-form');
     const formArea = document.getElementById('form-area');
 
-    // Pencereyi aç/kapa
     if (toggleBtn && chatWindow && closeBtn) {
         toggleBtn.addEventListener('click', () => {
             chatWindow.classList.toggle('hidden');
@@ -3357,10 +3539,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Form gönderimini yakala
     if (ajaxForm) {
         ajaxForm.addEventListener("submit", function (e) {
-            e.preventDefault(); // Sayfanın yenilenmesini engelle
+            e.preventDefault();
             
             const formData = new FormData(this);
             const formButton = this.querySelector("button");
@@ -3376,14 +3557,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }).then(response => {
                 if (response.ok) {
-                    // Başarılı olduğunda formu kaldırıp mesaj göster
                     formArea.innerHTML = '<p class="form-success-message">Teşekkürler! Mesajınız başarıyla iletildi.</p>';
                 } else {
-                    // Hata olduğunda
                     formArea.innerHTML = '<p class="form-error-message">Bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>';
                 }
             }).catch(error => {
-                // İnternet veya sunucu hatası
                 formArea.innerHTML = '<p class="form-error-message">Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edin.</p>';
             });
         });
@@ -3412,7 +3590,6 @@ document.addEventListener('DOMContentLoaded', () => {
     <button id="chat-toggle-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28px" height="28px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
     </button>
-</div>
-
-</body>
-</html>
+    </div>
+    </body>
+  </html>
