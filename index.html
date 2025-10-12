@@ -29,6 +29,7 @@
       summary{list-style:none;cursor:pointer;padding:10px;border-radius:8px;color:var(--muted);font-size:14px;transition:all 0.2s}
       summary:hover{background:var(--glass)}
       summary::-webkit-details-marker{display:none}
+      .content summary::before { display: none !important; }
       details[open] summary{background:var(--glass);color:#fff}
       .subitem{padding:8px 12px;margin-left:6px;border-radius:6px;color:var(--muted);display:block;text-decoration:none;font-size:14px;transition:all 0.2s;cursor:pointer}
       .subitem:hover{background:rgba(255,255,255,0.05)}
@@ -948,13 +949,6 @@ idor: {
         }
     ]
 },
-
-
-
-
-
-
-
 
         bac: {
           menuName: 'BAC',
@@ -1935,65 +1929,65 @@ directory_traversal: {
     ]
   },
 
-  toolbox: {
-      menuName: 'ToolBox',
-      icon: 'icon-toolbox',
-      title: 'Siber Güvenlik Araçları',
-      description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.<br><br>',
-      categories: [
-          {
-              categoryTitle: '📡 1. Keşif ve Bilgi Toplama',
-              tools: [
-                  { id: 'subdomainfinder', icon: 'fa-solid fa-magnifying-glass', title: 'Subdomain Finder', description: 'Bir alan adının gizli alt alan adlarını keşfedin.' },
-                  { id: 'dnslookup', icon: 'fa-solid fa-book-atlas', title: 'DNS Kayıt Sorgulama ❌', description: 'Bir domainin DNS kayıtlarını (A, MX, CNAME vb.) sorgulayın.' },
-                  { id: 'whois', icon: 'fa-solid fa-user-secret', title: 'Whois Sorgulama ❌', description: 'Domain sahiplik ve kayıt bilgilerini anında öğrenin.' },
-                  { id: 'techdetect', icon: 'fa-solid fa-microchip', title: 'Teknoloji Tespiti', description: 'Bir web sitesinin hangi teknolojilerle yapıldığını analiz edin.' }
-              ]
-          },
-          {
-              categoryTitle: '',
-              tools: []
-          },        {
-              categoryTitle: '',
-              tools: []
-          },
-          {
-              categoryTitle: '',
-              tools: []
-          },
-          {
-              categoryTitle: '🔬 2. Tarama ve Analiz',
-              tools: [
-                  { id: 'portscanner', icon: 'fa-solid fa-network-wired', title: 'Port Scanner', description: 'Hedef sistemdeki açık portları ve çalışan servisleri tespit edin.' },
-                  { id: 'headeranalyzer', icon: 'fa-solid fa-file-code', title: 'HTTP Başlık Analizörü', description: 'Bir web sitesinin HTTP başlıklarını detaylıca inceleyin.' },
-                  { id: 'sslanalyzer', icon: 'fa-solid fa-shield-halved', title: 'SSL/TLS Sertifika Analizörü', description: 'Bir sunucunun SSL/TLS sertifika yapılandırmasını analiz edin.' },
-                  { id: 'paramfinder', icon: 'fa-solid fa-list-ol', title: 'URL Parametre Kaşifi', description: 'Bir URL\'deki gizli veya unutulmuş parametreleri keşfedin.' },
-                  { id: 'dirscanner', icon: 'fa-regular fa-folder-open', title: 'Dizin ve Dosya Tarayıcı', description: 'Web sunucusundaki yaygın dizin ve dosyaları tarayın.' }
-              ]
-          },
-          {
-              categoryTitle: '',
-              tools: []
-          },        
-          {
-              categoryTitle: '',
-              tools: []
-          },
-          {
-              categoryTitle: '',
-              tools: []
-          },
-          {
-              categoryTitle: '⚙️ 3. Kodlama & Genel Araçlar',
-              tools: [
-                  { id: 'encoderdecoder', icon: 'fa-solid fa-code', title: 'Encoder / Decoder / Hash Identifier', description: 'Metinleri Base64, URL ve diğer formatlara çevirin veya çözümleyin.' },
-                  { id: 'hibp', icon: 'fa-solid fa-user-shield', title: 'Have I Been Pwned', description: 'E-posta adresinizin veri sızıntılarında yer alıp almadığını kontrol edin.' },
-                  { id: 'iplookup', icon: 'fa-solid fa-location-dot', title: 'IP Bilgisi & Coğrafi Konum', description: 'Bir IP adresinin coğrafi konumunu ve sağlayıcı bilgilerini bulun.' },
-                  { id: 'cvesearch', icon: 'fa-solid fa-shield-virus', title: 'CVE Arama Motoru', description: 'Bilinen zafiyetleri (CVE) ve detaylarını anında sorgulayın.' }
-              ]
-          }
-      ]
-  },
+toolbox: {
+    menuName: 'ToolBox',
+    icon: 'icon-toolbox',
+    title: 'Siber Güvenlik Araçları',
+    description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.<br><br>',
+    categories: [
+        {
+            categoryTitle: '📡 1. Keşif ve Bilgi Toplama',
+            tools: [
+                { id: 'subdomainfinder', icon: 'fa-solid fa-magnifying-glass', title: 'Subdomain Finder', description: 'Bir alan adının gizli alt alan adlarını keşfedin.' },
+                { id: 'waybackRecon', icon: 'fa-solid fa-clock-rotate-left', title: 'Otomatik Wayback Keşfi', description: 'Wayback Machine, uro ve gf ile bir hedefin saldırı yüzeyini hızlıca çıkarın.' },
+                { id: 'techdetect', icon: 'fa-solid fa-microchip', title: 'Teknoloji Tespiti', description: 'Bir web sitesinin hangi teknolojilerle yapıldığını analiz edin.' },
+                { id: 'dnslookup', icon: 'fa-solid fa-book-atlas', title: 'DNS Kayıt Sorgulama ❌', description: 'Bir domainin DNS kayıtlarını (A, MX, CNAME vb.) sorgulayın.' },
+                { id: 'whois', icon: 'fa-solid fa-user-secret', title: 'Whois Sorgulama ❌', description: 'Domain sahiplik ve kayıt bilgilerini anında öğrenin.' }
+            ]
+        },
+        {
+            categoryTitle: '',
+            tools: []
+        },        {
+            categoryTitle: '',
+            tools: []
+        },
+        {
+            categoryTitle: '',
+            tools: []
+        },
+        {
+            categoryTitle: '🔬 2. Tarama ve Analiz',
+            tools: [
+                { id: 'portscanner', icon: 'fa-solid fa-network-wired', title: 'Port Scanner', description: 'Hedef sistemdeki açık portları ve çalışan servisleri tespit edin.' },
+                { id: 'headeranalyzer', icon: 'fa-solid fa-file-code', title: 'HTTP Başlık Analizörü', description: 'Bir web sitesinin HTTP başlıklarını detaylıca inceleyin.' },
+                { id: 'sslanalyzer', icon: 'fa-solid fa-shield-halved', title: 'SSL/TLS Sertifika Analizörü', description: 'Bir sunucunun SSL/TLS sertifika yapılandırmasını analiz edin.' },
+                { id: 'paramfinder', icon: 'fa-solid fa-list-ol', title: 'URL Parametre Kaşifi', description: 'Bir URL\'deki gizli veya unutulmuş parametreleri keşfedin.' },
+                { id: 'dirscanner', icon: 'fa-regular fa-folder-open', title: 'Dizin ve Dosya Tarayıcı', description: 'Web sunucusundaki yaygın dizin ve dosyaları tarayın.' }
+            ]
+        },
+        {
+            categoryTitle: '',
+            tools: []
+        },        {
+            categoryTitle: '',
+            tools: []
+        },
+        {
+            categoryTitle: '',
+            tools: []
+        },
+        {
+            categoryTitle: '⚙️ 3. Kodlama & Genel Araçlar',
+            tools: [
+                { id: 'encoderdecoder', icon: 'fa-solid fa-code', title: 'Encoder / Decoder / Hash Identifier', description: 'Metinleri Base64, URL ve diğer formatlara çevirin veya çözümleyin.' },
+                { id: 'hibp', icon: 'fa-solid fa-user-shield', title: 'Have I Been Pwned', description: 'E-posta adresinizin veri sızıntılarında yer alıp almadığını kontrol edin.' },
+                { id: 'iplookup', icon: 'fa-solid fa-location-dot', title: 'IP Bilgisi & Coğrafi Konum', description: 'Bir IP adresinin coğrafi konumunu ve sağlayıcı bilgilerini bulun.' },
+                { id: 'cvesearch', icon: 'fa-solid fa-shield-virus', title: 'CVE Arama Motoru', description: 'Bilinen zafiyetleri (CVE) ve detaylarını anında sorgulayın.' }
+            ]
+        }
+    ]
+},
 
   sources: {
     menuName: 'Kaynaklar',
@@ -3410,7 +3404,121 @@ view</textarea>
      main.innerHTML = html;
      activateParamFinder();
 
+} // ... diğer else if bloklarından sonra, en sondaki else'ten önce bunu yapıştır ...
 
+else if (toolId === 'waybackRecon') {
+    html = `
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <h1><i class="" style="color:var(--accent);"></i> ${tool.title}</h1>
+        <p class="lead">${tool.description}</p>
+        
+        <div class="card">
+            <h3>Kullanım Akışı</h3>
+            <ol style="padding-left: 20px; font-size: 14px; color: var(--muted); line-height: 1.6;">
+                <li style="margin-bottom: 8px;">
+                    <strong>Kurulum:</strong> Bu bir komut satırı aracıdır. Kullanmak için öncelikle aşağıdaki linkten GitHub reposuna gidin ve kurulum adımlarını takip edin.
+                </li>
+                <li style="margin-bottom: 8px;">
+                    <strong>Çalıştırma:</strong> Kurulumdan sonra terminalde <code>bash 1Recon.sh</code> komutunu çalıştırın. Betik size hedef domain'i soracaktır.
+                </li>
+                <li style="margin-bottom: 12px;">
+                    <strong>Analiz:</strong> Betik tamamlandığında oluşan <code>*_candidates.txt</code> dosyalarını aşağıdaki rehbere göre yorumlayın.
+                </li>
+            </ol>
+            <a href="https://github.com/turgaykara/1Recon.git" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; display: inline-block; font-weight:600;">
+                <span style="display: flex; align-items: center; gap: 8px; background: var(--glass); padding: 8px 12px; border-radius: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    Kurulum için GitHub'a git →
+                </span>
+            </a>
+        </div>
+        
+        <h3>Sonuçları Yorumlama Rehberi</h3>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-code" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>xss_candidates.txt <span class="small" style="margin-left:8px;">- Cross-Site Scripting</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> Kullanıcı girdisinin filtrelenmeden sayfaya yansıtıldığı (reflected) XSS zafiyetine yol açabilecek noktaları bulmak.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> Bu URL listesini Dalfox veya XSStrike gibi araçlarla taratın veya manuel olarak <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> payload'ları ile test edin.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-database" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>sqli_candidates.txt <span class="small" style="margin-left:8px;">- SQL Injection</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> Veritabanı sorgularını manipüle etme potansiyeli taşıyan SQL Injection zafiyetlerini bulmak.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> Listeyi doğrudan <code>sqlmap -m sqli_candidates.txt --batch --level=3</code> komutuyla SQLmap'e vererek taratın.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-server" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>ssrf_candidates.txt <span class="small" style="margin-left:8px;">- Server-Side Request Forgery</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> Sunucunun, kontrolümüzdeki bir adrese istek yapmasını sağlayan SSRF zafiyetlerini bulmak.</p>
+                    <p class="small"><b>💣 Kritik Hedefler:</b> <code>127.0.0.1</code> (localhost) veya bulut metadata adresi (<code>169.254.169.254</code>) gibi iç ağdaki adreslere erişim denemek.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> Parametreye bir Interact.sh veya Burp Collaborator URL'si vererek sunucudan geri bildirim (callback) alıp almadığınızı kontrol edin.</p>
+                </div>
+            </details>
+             <details class="accordion-menu">
+                <summary><i class="fa-solid fa-share-from-square" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>redirect_candidates.txt <span class="small" style="margin-left:8px;">- Open Redirect</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> Kullanıcıyı zararlı bir siteye yönlendirebilecek Açık Yönlendirme zafiyetlerini bulmak.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> Yönlendirme parametresinin değerini <code>https://evil.com</code> veya <code>javascript:alert(1)</code> gibi payload'lar ile değiştirerek test edin.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-folder-open" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>lfi_rfi_candidates.txt <span class="small" style="margin-left:8px;">- File Inclusion</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> Sunucudaki yerel dosyaları okumayı (LFI) veya uzak dosyaları çalıştırmayı (RFI) sağlayan noktaları bulmak.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> <code>../../etc/passwd</code> gibi payload'larla hassas sistem dosyalarını okumayı deneyin.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-key" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>idor_candidates.txt <span class="small" style="margin-left:8px;">- Insecure Direct Object Ref.</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                     <p class="small"><b>🎯 Amaç:</b> Başka kullanıcılara ait nesnelere (profil, fatura vb.) yetkisiz erişimi (IDOR) tespit etmek.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> İki farklı kullanıcı hesabı açıp birinin ID'si ile diğerinin verisine erişmeyi deneyin.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-lightbulb" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>interestingparams_candidates.txt <span class="small" style="margin-left:8px;">- İlginç Parametreler</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> <code>api_key</code>, <code>debug</code>, <code>admin</code>, <code>secret</code> gibi anahtar kelimeler içeren URL'leri bulur.</p>
+                    <p class="small"><b>💣 Kritik Bulgular:</b> JavaScript dosyalarında unutulmuş, geçerli bir API anahtarı veya <code>?debug=true</code> ile ifşa olan veritabanı şifreleri.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-bug" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>debug_logic_candidates.txt <span class="small" style="margin-left:8px;">- Hata Ayıklama & Mantık</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> <code>debug=true</code>, <code>test=1</code> gibi parametrelerle aktif olan ve hassas bilgi sızdırabilecek hata ayıklama sayfalarını bulmak.</p>
+                    <p class="small"><b>💣 Kritik Bulgular:</b> Tam dosya yolları, SQL sorguları, sunucu versiyon bilgileri.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-network-wired" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>ip_candidates.txt <span class="small" style="margin-left:8px;">- IP Adresleri</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> URL içinde IP adresi barındıran endpoint'leri bulmak. Bu, genellikle SSRF zafiyeti için güçlü bir ipucudur.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> Bulunan IP'yi <code>127.0.0.1</code> veya bir callback servisi ile değiştirerek SSRF testi yapın.</p>
+                </div>
+            </details>
+            <details class="accordion-menu">
+                <summary><i class="fa-solid fa-fire" style="margin-right: 12px; font-size: 14px; min-width:16px; text-align:center; color: var(--accent);"></i>firebase_candidates.txt <span class="small" style="margin-left:8px;">- Firebase URL'leri</span></summary>
+                <div class="card" style="margin: 8px 0 0 12px; border-left: 2px solid var(--accent);">
+                    <p class="small"><b>🎯 Amaç:</b> Yanlış yapılandırılmış (güvenlik kuralları zayıf) Firebase veritabanı URL'lerini keşfetmek.</p>
+                    <p class="small"><b>🛠️ Sonraki Adımlar:</b> Bulunan URL'nin sonuna <code>/.json</code> ekleyerek veritabanı içeriğini okumayı deneyin.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <h3>Yasal Uyarı</h3>
+            <p class="small">Bu betik ve rehber, yalnızca yasal ve etik kurallar çerçevesinde, izinli sistemler üzerinde (Bug Bounty programları, kendi sistemleriniz) test yapmak amacıyla hazırlanmıştır. İzinsiz sistemler üzerinde test yapmak yasa dışıdır. Sorumluluk tamamen kullanıcıya aittir.</p>
+        </div>
+        <button onclick="showPage('toolbox')" class="copybtn" style="margin-top:20px;"> ← Geri Dön</button>
+    `;
+    main.innerHTML = html;
+    activateParamFinder();
+    
+
+// ...diğer else if blokları...
 } else if (toolId === 'encoderdecoder') {
 html = `
  <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
