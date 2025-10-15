@@ -747,9 +747,10 @@ forum: {
                         </div>
                     </form>
                 </div>
-
                 <div id="user-session-section" class="hidden" style="text-align: right; margin-bottom: 15px;">
-                    <p style="margin: 0; font-size: 14px;">Hoş geldin, <strong id="user-username"></strong>! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
+                    <p style="margin: 0; font-size: 14px;">
+                        Hoş geldin, <strong id="user-welcome-name"></strong>!  <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a>
+                    </p>
                 </div>
 
                 <div id="new-post-form" class="card hidden">
@@ -3224,11 +3225,8 @@ function setupForum() {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
     
-    // 👇 DÜZELTME: userEmailEl değişkeni artık Hoş geldin mesajındaki <strong id="user-email"> elementini yakalayacak.
-    // Eğer HTML'de ID'niz "user-email" ise, bunu kullanmalıyız.
-    // Eğer HTML'de ID'niz "user-username" ise, o ID'yi kullanmalıyız.
-    // Hatanızdaki "userEmailEl is not defined" hatasını çözmek için, değişkeni hemen tanımlıyoruz.
-    const userEmailEl = document.getElementById('user-email'); 
+    // 👇 KRİTİK DÜZELTME: Yeni ID'yi yakalıyoruz
+    const welcomeNameEl = document.getElementById('user-welcome-name'); 
     
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
@@ -3239,14 +3237,14 @@ function setupForum() {
     const sendPostBtn = document.getElementById('send-post-btn');
     const emailForm = document.getElementById('email-login-form');
 
-    // DÜZELTİLMİŞ UI GÜNCELLEME LOGİĞİ
+    // DÜZELTİLMİŞ UI GÜNCELLEME LOGİĞİ (anonymousName kullanılıyor)
     const updateUI = (isLoggedIn, userEmail = '', anonymousName = '') => { 
         if (isLoggedIn) {
             if (authSection) authSection.classList.add('hidden');
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
-            // KRİTİK DÜZELTME: Troll ismini elementin içine yazıyoruz.
-            if (userEmailEl) userEmailEl.textContent = anonymousName; 
+            // KRİTİK DÜZELTME: Troll ismini yeni elemente yazıyoruz.
+            if (welcomeNameEl) welcomeNameEl.textContent = anonymousName; 
         } else {
             if (authSection) authSection.classList.remove('hidden');
             if (userSessionSection) userSessionSection.classList.add('hidden');
