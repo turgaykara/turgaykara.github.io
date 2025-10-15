@@ -691,6 +691,133 @@
 #new-post-form button:hover {
     opacity: 0.9;
 }
+/* --- MODAL CSS STYLES (New) --- */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.modal.visible {
+    display: flex;
+}
+.modal-content {
+    background: var(--card);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.modal-close {
+    color: var(--muted);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.modal-close:hover,
+.modal-close:focus {
+    color: var(--accent);
+}
+.form-input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--glass);
+    background: var(--bg);
+    color: white;
+    box-sizing: border-box;
+}
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.form-buttons button {
+    flex-grow: 1;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.form-buttons button:hover {
+    background: #008fa3;
+}
+.form-buttons .btn-secondary {
+    background: var(--glass);
+    color: var(--muted);
+}
+.form-buttons .btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+.modal-links {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+.modal-links a {
+    color: var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-links a:hover {
+    color: white;
+}
+.form-message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+.form-success {
+    background: rgba(52, 211, 153, 0.1);
+    color: #34d399;
+}
+.form-error {
+    background: rgba(248, 113, 113, 0.1);
+    color: #f87171;
+}
+/* Login butonu için yeni stil */
+#login-toggle-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-right: 15px; /* Hero section ile arasına boşluk koymak için */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#login-toggle-btn:hover {
+    opacity: 0.9;
+}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   </head>
@@ -726,6 +853,7 @@
         },
 // MEVCUT forum BLOĞUNU SİL, YERİNE BUNU YAPIŞTIR:
 
+// index.html > const CONTENT = { ... } içinde bulun ve değiştirin:
 forum: {
     menuName: 'Forum',
     icon: 'icon-forum',
@@ -735,31 +863,15 @@ forum: {
         {
             title: '',
             content: `
-                <div id="auth-section" class="card">
-                    <h3>Topluluğa Katıl</h3>
-                    <p class="small" style="margin-bottom:15px;">Mesaj yazmak veya yeni konu açmak için giriş yapmalısınız.</p>
-                    <form id="email-login-form" style="width:100%;">
-                        <input type="email" id="email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
-                        <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
-                        <div class="tool-buttons">
-                            <button type="submit" id="login-email-btn">Giriş Yap</button>
-                            <button type="button" id="register-email-btn">Kaydol</button>
-                        </div>
-                    </form>
-                </div>
-
                 <div id="user-session-section" class="hidden" style="text-align: right; margin-bottom: 15px;">
                     <p style="margin: 0; font-size: 14px;">Hoş geldin, <strong id="user-email"></strong>! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
                 </div>
-
                 <div id="new-post-form" class="card hidden">
                     <h3>Yeni Mesaj Yaz</h3>
                     <textarea id="post-content" placeholder="Mesajınızı buraya yazın..." style="width:100%; min-height:100px; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;"></textarea>
-                    <button id="send-post-btn">Gönder</button>
+                    <button id="send-post-btn" style="background: var(--accent); border: none; color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer;">Gönder</button>
                 </div>
-
                 <hr style="border-color: var(--glass); margin: 20px 0;">
-
                 <h3>Son Mesajlar</h3>
                 <div id="posts-section">
                     <p class="small">Mesajlar yükleniyor...</p>
@@ -2336,18 +2448,25 @@ function renderMenu() {
 
       if (!page) return;
       
-      if (pageId === 'home') {
-          main.innerHTML = `
-              <div class="search-bar">
-                  <input type="text" id="searchInput" placeholder="Konu, araç veya zafiyet ara..." aria-label="Ara" autocomplete="off" />
-                  <span class="search-icon">🔍</span>
-                  <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
-              </div>
-              <div class="hero"><h1>${page.title}</h1><p class="subtitle">${page.subtitle}</p></div>
-              <div class="stats"><div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Vulnerability Türü</div></div><div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Araç & Komut</div></div><div class="stat-card"><div class="stat-number">100%</div><div class="stat-label">Ücretsiz İçerik</div></div></div>
-              <div style="margin-bottom:12px"><h2>Hızlı Başlangıç</h2></div><div class="quick-links" id="quickLinks"></div><div style="margin-bottom:12px"><h2>Popüler Kaynaklar</h2></div><div class="resource-grid"><div class="resource-card"><div class="resource-title">🎯 PortSwigger Academy</div><div class="resource-desc">Ücretsiz interaktif web security eğitimi ve lab'ları</div></div><div class="resource-card"><div class="resource-title">📖 HackerOne Hacktivity</div><div class="resource-desc">Gerçek bug bounty raporlarını inceleyin</div></div><div class="resource-card"><div class="resource-title">🔧 OWASP Top 10</div><div class="resource-desc">En kritik web güvenlik risklerini öğrenin</div></div><div class="resource-card"><div class="resource-title">💻 TryHackMe</div><div class="resource-desc">Pratik yapabileceğiniz güvenlik lab'ları</div></div></div>
-              <div class="footer">Hazırlayan: Turgay Kara &lt;!&gt; Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.</div>
-          `;
+      else if (pageId === 'home') {
+      main.innerHTML = `
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Konu, araç veya zafiyet ara..." aria-label="Ara" autocomplete="off" />
+        <span class="search-icon">🔍</span>
+        <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
+      </div>
+      <div class="hero">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1>${page.title}</h1>
+      <div id="top-right-user-info">
+        </div>
+        </div>
+        <p class="subtitle">${page.subtitle}</p>
+      </div>
+      <div class="stats"><div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Vulnerability Türü</div></div><div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Araç & Komut</div></div><div class="stat-card"><div class="stat-number">100%</div><div class="stat-label">Ücretsiz İçerik</div></div></div>
+      <div style="margin-bottom:12px"><h2>Hızlı Başlangıç</h2></div><div class="quick-links" id="quickLinks"></div><div style="margin-bottom:12px"><h2>Popüler Kaynaklar</h2></div><div class="resource-grid"><div class="resource-card"><div class="resource-title">🎯 PortSwigger Academy</div><div class="resource-desc">Ücretsiz interaktif web security eğitimi ve lab'ları</div></div><div class="resource-card"><div class="resource-title">📖 HackerOne Hacktivity</div><div class="resource-desc">Gerçek bug bounty raporlarını inceleyin</div></div><div class="resource-card"><div class="resource-title">🔧 OWASP Top 10</div><div class="resource-desc">En kritik web güvenlik risklerini öğrenin</div></div><div class="resource-card"><div class="resource-title">💻 TryHackMe</div><div class="resource-desc">Pratik yapabileceğiniz güvenlik lab'ları</div></div></div>
+      <div class="footer">Hazırlayan: Turgay Kara &lt;!&gt; Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.</div>
+      `;
           const quickLinks = document.getElementById('quickLinks');
 if(quickLinks) {
     quickLinks.innerHTML = '';
@@ -2440,12 +2559,15 @@ if(quickLinks) {
           }
           main.innerHTML = html;
       }
-          if (pageId === 'forum') {
+        if (pageId === 'forum') {
           setupForum();
       }
+      // Her sayfa geçişinde oturum durumunu kontrol etmek ve üst sağ bilgiyi yenilemek için
+      checkSession();
     
     window.scrollTo({top: 0, behavior: 'smooth'});
 } // showPage fonksiyonunun bittiği yer
+
 
 function activateSubfinder() {
 const scanButton = document.getElementById('scanButton');
@@ -3218,33 +3340,223 @@ scanButton.textContent = 'Taramayı Başlat';
           setTimeout(() => { document.getElementById('btnCopyDecodeOutput').textContent = 'Çıktıyı Kopyala'; }, 1500);
       });
     }
-// BU KOD BLOĞUNU OLDUĞU GİBİ YAPIŞTIR
 
-function setupForum() {
+const escapeHTML = (str) => {
+    const p = document.createElement("p");
+    p.textContent = str;
+    return p.innerHTML;
+};
+
+// ===============================================
+// YENİ FORUM MODÜLÜ FONKSİYONLARI BAŞLANGICI
+// ===============================================
+
+// 1. Kullanıcı Arayüzünü Güncelle (Username'i gösterecek şekilde)
+const updateUI = (isLoggedIn, userUsername = '') => {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
-    const userEmailEl = document.getElementById('user-email');
+    const userUsernameEl = document.getElementById('user-username');
+    
+    if (isLoggedIn) {
+        if (authSection) authSection.classList.add('hidden');
+        if (userSessionSection) userSessionSection.classList.remove('hidden');
+        if (userUsernameEl) userUsernameEl.textContent = userUsername;
+    } else {
+        if (authSection) authSection.classList.remove('hidden');
+        if (userSessionSection) userSessionSection.classList.add('hidden');
+    }
+    // Konu detay sayfasındaki post formu dinamik olarak bu fonksiyondan kontrol edilir.
     const newPostForm = document.getElementById('new-post-form');
-    const postsSection = document.getElementById('posts-section');
+    if (newPostForm) {
+         if (isLoggedIn) { newPostForm.classList.remove('hidden'); }
+         else { newPostForm.classList.add('hidden'); }
+    }
+};
 
-    const loginBtn = document.getElementById('login-email-btn');
-    const registerBtn = document.getElementById('register-email-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const sendPostBtn = document.getElementById('send-post-btn');
-    const emailForm = document.getElementById('email-login-form');
 
-    const updateUI = (isLoggedIn, userEmail = '') => {
-        if (isLoggedIn) {
-            if (authSection) authSection.classList.add('hidden');
-            if (userSessionSection) userSessionSection.classList.remove('hidden');
-            if (newPostForm) newPostForm.classList.remove('hidden');
-            if (userEmailEl) userEmailEl.textContent = userEmail;
+// 2. Oturum Kontrolü (Username'i alacak şekilde güncellendi)
+const checkSession = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
+        const data = await response.json();
+        updateUI(data.is_logged_in, data.user?.username); 
+    } catch (error) {
+        console.error("Oturum kontrol edilemedi:", error);
+        updateUI(false);
+    }
+};
+
+// 3. Konu Listesini Çeker ve Gösterir (Yeni Forum Girişi)
+const fetchTopics = async () => {
+    const topicsSection = document.getElementById('topics-section');
+    if (!topicsSection) return;
+    topicsSection.innerHTML = '<p class="small">Konular yükleniyor...</p>';
+    try {
+        // topics endpoint'ine istek at
+        const response = await fetch(`${API_BASE_URL}/topics`); 
+        const topics = await response.json();
+        
+        if (topics && topics.length > 0) {
+            topicsSection.innerHTML = topics.map(topic => `
+                <div class="card" onclick="showTopicPosts(${topic.id}, '${escapeHTML(topic.title)}')">
+                    <h3 style="margin-top:0; color: var(--accent);">${escapeHTML(topic.title)}</h3>
+                    <p class="small">${escapeHTML(topic.description)}</p>
+                    <span class="small" style="font-weight: 600; color: #fff;">Konuya Git →</span>
+                </div>
+            `).join('');
         } else {
-            if (authSection) authSection.classList.remove('hidden');
-            if (userSessionSection) userSessionSection.classList.add('hidden');
-            if (newPostForm) newPostForm.classList.add('hidden');
+            topicsSection.innerHTML = '<p class="small">Henüz hiç konu oluşturulmamış.</p>';
         }
-    };
+    } catch (error) {
+        topicsSection.innerHTML = `<p class="small" style="color:red;">Konular yüklenemedi. Backend sunucusunun (${API_BASE_URL}) çalıştığından emin olun.</p>`;
+    }
+};
+
+// 4. Konu İçindeki Mesajları Gösterir ve Yeni Mesaj Formunu Oluşturur
+const showTopicPosts = async (topicId, topicTitle) => {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <h1>${escapeHTML(topicTitle)}</h1>
+        <p class="lead"><a href="#forum" onclick="showPage('forum')" style="color: var(--muted); text-decoration: none;">← Tüm Konulara Geri Dön</a></p>
+        
+        <div id="new-post-form" class="card hidden">
+            <h3>Bu Konuya Mesaj Yaz</h3>
+            <textarea id="post-content" placeholder="Mesajınızı buraya yazın..." style="width:100%; min-height:100px; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;"></textarea>
+            <button id="send-post-btn" data-topic-id="${topicId}">Gönder</button>
+        </div>
+        
+        <hr style="border-color: var(--glass); margin: 20px 0;">
+
+        <h3>Son Mesajlar</h3>
+        <div id="posts-section">Mesajlar yükleniyor...</div>
+        <div style="height: 10px;"></div>
+    `;
+    
+    // UI ve oturum durumunu güncelle
+    await checkSession(); 
+
+    // Mesaj gönderme listener'ını yeniden bağla
+    const sendPostBtn = document.getElementById('send-post-btn');
+    if (sendPostBtn) {
+        sendPostBtn.addEventListener('click', () => createPost(topicId));
+    }
+    
+    // Mesajları yükle
+    loadPostsForTopic(topicId);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+};
+
+// 5. Belirli bir konunun mesajlarını API'den çeker
+const loadPostsForTopic = async (topicId) => {
+    const postsSection = document.getElementById('posts-section');
+    if (!postsSection) return;
+    postsSection.innerHTML = '<p class="small">Mesajlar yükleniyor...</p>';
+
+    try {
+        // topics/<id>/posts endpoint'ine istek at
+        const response = await fetch(`${API_BASE_URL}/topics/${topicId}/posts`); 
+        const data = await response.json();
+        const posts = data.posts;
+        
+        if (posts && posts.length > 0) {
+            postsSection.innerHTML = posts.map(post => `
+                <div class="card" style="border-left: 3px solid var(--accent);">
+                    <p style="white-space: pre-wrap; word-break: break-word; margin-top:0;">${escapeHTML(post.content)}</p>
+                    <p class="small" style="margin: 0;">
+                        <strong>Yazan:</strong> <span style="color: var(--accent);">${escapeHTML(post.author_username)}</span> - 
+                        <strong>Tarih:</strong> ${new Date(post.created_at).toLocaleString()}
+                    </p>
+                </div>
+            `).join('');
+        } else {
+            postsSection.innerHTML = '<p class="small">Bu konuda henüz hiç mesaj yok.</p>';
+        }
+    } catch (error) {
+        postsSection.innerHTML = '<p class="small" style="color:red;">Mesajlar yüklenemedi. Backend sunucusunun çalıştığından emin olun.</p>';
+    }
+};
+
+// 6. Yeni Mesaj Gönderme
+const createPost = async (topicId) => {
+    const content = document.getElementById('post-content').value;
+    if (!content.trim()) return;
+    
+    const sendButton = document.getElementById('send-post-btn');
+    sendButton.disabled = true;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/topics/${topicId}/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content }),
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            document.getElementById('post-content').value = '';
+            loadPostsForTopic(topicId); 
+        } else {
+            const data = await response.json();
+            alert(data.error || 'Mesaj gönderilemedi. Giriş yapmış olmanız gerekiyor.');
+        }
+    } catch (error) {
+         alert('Mesaj gönderilirken bir hata oluştu: Sunucuya ulaşılamıyor.');
+    } finally {
+        sendButton.disabled = false;
+    }
+};
+
+// 7. Giriş İşlemi (Username/Email ile giriş)
+const performLogin = async (email, password) => {
+    const response = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
+    });
+    const data = await response.json();
+    if (response.ok) {
+        checkSession();
+    } else {
+        alert(data.error);
+    }
+};
+
+// 8. Kayıt İşlemi (Username eklendi)
+const performRegister = async (email, password, username) => {
+    if (!username.trim()) { alert("Kayıt olmak için Kullanıcı Adı girmelisiniz."); return; }
+    
+    const response = await fetch(`${API_BASE_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, username }) 
+    });
+    const data = await response.json();
+    alert(data.message || data.error);
+};
+
+// 9. Forum Ana Sayfası Kurulumu
+// FORUM FUNCS
+function setupForum() {
+    const postsSection = document.getElementById('posts-section');
+    
+    // Modal Elementleri
+    const modal = document.getElementById('authModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modalRegisterBtn = document.getElementById('modal-register-btn');
+    const backToLoginBtn = document.getElementById('back-to-login-btn');
+    const forgotPasswordLink = document.getElementById('modal-forgot-password-link');
+    const backToLoginFromForgotBtn = document.getElementById('back-to-login-from-forgot-btn');
+    
+    // Form Inputları
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const forgotPasswordForm = document.getElementById('forgot-password-form');
+    const modalEmailInput = document.getElementById('modal-email-input');
+    const modalPasswordInput = document.getElementById('modal-password-input');
+    const registerEmailInput = document.getElementById('register-email-input');
+    const registerUsernameInput = document.getElementById('register-username-input'); 
+    const registerPasswordInput = document.getElementById('register-password-input');
 
     const escapeHTML = (str) => {
         const p = document.createElement("p");
@@ -3272,81 +3584,100 @@ function setupForum() {
             postsSection.innerHTML = '<p class="small" style="color:red;">Mesajlar yüklenemedi. Backend sunucusunun çalıştığından emin olun.</p>';
         }
     };
+    
+    // --- MODAL ve FORM LISTENERS (Forum için) ---
+    
+    // Modal açma/kapatma
+    closeModalBtn?.addEventListener('click', () => modal.classList.remove('visible'));
+    window.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('visible'); });
 
-    const checkSession = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
-            const data = await response.json();
-            updateUI(data.is_logged_in, data.user?.email);
-        } catch (error) {
-            console.error("Oturum kontrol edilemedi:", error);
-            updateUI(false);
+    // Modal formları arasında geçiş
+    modalRegisterBtn?.addEventListener('click', () => showForm('register', 'Yeni Hesap Oluştur'));
+    backToLoginBtn?.addEventListener('click', () => showForm('login', 'Giriş Yap'));
+    forgotPasswordLink?.addEventListener('click', () => showForm('forgot', 'Şifremi Sıfırla'));
+    backToLoginFromForgotBtn?.addEventListener('click', () => showForm('login', 'Giriş Yap'));
+
+    // Oturum Açma İşlemi
+    loginForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showMessage('success', 'Giriş yapılıyor...');
+        const email = modalEmailInput.value;
+        const password = modalPasswordInput.value;
+        const response = await fetch(`${API_BASE_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
+        });
+        const data = await response.json();
+        if (response.ok) {
+            showMessage('success', 'Giriş başarılı! Yönlendiriliyorsunuz...');
+            checkSession(); 
+        } else {
+            showMessage('error', data.error || 'Giriş başarısız oldu.');
         }
-    };
+    });
 
-    if (emailForm) {
-        emailForm.addEventListener('submit', e => e.preventDefault());
-    }
-    if (loginBtn) {
-        loginBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email-input').value;
-            const password = document.getElementById('password-input').value;
-            const response = await fetch(`${API_BASE_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-                credentials: 'include' // 👈 Bu satır ÇOK ÖNEMLİ
-            });
-            const data = await response.json();
-            if (response.ok) {
-                checkSession();
-            } else {
-                alert(data.error);
-            }
+    // Kayıt İşlemi
+    registerForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showMessage('success', 'Kayıt işlemi yapılıyor...');
+        const email = registerEmailInput.value;
+        const username = registerUsernameInput.value; 
+        const password = registerPasswordInput.value;
+        
+        const response = await fetch(`${API_BASE_URL}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, username }),
         });
-    }
-    if (registerBtn) {
-        registerBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email-input').value;
-            const password = document.getElementById('password-input').value;
-            const response = await fetch(`${API_BASE_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await response.json();
-            alert(data.message || data.error);
-        });
-    }
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await fetch(`${API_BASE_URL}/logout`, { method: 'POST', credentials: 'include' });
-            checkSession();
-        });
-    }
-    if (sendPostBtn) {
-        sendPostBtn.addEventListener('click', async () => {
-            const content = document.getElementById('post-content').value;
-            if (!content.trim()) return;
-            const response = await fetch(`${API_BASE_URL}/posts`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content }),
-                credentials: 'include'
-            });
-            if (response.ok) {
-                document.getElementById('post-content').value = '';
-                fetchPosts();
-            } else {
-                const data = await response.json();
-                alert(data.error || 'Mesaj gönderilemedi.');
-            }
-        });
-    }
+        const data = await response.json();
+        if (response.ok) {
+            showMessage('success', data.message + ' Şimdi giriş yapabilirsiniz.');
+            showForm('login', 'Giriş Yap'); 
+        } else {
+            showMessage('error', data.error || 'Kayıt başarısız oldu.');
+        }
+    });
 
-    checkSession();
+    // Şifremi Unuttum İşlemi (Mock)
+    forgotPasswordForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        showMessage('success', 'Şifre sıfırlama linki e-posta adresinize gönderildi. (Bu sadece bir demo mesajıdır)');
+    });
+
+    // Forum Logout
+    document.getElementById('logout-btn')?.addEventListener('click', doLogout);
+
+    // Yeni Mesaj Gönderme
+    document.getElementById('send-post-btn')?.addEventListener('click', async () => {
+        const content = document.getElementById('post-content').value;
+        if (!content.trim()) return;
+        const sendPostBtn = document.getElementById('send-post-btn');
+        sendPostBtn.disabled = true;
+
+        const response = await fetch(`${API_BASE_URL}/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content }),
+            credentials: 'include'
+        });
+        
+        sendPostBtn.disabled = false;
+        
+        if (response.ok) {
+            document.getElementById('post-content').value = '';
+            fetchPosts();
+        } else {
+            const data = await response.json();
+            alert(data.error || 'Mesaj gönderilemedi.');
+            checkSession(); 
+        }
+    });
+
+    // Başlangıç İşlemleri
     fetchPosts();
+    // checkSession en son 'showPage' içinde çağrıldığı için burada çağırmaya gerek yok.
 }
 
   function openTool(toolId) {
@@ -3859,5 +4190,43 @@ document.addEventListener('DOMContentLoaded', () => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28px" height="28px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
     </button>
     </div>
+    <div id="authModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" id="closeModal">&times;</span>
+        <h3 id="modal-title">Giriş Yap</h3>
+        <div id="form-message-container"></div>
+
+        <form id="login-form" class="modal-form">
+            <input type="email" id="modal-email-input" class="form-input" placeholder="E-posta adresiniz" required>
+            <input type="password" id="modal-password-input" class="form-input" placeholder="Parolanız" required>
+            <div class="form-buttons">
+                <button type="submit">Giriş Yap</button>
+                <button type="button" id="modal-register-btn" class="btn-secondary">Kaydol</button>
+            </div>
+            <div class="modal-links">
+                <a id="modal-forgot-password-link">Şifremi Unuttum</a>
+            </div>
+        </form>
+
+        <form id="register-form" class="modal-form hidden">
+            <input type="email" id="register-email-input" class="form-input" placeholder="E-posta adresiniz" required>
+            <input type="text" id="register-username-input" class="form-input" placeholder="Kullanıcı Adınız" required>
+            <input type="password" id="register-password-input" class="form-input" placeholder="Parolanız" required>
+            <div class="form-buttons">
+                <button type="submit">Kaydol</button>
+                <button type="button" id="back-to-login-btn" class="btn-secondary">Geri Dön</button>
+            </div>
+        </form>
+
+        <form id="forgot-password-form" class="modal-form hidden">
+            <p class="small" style="color:var(--muted); margin-bottom: 15px;">Şifre sıfırlama linki e-posta adresinize gönderilecektir. Lütfen e-posta adresinizi girin.</p>
+            <input type="email" id="forgot-email-input" class="form-input" placeholder="E-posta adresiniz" required>
+            <div class="form-buttons">
+                <button type="submit">Sıfırlama Linki Gönder</button>
+                <button type="button" id="back-to-login-from-forgot-btn" class="btn-secondary">Geri Dön</button>
+            </div>
+        </form>
+    </div>
+</div>
     </body>
   </html>
