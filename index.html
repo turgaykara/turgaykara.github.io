@@ -750,7 +750,7 @@ forum: {
 
                 <div id="user-session-section" class="hidden" style="margin-bottom: 15px;">
                     <p style="margin: 0; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>Hoş geldin, <strong id="user-welcome-name"></strong>!</span> 
+                        <strong>Hoş geldin, </strong> ${escapeHTML(post.author_email) || 'anonim'}<br><strong>
                         <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a>
                     </p>
                 </div>
