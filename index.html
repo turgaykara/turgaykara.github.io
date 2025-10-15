@@ -3223,7 +3223,8 @@ scanButton.textContent = 'Taramayı Başlat';
 function setupForum() {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
-    const userUsernameEl = document.getElementById('user-username'); // 👈 DEĞİŞTİ
+    // HATA DÜZELTME: userEmailEl değişkenini tanımla (Hoş geldin metnini tutan strong elementini yakalar)
+    const userEmailEl = document.getElementById('user-email'); 
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
 
@@ -3233,17 +3234,15 @@ function setupForum() {
     const sendPostBtn = document.getElementById('send-post-btn');
     const emailForm = document.getElementById('email-login-form');
 
-    // Yeni değişkenler:
-    const emailInput = document.getElementById('email-input');
-    const passwordInput = document.getElementById('password-input');
-
-    const updateUI = (isLoggedIn, userEmail = '', anonymousName = '') => {
-    if (isLoggedIn) {
+    // DÜZELTİLMİŞ UI GÜNCELLEME LOGİĞİ (anonymousName kullanılıyor)
+    const updateUI = (isLoggedIn, userEmail = '', anonymousName = '') => { 
+        if (isLoggedIn) {
             if (authSection) authSection.classList.add('hidden');
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
-            if (userEmailEl) userEmailEl.textContent = anonymousName;
-    } else {
+            // Hoş geldin mesajına anonim ismi yaz
+            if (userEmailEl) userEmailEl.textContent = anonymousName; 
+        } else {
             if (authSection) authSection.classList.remove('hidden');
             if (userSessionSection) userSessionSection.classList.add('hidden');
             if (newPostForm) newPostForm.classList.add('hidden');
@@ -3278,15 +3277,14 @@ function setupForum() {
     };
 
     const checkSession = async () => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
-        const data = await response.json();
-            // 👇 DEĞİŞTİ: session'dan username çekiliyor
-            updateUI(data.is_logged_in, data.user?.email, data.user?.anonymous_name);
-            // 👆 DEĞİŞTİ
+        try {
+            const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
+            const data = await response.json();
+            // checkSession'dan gelen anonim ismi updateUI'a ilet
+            updateUI(data.is_logged_in, data.user?.email, data.user?.anonymous_name); 
         } catch (error) {
-        console.error("Oturum kontrol edilemedi:", error);
-        updateUI(false);
+            console.error("Oturum kontrol edilemedi:", error);
+            updateUI(false);
         }
     };
 
@@ -3294,10 +3292,9 @@ function setupForum() {
         emailForm.addEventListener('submit', e => e.preventDefault());
     }
     if (loginBtn) {
-        // Login butonu için username input'unun değerine ihtiyacımız yok.
         loginBtn.addEventListener('click', async () => {
-            const email = emailInput.value; // Düzeltildi
-            const password = passwordInput.value; // Düzeltildi
+            const email = document.getElementById('email-input').value; 
+            const password = document.getElementById('password-input').value; 
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -3312,33 +3309,20 @@ function setupForum() {
             }
         });
     }
-// index.html içindeki setupForum fonksiyonu içinde:
 
-// index.html: setupForum fonksiyonu içinde
-if (registerBtn) {
-    registerBtn.addEventListener('click', async () => {
-        const email = document.getElementById('email-input').value;
-        const password = document.getElementById('password-input').value; 
-
-        const response = await fetch(`${API_BASE_URL}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+    if (registerBtn) {
+        registerBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value; 
+            const response = await fetch(`${API_BASE_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
         });
-        
-        const data = await response.json();
-        
-        // Sadece mesajı göster (link artık backend'den gelmeyecek)
-        alert(data.message || data.error);
-
-        // Başarılıysa formu temizle (isteğe bağlı)
-        if (response.ok) {
-            document.getElementById('email-input').value = '';
-            document.getElementById('password-input').value = '';
-        }
-    });
-}
-// ...
+    }
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
