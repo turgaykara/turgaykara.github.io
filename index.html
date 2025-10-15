@@ -739,7 +739,6 @@ forum: {
                     <h3>Topluluğa Katıl</h3>
                     <p class="small" style="margin-bottom:15px;">Mesaj yazmak veya yeni konu açmak için giriş yapmalısınız.</p>
                     <form id="email-login-form" style="width:100%;">
-                        <input type="text" id="username-input" placeholder="Kullanıcı adınız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <input type="email" id="email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
@@ -3235,7 +3234,6 @@ function setupForum() {
     const emailForm = document.getElementById('email-login-form');
 
     // Yeni değişkenler:
-    const usernameInput = document.getElementById('username-input');
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
 
