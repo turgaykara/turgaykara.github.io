@@ -739,6 +739,7 @@ forum: {
                     <h3>Topluluğa Katıl</h3>
                     <p class="small" style="margin-bottom:15px;">Mesaj yazmak veya yeni konu açmak için giriş yapmalısınız.</p>
                     <form id="email-login-form" style="width:100%;">
+                        <input type="text" id="username-input" placeholder="Kullanıcı adınız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <input type="email" id="email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
@@ -749,7 +750,7 @@ forum: {
                 </div>
 
                 <div id="user-session-section" class="hidden" style="text-align: right; margin-bottom: 15px;">
-                    <p style="margin: 0; font-size: 14px;">Hoş geldin, <strong id="user-email"></strong>! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
+                    <p style="margin: 0; font-size: 14px;">Hoş geldin, <strong id="user-username"></strong>! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
                 </div>
 
                 <div id="new-post-form" class="card hidden">
@@ -3223,7 +3224,7 @@ scanButton.textContent = 'Taramayı Başlat';
 function setupForum() {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
-    const userEmailEl = document.getElementById('user-email');
+    const userUsernameEl = document.getElementById('user-username'); // 👈 DEĞİŞTİ
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
 
@@ -3233,12 +3234,17 @@ function setupForum() {
     const sendPostBtn = document.getElementById('send-post-btn');
     const emailForm = document.getElementById('email-login-form');
 
-    const updateUI = (isLoggedIn, userEmail = '') => {
+    // Yeni değişkenler:
+    const usernameInput = document.getElementById('username-input');
+    const emailInput = document.getElementById('email-input');
+    const passwordInput = document.getElementById('password-input');
+
+    const updateUI = (isLoggedIn, userUsername = '') => { // 👈 DEĞİŞTİ
         if (isLoggedIn) {
             if (authSection) authSection.classList.add('hidden');
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
-            if (userEmailEl) userEmailEl.textContent = userEmail;
+            if (userUsernameEl) userUsernameEl.textContent = userUsername; // 👈 DEĞİŞTİ
         } else {
             if (authSection) authSection.classList.remove('hidden');
             if (userSessionSection) userSessionSection.classList.add('hidden');
@@ -3277,7 +3283,9 @@ function setupForum() {
         try {
             const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
             const data = await response.json();
-            updateUI(data.is_logged_in, data.user?.email);
+            // 👇 DEĞİŞTİ: session'dan username çekiliyor
+            updateUI(data.is_logged_in, data.user?.username); 
+            // 👆 DEĞİŞTİ
         } catch (error) {
             console.error("Oturum kontrol edilemedi:", error);
             updateUI(false);
@@ -3288,14 +3296,15 @@ function setupForum() {
         emailForm.addEventListener('submit', e => e.preventDefault());
     }
     if (loginBtn) {
+        // Login butonu için username input'unun değerine ihtiyacımız yok.
         loginBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email-input').value;
-            const password = document.getElementById('password-input').value;
+            const email = emailInput.value; // Düzeltildi
+            const password = passwordInput.value; // Düzeltildi
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
-                credentials: 'include' // 👈 Bu satır ÇOK ÖNEMLİ
+                credentials: 'include' 
             });
             const data = await response.json();
             if (response.ok) {
@@ -3307,12 +3316,18 @@ function setupForum() {
     }
     if (registerBtn) {
         registerBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email-input').value;
-            const password = document.getElementById('password-input').value;
+            // 👇 DEĞİŞTİ: username'i de gönderiyoruz
+            const username = usernameInput.value; 
+            const email = emailInput.value; 
+            const password = passwordInput.value; 
+            // 👆 DEĞİŞTİ
+
             const response = await fetch(`${API_BASE_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                // 👇 DEĞİŞTİ: username payload'a eklendi
+                body: JSON.stringify({ email, password, username }) 
+                // 👆 DEĞİŞTİ
             });
             const data = await response.json();
             alert(data.message || data.error);
