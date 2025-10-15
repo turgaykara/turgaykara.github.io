@@ -748,12 +748,8 @@ forum: {
                     </form>
                 </div>
 
-                <div id="user-session-section" class="hidden" style="text-align: left; margin-bottom: 15px;">
-                    <p style="margin: 0; font-size: 14px;">Hoş geldin!</p>
-                </div>
-
                 <div id="user-session-section" class="hidden" style="text-align: right; margin-bottom: 15px;">
-                    <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
+                    <p style="margin: 0; font-size: 14px;">Hoş geldin! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
                 </div>
 
                 <div id="new-post-form" class="card hidden">
@@ -773,38 +769,24 @@ forum: {
     ]
 },
 
-        baslangic: {
-        menuName: 'Giriş',
-        icon: 'icon-rocket',
-        title: 'Siber Güvenliğe Giriş',
-        description: 'Siber Güvenlik Alanları',
-  "sections": [
+baslangic: {
+    menuName: 'Giriş',
+    icon: 'icon-rocket',
+    title: 'Siber Güvenlik Kariyer Alanları ve Uzmanlıklar',
+    description: 'Saldırı (Offensive) ve Savunma (Defensive) odaklı başlıca rollere ve uzmanlık alanlarına genel bakış.',
+    "sections": [
         {
-          "title": "",
-          "content": " \n\t\t\t \t<div style=\"\n\t\t\t \t\tbackground:#0b1220;\n\t\t\t \t\tborder:1px solid rgba(255,255,255,0.1);\n\t\t\t \t\tborder-radius:12px;\n\t\t\t \t\tpadding:15px;\n\t\t\t \t\tmargin-bottom:12px;\n\t\t\t \t\">\n\t\t\t \t\t<h3 style=\"margin:0 0 8px 0; font-size:18px; color:#06b6d4\">\n\t\t\t \t\t\tSECURITY ANALYST\n\t\t\t \t\t</h3>\n\t\t\t \t\t<p style=\"font-size:16px; line-height:1.4; color:#cbd5e1\">\n\t\t\t \t\t\tGüvenlik olaylarını izler, analiz eder ve müdahale planları hazırlar.<br>\n\t\t\t \t\t\tSistem loglarını inceleyerek tehditleri tespit edip raporlar.\n\t\t\t \t\t<br>\n\t\t\t \t\t</p>\n\t\t\t \t</div>\n\t\t\t "
+            "title": "Ana Disiplinler",
+            "content": " \n\t\t\t \t<div class=\"tool-grid-container\" style=\"grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 10px;\">\n\t\t\t \t\t\t<div class=\"tool-card\" style=\"border: 1px solid rgba(6,182,212,0.5);\">\n\t\t\t \t\t\t\t<h3 class=\"tool-title\" style=\"color:#06b6d4; font-size: 1.2em;\">OFFENSIVE SECURITY (Saldırı)</h3>\n\t\t\t \t\t\t\t<p class=\"tool-description\" style=\"color: #cbd5e1;\">Sistemlerdeki zafiyetleri bulma, istismar etme ve açıkları gerçek saldırılardan önce ortaya çıkarma odaklıdır. (Penetrasyon Testi, Red Team).</p>\n\t\t\t \t\t\t</div>\n\t\t\t \t\t\t<div class=\"tool-card\" style=\"border: 1px solid rgba(52,211,153,0.5);\">\n\t\t\t \t\t\t\t<h3 class=\"tool-title\" style=\"color:#34d399; font-size: 1.2em;\">DEFENSIVE SECURITY (Savunma)</h3>\n\t\t\t \t\t\t\t<p class=\"tool-description\" style=\"color: #cbd5e1;\">Ağları, sistemleri ve verileri saldırılara karşı koruma, 7/24 izleme ve olaylara müdahale etme odaklıdır. (SOC, DFIR, IR).</p>\n\t\t\t \t\t\t</div>\n\t\t\t \t</div>\n\t\t\t "
         },
         {
-          "title": "",
-          "content": " \n\t\t\t \t<div style=\"\n\t\t\t \t\tbackground:#0b1220;\n\t\t\t \t\tborder:1px solid rgba(255,255,255,0.1);\n\t\t\t \t\tborder-radius:12px;\n\t\t\t \t\tpadding:15px;\n\t\t\t \t\tmargin-bottom:12px;\n\t\t\t \t\">\n\n\t\t\t \t\t<h3 style=\"margin:0 0 8px 0; font-size:18px; color:#06b6d4\">\n\t\t\t \t\t\tMALWARE ANALYST\n\t\t\t \t\t</h3>\n\t\t\t \t\t<p style=\"font-size:16px; line-height:1.4; color:#cbd5e1\">\n\t\t\t \t\t\tKötü amaçlı yazılımları (virüs, truva atı vb.) tersine mühendislikle (Reverse Engineering) inceler.<br>\n\t\t\t \t\t\tYazılımın amacını, etkisini ve yayılma yöntemlerini ortaya çıkarır.\n\t\t\t \t\t<br>\n\t\t\t \t\t</p>\n\t\t\t \t</div>\n\t\t\t "
-        },
-        {
-          "title": "",
-          "content": " \n\t\t\t \t<div style=\"\n\t\t\t \t\tbackground:#0b1220;\n\t\t\t \t\tborder:1px solid rgba(255,255,255,0.1);\n\t\t\t \t\tborder-radius:12px;\n\t\t\t \t\tpadding:15px;\n\t\t\t \t\tmargin-bottom:12px;\n\t\t\t \t\">\n\n\t\t\t \t\t<h3 style=\"margin:0 0 8px 0; font-size:18px; color:#06b6d4\">\n\t\t\t \t\t\tPENTESTER / BUG BOUNTY HUNTER\n\t\t\t \t\t</h3>\n\t\t\t \t\t<p style=\"font-size:16px; line-height:1.4; color:#cbd5e1\">\n\t\t\t \t\t\tKurumların ve ürünlerin izinli şekilde zafiyetlerini arar.<br>\n\t\t\t \t\t\tTespit ettiği zafiyetleri raporlayarak sistemlerin güçlenmesine yardımcı olur ve karşılığında ödül kazanır.\n\t\t\t \t\t<br>\n\t\t\t \t\t</p>\n\t\t\t \t</div>\n\t\t\t "
-        },
-        {
-          "title": "",
-          "content": " \n\t\t\t \t<div style=\"\n\t\t\t \t\tbackground:#0b1220;\n\t\t\t \t\tborder:1px solid rgba(255,255,255,0.1);\n\t\t\t \t\tborder-radius:12px;\n\t\t\t \t\tpadding:15px;\n\t\t\t \t\tmargin-bottom:12px;\n\t\t\t \t\">\n\n\t\t\t \t\t<h3 style=\"margin:0 0 8px 0; font-size:18px; color:#06b6d4\">\n\t\t\t \t\t\tCLOUD SECURITY ENGINEER\n\t\t\t \t\t</h3>\n\t\t\t \t\t<p style=\"font-size:16px; line-height:1.4; color:#cbd5e1\">\n\t\t\t \t\t\tAmazon Web Services (AWS), Azure ve Google Cloud gibi bulut ortamlarının güvenliğini sağlar.<br>\n\t\t\t \t\t\tBulut tabanlı mimarilerde güvenlik politikalarını uygular ve izler.\n\t\t\t \t\t<br>\n\t\t\t \t\t</p>\n\t\t\t \t</div>\n\t\t\t "
-        },
-        {
-          "title": "",
-          "content": " \n\t\t\t \t<div style=\"\n\t\t\t \t\tbackground:#0b1220;\n\t\t\t \t\tborder:1px solid rgba(255,255,255,0.1);\n\t\t\t \t\tborder-radius:12px;\n\t\t\t \t\tpadding:15px;\n\t\t\t \t\tmargin-bottom:12px;\n\t\t\t \t\">\n\n\t\t\t \t\t<h3 style=\"margin:0 0 8px 0; font-size:18px; color:#06b6d4\">\n\t\t\t \t\t\tFORENSIC ANALYST\n\t\t\t \t\t</h3>\n\t\t\t \t\t<p style=\"font-size:16px; line-height:1.4; color:#cbd5e1\">\n\t\t\t \t\t\tBir siber saldırı ya da olayın ardından dijital kanıtları toplar, korur ve analiz eder.<br>\n\t\t\t \t\t\tSaldırının nasıl gerçekleştiğini ve failini tespit etmeye çalışır.\n\t\t\t \t\t<br>\n\t\t\t \t\t</p>\n\t\t\t \t</div>\n\t\t\t "
-        },
-        {
-          "title": "",
-          "content": " \n\t\t\t \t<div style=\"\n\t\t\t \t\tbackground:#0b1220;\n\t\t\t \t\tborder:1px solid rgba(255,255,255,0.1);\n\t\t\t \t\tborder-radius:12px;\n\t\t\t \t\tpadding:15px;\n\t\t\t \t\tmargin-bottom:12px;\n\t\t\t \t\">\n\n\t\t\t \t\t<h3 style=\"margin:0 0 8px 0; font-size:18px; color:#06b6d4\">\n\t\t\t \t\t\tDEVSECOPS ENGINEER\n\t\t\t \t\t</h3>\n\t\t\t \t\t<p style=\"font-size:16px; line-height:1.4; color:#cbd5e1\">\n\t\t\t \t\t\tYazılım geliştirme sürecinin (DevOps) her aşamasına güvenliği entegre eder.<br>\n\t\t\t \t\t\tGüvenli kodlama uygulamalarını otomatize eder ve altyapı güvenliğini yönetir.\n\t\t\t \t\t<br>\n\t\t\t \t\t</p>\n\t\t\t \t</div>\n\t\t\t "
+            "title": "Uzmanlık Alanları (Kart Görünümü)",
+            "content": " \n\t\t\t \t<div class=\"tool-grid-container\" style=\"grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 10px;\">\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #06b6d4;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">PENETRATION TESTER</div>\n\t\t\t \t\t\t<p class=\"small\">İzinli saldırı simülasyonları yaparak güvenlik açıklarını bulur ve raporlar.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #06b6d4;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">RED TEAMER</div>\n\t\t\t \t\t\t<p class=\"small\">Gelişmiş, gerçekçi saldırı senaryoları uygulayarak savunmayı test eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #34d399;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">SECURITY ANALYST (SOC)</div>\n\t\t\t \t\t\t<p class=\"small\">Güvenlik olaylarını 7/24 izler, logları analiz eder ve tehditleri tespit eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #34d399;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">INCIDENT RESPONDER</div>\n\t\t\t \t\t\t<p class=\"small\">Siber saldırılara anında müdahale eder, hasarı sınırlar ve sistemi kurtarır.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #34d399;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">DFIR / FORENSICS EXAMINER</div>\n\t\t\t \t\t\t<p class=\"small\">Saldırı sonrası dijital kanıtları toplar ve olayların hukuki analizini yapar.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #06b6d4;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">APPLICATION SECURITY (AppSec)</div>\n\t\t\t \t\t\t<p class=\"small\">Uygulama geliştirme yaşam döngüsüne (SDLC) güvenliği entegre eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #9aa4b2;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">GRC SPECIALIST</div>\n\t\t\t \t\t\t<p class=\"small\">Yönetişim, risk yönetimi ve yasal uyumluluk süreçlerini denetler (ISO 27001, KVKK).</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #9aa4b2;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">MALWARE ANALYST</div>\n\t\t\t \t\t\t<p class=\"small\">Zararlı yazılımların (virüs) çalışma mantığını ve yayılma yöntemlerini inceler.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #9aa4b2;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">THREAT INTELLIGENCE</div>\n\t\t\t \t\t\t<p class=\"small\">Potansiyel tehditler hakkında bilgi toplar ve savunma stratejilerine entegre eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #9aa4b2;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">CLOUD SECURITY ENGINEER</div>\n\t\t\t \t\t\t<p class=\"small\">Bulut ortamlarının (AWS, Azure) güvenliğini sağlar ve politikaları uygular.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #34d399;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">SECURITY ARCHITECT</div>\n\t\t\t \t\t\t<p class=\"small\">Büyük ölçekli sistemler ve ağlar için uçtan uca güvenlik mimarilerini tasarlar.</p>\n\t\t\t \t\t</div>\n\t\t\t \t</div>\n\t\t\t "
         }
-      ]
-        },
+    ]
+}
+,
+
 
   javascriptrecon: {
     menuName: 'Recon',
