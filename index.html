@@ -3223,8 +3223,13 @@ scanButton.textContent = 'Taramayı Başlat';
 function setupForum() {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
-    // HATA DÜZELTME: userEmailEl değişkenini tanımla (Hoş geldin metnini tutan strong elementini yakalar)
+    
+    // 👇 DÜZELTME: userEmailEl değişkeni artık Hoş geldin mesajındaki <strong id="user-email"> elementini yakalayacak.
+    // Eğer HTML'de ID'niz "user-email" ise, bunu kullanmalıyız.
+    // Eğer HTML'de ID'niz "user-username" ise, o ID'yi kullanmalıyız.
+    // Hatanızdaki "userEmailEl is not defined" hatasını çözmek için, değişkeni hemen tanımlıyoruz.
     const userEmailEl = document.getElementById('user-email'); 
+    
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
 
@@ -3234,13 +3239,13 @@ function setupForum() {
     const sendPostBtn = document.getElementById('send-post-btn');
     const emailForm = document.getElementById('email-login-form');
 
-    // DÜZELTİLMİŞ UI GÜNCELLEME LOGİĞİ (anonymousName kullanılıyor)
+    // DÜZELTİLMİŞ UI GÜNCELLEME LOGİĞİ
     const updateUI = (isLoggedIn, userEmail = '', anonymousName = '') => { 
         if (isLoggedIn) {
             if (authSection) authSection.classList.add('hidden');
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
-            // Hoş geldin mesajına anonim ismi yaz
+            // KRİTİK DÜZELTME: Troll ismini elementin içine yazıyoruz.
             if (userEmailEl) userEmailEl.textContent = anonymousName; 
         } else {
             if (authSection) authSection.classList.remove('hidden');
