@@ -717,6 +717,7 @@
     </div>
 
     <script>
+      const API_BASE_URL = 'http://127.0.0.1:5001';
       const CONTENT = {
         home: {
           type: 'home',
@@ -756,7 +757,7 @@ forum: {
                     <textarea id="post-content" placeholder="Mesajınızı buraya yazın..." style="width:100%; min-height:100px; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;"></textarea>
                     <button id="send-post-btn">Gönder</button>
                 </div>
-                
+
                 <hr style="border-color: var(--glass); margin: 20px 0;">
 
                 <h3>Son Mesajlar</h3>
@@ -766,7 +767,8 @@ forum: {
             `
         }
     ]
-}, // Bu virgülden sonra diğer içeriklerin devam ediyor olmalı
+},
+
         baslangic: {
         menuName: 'Giriş',
         icon: 'icon-rocket',
@@ -3219,14 +3221,12 @@ scanButton.textContent = 'Taramayı Başlat';
 // BU KOD BLOĞUNU OLDUĞU GİBİ YAPIŞTIR
 
 function setupForum() {
-    const backendUrl = 'https://admin3131.pythonanywhere.com';
-
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
     const userEmailEl = document.getElementById('user-email');
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
-    
+
     const loginBtn = document.getElementById('login-email-btn');
     const registerBtn = document.getElementById('register-email-btn');
     const logoutBtn = document.getElementById('logout-btn');
@@ -3246,11 +3246,17 @@ function setupForum() {
         }
     };
 
+    const escapeHTML = (str) => {
+        const p = document.createElement("p");
+        p.textContent = str;
+        return p.innerHTML;
+    };
+
     const fetchPosts = async () => {
         if (!postsSection) return;
         postsSection.innerHTML = '<p class="small">Mesajlar yükleniyor...</p>';
         try {
-            const response = await fetch(`${backendUrl}/posts`, { credentials: 'include' });
+            const response = await fetch(`${API_BASE_URL}/posts`);
             const posts = await response.json();
             if (posts && posts.length > 0) {
                 postsSection.innerHTML = posts.map(post => `
@@ -3266,16 +3272,10 @@ function setupForum() {
             postsSection.innerHTML = '<p class="small" style="color:red;">Mesajlar yüklenemedi. Backend sunucusunun çalıştığından emin olun.</p>';
         }
     };
-    
-    const escapeHTML = (str) => {
-        const p = document.createElement("p");
-        p.textContent = str;
-        return p.innerHTML;
-    };
 
     const checkSession = async () => {
         try {
-            const response = await fetch(`${backendUrl}/session`, { credentials: 'include' });
+            const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
             const data = await response.json();
             updateUI(data.is_logged_in, data.user?.email);
         } catch (error) {
@@ -3291,7 +3291,7 @@ function setupForum() {
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('email-input').value;
             const password = document.getElementById('password-input').value;
-            const response = await fetch(`${backendUrl}/login`, {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -3309,11 +3309,10 @@ function setupForum() {
         registerBtn.addEventListener('click', async () => {
             const email = document.getElementById('email-input').value;
             const password = document.getElementById('password-input').value;
-            const response = await fetch(`${backendUrl}/register`, {
+            const response = await fetch(`${API_BASE_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-                credentials: 'include'
+                body: JSON.stringify({ email, password })
             });
             const data = await response.json();
             alert(data.message || data.error);
@@ -3322,7 +3321,7 @@ function setupForum() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            await fetch(`${backendUrl}/logout`, { method: 'POST', credentials: 'include' });
+            await fetch(`${API_BASE_URL}/logout`, { method: 'POST', credentials: 'include' });
             checkSession();
         });
     }
@@ -3330,7 +3329,7 @@ function setupForum() {
         sendPostBtn.addEventListener('click', async () => {
             const content = document.getElementById('post-content').value;
             if (!content.trim()) return;
-            const response = await fetch(`${backendUrl}/posts`, {
+            const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content }),
@@ -3349,6 +3348,7 @@ function setupForum() {
     checkSession();
     fetchPosts();
 }
+
   function openTool(toolId) {
       const main = document.getElementById('mainContent');
       let tool = null;
