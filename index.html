@@ -747,15 +747,6 @@ forum: {
                         </div>
                     </form>
                 </div>
-                <div id="activation-form-card" class="card" style="margin-top: 15px;">
-    <h3>Hesabı Etkinleştir</h3>
-    <p class="small" style="margin-bottom:15px;">Kayıt olduysanız ancak e-posta alamadıysanız (simülasyon), aktivasyon linkini tekrar almak için e-postanızı girin.</p>
-    <form id="resend-activation-form" style="width:100%;">
-        <input type="email" id="resend-email-input" placeholder="Kayıtlı E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
-        <button type="submit" id="resend-activation-btn">Aktivasyon Linkini Al</button>
-    </form>
-    <div id="resend-activation-result" class="small" style="margin-top: 10px; word-break: break-all;"></div>
-</div>
 
                 <div id="user-session-section" class="hidden" style="text-align: right; margin-bottom: 15px;">
                     <p style="margin: 0; font-size: 14px;">Hoş geldin, <strong id="user-username"></strong>! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
@@ -3377,52 +3368,8 @@ if (registerBtn) {
 
     checkSession();
     fetchPosts();
-    setupResendActivation();
 }
 // index.html, <script> bloğu içinde, setupForum fonksiyonundan sonra
-
-function setupResendActivation() {
-    const resendForm = document.getElementById('resend-activation-form');
-    const resendEmailInput = document.getElementById('resend-email-input');
-    const resendResultDiv = document.getElementById('resend-activation-result');
-
-    if (!resendForm) return;
-
-    resendForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = resendEmailInput.value;
-        resendResultDiv.innerHTML = '<p style="color:var(--accent);">İşleniyor...</p>';
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/resend_activation`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
-            });
-            const data = await response.json();
-
-            if (response.ok) {
-                // Linki kullanıcıya göster
-                resendResultDiv.innerHTML = `
-                    <p style="color: #34d399;">${data.message}</p>
-                    <p style="color: #fcd34d;">${data.info}</p>
-                    <a href="${data.activation_link}" target="_blank" style="color: var(--accent); font-weight: 600;">${data.activation_link}</a>
-                    <p class="small" style="margin-top:5px;">Lütfen bu linke tıklayarak hesabınızı aktif edin.</p>
-                `;
-            } else {
-                resendResultDiv.innerHTML = `<p style="color: #f87171;">Hata: ${data.error || 'Bilinmeyen Hata'}</p>`;
-            }
-        } catch (error) {
-            resendResultDiv.innerHTML = '<p style="color: #f87171;">Bağlantı Hatası. Sunucuya ulaşılamıyor.</p>';
-        }
-    });
-}
-
-// Uygulama yüklendiğinde bu fonksiyonu çağırın:
-// Örneğin: document.addEventListener('DOMContentLoaded', setupResendActivation);
-// Sizin setupForum fonksiyonunuzun en sonunda çağrılması en iyisidir.
-// setupForum fonksiyonunun en sonuna şu satırı ekleyin:
-// setupResendActivation();
   function openTool(toolId) {
       const main = document.getElementById('mainContent');
       let tool = null;
