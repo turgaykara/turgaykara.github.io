@@ -675,6 +675,10 @@
     font-size: 0;
     height: 28px;
 }
+.icon-forum::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V4c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V4c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z'/%3E%3C/svg%3E");
+}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   </head>
@@ -707,6 +711,50 @@
           title: 'Bug Bounty Akademi',
           subtitle: 'Sıfırdan ileri seviyeye kapsamlı bug bounty eğitimi. Gerçek dünya senaryoları, pratik araçlar ve adım adım metodolojiler ile zafiyet avcısı olun.<br>Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.'
         },
+// MEVCUT forum BLOĞUNU SİL, YERİNE BUNU YAPIŞTIR:
+
+forum: {
+    menuName: 'Forum',
+    icon: 'icon-forum',
+    title: 'Topluluk Forumu',
+    description: 'Giriş yaparak tartışmalara katılın, soru sorun veya mevcut konuları inceleyin.',
+    sections: [
+        {
+            title: '',
+            content: `
+                <div id="auth-section" class="card">
+                    <h3>Topluluğa Katıl</h3>
+                    <p class="small" style="margin-bottom:15px;">Mesaj yazmak veya yeni konu açmak için giriş yapmalısınız.</p>
+                    <form id="email-login-form" style="width:100%;">
+                        <input type="email" id="email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                        <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                        <div class="tool-buttons">
+                            <button type="submit" id="login-email-btn">Giriş Yap</button>
+                            <button type="button" id="register-email-btn">Kaydol</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="user-session-section" class="hidden" style="text-align: right; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 14px;">Hoş geldin, <strong id="user-email"></strong>! <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a></p>
+                </div>
+
+                <div id="new-post-form" class="card hidden">
+                    <h3>Yeni Mesaj Yaz</h3>
+                    <textarea id="post-content" placeholder="Mesajınızı buraya yazın..." style="width:100%; min-height:100px; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;"></textarea>
+                    <button id="send-post-btn">Gönder</button>
+                </div>
+                
+                <hr style="border-color: var(--glass); margin: 20px 0;">
+
+                <h3>Son Mesajlar</h3>
+                <div id="posts-section">
+                    <p class="small">Mesajlar yükleniyor...</p>
+                </div>
+            `
+        }
+    ]
+}, // Bu virgülden sonra diğer içeriklerin devam ediyor olmalı
         baslangic: {
         menuName: 'Giriş',
         icon: 'icon-rocket',
@@ -2378,8 +2426,12 @@ if(quickLinks) {
           }
           main.innerHTML = html;
       }
-      window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+          if (pageId === 'forum') {
+          setupForum();
+      }
+    
+    window.scrollTo({top: 0, behavior: 'smooth'});
+} // showPage fonksiyonunun bittiği yer
 
 function activateSubfinder() {
 const scanButton = document.getElementById('scanButton');
@@ -3152,7 +3204,143 @@ scanButton.textContent = 'Taramayı Başlat';
           setTimeout(() => { document.getElementById('btnCopyDecodeOutput').textContent = 'Çıktıyı Kopyala'; }, 1500);
       });
     }
-  
+// BU KOD BLOĞUNU OLDUĞU GİBİ YAPIŞTIR
+
+function setupForum() {
+    const backendUrl = 'https://admin3131.pythonanywhere.com'; // Kendi PythonAnywhere URL'n
+
+    const authSection = document.getElementById('auth-section');
+    const userSessionSection = document.getElementById('user-session-section');
+    const userEmailEl = document.getElementById('user-email');
+    const newPostForm = document.getElementById('new-post-form');
+    const postsSection = document.getElementById('posts-section');
+    
+    const loginBtn = document.getElementById('login-email-btn');
+    const registerBtn = document.getElementById('register-email-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const sendPostBtn = document.getElementById('send-post-btn');
+    const emailForm = document.getElementById('email-login-form');
+
+    const updateUI = (isLoggedIn, userEmail = '') => {
+        if (isLoggedIn) {
+            if (authSection) authSection.classList.add('hidden');
+            if (userSessionSection) userSessionSection.classList.remove('hidden');
+            if (newPostForm) newPostForm.classList.remove('hidden');
+            if (userEmailEl) userEmailEl.textContent = userEmail;
+        } else {
+            if (authSection) authSection.classList.remove('hidden');
+            if (userSessionSection) userSessionSection.classList.add('hidden');
+            if (newPostForm) newPostForm.classList.add('hidden');
+        }
+    };
+
+    const fetchPosts = async () => {
+        if (!postsSection) return;
+        postsSection.innerHTML = '<p class="small">Mesajlar yükleniyor...</p>';
+        try {
+            const response = await fetch(`${backendUrl}/posts`, {
+                credentials: 'include' // <-- EKLENDİ
+            });
+            const posts = await response.json();
+            if (posts && posts.length > 0) {
+                postsSection.innerHTML = posts.map(post => `
+                    <div class="card">
+                        <p style="white-space: pre-wrap;">${post.content}</p>
+                        <p class="small"><strong>Yazan:</strong> ${post.author_email || 'anonim'}<br><strong>Tarih:</strong> ${new Date(post.created_at).toLocaleString()}</p>
+                    </div>
+                `).join('');
+            } else {
+                postsSection.innerHTML = '<p class="small">Henüz hiç mesaj yazılmamış.</p>';
+            }
+        } catch (error) {
+            postsSection.innerHTML = '<p class="small" style="color:red;">Mesajlar yüklenemedi.</p>';
+        }
+    };
+
+    const checkSession = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/session`, {
+                credentials: 'include' // <-- EKLENDİ
+            });
+            const data = await response.json();
+            updateUI(data.is_logged_in, data.user?.email);
+        } catch (error) {
+            console.error("Oturum kontrol edilemedi:", error);
+            updateUI(false);
+        }
+    };
+
+    if (emailForm) emailForm.addEventListener('submit', e => e.preventDefault());
+    
+    if (loginBtn) {
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            const response = await fetch(`${backendUrl}/login`, {
+                method: 'POST',
+                credentials: 'include', // <-- EKLENDİ
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                checkSession(); // Giriş sonrası session'ı kontrol et
+                fetchPosts();
+            } else {
+                alert(data.error);
+            }
+        });
+    }
+
+    if (registerBtn) {
+        registerBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            const response = await fetch(`${backendUrl}/register`, {
+                method: 'POST',
+                credentials: 'include', // <-- EKLENDİ
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch(`${backendUrl}/logout`, { 
+                method: 'POST',
+                credentials: 'include' // <-- EKLENDİ
+            });
+            updateUI(false);
+        });
+    }
+
+    if (sendPostBtn) {
+        sendPostBtn.addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value;
+            if (!content.trim()) return;
+            const response = await fetch(`${backendUrl}/posts`, {
+                method: 'POST',
+                credentials: 'include', // <-- EKLENDİ
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            });
+            if (response.ok) {
+                document.getElementById('post-content').value = '';
+                fetchPosts();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Mesaj gönderilemedi.');
+            }
+        });
+    }
+
+    checkSession();
+    fetchPosts();
+}
   function openTool(toolId) {
       const main = document.getElementById('mainContent');
       let tool = null;
@@ -3665,6 +3853,3 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
   </html>
-
-
-
