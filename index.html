@@ -3237,13 +3237,13 @@ function setupForum() {
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
 
-    const updateUI = (isLoggedIn, userUsername = '') => { // 👈 DEĞİŞTİ
-        if (isLoggedIn) {
+    const updateUI = (isLoggedIn, userEmail = '', anonymousName = '') => {
+    if (isLoggedIn) {
             if (authSection) authSection.classList.add('hidden');
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
             if (userEmailEl) userEmailEl.textContent = anonymousName;
-        } else {
+    } else {
             if (authSection) authSection.classList.remove('hidden');
             if (userSessionSection) userSessionSection.classList.add('hidden');
             if (newPostForm) newPostForm.classList.add('hidden');
@@ -3278,15 +3278,15 @@ function setupForum() {
     };
 
     const checkSession = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
-            const data = await response.json();
+    try {
+        const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
+        const data = await response.json();
             // 👇 DEĞİŞTİ: session'dan username çekiliyor
-            updateUI(data.is_logged_in, data.user?.username); 
+            updateUI(data.is_logged_in, data.user?.email, data.user?.anonymous_name);
             // 👆 DEĞİŞTİ
         } catch (error) {
-            console.error("Oturum kontrol edilemedi:", error);
-            updateUI(false);
+        console.error("Oturum kontrol edilemedi:", error);
+        updateUI(false);
         }
     };
 
