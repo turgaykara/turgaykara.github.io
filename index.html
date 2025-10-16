@@ -3272,7 +3272,7 @@ function setupForum() {
 
     const updateUI = (isLoggedIn, userEmail = '') => {
         if (isLoggedIn) {
-            // Sadece Auth ve Reset formlarını gizle
+            // ... (Giriş Yapılmışsa mantığı, değişmedi)
             if (authSection) authSection.classList.add('hidden');
             if (requestResetSection) requestResetSection.classList.add('hidden');
             if (newPasswordSection) newPasswordSection.classList.add('hidden');
@@ -3281,31 +3281,39 @@ function setupForum() {
             if (newPostForm) newPostForm.classList.remove('hidden');
             
             // Eğer giriş yapıldıysa, URL'deki olası token'ı temizle
-            if(window.location.hash.startsWith('#reset_password')) {
+            if(window.location.hash.includes('reset_token')) { // Sadece reset_token varsa temizle
                 window.location.hash = '#forum';
             }
 
         } else {
+            // ... (Giriş yapılmamışsa mantığı)
             if (userSessionSection) userSessionSection.classList.add('hidden');
             if (newPostForm) newPostForm.classList.add('hidden');
 
-            // URL Hash Kontrolü
-            if (window.location.hash.startsWith('#reset_password')) {
+            // 👇 GÜNCELLENMİŞ URL HASH VE PARAMETRE KONTROLÜ
+            const hash = window.location.hash;
+            const tokenMatch = hash.match(/reset_token=([^&]+)/);
+            const token = tokenMatch ? tokenMatch[1] : null;
+
+            if (token) {
                 // Şifre Sıfırlama Formunu göster ve token'ı doldur
-                const urlParams = new URLSearchParams(window.location.hash.substring(1).split('?')[1]);
-                const token = urlParams.get('token');
-                
                 if (authSection) authSection.classList.add('hidden');
                 if (requestResetSection) requestResetSection.classList.add('hidden');
                 if (newPasswordSection) newPasswordSection.classList.remove('hidden');
-                if (resetTokenInput) resetTokenInput.value = token || '';
                 
+                // Token'ı input alanına yaz
+                if (resetTokenInput) resetTokenInput.value = token;
+                
+                // URL'yi temizle (opsiyonel, daha temiz bir görünüm için)
+                // window.history.replaceState(null, null, ' '); 
+
             } else {
                 // Normal giriş formunu göster
                 if (authSection) authSection.classList.remove('hidden');
                 if (requestResetSection) requestResetSection.classList.add('hidden');
                 if (newPasswordSection) newPasswordSection.classList.add('hidden');
             }
+            // 👆 GÜNCELLENMİŞ URL HASH VE PARAMETRE KONTROLÜ
         }
     };
 
