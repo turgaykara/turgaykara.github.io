@@ -736,24 +736,51 @@ forum: {
             title: '',
             content: `
                 <div id="auth-section" class="card">
-                    <h3>Topluluğa Katıl</h3>
+                  <h3>Topluluğa Katıl</h3>
                     <p class="small" style="margin-bottom:15px;">Mesaj yazmak veya yeni konu açmak için giriş yapmalısınız.</p>
                     <form id="email-login-form" style="width:100%;">
-                        <input type="email" id="email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
-                        <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                    <input type="email" id="email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                      <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
-                            <button type="submit" id="login-email-btn">Giriş Yap</button>
-                            <button type="button" id="register-email-btn">Kaydol</button>
+                      <button type="submit" id="login-email-btn">Giriş Yap</button>
+                          <button type="button" id="register-email-btn">Kaydol</button>
+                      </div>
+                                            <p class="small" style="margin-top:10px; text-align:right;"><a href="#request_reset" id="forgot-password-link" style="color:var(--muted); text-decoration: none;">Şifremi Unuttum</a></p>
+                                            </form>
+                </div>
+
+                <div id="request-reset-section" class="card hidden">
+                    <h3>Şifre Sıfırlama Talebi</h3>
+                    <p class="small" style="margin-bottom:15px;">Şifre sıfırlama linkini göndereceğimiz e-posta adresinizi girin.</p>
+                    <form id="request-reset-form" style="width:100%;">
+                        <input type="email" id="reset-email-input" placeholder="E-posta adresiniz" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                        <div class="tool-buttons">
+                            <button type="submit" id="request-reset-btn">Link Gönder</button>
+                            <button type="button" id="back-to-login-link" style="background:var(--glass);">Geri</button>
                         </div>
+                        <p id="request-reset-message" class="small" style="margin-top:10px; color:#34d399;"></p>
                     </form>
                 </div>
 
-                <div id="user-session-section" class="hidden" style="margin-bottom: 15px;">
-                    <p style="margin: 0; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>Forum - Hoş geldin!</span> 
-                        <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a>
-                    </p>
+                <div id="new-password-section" class="card hidden">
+                    <h3>Yeni Şifre Belirle</h3>
+                    <p class="small" style="margin-bottom:15px;">E-posta ile gelen linkteki token'ı ve yeni şifrenizi girin.</p>
+                    <form id="new-password-form" style="width:100%;">
+                        <input type="text" id="reset-token-input" placeholder="Sıfırlama Token'ı" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                        <input type="password" id="new-password-input" placeholder="Yeni Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
+                        <div class="tool-buttons">
+                            <button type="submit" id="set-new-password-btn">Şifreyi Sıfırla</button>
+                            <button type="button" id="back-to-login-link-2" style="background:var(--glass);">Geri</button>
+                        </div>
+                        <p id="new-password-message" class="small" style="margin-top:10px; color:#34d399;"></p>
+                    </form>
                 </div>
+                            <div id="user-session-section" class="hidden" style="margin-bottom: 15px;">
+                      <p style="margin: 0; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Forum - Hoş geldin!</span> 
+                        <a href="#" id="logout-btn" style="color: var(--accent);">Çıkış Yap</a>
+                </p>
+              </div>
 
                 <div id="new-post-form" class="card hidden">
                     <h3>Yeni Mesaj Yaz</h3>
@@ -3210,12 +3237,19 @@ scanButton.textContent = 'Taramayı Başlat';
     }
 // BU KOD BLOĞUNU OLDUĞU GİBİ YAPIŞTIR
 
+// index.html: setupForum fonksiyonunun YENİ HALİ
+
 function setupForum() {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
-    const userUsernameEl = document.getElementById('user-username'); // 👈 DEĞİŞTİ
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
+
+    const forgotPasswordLink = document.getElementById('forgot-password-link'); // YENİ
+    const requestResetSection = document.getElementById('request-reset-section'); // YENİ
+    const newPasswordSection = document.getElementById('new-password-section'); // YENİ
+    const backToLoginLink = document.getElementById('back-to-login-link'); // YENİ
+    const backToLoginLink2 = document.getElementById('back-to-login-link-2'); // YENİ
 
     const loginBtn = document.getElementById('login-email-btn');
     const registerBtn = document.getElementById('register-email-btn');
@@ -3223,20 +3257,55 @@ function setupForum() {
     const sendPostBtn = document.getElementById('send-post-btn');
     const emailForm = document.getElementById('email-login-form');
 
-    // Yeni değişkenler:
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
+    
+    // YENİ ELEMANLAR
+    const requestResetBtn = document.getElementById('request-reset-btn'); 
+    const resetEmailInput = document.getElementById('reset-email-input');
+    const requestResetMessage = document.getElementById('request-reset-message');
+    const setNewPasswordBtn = document.getElementById('set-new-password-btn');
+    const resetTokenInput = document.getElementById('reset-token-input');
+    const newPasswordInput = document.getElementById('new-password-input');
+    const newPasswordMessage = document.getElementById('new-password-message');
 
-    const updateUI = (isLoggedIn, userUsername = '') => { // 👈 DEĞİŞTİ
+
+    const updateUI = (isLoggedIn, userEmail = '') => {
         if (isLoggedIn) {
+            // Sadece Auth ve Reset formlarını gizle
             if (authSection) authSection.classList.add('hidden');
+            if (requestResetSection) requestResetSection.classList.add('hidden');
+            if (newPasswordSection) newPasswordSection.classList.add('hidden');
+            
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
-            if (userUsernameEl) userUsernameEl.textContent = userUsername; // 👈 DEĞİŞTİ
+            
+            // Eğer giriş yapıldıysa, URL'deki olası token'ı temizle
+            if(window.location.hash.startsWith('#reset_password')) {
+                window.location.hash = '#forum';
+            }
+
         } else {
-            if (authSection) authSection.classList.remove('hidden');
             if (userSessionSection) userSessionSection.classList.add('hidden');
             if (newPostForm) newPostForm.classList.add('hidden');
+
+            // URL Hash Kontrolü
+            if (window.location.hash.startsWith('#reset_password')) {
+                // Şifre Sıfırlama Formunu göster ve token'ı doldur
+                const urlParams = new URLSearchParams(window.location.hash.substring(1).split('?')[1]);
+                const token = urlParams.get('token');
+                
+                if (authSection) authSection.classList.add('hidden');
+                if (requestResetSection) requestResetSection.classList.add('hidden');
+                if (newPasswordSection) newPasswordSection.classList.remove('hidden');
+                if (resetTokenInput) resetTokenInput.value = token || '';
+                
+            } else {
+                // Normal giriş formunu göster
+                if (authSection) authSection.classList.remove('hidden');
+                if (requestResetSection) requestResetSection.classList.add('hidden');
+                if (newPasswordSection) newPasswordSection.classList.add('hidden');
+            }
         }
     };
 
@@ -3247,6 +3316,7 @@ function setupForum() {
     };
 
     const fetchPosts = async () => {
+        // ... (Mevcut fetchPosts fonksiyonu)
         if (!postsSection) return;
         postsSection.innerHTML = '<p class="small">Mesajlar yükleniyor...</p>';
         try {
@@ -3271,28 +3341,122 @@ function setupForum() {
         try {
             const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
             const data = await response.json();
-            // 👇 DEĞİŞTİ: session'dan username çekiliyor
-            updateUI(data.is_logged_in, data.user?.username); 
-            // 👆 DEĞİŞTİ
+            updateUI(data.is_logged_in, data.user?.email);
         } catch (error) {
             console.error("Oturum kontrol edilemedi:", error);
             updateUI(false);
         }
     };
 
+    // --- OLAY DİNLEYİCİLERİ ---
+
+    // Login/Register Formu (Submit'i engelle)
     if (emailForm) {
         emailForm.addEventListener('submit', e => e.preventDefault());
     }
+    
+    // Şifremi Unuttum Linki Tıklandığında
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authSection.classList.add('hidden');
+            requestResetSection.classList.remove('hidden');
+        });
+    }
+
+    // Geri Dön Linki Tıklandığında
+    if (backToLoginLink) {
+        backToLoginLink.addEventListener('click', () => {
+            requestResetSection.classList.add('hidden');
+            authSection.classList.remove('hidden');
+            requestResetMessage.textContent = ''; // Mesajı temizle
+        });
+    }
+
+    if (backToLoginLink2) {
+        backToLoginLink2.addEventListener('click', () => {
+            newPasswordSection.classList.add('hidden');
+            authSection.classList.remove('hidden');
+            newPasswordMessage.textContent = ''; // Mesajı temizle
+        });
+    }
+
+    // Şifre Sıfırlama Talebi Gönder Butonu (YENİ)
+    if (requestResetBtn) {
+        requestResetBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = resetEmailInput.value;
+            requestResetMessage.textContent = 'Gönderiliyor...';
+            requestResetMessage.style.color = 'yellow';
+            requestResetBtn.disabled = true;
+
+            const response = await fetch(`${API_BASE_URL}/request_password_reset`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await response.json();
+
+            requestResetBtn.disabled = false;
+            
+            if (response.ok) {
+                requestResetMessage.textContent = data.message;
+                requestResetMessage.style.color = '#34d399';
+            } else {
+                requestResetMessage.textContent = data.error || 'Bir hata oluştu.';
+                requestResetMessage.style.color = 'red';
+            }
+        });
+    }
+
+    // Yeni Şifre Belirleme Butonu (YENİ)
+    if (setNewPasswordBtn) {
+        setNewPasswordBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const token = resetTokenInput.value;
+            const new_password = newPasswordInput.value;
+            
+            newPasswordMessage.textContent = 'Şifre sıfırlanıyor...';
+            newPasswordMessage.style.color = 'yellow';
+            setNewPasswordBtn.disabled = true;
+
+            const response = await fetch(`${API_BASE_URL}/reset_password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, new_password }),
+            });
+            const data = await response.json();
+
+            setNewPasswordBtn.disabled = false;
+            
+            if (response.ok) {
+                newPasswordMessage.textContent = data.message;
+                newPasswordMessage.style.color = '#34d399';
+                resetTokenInput.value = '';
+                newPasswordInput.value = '';
+                // Başarılı olursa 3 saniye sonra login formuna yönlendir
+                setTimeout(() => {
+                    newPasswordSection.classList.add('hidden');
+                    authSection.classList.remove('hidden');
+                    newPasswordMessage.textContent = '';
+                }, 3000);
+
+            } else {
+                newPasswordMessage.textContent = data.error || 'Şifre sıfırlanamadı.';
+                newPasswordMessage.style.color = 'red';
+            }
+        });
+    }
+
     if (loginBtn) {
-        // Login butonu için username input'unun değerine ihtiyacımız yok.
         loginBtn.addEventListener('click', async () => {
-            const email = emailInput.value; // Düzeltildi
-            const password = passwordInput.value; // Düzeltildi
+            const email = emailInput.value;
+            const password = passwordInput.value;
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
-                credentials: 'include' 
+                credentials: 'include'
             });
             const data = await response.json();
             if (response.ok) {
@@ -3302,33 +3466,29 @@ function setupForum() {
             }
         });
     }
-// index.html içindeki setupForum fonksiyonu içinde:
 
-// index.html: setupForum fonksiyonu içinde
-if (registerBtn) {
-    registerBtn.addEventListener('click', async () => {
-        const email = document.getElementById('email-input').value;
-        const password = document.getElementById('password-input').value; 
+    if (registerBtn) {
+        registerBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
 
-        const response = await fetch(`${API_BASE_URL}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            const response = await fetch(`${API_BASE_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            alert(data.message || data.error);
+
+            if (response.ok) {
+                document.getElementById('email-input').value = '';
+                document.getElementById('password-input').value = '';
+            }
         });
-        
-        const data = await response.json();
-        
-        // Sadece mesajı göster (link artık backend'den gelmeyecek)
-        alert(data.message || data.error);
+    }
 
-        // Başarılıysa formu temizle (isteğe bağlı)
-        if (response.ok) {
-            document.getElementById('email-input').value = '';
-            document.getElementById('password-input').value = '';
-        }
-    });
-}
-// ...
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -3336,6 +3496,7 @@ if (registerBtn) {
             checkSession();
         });
     }
+    
     if (sendPostBtn) {
         sendPostBtn.addEventListener('click', async () => {
             const content = document.getElementById('post-content').value;
@@ -3355,6 +3516,12 @@ if (registerBtn) {
             }
         });
     }
+
+    // URL değiştiğinde UI'yi kontrol et
+    window.addEventListener('hashchange', () => {
+        showPage('forum'); // Forum sayfasını yeniden yükle (updateUI çağrılacak)
+    });
+
 
     checkSession();
     fetchPosts();
