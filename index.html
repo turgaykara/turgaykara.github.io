@@ -3517,12 +3517,6 @@ function setupForum() {
         });
     }
 
-    // URL değiştiğinde UI'yi kontrol et
-    window.addEventListener('hashchange', () => {
-        showPage('forum'); // Forum sayfasını yeniden yükle (updateUI çağrılacak)
-    });
-
-
     checkSession();
     fetchPosts();
 }
@@ -3968,7 +3962,39 @@ activateEncoderDecoder();
       window.scrollTo({top: 0, behavior: 'smooth'});
   }
     renderMenu();
-    showPage('home');
+    // index.html - Script Bloğunun Sonu
+function initializePage() {
+    const hash = window.location.hash.substring(1); // '#' işaretini kaldır
+    let pageToLoad = 'home';
+
+    if (hash) {
+        // Eğer hash varsa, sadece sayfa adını al (örn: 'forum' veya 'forum?reset_token=...')
+        const cleanHash = hash.split('?')[0]; 
+        
+        // Bu sayfa adı CONTENT objesinde var mı kontrol et
+        if (CONTENT[cleanHash]) {
+            pageToLoad = cleanHash;
+        }
+    }
+    
+    // Sadece 'forum' sayfasındayken session/token kontrolü yapmalıyız.
+    // Başka bir sayfadayken (örn: #tools) orayı aç, forum ile ilgili mantığı çalıştırma.
+    
+    // Gerekli menüyü çiz ve sayfayı yükle
+    renderMenu();
+    showPage(pageToLoad);
+    
+    // Forum açılıyorsa, hash'te token olsa bile setupForum mantığı içinde işlenecek.
+}
+
+// Uygulamayı başlat
+initializePage(); 
+
+// Eğer kullanıcı tarayıcının geri/ileri butonunu kullanırsa veya hash değişirse
+window.addEventListener('hashchange', () => {
+    initializePage(); 
+});
+// ... devam eden chat widget kodları ...
 
 document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.getElementById('chat-window');
