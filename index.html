@@ -3286,17 +3286,17 @@ function setupForum() {
             }
 
         } else {
-            // ... (Giriş yapılmamışsa mantığı)
-            if (userSessionSection) userSessionSection.classList.add('hidden');
-            if (newPostForm) newPostForm.classList.add('hidden');
-
-            // 👇 GÜNCELLENMİŞ URL HASH VE PARAMETRE KONTROLÜ
+            // ... (diğer userSessionSection ve newPostForm gizleme satırları)
+            
+            // 👇 BURASI KRİTİK: URL'den token'ı çözme
             const hash = window.location.hash;
-            const tokenMatch = hash.match(/reset_token=([^&]+)/);
-            const token = tokenMatch ? tokenMatch[1] : null;
+            
+            // #forum?reset_token=TOKEN formatını ararız
+            const urlParams = new URLSearchParams(hash.substring(hash.indexOf('?') + 1));
+            const token = urlParams.get('reset_token');
 
             if (token) {
-                // Şifre Sıfırlama Formunu göster ve token'ı doldur
+                // Şifre Sıfırlama Formunu göster
                 if (authSection) authSection.classList.add('hidden');
                 if (requestResetSection) requestResetSection.classList.add('hidden');
                 if (newPasswordSection) newPasswordSection.classList.remove('hidden');
@@ -3304,8 +3304,8 @@ function setupForum() {
                 // Token'ı input alanına yaz
                 if (resetTokenInput) resetTokenInput.value = token;
                 
-                // URL'yi temizle (opsiyonel, daha temiz bir görünüm için)
-                // window.history.replaceState(null, null, ' '); 
+                // Başarılı formu gösterdiğimiz için URL'yi forum hash'ine geri döndürüyoruz
+                window.location.hash = '#forum'; 
 
             } else {
                 // Normal giriş formunu göster
@@ -3313,7 +3313,6 @@ function setupForum() {
                 if (requestResetSection) requestResetSection.classList.add('hidden');
                 if (newPasswordSection) newPasswordSection.classList.add('hidden');
             }
-            // 👆 GÜNCELLENMİŞ URL HASH VE PARAMETRE KONTROLÜ
         }
     };
 
