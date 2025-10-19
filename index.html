@@ -691,6 +691,8 @@
 #new-post-form button:hover {
     opacity: 0.9;
 }
+
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   </head>
@@ -724,8 +726,8 @@
           title: 'Bug Bounty Akademi',
           subtitle: 'Sıfırdan ileri seviyeye kapsamlı bug bounty eğitimi. Gerçek dünya senaryoları, pratik araçlar ve adım adım metodolojiler ile zafiyet avcısı olun.<br>Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.'
         },
-// MEVCUT forum BLOĞUNU SİL, YERİNE BUNU YAPIŞTIR:
 
+        
 forum: {
     menuName: 'Forum',
     icon: 'icon-forum',
@@ -1542,92 +1544,6 @@ file_inclusion: {
       }
     ]
   },
-directory_traversal: {
-    menuName: 'Directory Traversal',
-    icon: 'icon-folder-tree',
-    parent: 'vulnerabilities',
-    title: 'Directory & Path Traversal',
-    description: 'Dizin gezme (../) zafiyeti ile uygulamanın yetki dışı dosya ve dizinlere erişmesi. PoC odaklı bypass teknikleri içerir.',
-    sections: [
-        {
-            title: 'Özet Bilgi',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, dosya yolu alan bir parametreyi düzgün doğrulamıyor ve filtrelemiyorsa, "../" karakterleri kullanılarak dosya sisteminde yetki dışı dizinlere erişilebilir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etkisi bilgi sızdırmadan, "Log Poisoning" gibi tekniklerle Uzaktan Kod Çalıştırma (RCE) zafiyetine kadar gidebilir.</li>
-            </ul>`
-        },
-      {
-        title: 'Hızlı Tespit',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=public.txt</code> → <code>?file=../../../../etc/passwd</code> dene.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PoC örnek: <code>GET /download?f=../../../../etc/passwd</code> → /etc/passwd içeriği dönüyorsa başarılı.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Path-only parametrelerde: <code>?path=/images/..//..//..//etc/passwd</code> gibi varyasyonları dene.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Bypass Teknikleri',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">URL encode: <code>..%2f..%2f..%2fetc/passwd</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Double-encode: <code>%252e%252e%252f%252e%252e</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Null byte (legacy PHP): <code>../../../../etc/passwd%00</code> (modernlerde genelde çalışmaz)</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Odd forms: <code>....//....//etc/passwd</code>, <code>..\\..\\..\\etc\\passwd</code> (Windows hedeflerde)</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Alternate encodings (unicode/UTF-8) ve path normalization kaçışlarını dene.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Hedef Dosyalar (hızlı referans)',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Linux: <code>/etc/passwd</code>, <code>/etc/shadow</code>, <code>/root/.ssh/id_rsa</code>, <code>/var/www/html/config.php</code>, webserver logları <code>/var/log/apache2/access.log</code>.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Windows: <code>C:\\Windows\\system32\\drivers\\etc\\hosts</code>, <code>C:\\inetpub\\wwwroot\\web.config</code>, IIS log dosyaları.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Log Poisoning & Zincirleme Notu',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log dosyasına payload (User-Agent veya param) yaz, sonra LFI ile log'u okunur/includelenirsen RCE elde etme şansı olur.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Örnek akış: 1) <code>curl -A "<?php system($_GET['c']); ?>" http://target/</code> 2) <code>?file=/var/log/apache2/access.log&c=whoami</code></li>
-          </ul>
-        `
-      },
-      {
-        title: 'PoC Örnekleri',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit: <code>/download?f=../../../../etc/passwd</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Encoded: <code>/download?f=..%2f..%2f..%2fetc%2fpasswd</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning zinciri örneği (tek satırda): User-Agent payload → include log.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Mitigations',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Allow-list: sadece izinli dosya isimleri/klasörler kabul edilsin (white-listing).</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Canonicalization + normalize et → path üzerinde ../ kontrolü yap; normalize sonrası izin kontrolü uygula.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">User-controlled input ile direkt file include etme; mutlak/relative pathleri sabit bir root dizine bağla (chroot-like) ve dışına çıkışı engelle.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log dosyalarını include etme; upload edilen dosyaları doğrudan serve et, include etme; dosya izinlerini kısıtla.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Raporlama Notları',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Rapor: hangi parametre, tam HTTP isteği, PoC payload (raw + encoded), hangi bypass denemeleri yapıldığı, elde edilen çıktı açık ve net yazılsın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etkisi: bilgi sızdırma, log-poisoning ile RCE ihtimali; severity buna göre belirt.</li>
-          </ul>
-        `
-      }
-    ]
-  },
 
   authentication_bypass: {
     menuName: 'Authentication Bypass',
@@ -1680,6 +1596,335 @@ directory_traversal: {
     ]
   },
 
+
+
+  clickjacking: {
+    menuName: 'Clickjacking',
+    icon: 'icon-lock-open',
+    parent: 'vulnerabilities',
+    title: 'Clickjacking (UI Redressing) Zafiyeti - Hedefe Yönelik Metodoloji',
+    description: 'Kullanıcının kritik bir işlemi, aldatıcı bir arayüz arkasına gizlenmiş görünmez bir iframe üzerinden gerçekleştirmesini sağlama tekniği.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Kritik Etki',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Clickjacking, oturum yönetimi zafiyetine (Broken Session Management) dayanır. Eğer kurban oturum açmışsa, iframe içindeki kritik butona tıklatılabilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Etkiler:</strong> Hesap Silme, Şifre Değiştirme, Para Transferi Onayı (CSRF token kontrolü atlanmışsa), Admin eylemlerinin tetiklenmesi.</li>
+            </ul>`
+        },
+        {
+            title: 'Hızlı Tespit ve Savunma Kontrolü',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Kritik Hedefleri Bul:</strong> Şifre resetleme, e-posta değiştirme, ödeme onayı gibi tek tıkla geri dönüşü olmayan işlemlere odaklan.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: iframe Testi Yap:</strong> Kendi local HTML dosyanızda hedef URL'i bir iframe içine gömün ve tarayıcıda açın. Başarılı yükleniyorsa zafiyet adayıdır.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Header Kontrolü (Burp/DevTools):</strong> Sunucu yanıtında bu başlıkları ara:
+                <ul>
+                    <li><code>X-Frame-Options: DENY</code> (En güçlü engelleme)</li>
+                    <li><code>X-Frame-Options: SAMEORIGIN</code> (Aynı domain iframe'e izin verir)</li>
+                    <li><code>Content-Security-Policy: frame-ancestors 'none'</code> (En modern ve güçlü engelleme)</li>
+                </ul></li>
+            </ul>`
+        },
+        {
+            title: 'Bypass Teknikleri (Savunma Atlatma)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>SAMEORIGIN Atlatma:</strong> Eğer <code>X-Frame-Options: SAMEORIGIN</code> varsa ve subdomain'lerde XSS veya Open Redirect varsa bu zafiyetleri zincirleyerek atlatmayı deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Null Byte/Encoding Bypass:</strong> Nadiren bazı eski sunucular, header değerine URL encode edilmiş karakterler (<code>%00</code>) eklenerek header'ın geçerliliğini yitirmesine neden olabilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Frame Buster Atlatma:</strong> Sayfa kendisini frame'den çıkarmaya çalışan JS koduna sahipse (Frame Buster), <code>sandbox</code> özniteliği veya JS'yi geçersiz kılan tarayıcı tricklerini araştırın.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri (Basit HTML)',
+            content: `<pre>
+&lt;html&gt;
+&lt;body&gt;
+&lt;!-- Hedeflenen sayfa, saydam ve üst katmanın altına yerleştirilir --&gt;
+&lt;iframe src="https://hedefsite.com/action?csrf=xyz" 
+        style="position:absolute; left:20px; top:100px; 
+               width:400px; height:200px; 
+               opacity:0.0001; z-index:100;"&gt;
+&lt;/iframe&gt;
+
+&lt;!-- Kurbanın göreceği aldatıcı arayüz --&gt;
+&lt;button style="position:absolute; left:20px; top:100px; z-index:1;"&gt;ÜCRETSİZ PARA KAZAN&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p class="small">Hedeflenen butonun koordinatlarını, üstteki aldatıcı butonun tam üzerine gelecek şekilde ayarlayın (Chrome DevTools ile koordinatları bulun).</p>`
+        }
+    ]
+},
+
+openredirect: {
+    menuName: 'Open Redirect',
+    icon: 'icon-refresh',
+    parent: 'vulnerabilities',
+    title: 'Open Redirect (Açık Yönlendirme) Zafiyeti - Aksiyon Odaklı Metodoloji',
+    description: 'Kullanıcının kontrol ettiği bir parametre ile uygulamanın kullanıcıyı kötü amaçlı bir harici siteye yönlendirmesi. Phishing ve zincirleme saldırılar için kritik.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Kritik Etki',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Etki:</strong> Phishing saldırıları, tarayıcıda XSS (<code>javascript:</code> protokolü ile), SSRF zafiyetine yol açan zincirleme saldırılar.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, URL'de belirtilen yönlendirme hedefini (Location header) hiçbir güvenlik kontrolü yapmadan kullanır.</li>
+            </ul>`
+        },
+        {
+            title: 'Hızlı Tespit ve PoC Adımları',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Parametre Taraması:</strong> <code>?redirect=</code>, <code>?next=</code>, <code>?target=</code>, <code>?url=</code>, <code>?continue=</code>, <code>?returnTo=</code> gibi parametreleri arayın. Otomatik tarama için <code>ParamSpider</code> veya <code>waybackurls</code> çıktısını grepleyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: Temel PoC:</strong> Parametre değerine <code>https://google.com</code> gibi bir harici URL verip yönlenip yönlenmediğini kontrol edin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//google.com</code> veya <code>/\/google.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
+            </ul>`
+        },
+        {
+            title: 'Bypass Teknikleri (Whitelist Atlatma)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Domain Taklidi:</strong> Uygulama sadece kendi domainine izin veriyorsa: <code>https://hedef.com.kötüamaclisite.com</code> deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Path Atlatma:</strong> <code>https://hedef.com/../kötüamaclisite.com</code> (Path normalizasyonu hatalarını sömürme).</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Ekstra Karakterler:</strong> <code>https:// kötüamaclisite.com</code> (Boşluk, tab gibi kontrolsüz karakterler ekleme).</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Data/Javascript URI:</strong> <code>javascript:alert(document.domain)</code> veya <code>data:text/html;base64,...</code> deneyerek XSS'e çevirmeye çalışın.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Temel Atlatma:</strong> <code>/login?next=https://hedef.com.evil.com</code></li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Zorlama:</strong> <code>/logout?target=/%5cevil.com</code> (Ters slash encoding denemesi)</li>
+            </ul>`
+        }
+    ]
+},
+
+misconfig: {
+    menuName: 'Misconfiguration',
+    icon: 'icon-toolbox',
+    parent: 'vulnerabilities',
+    title: 'Security Misconfiguration (Yanlış Yapılandırma) - Metodoloji ve Checklist',
+    description: 'Varsayılan ayarlar, gereksiz servisler ve yetersiz hata yönetimi kaynaklı, en yaygın zafiyet sınıfıdır.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Kritik Etki',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Yanlış yapılandırmalar genellikle Information Disclosure (Bilgi Sızıntısı), Dizin Listeleme (Directory Listing) veya RCE'ye (WebShell Yükleme) zemin hazırlar.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Etki:</strong> Eğer <code>.env</code> gibi konfigürasyon dosyaları sızarsa, tüm sistemin kimlik bilgileri ifşa olabilir.</li>
+            </ul>`
+        },
+        {
+            title: 'Hızlı Tespit ve Checklist',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Dizin/Dosya Kontrolü:</strong>
+                <pre>Gobuster / Ffuf ile: /admin, /test, /backup, /logs, /.git, /.env, /config.php</pre></li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Hata Yönetimi:</strong> Hatalı bir istek göndererek (URL'ye <code>'</code> veya <code>"</code> ekle) detaylı Stack Trace veya veritabanı hataları alınıp alınmadığını kontrol et.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Gereksiz Metotlar:</strong> <code>OPTIONS</code> HTTP metoduyla hangi metotların (PUT, DELETE) açık olduğunu kontrol et. <code>PUT</code> ile dosya yükleme, <code>DELETE</code> ile dosya silme denemeleri yap.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>4. Varsayılan Ayarlar:</strong> CMS (WordPress, Joomla vb.) kullanılıyorsa, varsayılan admin yolları (<code>/wp-admin</code>) ve parola kombinasyonlarını dene.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>.env Sızıntısı:</strong> <code>GET https://target.com/.env</code> isteği ile veritabanı şifrelerini ve API anahtarlarını elde etme.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>WebDAV/PUT RCE:</strong> <code>PUT /shell.php</code> isteği ile basit bir PHP shell dosyasını sunucuya doğrudan kaydetme.</li>
+            </ul>`
+        }
+    ]
+},
+
+sensitive_data_exposure: {
+    menuName: 'Data Exposure',
+    icon: 'icon-file-export',
+    parent: 'vulnerabilities',
+    title: 'Sensitive Data Exposure (Hassas Veri Sızıntısı) - Gizli Bilgi Avcılığı',
+    description: 'Hassas verilerin (API anahtarları, şifreler, kişisel veriler) şifrelenmeden, yetkisiz erişime açık veya log dosyalarında ifşa edilmesi.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Kritik Alanlar',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Verilerin depolama, aktarım veya işleme aşamalarındaki şifreleme/maskeleme eksikliğinden kaynaklanır.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Odak:</strong> Kaynak kod (HTML/JS), HTTP/AJAX yanıtları, Log dosyaları, yedekleme dizinleri.</li>
+            </ul>`
+        },
+        {
+            title: 'Hızlı Tespit ve Arama İpuçları (Grep/Burp)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Transport Kontrolü:</strong> Login/Ödeme sayfalarında tarayıcı kilidine bak. Site HTTP'ye düşüyorsa kritik veri sızıntısı riski vardır. HSTS header'ını kontrol et.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Kaynak Kodu Avcılığı:</strong> Sayfada ve JS dosyalarında (LinkFinder ile çekilen) şu kelimeleri ara: <code>secret</code>, <code>token</code>, <code>key</code>, <code>api_key</code>, <code>auth</code>, <code>DB_PASS</code>, <code>S3_</code>.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Regex İpuçları:</strong>
+                <pre>AKIA[0-9A-Z]{16}</pre> (AWS Access Key ID)
+                <pre>EAACEdEose0cBA...</pre> (Facebook Access Token)</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>4. API Yanıtları:</strong> Kendi profilinizi çekin (<code>/api/user/me</code>) ve yanıt JSON'unda gereksiz hassas alan (örneğin düz metin şifre, dahili IP) olup olmadığını kontrol edin.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>API Key Sızıntısı:</strong> <code>GET /static/app.js</code> yanıtında <code>const API_SECRET = 's3cr3t-t0k3n-123';</code> gibi bir değer bulma.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Hata Log Sızıntısı:</strong> <code>GET /debug/log.txt</code> ile erişilen log dosyasında kimlik bilgisi (Basic Auth hash'i, session ID'leri) görme.</li>
+            </ul>`
+        }
+    ]
+},
+
+unrestricted_file_upload: {
+    menuName: 'RCE / File Upload',
+    icon: 'icon-folder-open',
+    parent: 'vulnerabilities',
+    title: 'RCE - Remote Code Execution (Uzaktan Kod Çalıştırma)',
+    description: 'Komut enjeksiyonu, dosya yükleme veya zincirleme zafiyetler yoluyla hedef sistemde kod çalıştırma teknikleri.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Kritik Etki',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hedef: Sunucuda komut çalıştırma yeteneği sağlayan bir Webshell (PHP, ASP, JSP, Python) yüklemek.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım:</strong> Yükleme Formu → Bypass Tekniği Uygula → Yüklenen Dosyaya Erişim Sağla → RCE.</li>
+            </ul>`
+        },
+        {
+            title: 'Bypass Teknikleri (Nokta Atışı Filtre Atlatma)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Client-Side Bypass:</strong> Eğer tarayıcıda sadece JS ile uzantı kontrolü yapılıyorsa, JS'yi devredışı bırak veya Burp ile isteği yakalayıp uzantıyı manuel değiştir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Mime Type Kontrolü Atlatma:</strong> Yüklenen dosya <code>shell.jpg</code> olsa bile, Burp ile <code>Content-Type: image/jpeg</code>'i <code>Content-Type: application/x-php</code> olarak değiştirin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Uzantı Blacklist Bypass:</strong> <code>.php</code> engelleniyorsa: <code>.phtml</code>, <code>.php5</code>, <code>.php3</code>, <code>.phps</code> (Sunucunun kabul ettiği diğer PHP uzantıları) veya <code>.asp</code>, <code>.jsp</code> deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>4. Double Uzantı/Null Byte:</strong> Filtreleme sonrası dosya adına <code>.jpg</code> ekleniyorsa: <code>shell.php.jpg</code> veya <code>shell.php%00.jpg</code> (Null byte, dosya adı kısıtlamasını atlatabilir).</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri (RCE Zinciri)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Basit Shell:</strong> <code>&lt;?php system($_GET['cmd']); ?&gt;</code> (Komut Çalıştırma)</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Shell Yükleme Adımı (Burp):</strong> <code>filename="shell.php"</code> ve <code>Content-Type: image/jpeg</code>'i <code>application/x-php</code> olarak değiştir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Exploit:</strong> <code>https://target.com/uploads/shell.php?cmd=ls%20-la</code></li>
+            </ul>`
+        }
+    ]
+},
+
+header_injection: {
+    menuName: 'Header Injection',
+    icon: 'icon-code',
+    parent: 'vulnerabilities',
+    title: 'HTTP Header Injection (CRLF) ve Response Splitting - Pratik Kılavuz',
+    description: 'Kullanıcı girdisine CRLF (\r\n) enjekte ederek sunucu yanıtına ekstra başlıklar veya içerik ekleme tekniği.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Kritik Etki',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Amaç:</strong> Yanıtı bölerek (Response Splitting) tarayıcıya yepyeni, kötü amaçlı bir HTTP yanıtı (veya HTML) göndermek.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>En Kritik Etki:</strong> Cache Poisoning (Önbellek Zehirlenmesi) ve Oturum Çerezinin Enjekte Edilmesi (Cookie Injection).</li>
+            </ul>`
+        },
+        {
+            title: 'Hızlı Tespit ve Payloadlar',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Parametreler:</strong> <code>Location</code>, <code>Set-Cookie</code> veya kullanıcı girdisini yansıtan herhangi bir HTTP başlığı.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Temel Payloadlar:</strong>
+                <ul>
+                    <li>Yeni Başlık Ekleme: <code>%0d%0aNew-Header: Injected-Value</code></li>
+                    <li>Response Splitting (Yeni Yanıt Başlatma): <code>%0d%0a%0d%0a&lt;html&gt;Kötü Amaçlı İçerik&lt;/html&gt;</code></li>
+                </ul></li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Dönüşümler:</strong> <code>%0d%0a</code> (URL Encoded CRLF) veya <code>\r\n</code> (Raw CRLF). Burp Repeater ile test edilmelidir.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri (Cookie Enjeksiyonu)',
+            content: `<pre>
+GET /redirect?url=/safe/page%0d%0aSet-Cookie:hijacked=true HTTP/1.1
+Host: target.com</pre>
+<p class="small">Sunucu, <code>Location: /safe/page</code> başlığını oluştururken URL parametresini kullanıyorsa, yanıt header'larına <code>Set-Cookie: hijacked=true</code> eklenir ve kurbanın tarayıcısına yazılır.</p>`
+        },
+        {
+            title: 'Dikkat Edilmesi Gerekenler',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Filtre Kontrolü:</strong> Modern uygulamalar CRLF'i filtreler. Çift kodlama (Double Encoding) deneyin: <code>%250d%250a</code>.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Zincirleme:</strong> Cache Poisoning için enjekte edilen yanıta <code>Cache-Control: public</code> gibi caching başlıkları eklenmelidir.</li>
+            </ul>`
+        }
+    ]
+},
+
+session_management: {
+    menuName: 'Session Mgmt',
+    icon: 'icon-shield',
+    parent: 'vulnerabilities',
+    title: 'Broken Session Management (Oturum Yönetimi Hataları) - 3 Adımda Tespit',
+    description: 'Oturum kimliklerinin (Session ID) tahmin edilebilir olması, sızdırılması veya sunucu tarafında düzgün sonlandırılmaması sonucu yetkisiz erişime izin verme.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Hızlı Tespit Alanları',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Odak:</strong> Login sonrası, Logout sonrası ve Session ID'nin rastgelelik kalitesi.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Session ID Analizi:</strong> Yeni Session ID'si almak için arka arkaya 10-20 kez giriş yapın/çıkarın. ID'ler arasında ardışık, zaman damgasına dayalı (Base64 decode et) veya kullanıcı ID'si içeren bir desen var mı?</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Session Fiksasyonu Kontrolü:</strong> Login olmadan bir Session ID'si alın. Login olduktan sonra aynı ID'nin devam edip etmediğini kontrol edin. (Etmemeli!)</li>
+            </ul>`
+        },
+        {
+            title: 'Bypass Teknikleri (Güvenlik Bayrağı Atlatma)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Logout Bypass:</strong> Logout işleminin HTTP isteğini yakala. İsteği tekrarla (Replay) ve sunucunun Session ID'yi gerçekten geçersiz kılıp kılmadığını kontrol et. Logout sonrası hassas bir sayfaya erişmeyi dene.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Cookie Flag Eksikliği:</strong> Çerezde <code>HttpOnly</code> yoksa XSS ile oturum çalınabilir. <code>Secure</code> yoksa oturum çerezi HTTP üzerinden bile gönderilebilir (MiTM riski).</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Cookie Tampering:</strong> <code>isAdmin=false</code> veya <code>role=guest</code> gibi değerleri <code>isAdmin=true</code> veya <code>role=admin</code> ile değiştirip yönetici paneline erişimi dene. Base64 veya JWT kullanılıyorsa, payload kısmını değiştirip yeniden kodla.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri (Cookie Tampering)',
+            content: `<pre>
+GET /admin/panel HTTP/1.1
+Cookie: session_id=...; isAdmin=true</pre>
+<p class="small">Eğer sunucu <code>isAdmin</code> değerini istemciden alıp doğrulamıyorsa (Sunucu tarafı kontrol eksikliği), bu yetki atlatmaya yol açar.</p>`
+        }
+    ]
+},
+
+privilege_escalation: {
+    menuName: 'Priv Esc',
+    icon: 'icon-user-slash',
+    parent: 'vulnerabilities',
+    title: 'Privilege Escalation (Yetki Yükseltme) - Kontrol Metodolojisi',
+    description: 'Bir kullanıcının sahip olduğundan daha yüksek izinlere (yatay veya dikey) sahip olması veya kritik bir işlemi gerçekleştirmesi.',
+    sections: [
+        {
+            title: 'Özet Bilgi ve Dikey/Yatay Farkı',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Yatay Yükseltme:</strong> Aynı seviye roller arası geçiş (IDOR). Kendi profilinizden başka bir kullanıcının profiline erişim.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Dikey Yükseltme:</strong> Düşük rolden yüksek role geçiş (Admin Panel erişimi, rol değiştirme).</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Bu zafiyetin ana nedeni: Sunucunun yetki kontrolünü istemciye bırakması veya hatalı uygulaması.</li>
+            </ul>`
+        },
+        {
+            title: 'Hızlı Tespit ve Nerede Aranır?',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. İki Hesap Tekniği:</strong> Bir Düşük Yetkili (User) ve bir Yüksek Yetkili (Admin) hesabı oluşturun. Admin'in yaptığı işlemi User'ın token'ı ile tekrarlamayı deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Endpoint Tahmini:</strong> Normal kullanıcı olarak login olduktan sonra <code>/admin/users</code>, <code>/api/v1/update-role</code>, <code>/config</code> gibi URL'leri ziyaret etmeyi deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Kaynak Kodu:</strong> JavaScript dosyalarında <code>if (user.role === 'admin')</code> gibi yetki kontrolü yapan client-side kodları arayın (Bu sadece bir ipucudur, asıl kontrol server'da olmalıdır).</li>
+            </ul>`
+        },
+        {
+            title: 'Bypass Teknikleri (JSON / Parameter Manipülasyonu)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Mass Assignment:</strong> Kullanıcının gönderdiği JSON/Form verisine <code>"role": "admin"</code> veya <code>"is_admin": true</code> gibi normalde gönderilmemesi gereken bir parametre eklemeyi deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Metod/Header Değiştirme:</strong> User hesabıyla <code>GET /api/delete-user</code> isteği 403 veriyorsa, isteği <code>POST</code> veya <code>DELETE</code> olarak değiştirip tekrar deneyin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Yüksek Yetki Fonksiyonu:</strong> Normal bir kullanıcı fonksiyonunu (örneğin <code>/api/profile-update</code>) Admin'in User ID'sini hedef alarak kullanmayı deneyin.</li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri (Rol Değiştirme)',
+            content: `<pre>
+// User A olarak yakalanan istek:
+POST /api/users/update
+{
+    "id": "USER_ID",
+    "username": "new_name"
+}</pre>
+<p class="small"><strong>Yetki Yükseltme PoC:</strong> JSON'a <code>"id": "ADMIN_ID", "role": "admin"</code> eklemeyi deneyin (Mass Assignment).</p>
+<pre>
+POST /api/users/update
+{
+    "id": "USER_ID",
+    "username": "new_name",
+    "role": "admin" // KRİTİK EKLEME
+}</pre>`
+        }
+    ]
+},
   tools: {
     menuName: 'Araçlar',
     icon: 'icon-wrench',
@@ -2327,89 +2572,154 @@ function renderMenu() {
       if (!page) return;
       
       if (pageId === 'home') {
-          main.innerHTML = `
-              <div class="search-bar">
-                  <input type="text" id="searchInput" placeholder="Konu, araç veya zafiyet ara..." aria-label="Ara" autocomplete="off" />
-                  <span class="search-icon">🔍</span>
-                  <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
-              </div>
-              <div class="hero"><h1>${page.title}</h1><p class="subtitle">${page.subtitle}</p></div>
-              <div class="stats"><div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Vulnerability Türü</div></div><div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Araç & Komut</div></div><div class="stat-card"><div class="stat-number">100%</div><div class="stat-label">Ücretsiz İçerik</div></div></div>
-              <div style="margin-bottom:12px"><h2>Hızlı Başlangıç</h2></div><div class="quick-links" id="quickLinks"></div><div style="margin-bottom:12px"><h2>Popüler Kaynaklar</h2></div><div class="resource-grid"><div class="resource-card"><div class="resource-title">🎯 PortSwigger Academy</div><div class="resource-desc">Ücretsiz interaktif web security eğitimi ve lab'ları</div></div><div class="resource-card"><div class="resource-title">📖 HackerOne Hacktivity</div><div class="resource-desc">Gerçek bug bounty raporlarını inceleyin</div></div><div class="resource-card"><div class="resource-title">🔧 OWASP Top 10</div><div class="resource-desc">En kritik web güvenlik risklerini öğrenin</div></div><div class="resource-card"><div class="resource-title">💻 TryHackMe</div><div class="resource-desc">Pratik yapabileceğiniz güvenlik lab'ları</div></div></div>
-              <div class="footer">Hazırlayan: Turgay Kara &lt;!&gt; Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.</div>
-          `;
-          const quickLinks = document.getElementById('quickLinks');
-if(quickLinks) {
-    quickLinks.innerHTML = '';
-    Object.keys(CONTENT).forEach(key => { 
-        if (key === 'home' || !CONTENT[key].menuName) return; 
-        const item = CONTENT[key]; 
-        quickLinks.innerHTML += `<div class="quick-link" data-page="${key}"><div class="quick-link-icon ${item.icon || 'icon-book'}"></div><div class="quick-link-title">${item.title}</div><div class="quick-link-desc">${item.description || ''}</div></div>`; 
-    });
-    document.querySelectorAll('#quickLinks [data-page]').forEach(el => { el.addEventListener('click', () => showPage(el.dataset.page)); });
+    main.innerHTML = `
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Zafiyet, araç veya metodoloji ara..." aria-label="Ara" autocomplete="off" />
+            <span class="search-icon">🔍</span>
+            <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
+        </div>
+        
+        <div class="hero" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(124, 58, 237, 0.2)); border: 1px solid var(--accent); padding: 40px; margin-bottom: 30px;">
+            <h1 style="font-size: 38px; margin-bottom: 12px; font-family: monospace; color: #00ff88; text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);">
+                &gt; PENTEST_LIBRARY_INIT: SUCCESS
+            </h1>
+            <p class="subtitle" style="font-size: 17px; color: #cbd5e1; line-height: 1.6; font-family: monospace;">
+                [INFO] **Saldırı yüzeyiniz analiz edildi.  Exploit Metodolojileri aktif.**<br>[WARNING] Yalnızca yetkiniz olan hedeflerde test yapın!"
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <h2 style="font-size: 20px; color: var(--accent); border-bottom: 1px solid var(--glass); padding-bottom: 8px;">ATTACK FLOW (Saldırı Aşaması)</h2>
+                
+                ${generateFlowCard('icon-search', 'RECON & KEŞİF', 'javascriptrecon', 'Subdomain, endpoint ve eski URL\'leri toplayarak saldırı yüzeyini genişlet.', '#34d399')}
+                ${generateFlowCard('icon-file-export', 'ENDPOINT VURGUSU', 'informationDisclosure', 'Gömülü anahtarlar, debug panelleri ve hassas veri sızıntılarını sömür.', '#06b6d4')}
+                ${generateFlowCard('icon-code', 'İSTİSMAR (EXPLOIT)', 'xss', 'API/web katmanında SQLi, XSS, SSRF ve RCE tekniklerini uygula.', '#f87171')}
+                ${generateFlowCard('icon-user-slash', 'YETKİ YÜKSELTME', 'privilege_escalation', 'Kullanıcı/Admin rollerinde dikey ve yatay yetki atlatma tekniklerini kullan.', '#7c3aed')}
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <h2 style="font-size: 20px; color: var(--accent); border-bottom: 1px solid var(--glass); padding-bottom: 8px;">CRITICAL TARGETS (Kritik Hedefler)</h2>
+                
+                ${generateTargetCard('icon-database', 'SQL Injection Adayları', 'sqli', 'Formlar, API JSON gövdeleri ve her türlü GET/POST parametresi.')}
+                ${generateTargetCard('icon-key', 'IDOR & Yetkilendirme', 'idor', 'Sıralı ID\'ler, Base64 ID\'ler ve UUID ile referans verilen tüm nesneler.')}
+                ${generateTargetCard('icon-globe', 'SSRF Vektörleri', 'ssrf', 'Image URL, PDF render, webhook ve sunucu taraflı API çağrıları.')}
+                ${generateTargetCard('icon-folder-open', 'RCE Potansiyeli', 'unrestricted_file_upload', 'Dosya yükleme noktaları, LFI/RFI ve log poisoning yolları.')}
+
+                <button onclick="showPage('toolbox')" class="copybtn" style="background:var(--accent); color:white; padding: 12px 15px; border-radius:8px; margin-top: 10px; font-weight: 600;">TÜM ARAÇLARA GİT (TOOLBOX) →</button>
+            </div>
+        </div>
+        
+        <div class="footer" style="margin-top: 40px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+            <span style="text-align: right;">© 2025 Pentest Library &lt;/&gt; Eğitim amaçlı içeriktir. Yalnızca yetkiniz olan hedeflerde test yapın.</span>
+        </div>
+        <div id="signature-image-container">
+          <img src="sign.png" 
+          alt="Mustafa Kemal Atatürk'ün İmzası" 
+          style="width: 150px; height: auto; display: block; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));">
+        </div>
+        
+    `;
+    
+    // BURADAN İTİBAREN YENİ YARDIMCI FONKSİYONLAR GELİYOR. ESKİ `quickLinks` KODUNUN YERİNİ ALMALI.
+    
+    function generateFlowCard(icon, title, pageKey, desc, color) {
+        return `<div class="card" data-page="${pageKey}" onclick="showPage('${pageKey}')" style="border-left: 3px solid ${color}; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 15px;">
+            <div style="display: flex; flex-direction: column;">
+                <h3 class="tool-title" style="color: ${color}; margin-bottom: 4px;">${title}</h3>
+                <p class="tool-description" style="margin: 0;">${desc}</p>
+            </div>
+            <span class="quick-link-icon ${icon}" style="color: ${color}; margin-left: 15px;"></span>
+        </div>`;
+    }
+
+    function generateTargetCard(iconClass, title, pageKey, desc) {
+        return `<div class="card" data-page="${pageKey}" onclick="showPage('${pageKey}')" style="border-left: 3px solid var(--accent); cursor: pointer; display: flex; align-items: center; padding: 15px;">
+            <span class="quick-link-icon ${iconClass}" style="color: var(--accent); background-color: rgba(6,182,212,0.1); margin-right: 15px;"></span>
+            <div style="display: flex; flex-direction: column;">
+                <h3 class="tool-title" style="margin-bottom: 4px;">${title}</h3>
+                <p class="tool-description" style="margin: 0; font-size: 12px;">${desc}</p>
+            </div>
+        </div>`;
+    }
+
+    // Quick Links'i manuel olarak ekliyoruz, artık statik HTML'de yok.
+    // Bu kod parçası, normalde quickLinks'i render eden JS bloğunun yerine geçmeli.
+    const container1 = document.querySelector('.hero').nextElementSibling.nextElementSibling.nextElementSibling; // Sizin özel yapınızdaki quickLinks container'ını bulur.
+    
+    if (container1) {
+        // Yeni tasarımda bu bloklar statik HTML içinde olduğu için bu kısım artık sadece arama/navigasyonu yeniden bağlamak için kullanılır.
+        
+        // Yeni tasarımdaki kartlara tıklama olayını bağlama (generateFlowCard ve generateTargetCard ile oluşturulanlar için)
+        document.querySelectorAll('div[data-page]').forEach(el => {
+            el.addEventListener('click', () => showPage(el.dataset.page));
+        });
+    }
+
+    // Arama kutusunu aktive etmek için gerekli kod bloğu aşağıdadır.
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsDiv = document.getElementById('searchSuggestions');
+    let selectedIndex = -1;
+    // ... (Arama fonksiyonlarının geri kalanı aynı kalacaktır)
+
+    if (searchInput) {
+        const searchHandler = function(e) {
+            const query = e.target.value.trim().toLowerCase();
+            suggestionsDiv.innerHTML = '';
+            suggestionsDiv.classList.remove('visible');
+            selectedIndex = -1;
+            if (query === '') return;
+            Object.keys(CONTENT).forEach(key => {
+                if (key === 'home') return;
+                const item = CONTENT[key];
+                const searchText = `${item.menuName || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
+                let sectionMatches = '';
+                if (item.sections) {
+                    item.sections.forEach(sec => {
+                        const secText = `${sec.title || ''}`.toLowerCase();
+                        if (secText.includes(query)) sectionMatches += ` - ${sec.title}`;
+                    });
+                }
+                if (searchText.includes(query) || sectionMatches) {
+                    const suggestion = document.createElement('div');
+                    suggestion.classList.add('search-suggestion');
+                    suggestion.dataset.page = key;
+                    suggestion.innerHTML = `${item.menuName || item.title}${sectionMatches}`;
+                    suggestionsDiv.appendChild(suggestion);
+                }
+            });
+            if (suggestionsDiv.children.length > 0) suggestionsDiv.classList.add('visible');
+        };
+        searchInput.addEventListener('input', searchHandler);
+        const keyHandler = function(e) {
+            const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
+            if (suggestions.length === 0) return;
+            if (e.key === 'ArrowDown') selectedIndex = (selectedIndex + 1) % suggestions.length;
+            else if (e.key === 'ArrowUp') selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
+            else if (e.key === 'Enter' && selectedIndex >= 0) { suggestions[selectedIndex].click(); }
+            else if (e.key === 'Escape') { clearSearch(); }
+            suggestions.forEach((sug, idx) => sug.classList.toggle('highlight', idx === selectedIndex));
+        };
+        searchInput.addEventListener('keydown', keyHandler);
+
+        const suggestionClickHandler = function(e) {
+            const targetSuggestion = e.target.closest('.search-suggestion');
+            if (targetSuggestion) {
+                showPage(targetSuggestion.dataset.page);
+                clearSearch();
+            }
+        };
+        suggestionsDiv.addEventListener('click', suggestionClickHandler);
+        
+        function clearSearch() {
+            searchInput.value = '';
+            suggestionsDiv.innerHTML = '';
+            suggestionsDiv.classList.remove('visible');
+            selectedIndex = -1;
+        }
+    }
 }
-
-          const searchInput = document.getElementById('searchInput');
-          const suggestionsDiv = document.getElementById('searchSuggestions');
-          let selectedIndex = -1;
-
-          if (searchInput) {
-              const searchHandler = function(e) {
-                  const query = e.target.value.trim().toLowerCase();
-                  suggestionsDiv.innerHTML = '';
-                  suggestionsDiv.classList.remove('visible');
-                  selectedIndex = -1;
-                  if (query === '') return;
-                  Object.keys(CONTENT).forEach(key => {
-                      if (key === 'home') return;
-                      const item = CONTENT[key];
-                      const searchText = `${item.menuName || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
-                      let sectionMatches = '';
-                      if (item.sections) {
-                          item.sections.forEach(sec => {
-                              const secText = `${sec.title || ''}`.toLowerCase();
-                              if (secText.includes(query)) sectionMatches += ` - ${sec.title}`;
-                          });
-                      }
-                      if (searchText.includes(query) || sectionMatches) {
-                          const suggestion = document.createElement('div');
-                          suggestion.classList.add('search-suggestion');
-                          suggestion.dataset.page = key;
-                          suggestion.innerHTML = `${item.menuName || item.title}${sectionMatches}`;
-                          suggestionsDiv.appendChild(suggestion);
-                      }
-                  });
-                  if (suggestionsDiv.children.length > 0) suggestionsDiv.classList.add('visible');
-              };
-              searchInput.addEventListener('input', searchHandler);
-              const keyHandler = function(e) {
-                  const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
-                  if (suggestions.length === 0) return;
-                  if (e.key === 'ArrowDown') selectedIndex = (selectedIndex + 1) % suggestions.length;
-                  else if (e.key === 'ArrowUp') selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
-                  else if (e.key === 'Enter' && selectedIndex >= 0) { suggestions[selectedIndex].click(); } 
-                  else if (e.key === 'Escape') { clearSearch(); }
-                  suggestions.forEach((sug, idx) => sug.classList.toggle('highlight', idx === selectedIndex));
-              };
-              searchInput.addEventListener('keydown', keyHandler);
-
-              const suggestionClickHandler = function(e) {
-                  const targetSuggestion = e.target.closest('.search-suggestion');
-                  if (targetSuggestion) {
-                      showPage(targetSuggestion.dataset.page);
-                      clearSearch();
-                  }
-              };
-              suggestionsDiv.addEventListener('click', suggestionClickHandler);
-              
-              function clearSearch() {
-                  searchInput.value = '';
-                  suggestionsDiv.innerHTML = '';
-                  suggestionsDiv.classList.remove('visible');
-                  selectedIndex = -1;
-              }
-          }
-      }
 
       else if (pageId === 'toolbox') {
           let toolboxHtml = `<h1>${page.title}</h1><p class="lead">${page.description || ''}</p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">`;
@@ -2435,7 +2745,7 @@ if(quickLinks) {
       }
     
     window.scrollTo({top: 0, behavior: 'smooth'});
-} // showPage fonksiyonunun bittiği yer
+}
 
 function activateSubfinder() {
 const scanButton = document.getElementById('scanButton');
@@ -3208,12 +3518,10 @@ scanButton.textContent = 'Taramayı Başlat';
           setTimeout(() => { document.getElementById('btnCopyDecodeOutput').textContent = 'Çıktıyı Kopyala'; }, 1500);
       });
     }
-// BU KOD BLOĞUNU OLDUĞU GİBİ YAPIŞTIR
-
 function setupForum() {
     const authSection = document.getElementById('auth-section');
     const userSessionSection = document.getElementById('user-session-section');
-    const userUsernameEl = document.getElementById('user-username'); // 👈 DEĞİŞTİ
+    const userUsernameEl = document.getElementById('user-username');
     const newPostForm = document.getElementById('new-post-form');
     const postsSection = document.getElementById('posts-section');
 
@@ -3223,16 +3531,15 @@ function setupForum() {
     const sendPostBtn = document.getElementById('send-post-btn');
     const emailForm = document.getElementById('email-login-form');
 
-    // Yeni değişkenler:
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
 
-    const updateUI = (isLoggedIn, userUsername = '') => { // 👈 DEĞİŞTİ
+    const updateUI = (isLoggedIn, userUsername = '') => {
         if (isLoggedIn) {
             if (authSection) authSection.classList.add('hidden');
             if (userSessionSection) userSessionSection.classList.remove('hidden');
             if (newPostForm) newPostForm.classList.remove('hidden');
-            if (userUsernameEl) userUsernameEl.textContent = userUsername; // 👈 DEĞİŞTİ
+            if (userUsernameEl) userUsernameEl.textContent = userUsername;
         } else {
             if (authSection) authSection.classList.remove('hidden');
             if (userSessionSection) userSessionSection.classList.add('hidden');
@@ -3271,9 +3578,7 @@ function setupForum() {
         try {
             const response = await fetch(`${API_BASE_URL}/session`, { credentials: 'include' });
             const data = await response.json();
-            // 👇 DEĞİŞTİ: session'dan username çekiliyor
             updateUI(data.is_logged_in, data.user?.username); 
-            // 👆 DEĞİŞTİ
         } catch (error) {
             console.error("Oturum kontrol edilemedi:", error);
             updateUI(false);
@@ -3284,10 +3589,9 @@ function setupForum() {
         emailForm.addEventListener('submit', e => e.preventDefault());
     }
     if (loginBtn) {
-        // Login butonu için username input'unun değerine ihtiyacımız yok.
         loginBtn.addEventListener('click', async () => {
-            const email = emailInput.value; // Düzeltildi
-            const password = passwordInput.value; // Düzeltildi
+            const email = emailInput.value;
+            const password = passwordInput.value;
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -3302,9 +3606,7 @@ function setupForum() {
             }
         });
     }
-// index.html içindeki setupForum fonksiyonu içinde:
 
-// index.html: setupForum fonksiyonu içinde
 if (registerBtn) {
     registerBtn.addEventListener('click', async () => {
         const email = document.getElementById('email-input').value;
@@ -3317,18 +3619,15 @@ if (registerBtn) {
         });
         
         const data = await response.json();
-        
-        // Sadece mesajı göster (link artık backend'den gelmeyecek)
+
         alert(data.message || data.error);
 
-        // Başarılıysa formu temizle (isteğe bağlı)
         if (response.ok) {
             document.getElementById('email-input').value = '';
             document.getElementById('password-input').value = '';
         }
     });
 }
-// ...
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -3359,7 +3658,6 @@ if (registerBtn) {
     checkSession();
     fetchPosts();
 }
-// index.html, <script> bloğu içinde, setupForum fonksiyonundan sonra
   function openTool(toolId) {
       const main = document.getElementById('mainContent');
       let tool = null;
@@ -3611,9 +3909,7 @@ view</textarea>
      main.innerHTML = html;
      activateParamFinder();
 
-} // ... diğer else if bloklarından sonra, en sondaki else'ten önce bunu yapıştır ...
-
-else if (toolId === 'waybackRecon') {
+} else if (toolId === 'waybackRecon') {
     html = `
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
         <h1><i class="" style="color:var(--accent);"></i> ${tool.title}</h1>
@@ -3723,9 +4019,8 @@ else if (toolId === 'waybackRecon') {
     `;
     main.innerHTML = html;
     activateParamFinder();
-    
 
-// ...diğer else if blokları...
+
 } else if (toolId === 'encoderdecoder') {
 html = `
  <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
