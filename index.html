@@ -751,7 +751,7 @@ forum: {
                         <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
                             <button type="submit" id="login-email-btn">Giriş Yap</button>
-                            <button type="button" id="register-email-btn" disabled>Kaydol</button>
+                            <button type="button" id="register-email-btn">Kaydol</button>
                             <p class="small-info" style="font-size: 0.8em; color: #aaa; margin-top: 5px;">*Kayıtlar şimdilik kapalıdır.</p>
                         </div>
                     </form>
@@ -1079,7 +1079,7 @@ Password: anything</pre>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tanım: Kullanıcının tarayıcısı doğrulanmış oturumla hedefe izinsiz istek gönderir (ör: POST değişiklikleri).</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: State-changing endpoint (POST/PUT/DELETE) oturum çerezine bağımlı mı? Normal istek → çalışıyor mu?</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC (güvenlik amacıyla soyut): Basit bir HTML form (action=[TARGET_URL], method=POST) ve otomatik submit ile test edilir — form alanları hedef parametre isimleriyle doldurulur.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC: Basit bir HTML form (action=[TARGET_URL], method=POST) ve otomatik submit ile test edilir — form alanları hedef parametre isimleriyle doldurulur.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Exploit (özet): Kullanıcı oturumdayken crafted sayfa ziyaret ettirilir; hedef sunucu değişiklik yapıyor ise CSRF mümkündür. Araç: Burp repeater ile isteği tekrar etmek, farkı incelemek.</li>
           </ul>
         `
@@ -1101,7 +1101,7 @@ Password: anything</pre>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tanım: Saldırgan kullanıcının oturumunu kendi hesabına yönlendirir (session fixation-like) veya kullanıcıyı saldırgan hesabına login eder.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: Login endpoint CSRF koruması var mı? (login işlemine CSRF token eklenmiş mi?)</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC (soyut): Crafted form ile otomatik login denemesi — eğer hedef login isteğini CSRF koruması olmadan kabul ediyorsa login CSRF mümkündür.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC: Crafted form ile otomatik login denemesi — eğer hedef login isteğini CSRF koruması olmadan kabul ediyorsa login CSRF mümkündür.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etki: Kullanıcı izinsiz şekilde saldırgan hesabına bağlanır; sonrasında yetkili işlemler saldırgan tarafından takip edilebilir.</li>
           </ul>
         `
@@ -4230,3 +4230,4 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
   </html>
+
