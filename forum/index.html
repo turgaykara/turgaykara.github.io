@@ -135,85 +135,22 @@
         .chat-area::-webkit-scrollbar-thumb { background: var(--bg-input); border-radius: 3px; }
 
         /* --- MESSAGES --- */
-/* --- MODERN MESAJ TASARIMI (FINAL) --- */
-        .message-group { margin-bottom: 16px; } /* Mesajlar arası boşluk */
+        .message-group { margin-bottom: 24px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .message { 
-            display: flex; 
-            gap: 12px; 
-            align-items: flex-start;
-        }
-        
-        /* Avatar */
+        .message { display: flex; gap: 16px; }
         .msg-avatar {
-            width: 40px; height: 40px; 
-            border-radius: 50%; 
-            background: #1e1e24; /* Daha koyu arka plan */
-            flex-shrink: 0; 
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; color: #a1a1aa; 
-            border: 1px solid var(--border);
-            margin-top: 4px; /* Hafif aşağı al */
+            width: 40px; height: 40px; border-radius: 50%; background: var(--bg-card);
+            flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            font-weight: 600; color: var(--text-muted); border: 1px solid var(--border);
         }
-
-        /* Mesaj Baloncuğu */
-        .msg-content { 
-            background-color: #27272a; 
-            padding: 10px 16px; 
-            border-radius: 0 16px 16px 16px; /* Sol üst köşe sivri kalsın */
-            position: relative;
-            
-            /* İŞTE SİHİR BURADA: */
-            width: fit-content; /* Sadece içerik kadar genişle */
-            max-width: 75%; /* Ekranın %75'ini geçmesin */
-            min-width: 160px; /* Çok kısa mesajda butonlar sığsın diye min genişlik */
-            
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-        }
-
-        .msg-header { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-            margin-bottom: 6px; 
-        }
-        
-        .msg-author { font-size: 14px; font-weight: 700; color: #e4e4e7; cursor: pointer; }
+        .msg-content { flex-grow: 1; }
+        .msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+        .msg-author { font-weight: 600; color: #fff; cursor: pointer; }
         .msg-author:hover { text-decoration: underline; }
-        
-        .msg-time { font-size: 11px; color: #71717a; margin-top: 2px; }
+        .msg-time { font-size: 11px; color: var(--text-muted); }
+        .msg-text { font-size: 15px; line-height: 1.5; color: #d1d5db; white-space: pre-wrap; }
 
-        .msg-text { 
-            font-size: 14px; 
-            line-height: 1.5; 
-            color: #d4d4d8; 
-            white-space: pre-wrap; 
-            word-break: break-word; /* Uzun linkler taşmasın */
-        }
-
-        /* Butonlar (Sağ alta yaslı ve küçük) */
-        .msg-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            padding-top: 6px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            justify-content: flex-end;
-        }
-
-        .action-btn { 
-            font-size: 10px; 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            background: rgba(0,0,0,0.2);
-            color: #a1a1aa;
-            transition: 0.2s;
-        }
-        .action-btn i { margin-right: 4px; }
-        
-        .action-edit:hover { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-        .action-delete:hover { background: rgba(239, 68, 68, 0.2); color: #f87171; }
         /* --- MODALS & AUTH --- */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
