@@ -2322,6 +2322,7 @@ POST /api/users/update
         }
     ]
 },
+
   tools: {
     menuName: 'Araçlar',
     icon: 'icon-wrench',
@@ -3057,7 +3058,6 @@ function renderMenu() {
             regular.push({key, ...item});
         }
     });
-
     regular.forEach(item => {
         nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
     });
@@ -3078,7 +3078,6 @@ function renderMenu() {
         });
     });
 }
-
   function showPage(pageId) {
       document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
       const activeEl = document.querySelector(`[data-page="${pageId}"]`);
@@ -4601,8 +4600,26 @@ activateEncoderDecoder();
 
       window.scrollTo({top: 0, behavior: 'smooth'});
   }
-    renderMenu();
-    showPage('home');
+renderMenu();
+
+// Sayfa yüklendiğinde URL'de #forum veya başka bir sayfa var mı kontrol et
+const hash = window.location.hash.substring(1); // # işaretini atar
+if (hash && CONTENT[hash]) {
+    showPage(hash);
+} else {
+    showPage('home'); // Hash yoksa ana sayfayı aç
+}
+
+// Tarayıcı geri/ileri butonları için dinleyici
+window.addEventListener('hashchange', () => {
+    const currentHash = window.location.hash.substring(1);
+    if (currentHash && CONTENT[currentHash]) {
+        showPage(currentHash);
+    } else {
+        showPage('home');
+    }
+});
+// ---------------------
 
 document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.getElementById('chat-window');
@@ -4698,3 +4715,5 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
 </html>
+
+
