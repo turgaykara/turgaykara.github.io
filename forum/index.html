@@ -491,22 +491,7 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-        apiKey: "AIzaSyBYZH2eNta0Xm5DkaNMbCrx9og4F6P6jOU",
-        authDomain: "pentest-b71d5.firebaseapp.com",
-        projectId: "pentest-b71d5",
-        storageBucket: "pentest-b71d5.firebasestorage.app",
-        messagingSenderId: "733965925244",
-        appId: "1:733965925244:web:5b0faa927b0089a18482f9",
-        measurementId: "G-4N6KTXFKG7"
-        };
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+    <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
         
         // Elementler
@@ -562,48 +547,49 @@ const auth = getAuth(app);
         });
 
         // --- ŞİFRE SIFIRLAMA İSTEĞİ ---
-// --- ŞİFRE SIFIRLAMA İSTEĞİ (FIREBASE VERSİYONU) ---
-document.getElementById('send-reset-btn').addEventListener('click', () => {
-    const email = document.getElementById('forgot-email').value;
-    const btn = document.getElementById('send-reset-btn');
-    const loginErrorEl = document.getElementById('login-error'); 
-    const loginSuccessEl = document.getElementById('login-success');
-
-    if(!email) {
-        loginErrorEl.style.display = 'block';
-        loginErrorEl.textContent = "Lütfen e-posta adresinizi girin.";
-        return;
-    }
-
-    btn.disabled = true; 
-    btn.textContent = "Gönderiliyor...";
-    loginErrorEl.style.display = 'none';
-    loginSuccessEl.style.display = 'none';
-
-    // Firebase'e emir veriyoruz
-    sendPasswordResetEmail(auth, email)
-        .then(() => {
-            loginSuccessEl.style.display = 'block';
-            loginSuccessEl.textContent = "✅ Sıfırlama linki e-posta adresine gönderildi! (Spam kutusuna da bak)";
-            document.getElementById('forgot-email').value = '';
-        })
-        .catch((error) => {
-            console.error(error);
-            loginErrorEl.style.display = 'block';
+// --- ŞİFRE SIFIRLAMA İSTEĞİ (GÜNCELLENMİŞ) ---
+        document.getElementById('send-reset-btn').addEventListener('click', async () => {
+            const email = document.getElementById('forgot-email').value;
+            const btn = document.getElementById('send-reset-btn');
             
-            if (error.code === 'auth/user-not-found') {
-                loginErrorEl.textContent = "Bu e-posta ile kayıtlı kullanıcı bulunamadı.";
-            } else if (error.code === 'auth/invalid-email') {
-                loginErrorEl.textContent = "Geçersiz e-posta formatı.";
-            } else {
-                loginErrorEl.textContent = "Hata: " + error.message;
+            if(!email) {
+                loginErrorEl.textContent = "Lütfen e-posta adresinizi girin.";
+                loginErrorEl.style.display = 'block';
+                return;
             }
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.textContent = "Sıfırlama Bağlantısı Gönder";
+
+            btn.disabled = true; btn.textContent = "Gönderiliyor...";
+            loginErrorEl.style.display = 'none';
+            loginSuccessEl.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API_URL}/forgot-password`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email}),
+                });
+                
+                const data = await res.json();
+
+                if(res.ok) { 
+                    // (Demo) yazısını kaldırdık
+                    loginSuccessEl.textContent = "✅ Yeni şifreniz e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünü kontrol edin.";
+                    loginSuccessEl.style.display = 'block';
+                    
+                    // İsteğe bağlı: Başarılı olunca inputu temizle
+                    document.getElementById('forgot-email').value = '';
+                } else {
+                    // Backend'den gelen "Kayıtlı değil" hatasını burada gösteriyoruz
+                    loginErrorEl.textContent = data.error || "İşlem başarısız.";
+                    loginErrorEl.style.display = 'block';
+                }
+            } catch (e) {
+                loginErrorEl.textContent = "Sunucu hatası.";
+                loginErrorEl.style.display = 'block';
+            } finally {
+                btn.disabled = false; btn.textContent = "Sıfırlama Bağlantısı Gönder";
+            }
         });
-});
 
         // Oturum Kontrolü
         async function checkSession() {
