@@ -135,47 +135,32 @@
         .chat-area::-webkit-scrollbar-thumb { background: var(--bg-input); border-radius: 3px; }
 
         /* --- MESSAGES --- */
-/* --- PREMIUM FORUM TASARIMI (FINAL V4 - ORTALANMIŞ & GEÇİŞLİ) --- */
+/* --- ORTALANMIŞ FORUM KARTI (FINAL V5) --- */
         .message-group { 
-            margin-bottom: 20px; 
-            padding: 0 10px; /* Mobilde kenarlara yapışmasın */
+            margin-bottom: 24px; 
+            padding: 0 10px;
         }
 
         .message { 
-            display: flex; 
-            /* Arka plan: Hafif geçişli koyu ton (Dümdüz gri değil) */
-            background: linear-gradient(145deg, #202025 0%, #161618 100%);
+            display: flex; /* Yanyana düzen: Sol Profil + Sağ İçerik */
             
-            /* Kenarlık: Hafif parlayan morumsu ince çizgi */
-            border: 1px solid rgba(139, 92, 246, 0.1); 
+            /* MERKEZLEME VE KIRPMA AYARLARI */
+            max-width: 850px; /* Genişliği kısıtladık (Kenarlar boş kalacak) */
+            margin: 0 auto;   /* Tam ortaya hizala */
             
-            border-radius: 16px; /* Daha yuvarlak köşeler */
-            
-            /* Kenarlardan kırpıp ortaya alıyoruz */
-            max-width: 95%; 
-            margin: 0 auto; 
-            
-            /* Hafif havada durma efekti (Gölge) */
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            
+            background: #18181b; 
+            border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Derinlik gölgesi */
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        /* Üzerine gelince çok hafif yukarı kalksın */
-        .message:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px -10px rgba(139, 92, 246, 0.15); /* Mor ışıltı */
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        /* --- SOL TARAF (PROFİL) --- */
+        /* --- SOL SÜTUN (KÜÇÜLTÜLDÜ VE DÜZELTİLDİ) --- */
         .msg-left {
-            width: 150px;
-            /* Sol tarafın arka planı da hafif geçişli olsun */
-            background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+            width: 130px; /* Sabit genişlik */
+            background: #141417; /* Hafif daha koyu */
             border-right: 1px solid rgba(255,255,255,0.05);
-            padding: 24px 12px;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -184,118 +169,91 @@
         }
 
         .msg-avatar {
-            width: 70px; height: 70px;
-            border-radius: 50%; /* Tam yuvarlak */
-            
-            /* Avatarın çevresinde dönen renkli halka hissi */
-            background: #18181b;
-            border: 2px solid transparent;
-            background-image: linear-gradient(#18181b, #18181b), linear-gradient(45deg, #8b5cf6, #06b6d4);
-            background-origin: border-box;
-            background-clip: content-box, border-box;
-            
+            width: 50px; height: 50px; /* EŞEK KADAR DEĞİL ARTIK :) */
+            border-radius: 10px;
+            background: #27272a;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 700; color: #e4e4e7;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-size: 18px; font-weight: 700; color: #a1a1aa;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .msg-author { 
-            font-size: 15px; 
+            font-size: 13px; 
             font-weight: 700; 
-            color: #fff; 
-            margin-bottom: 6px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+            color: #f4f4f5; 
+            margin-bottom: 4px;
+            word-break: break-all; /* Uzun isimler patlatmasın */
         }
-
+        
+        /* O SEVDİĞİN RÜTBE KUTUSU */
         .user-rank {
-            font-size: 11px;
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.2));
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(139, 92, 246, 0.1); /* Morumsu */
             color: #c4b5fd;
-            padding: 3px 10px;
-            border-radius: 20px; /* Hap şeklinde */
+            padding: 2px 8px;
+            border-radius: 4px;
             font-weight: 600;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.2);
             margin-bottom: 10px;
         }
 
-        /* --- SAĞ TARAF (İÇERİK) --- */
+        /* --- SAĞ SÜTUN (İÇERİK) --- */
         .msg-right {
             flex-grow: 1;
-            padding: 20px 24px;
+            padding: 16px 20px;
             display: flex;
             flex-direction: column;
-            background: transparent;
+            min-width: 0; /* Flexbox taşma fixi */
         }
 
         .msg-header {
             display: flex;
             justify-content: space-between;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 10px;
-            margin-bottom: 16px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
 
-        .msg-date { 
-            font-size: 12px; 
-            color: #71717a; 
-            display: flex; align-items: center; gap: 6px;
-        }
+        .msg-date { font-size: 11px; color: #52525b; }
 
         .msg-text { 
-            font-size: 15px; 
-            line-height: 1.7; /* Okunabilirlik arttı */
-            color: #e4e4e7; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            color: #d4d4d8; 
             white-space: pre-wrap;
-            font-weight: 300;
-            letter-spacing: 0.3px;
         }
 
-        /* Butonlar */
         .msg-actions {
-            margin-top: 20px;
+            margin-top: auto; /* Butonları en alta it */
             padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,0.05);
             display: flex;
             justify-content: flex-end;
             gap: 12px;
         }
 
         .action-btn { 
-            font-size: 12px; 
-            padding: 6px 12px;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.03);
-            transition: all 0.3s ease;
+            font-size: 11px; cursor: pointer; color: #71717a; transition: 0.2s;
         }
-        
-        .action-edit:hover { 
-            background: rgba(6, 182, 212, 0.15); 
-            color: #22d3ee; 
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
-        }
-        
-        .action-delete:hover { 
-            background: rgba(239, 68, 68, 0.15); 
-            color: #f87171; 
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
-        }
+        .action-edit:hover { color: #22d3ee; }
+        .action-delete:hover { color: #ef4444; }
 
-        /* Mobilde yine alt alta geçsin ama kart yapısını korusun */
-        @media (max-width: 700px) {
+        /* MOBİL UYUMLULUĞU */
+        @media (max-width: 600px) {
             .message { flex-direction: column; max-width: 100%; }
             .msg-left { 
                 width: 100%; 
                 flex-direction: row; 
-                padding: 15px; 
-                gap: 15px; 
+                padding: 10px 16px; 
+                gap: 12px; 
                 border-right: none; 
                 border-bottom: 1px solid rgba(255,255,255,0.08); 
-                justify-content: flex-start;
-                background: linear-gradient(to right, rgba(255,255,255,0.03), transparent);
+                text-align: left;
             }
-            .msg-avatar { margin-bottom: 0; width: 50px; height: 50px; }
-            .user-stats { display: none; }
+            .msg-avatar { width: 40px; height: 40px; margin-bottom: 0; }
             .user-rank { margin-left: auto; margin-bottom: 0; }
         }
 
@@ -607,9 +565,8 @@
         }
 
         // Mesajları Yükle
-        async function loadMessages() {
+async function loadMessages() {
             try {
-                // credentials: 'include' ekledik ki sunucu kim olduğunu bilsin (is_mine için şart)
                 const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
                 const posts = await res.json();
                 
@@ -618,14 +575,24 @@
                         const initial = (p.author_email || 'A').charAt(0).toUpperCase();
                         const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
                         
-                        // --- YENİ KISIM: SİL/DÜZENLE BUTONLARI ---
+                        // RÜTBE AYARI (İsimde admin geçiyorsa Admin, yoksa Üye)
+                        let rank = "Üye";
+                        let rankColor = "rgba(139, 92, 246, 0.1)"; // Mor (Üye)
+                        let rankText = "#c4b5fd";
+
+                        if(name.toLowerCase().includes("admin") || name.toLowerCase().includes("0xkara")) {
+                            rank = "Yönetici";
+                            rankColor = "rgba(239, 68, 68, 0.15)"; // Kırmızı (Admin)
+                            rankText = "#fca5a5";
+                        }
+                        
+                        // Butonlar
                         let actionsHTML = '';
                         if (p.is_mine) {
-                            // İçerikteki tırnak işaretlerini kaçırıyoruz ki JS hatası vermesin
                             const safeContent = p.content.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
                             actionsHTML = `
                                 <div class="msg-actions">
-                                    <span class="action-btn action-edit" onclick="editPost(${p.id}, '${safeContent}')">
+                                    <span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${safeContent}')">
                                         <i class="fa-solid fa-pen"></i> Düzenle
                                     </span>
                                     <span class="action-btn action-delete" onclick="deletePost(${p.id})">
@@ -634,28 +601,32 @@
                                 </div>
                             `;
                         }
-                        // -----------------------------------------
 
                         return `
                         <div class="message-group">
                             <div class="message">
-                                <div class="msg-avatar">${initial}</div>
-                                <div class="msg-content">
+                                <div class="msg-left">
+                                    <div class="msg-avatar">${initial}</div>
+                                    <div class="msg-author">${escapeHTML(name)}</div>
+                                    <div class="user-rank" style="background:${rankColor}; color:${rankText}">${rank}</div>
+                                </div>
+
+                                <div class="msg-right">
                                     <div class="msg-header">
-                                        <span class="msg-author">${escapeHTML(name)}</span>
-                                        <span class="msg-time">${formatTime(p.created_at)}</span>
+                                        <span class="msg-date">${formatTime(p.created_at)}</span>
+                                        <span style="font-size:10px; color:#52525b">#${p.id}</span>
                                     </div>
                                     <div class="msg-text">${escapeHTML(p.content)}</div>
-                                    ${actionsHTML} </div>
+                                    ${actionsHTML}
+                                </div>
                             </div>
                         </div>`;
                     }).join('');
                 } else {
-                    chatFeed.innerHTML = `<div style="text-align:center; color:var(--text-muted); margin-top:100px;"><i class="fa-solid fa-comments" style="font-size:48px; opacity:0.2; margin-bottom:16px;"></i><p>Henüz mesaj yok. Sohbeti sen başlat!</p></div>`;
+                    chatFeed.innerHTML = `<div style="text-align:center; margin-top:50px; color:gray;">Henüz mesaj yok.</div>`;
                 }
             } catch (e) {
                 console.error(e);
-                chatFeed.innerHTML = '<div style="color:var(--danger); text-align:center; margin-top:50px;">Bağlantı hatası!</div>';
             }
         }
 
