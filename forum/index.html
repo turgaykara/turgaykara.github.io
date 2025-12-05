@@ -135,22 +135,110 @@
         .chat-area::-webkit-scrollbar-thumb { background: var(--bg-input); border-radius: 3px; }
 
         /* --- MESSAGES --- */
-        .message-group { margin-bottom: 24px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .message { display: flex; gap: 16px; }
-        .msg-avatar {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--bg-card);
-            flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-            font-weight: 600; color: var(--text-muted); border: 1px solid var(--border);
+/* --- HAYALET MESAJ TASARIMI (FINAL V2) --- */
+        .message-group { 
+            margin-bottom: 4px; /* Mesajlar arası boşluk azaldı */
+            padding: 2px 0;
         }
-        .msg-content { flex-grow: 1; }
-        .msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
-        .msg-author { font-weight: 600; color: #fff; cursor: pointer; }
-        .msg-author:hover { text-decoration: underline; }
-        .msg-time { font-size: 11px; color: var(--text-muted); }
-        .msg-text { font-size: 15px; line-height: 1.5; color: #d1d5db; white-space: pre-wrap; }
 
+        .message { 
+            display: flex; 
+            gap: 14px; 
+            align-items: flex-start;
+            padding: 8px 16px; /* Hafif iç boşluk */
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            position: relative;
+        }
+
+        /* Üzerine gelince hafif parlasın (Geçişli efekt) */
+        .message:hover {
+            background: rgba(255, 255, 255, 0.03); 
+        }
+        
+        /* Avatar */
+        .msg-avatar {
+            width: 42px; height: 42px; 
+            border-radius: 50%; 
+            background: #18181b; 
+            flex-shrink: 0; 
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #a1a1aa; 
+            border: none; /* Çerçeveyi kaldırdık */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* İçerik Alanı - KUTU YOK, SINIR YOK */
+        .msg-content { 
+            background: transparent; /* Arka planı sildik */
+            padding: 0; 
+            border: none; 
+            box-shadow: none;
+            flex-grow: 1;
+        }
+
+        .msg-header { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 10px;
+            margin-bottom: 4px; 
+        }
+        
+        .msg-author { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #f4f4f5; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.1); /* Hafif neon etkisi */
+            cursor: pointer; 
+        }
+        .msg-author:hover { text-decoration: underline; }
+        
+        .msg-time { 
+            font-size: 11px; 
+            color: #52525b; 
+            font-weight: 500;
+        }
+
+        .msg-text { 
+            font-size: 15px; 
+            line-height: 1.5; 
+            color: #d4d4d8; /* Hafif kırık beyaz */
+            white-space: pre-wrap; 
+            word-break: break-word;
+            font-weight: 400;
+        }
+
+        /* Butonlar - İlk resimdeki gibi yazının altında ve SADE */
+        .msg-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 6px;
+            opacity: 0; /* Normalde gizli */
+            transition: opacity 0.2s ease;
+            justify-content: flex-start; /* Sola yaslı */
+        }
+
+        /* Mesajın üzerine gelince butonlar görünsün (Pro hareket) */
+        .message:hover .msg-actions {
+            opacity: 1;
+        }
+
+        .action-btn { 
+            font-size: 12px; 
+            background: none; /* Arka plan yok */
+            padding: 0;
+            border-radius: 0;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex; align-items: center; gap: 5px;
+        }
+        
+        /* Renkler (İlk resimdeki gibi Cyan ve Red) */
+        .action-edit { color: #06b6d4; } /* Turkuaz */
+        .action-edit:hover { color: #22d3ee; text-shadow: 0 0 8px rgba(6, 182, 212, 0.4); }
+        
+        .action-delete { color: #ef4444; } /* Kırmızı */
+        .action-delete:hover { color: #f87171; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
         /* --- MODALS & AUTH --- */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
