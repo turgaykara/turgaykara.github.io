@@ -316,9 +316,12 @@
 
         // Zaman formatı
         const formatTime = (dateStr) => {
-            const date = new Date(dateStr);
+            let date = new Date(dateStr);
+            date.setHours(date.getHours() + 3);
+
             const now = new Date();
             const diff = (now - date) / 1000;
+
             if (diff < 60) return "Az önce";
             if (diff < 3600) return Math.floor(diff / 60) + " dakika önce";
             if (diff < 86400) return Math.floor(diff / 3600) + " saat önce";
