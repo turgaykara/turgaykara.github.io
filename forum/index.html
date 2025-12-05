@@ -135,7 +135,6 @@
         .chat-area::-webkit-scrollbar-thumb { background: var(--bg-input); border-radius: 3px; }
 
         /* --- MESSAGES --- */
-/* --- CYBERPUNK / NEON FORUM KARTI (FINAL) --- */
         .message-group { 
             margin-bottom: 24px; 
             padding: 0 10px;
@@ -792,32 +791,72 @@ async function loadMessages() {
             }
         }
 
-        // --- YENİ: MESAJ DÜZENLEME FONKSİYONU ---
-        async function editPost(id, oldContent) {
-            // Basit bir prompt açıyoruz
-            const newContent = prompt("Mesajını düzenle:", oldContent);
-            
-            // Eğer boş değilse ve değiştiyse gönder
-            if (newContent !== null && newContent.trim() !== "" && newContent !== oldContent) {
-                try {
-                    const res = await fetch(`${API_URL}/posts/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ content: newContent }),
-                        credentials: 'include'
-                    });
+// --- YENİ DÜZENLEME SİSTEMİ (MODAL İLE) ---
+        const editModal = document.getElementById('edit-modal');
+        const editInput = document.getElementById('edit-content');
+        const editIdInput = document.getElementById('edit-post-id');
+        const saveEditBtn = document.getElementById('save-edit-btn');
+        const closeEditBtn = document.getElementById('close-edit-modal');
 
-                    if (res.ok) {
-                        loadMessages(); // Listeyi yenile
-                    } else {
-                        const data = await res.json();
-                        alert(data.error || "Güncellenemedi.");
-                    }
-                } catch (e) {
-                    alert("Bağlantı hatası.");
-                }
-            }
+        // 1. Modalı Açan Fonksiyon (Düzenle butonuna basınca bu çalışır)
+        function openEditModal(id, content) {
+            editInput.value = content; // Eski mesajı kutuya doldur
+            editIdInput.value = id;    // Hangi mesaj olduğunu gizli inputa yaz
+            editModal.classList.add('active'); // Modalı ekranda göster
+            setTimeout(() => editInput.focus(), 100); // İmleci kutuya odakla
         }
+
+        // 2. Modalı Kapatan Listener (İptal'e basınca)
+        closeEditBtn.addEventListener('click', () => {
+            editModal.classList.remove('active');
+        });
+
+        // 3. Kaydet Butonuna Tıklayınca Çalışan Listener
+        saveEditBtn.addEventListener('click', async () => {
+            const id = editIdInput.value;
+            const newContent = editInput.value;
+            const originalBtnText = saveEditBtn.innerHTML;
+
+            if (!newContent.trim()) { 
+                alert("Mesaj boş olamaz!"); 
+                editInput.focus();
+                return; 
+            }
+
+            // Butonu kilitle ve yükleniyor yap
+            saveEditBtn.disabled = true; 
+            saveEditBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kaydediliyor...';
+
+            try {
+                const res = await fetch(`${API_URL}/posts/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: newContent }),
+                    credentials: 'include' // Oturum bilgisi için şart
+                });
+
+                if (res.ok) {
+                    editModal.classList.remove('active'); // Başarılıysa modalı kapat
+                    loadMessages(); // Mesajları yenile ki güncel hali görünsün
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "Bir hata oluştu, güncellenemedi.");
+                }
+            } catch (e) {
+                alert("Sunucuya bağlanılamadı.");
+            } finally {
+                // Butonu eski haline getir
+                saveEditBtn.disabled = false; 
+                saveEditBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        // Modalin dışına (gri alana) tıklayınca da kapansın (Opsiyonel, pro hareket)
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                editModal.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
