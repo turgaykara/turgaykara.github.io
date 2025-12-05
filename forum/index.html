@@ -135,126 +135,92 @@
         .chat-area::-webkit-scrollbar-thumb { background: var(--bg-input); border-radius: 3px; }
 
         /* --- MESSAGES --- */
-/* --- ORTALANMIŞ FORUM KARTI (FINAL V5) --- */
+/* --- HAYALET MESAJ TASARIMI (FINAL V2) --- */
         .message-group { 
-            margin-bottom: 24px; 
-            padding: 0 10px;
+            margin-bottom: 4px; /* Mesajlar arası boşluk azaldı */
+            padding: 2px 0;
         }
 
         .message { 
-            display: flex; /* Yanyana düzen: Sol Profil + Sağ İçerik */
-            
-            /* MERKEZLEME VE KIRPMA AYARLARI */
-            max-width: 850px; /* Genişliği kısıtladık (Kenarlar boş kalacak) */
-            margin: 0 auto;   /* Tam ortaya hizala */
-            
-            background: #18181b; 
-            border: 1px solid rgba(255,255,255,0.08); 
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Derinlik gölgesi */
-            overflow: hidden;
+            display: flex; 
+            gap: 14px; 
+            align-items: flex-start;
+            padding: 8px 16px; /* Hafif iç boşluk */
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            position: relative;
         }
 
-        /* --- SOL SÜTUN (KÜÇÜLTÜLDÜ VE DÜZELTİLDİ) --- */
-        .msg-left {
-            width: 130px; /* Sabit genişlik */
-            background: #141417; /* Hafif daha koyu */
-            border-right: 1px solid rgba(255,255,255,0.05);
-            padding: 20px 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .msg-avatar {
-            width: 50px; height: 50px; /* EŞEK KADAR DEĞİL ARTIK :) */
-            border-radius: 10px;
-            background: #27272a;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700; color: #a1a1aa;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .msg-author { 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: #f4f4f5; 
-            margin-bottom: 4px;
-            word-break: break-all; /* Uzun isimler patlatmasın */
+        /* Üzerine gelince hafif parlasın (Geçişli efekt) */
+        .message:hover {
+            background: rgba(255, 255, 255, 0.03); 
         }
         
-        /* O SEVDİĞİN RÜTBE KUTUSU */
-        .user-rank {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: rgba(139, 92, 246, 0.1); /* Morumsu */
-            color: #c4b5fd;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            margin-bottom: 10px;
+        /* Avatar */
+        .msg-avatar {
+            width: 42px; height: 42px; 
+            border-radius: 50%; 
+            background: #18181b; 
+            flex-shrink: 0; 
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #a1a1aa; 
+            border: none; /* Çerçeveyi kaldırdık */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* --- SAĞ SÜTUN (İÇERİK) --- */
-        .msg-right {
+        /* İçerik Alanı - KUTU YOK, SINIR YOK */
+        .msg-content { 
+            background: transparent; /* Arka planı sildik */
+            padding: 0; 
+            border: none; 
+            box-shadow: none;
             flex-grow: 1;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            min-width: 0; /* Flexbox taşma fixi */
         }
 
-        .msg-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+        .msg-header { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 10px;
+            margin-bottom: 4px; 
         }
-
-        .msg-date { font-size: 11px; color: #52525b; }
+        
+        .msg-author { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #f4f4f5; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.1); /* Hafif neon etkisi */
+            cursor: pointer; 
+        }
+        .msg-author:hover { text-decoration: underline; }
+        
+        .msg-time { 
+            font-size: 11px; 
+            color: #52525b; 
+            font-weight: 500;
+        }
 
         .msg-text { 
-            font-size: 14px; 
-            line-height: 1.6; 
-            color: #d4d4d8; 
-            white-space: pre-wrap;
+            font-size: 15px; 
+            line-height: 1.5; 
+            color: #d4d4d8; /* Hafif kırık beyaz */
+            white-space: pre-wrap; 
+            word-break: break-word;
+            font-weight: 400;
         }
 
+        /* Butonlar - İlk resimdeki gibi yazının altında ve SADE */
         .msg-actions {
-            margin-top: auto; /* Butonları en alta it */
-            padding-top: 12px;
             display: flex;
-            justify-content: flex-end;
-            gap: 12px;
+            gap: 15px;
+            margin-top: 6px;
+            opacity: 0; /* Normalde gizli */
+            transition: opacity 0.2s ease;
+            justify-content: flex-start; /* Sola yaslı */
         }
 
-        .action-btn { 
-            font-size: 11px; cursor: pointer; color: #71717a; transition: 0.2s;
-        }
-        .action-edit:hover { color: #22d3ee; }
-        .action-delete:hover { color: #ef4444; }
-
-        /* MOBİL UYUMLULUĞU */
-        @media (max-width: 600px) {
-            .message { flex-direction: column; max-width: 100%; }
-            .msg-left { 
-                width: 100%; 
-                flex-direction: row; 
-                padding: 10px 16px; 
-                gap: 12px; 
-                border-right: none; 
-                border-bottom: 1px solid rgba(255,255,255,0.08); 
-                text-align: left;
-            }
-            .msg-avatar { width: 40px; height: 40px; margin-bottom: 0; }
-            .user-rank { margin-left: auto; margin-bottom: 0; }
+        /* Mesajın üzerine gelince butonlar görünsün (Pro hareket) */
+        .message:hover .msg-actions {
+            opacity: 1;
         }
 
         .action-btn { 
@@ -565,8 +531,9 @@
         }
 
         // Mesajları Yükle
-async function loadMessages() {
+        async function loadMessages() {
             try {
+                // credentials: 'include' ekledik ki sunucu kim olduğunu bilsin (is_mine için şart)
                 const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
                 const posts = await res.json();
                 
@@ -575,24 +542,14 @@ async function loadMessages() {
                         const initial = (p.author_email || 'A').charAt(0).toUpperCase();
                         const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
                         
-                        // RÜTBE AYARI (İsimde admin geçiyorsa Admin, yoksa Üye)
-                        let rank = "Üye";
-                        let rankColor = "rgba(139, 92, 246, 0.1)"; // Mor (Üye)
-                        let rankText = "#c4b5fd";
-
-                        if(name.toLowerCase().includes("admin") || name.toLowerCase().includes("0xkara")) {
-                            rank = "Yönetici";
-                            rankColor = "rgba(239, 68, 68, 0.15)"; // Kırmızı (Admin)
-                            rankText = "#fca5a5";
-                        }
-                        
-                        // Butonlar
+                        // --- YENİ KISIM: SİL/DÜZENLE BUTONLARI ---
                         let actionsHTML = '';
                         if (p.is_mine) {
+                            // İçerikteki tırnak işaretlerini kaçırıyoruz ki JS hatası vermesin
                             const safeContent = p.content.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
                             actionsHTML = `
                                 <div class="msg-actions">
-                                    <span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${safeContent}')">
+                                    <span class="action-btn action-edit" onclick="editPost(${p.id}, '${safeContent}')">
                                         <i class="fa-solid fa-pen"></i> Düzenle
                                     </span>
                                     <span class="action-btn action-delete" onclick="deletePost(${p.id})">
@@ -601,32 +558,28 @@ async function loadMessages() {
                                 </div>
                             `;
                         }
+                        // -----------------------------------------
 
                         return `
                         <div class="message-group">
                             <div class="message">
-                                <div class="msg-left">
-                                    <div class="msg-avatar">${initial}</div>
-                                    <div class="msg-author">${escapeHTML(name)}</div>
-                                    <div class="user-rank" style="background:${rankColor}; color:${rankText}">${rank}</div>
-                                </div>
-
-                                <div class="msg-right">
+                                <div class="msg-avatar">${initial}</div>
+                                <div class="msg-content">
                                     <div class="msg-header">
-                                        <span class="msg-date">${formatTime(p.created_at)}</span>
-                                        <span style="font-size:10px; color:#52525b">#${p.id}</span>
+                                        <span class="msg-author">${escapeHTML(name)}</span>
+                                        <span class="msg-time">${formatTime(p.created_at)}</span>
                                     </div>
                                     <div class="msg-text">${escapeHTML(p.content)}</div>
-                                    ${actionsHTML}
-                                </div>
+                                    ${actionsHTML} </div>
                             </div>
                         </div>`;
                     }).join('');
                 } else {
-                    chatFeed.innerHTML = `<div style="text-align:center; margin-top:50px; color:gray;">Henüz mesaj yok.</div>`;
+                    chatFeed.innerHTML = `<div style="text-align:center; color:var(--text-muted); margin-top:100px;"><i class="fa-solid fa-comments" style="font-size:48px; opacity:0.2; margin-bottom:16px;"></i><p>Henüz mesaj yok. Sohbeti sen başlat!</p></div>`;
                 }
             } catch (e) {
                 console.error(e);
+                chatFeed.innerHTML = '<div style="color:var(--danger); text-align:center; margin-top:50px;">Bağlantı hatası!</div>';
             }
         }
 
