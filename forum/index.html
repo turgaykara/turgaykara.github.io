@@ -152,12 +152,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-        .btn-outline:hover { border-color: var(--text-main); color: var(--text-main); }
+        .btn-outline:hover { border-color: var(--text-main); color: var(--text-main); background: rgba(255,255,255,0.05); }
 
         .chat-area {
             flex-grow: 1;
@@ -244,24 +244,23 @@
         /* --- AUTH SCREEN SPECIFIC --- */
         #auth-screen { 
             z-index: 200; 
-            background: rgba(9, 9, 11, 0.85); /* Arka planı biraz daha koyulttuk */
-            backdrop-filter: blur(8px); /* Arka planı bulanıklaştır */
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(8px);
         }
         .auth-container { 
             width: 400px; 
             text-align: center;
-            /* Kart Görünümü Eklendi */
-            background: #18181b; /* Sidebar rengiyle aynı */
+            background: #18181b;
             padding: 40px;
             border-radius: 16px;
             border: 1px solid var(--border);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6); /* Güçlü gölge */
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
         }
         .auth-logo { 
             width: 80px; height: 80px; 
             border-radius: 50%; 
             margin-bottom: 24px; 
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); /* Logodaki gölgeyi azalttık */
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
         }
 
         /* Mobile */
@@ -279,18 +278,22 @@
         <div class="auth-container">
             <img src="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png" class="auth-logo">
             <h2 style="margin-bottom:8px; font-size:24px;">Hoş Geldiniz</h2>
-            <p style="color:var(--text-muted); margin-bottom:32px; font-size:14px;">Pentest Library topluluğuna katılmak için giriş yapın.</p>
+            <p style="color:var(--text-muted); margin-bottom:32px; font-size:14px;">Pentest Library topluluğuna katılmak için giriş yapın veya kayıt olun.</p>
             
-            <form id="login-form">
-                <div class="input-group">
-                    <input type="email" id="email" class="form-input" placeholder="E-posta adresi" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password" class="form-input" placeholder="Parola" required>
-                </div>
-                <button type="submit" class="btn" style="width:100%; justify-content:center; padding:14px;">Giriş Yap</button>
-            </form>
+            <div class="input-group">
+                <input type="email" id="email" class="form-input" placeholder="E-posta adresi" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" class="form-input" placeholder="Parola" required>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button id="login-btn" class="btn" style="flex: 1; padding:14px;">Giriş Yap</button>
+                <button id="register-btn" class="btn btn-outline" style="flex: 1; padding:14px;">Kayıt Ol</button>
+            </div>
+
             <p id="login-error" style="color:var(--danger); font-size:13px; margin-top:16px; display:none;"></p>
+            
             <div style="margin-top:24px;">
                 <a href="/" style="color:var(--text-muted); font-size:13px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
                     <i class="fa-solid fa-arrow-left"></i> Siteye Dön
@@ -364,12 +367,13 @@
         const modal = document.getElementById('post-modal');
         const userNameEl = document.getElementById('user-name');
         const avatarEl = document.getElementById('avatar-initial');
+        const loginErrorEl = document.getElementById('login-error');
 
         // Zaman formatı (Discord stili)
         const formatTime = (dateStr) => {
             const date = new Date(dateStr);
             const now = new Date();
-            const diff = (now - date) / 1000; // saniye
+            const diff = (now - date) / 1000;
 
             if (diff < 60) return "Az önce";
             if (diff < 3600) return Math.floor(diff / 60) + " dakika önce";
@@ -441,19 +445,24 @@
             }
         }
 
-        // Giriş Yapma
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // ORTAK AUTH FONKSİYONU (Login ve Register için)
+        async function handleAuth(endpoint, btnId) {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const btn = e.target.querySelector('button');
-            const err = document.getElementById('login-error');
+            const btn = document.getElementById(btnId);
 
-            btn.disabled = true; btn.textContent = "Giriş Yapılıyor...";
-            err.style.display = 'none';
+            if(!email || !password) {
+                loginErrorEl.textContent = "Lütfen tüm alanları doldurun.";
+                loginErrorEl.style.display = 'block';
+                return;
+            }
+
+            const originalText = btn.textContent;
+            btn.disabled = true; btn.textContent = "İşleniyor...";
+            loginErrorEl.style.display = 'none';
 
             try {
-                const res = await fetch(`${API_URL}/login`, {
+                const res = await fetch(`${API_URL}/${endpoint}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({email, password}),
@@ -462,18 +471,31 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    checkSession();
+                    if(endpoint === 'register') {
+                        alert("Kayıt başarılı! Şimdi giriş yapılıyor...");
+                        // Kayıt sonrası otomatik giriş denemesi (isteğe bağlı) veya kullanıcıdan giriş yapmasını bekle
+                        // Biz direkt giriş yapmış gibi davranan bir yapı kullanabiliriz ama
+                        // backend register sonrası session cookie set etmiyorsa login'e yönlendirelim.
+                        // Genelde register sadece DB'ye yazar. Login'i tetikleyelim:
+                        await handleAuth('login', btnId); 
+                    } else {
+                        checkSession(); // Login başarılıysa session kontrol et
+                    }
                 } else {
-                    err.textContent = data.error || "Hatalı giriş.";
-                    err.style.display = 'block';
+                    loginErrorEl.textContent = data.error || "İşlem başarısız.";
+                    loginErrorEl.style.display = 'block';
                 }
             } catch (e) {
-                err.textContent = "Sunucuya erişilemiyor.";
-                err.style.display = 'block';
+                loginErrorEl.textContent = "Sunucu hatası.";
+                loginErrorEl.style.display = 'block';
             } finally {
-                btn.disabled = false; btn.textContent = "Giriş Yap";
+                btn.disabled = false; btn.textContent = originalText;
             }
-        });
+        }
+
+        // Buton Dinleyicileri
+        document.getElementById('login-btn').addEventListener('click', () => handleAuth('login', 'login-btn'));
+        document.getElementById('register-btn').addEventListener('click', () => handleAuth('register', 'register-btn'));
 
         // Mesaj Gönderme
         document.getElementById('submit-post').addEventListener('click', async () => {
