@@ -187,6 +187,20 @@
         
         .hidden { display: none !important; }
 
+/* --- DÜZENLEME VE SİLME BUTONLARI --- */
+        .msg-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .action-btn { cursor: pointer; transition: 0.2s; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+        .action-edit { color: var(--secondary); }
+        .action-edit:hover { text-decoration: underline; color: #fff; }
+        .action-delete { color: var(--danger); }
+        .action-delete:hover { text-decoration: underline; color: #fff; }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .header { padding: 0 20px; }
@@ -289,7 +303,7 @@
     <div id="post-modal" class="modal-overlay">
         <div class="modal-box">
             <h3 style="margin:0 0 20px 0;">Düşüncelerini Paylaş</h3>
-            <textarea id="post-content" class="form-input form-textarea" placeholder="Buraya bir şeyler yaz... (Markdown desteklenmez ama emoji serbest 😉)"></textarea>
+            <textarea id="post-content" class="form-input form-textarea" placeholder="Buraya bir şeyler yaz..."></textarea>
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
                 <button id="close-modal" class="btn btn-outline">Vazgeç</button>
                 <button id="submit-post" class="btn">Gönder <i class="fa-solid fa-paper-plane"></i></button>
@@ -421,13 +435,33 @@
         // Mesajları Yükle
         async function loadMessages() {
             try {
-                const res = await fetch(`${API_URL}/posts`);
+                // credentials: 'include' ekledik ki sunucu kim olduğunu bilsin (is_mine için şart)
+                const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
                 const posts = await res.json();
                 
                 if (posts.length > 0) {
                     chatFeed.innerHTML = posts.map(p => {
                         const initial = (p.author_email || 'A').charAt(0).toUpperCase();
                         const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
+                        
+                        // --- YENİ KISIM: SİL/DÜZENLE BUTONLARI ---
+                        let actionsHTML = '';
+                        if (p.is_mine) {
+                            // İçerikteki tırnak işaretlerini kaçırıyoruz ki JS hatası vermesin
+                            const safeContent = p.content.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+                            actionsHTML = `
+                                <div class="msg-actions">
+                                    <span class="action-btn action-edit" onclick="editPost(${p.id}, '${safeContent}')">
+                                        <i class="fa-solid fa-pen"></i> Düzenle
+                                    </span>
+                                    <span class="action-btn action-delete" onclick="deletePost(${p.id})">
+                                        <i class="fa-solid fa-trash"></i> Sil
+                                    </span>
+                                </div>
+                            `;
+                        }
+                        // -----------------------------------------
+
                         return `
                         <div class="message-group">
                             <div class="message">
@@ -438,7 +472,7 @@
                                         <span class="msg-time">${formatTime(p.created_at)}</span>
                                     </div>
                                     <div class="msg-text">${escapeHTML(p.content)}</div>
-                                </div>
+                                    ${actionsHTML} </div>
                             </div>
                         </div>`;
                     }).join('');
@@ -446,6 +480,7 @@
                     chatFeed.innerHTML = `<div style="text-align:center; color:var(--text-muted); margin-top:100px;"><i class="fa-solid fa-comments" style="font-size:48px; opacity:0.2; margin-bottom:16px;"></i><p>Henüz mesaj yok. Sohbeti sen başlat!</p></div>`;
                 }
             } catch (e) {
+                console.error(e);
                 chatFeed.innerHTML = '<div style="color:var(--danger); text-align:center; margin-top:50px;">Bağlantı hatası!</div>';
             }
         }
@@ -546,6 +581,54 @@
         
         checkSession();
         setInterval(loadMessages, 30000);
+        // --- YENİ: MESAJ SİLME FONKSİYONU ---
+        async function deletePost(id) {
+            if (!confirm("Bu mesajı silmek istediğine emin misin?")) return;
+
+            try {
+                const res = await fetch(`${API_URL}/posts/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include' // Oturum bilgisi gitmesi için şart
+                });
+
+                if (res.ok) {
+                    loadMessages(); // Listeyi yenile
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "Silinemedi.");
+                }
+            } catch (e) {
+                alert("Bağlantı hatası.");
+            }
+        }
+
+        // --- YENİ: MESAJ DÜZENLEME FONKSİYONU ---
+        async function editPost(id, oldContent) {
+            // Basit bir prompt açıyoruz
+            const newContent = prompt("Mesajını düzenle:", oldContent);
+            
+            // Eğer boş değilse ve değiştiyse gönder
+            if (newContent !== null && newContent.trim() !== "" && newContent !== oldContent) {
+                try {
+                    const res = await fetch(`${API_URL}/posts/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: newContent }),
+                        credentials: 'include'
+                    });
+
+                    if (res.ok) {
+                        loadMessages(); // Listeyi yenile
+                    } else {
+                        const data = await res.json();
+                        alert(data.error || "Güncellenemedi.");
+                    }
+                } catch (e) {
+                    alert("Bağlantı hatası.");
+                }
+            }
+        }
     </script>
 </body>
 </html>
