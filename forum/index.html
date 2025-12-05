@@ -222,12 +222,12 @@
             </div>
 
             <div id="forgot-view" class="hidden">
-                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; line-height:1.5;">Hesabınıza ait e-posta adresini girin, size sıfırlama bağlantısı gönderelim.</p>
+                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; line-height:1.5;">Hesabınıza ait e-posta adresini girin.<br>Yeni Hesap Şifreniz Mail yoluyla iletilecektir.</p>
                 <div class="input-group">
                     <input type="email" id="forgot-email" class="form-input" placeholder="E-posta adresi">
                 </div>
                 <button type="button" id="send-reset-btn" class="btn" style="width:100%; padding:14px; margin-bottom: 15px;">Sıfırlama Bağlantısı Gönder</button>
-                <button type="button" id="back-to-login-btn" class="btn-text">← Giriş Ekranına Dön</button>
+                <button type="button" id="back-to-login-btn" class="btn-text">Giriş Ekranına Dön</button>
             </div>
 
             <p id="login-error" style="color:var(--danger); font-size:13px; margin-top:16px; display:none;"></p>
@@ -376,7 +376,7 @@
 
                 if(res.ok) { 
                     // (Demo) yazısını kaldırdık
-                    loginSuccessEl.textContent = "✅ Yeni şifreniz e-posta adresinize gönderildi. Lütfen gelen kutunuzu (ve spam klasörünü) kontrol edin.";
+                    loginSuccessEl.textContent = "✅ Yeni şifreniz e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünü kontrol edin.";
                     loginSuccessEl.style.display = 'block';
                     
                     // İsteğe bağlı: Başarılı olunca inputu temizle
@@ -393,7 +393,7 @@
                 btn.disabled = false; btn.textContent = "Sıfırlama Bağlantısı Gönder";
             }
         });
-        
+
         // Oturum Kontrolü
         async function checkSession() {
             try {
