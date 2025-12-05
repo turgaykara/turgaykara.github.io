@@ -350,6 +350,7 @@
         });
 
         // --- ŞİFRE SIFIRLAMA İSTEĞİ ---
+// --- ŞİFRE SIFIRLAMA İSTEĞİ (GÜNCELLENMİŞ) ---
         document.getElementById('send-reset-btn').addEventListener('click', async () => {
             const email = document.getElementById('forgot-email').value;
             const btn = document.getElementById('send-reset-btn');
@@ -365,19 +366,23 @@
             loginSuccessEl.style.display = 'none';
 
             try {
-                // Backend'de bu endpoint yoksa 404 dönebilir, biz UI test ediyoruz
                 const res = await fetch(`${API_URL}/forgot-password`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({email}),
                 });
                 
-                // Başarılı kabul edelim (Simülasyon) veya backend cevabını işleyelim
-                if(res.ok || res.status === 404) { 
-                    loginSuccessEl.textContent = "✅ Sıfırlama bağlantısı e-posta adresinize gönderildi (Demo).";
+                const data = await res.json();
+
+                if(res.ok) { 
+                    // (Demo) yazısını kaldırdık
+                    loginSuccessEl.textContent = "✅ Yeni şifreniz e-posta adresinize gönderildi. Lütfen gelen kutunuzu (ve spam klasörünü) kontrol edin.";
                     loginSuccessEl.style.display = 'block';
+                    
+                    // İsteğe bağlı: Başarılı olunca inputu temizle
+                    document.getElementById('forgot-email').value = '';
                 } else {
-                    const data = await res.json();
+                    // Backend'den gelen "Kayıtlı değil" hatasını burada gösteriyoruz
                     loginErrorEl.textContent = data.error || "İşlem başarısız.";
                     loginErrorEl.style.display = 'block';
                 }
@@ -388,7 +393,7 @@
                 btn.disabled = false; btn.textContent = "Sıfırlama Bağlantısı Gönder";
             }
         });
-
+        
         // Oturum Kontrolü
         async function checkSession() {
             try {
