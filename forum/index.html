@@ -310,6 +310,16 @@
             </div>
         </div>
     </div>
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="margin:0 0 20px 0;">Mesajı Düzenle</h3>
+            <textarea id="edit-content" class="form-input form-textarea"></textarea>
+            <input type="hidden" id="edit-post-id"> <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
+                <button id="close-edit-modal" class="btn btn-outline">İptal</button>
+                <button id="save-edit-btn" class="btn">Kaydet</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
