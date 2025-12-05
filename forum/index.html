@@ -547,49 +547,57 @@
         });
 
         // --- ŞİFRE SIFIRLAMA İSTEĞİ ---
-// --- ŞİFRE SIFIRLAMA İSTEĞİ (GÜNCELLENMİŞ) ---
-        document.getElementById('send-reset-btn').addEventListener('click', async () => {
-            const email = document.getElementById('forgot-email').value;
-            const btn = document.getElementById('send-reset-btn');
-            
-            if(!email) {
-                loginErrorEl.textContent = "Lütfen e-posta adresinizi girin.";
-                loginErrorEl.style.display = 'block';
-                return;
-            }
+// --- YENİ VE DOĞRU HALİ (Firebase Kullanır) ---
+import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-            btn.disabled = true; btn.textContent = "Gönderiliyor...";
+// Senin Firebase Config Ayarların (Login sayfasındakiyle aynı olacak)
+// const firebaseConfig = { ... BURAYA SENİN CONFİGLER GELECEK ... };
+// const app = initializeApp(firebaseConfig); 
+// const auth = getAuth(app); 
+// (Yukarıdakiler zaten sayfanın başında tanımlıysa tekrar yazma)
+
+document.getElementById('send-reset-btn').addEventListener('click', () => {
+    const email = document.getElementById('forgot-email').value;
+    const btn = document.getElementById('send-reset-btn');
+    const loginErrorEl = document.getElementById('login-error'); // Hata mesajı alanı
+    const loginSuccessEl = document.getElementById('login-success'); // Başarı mesajı alanı
+
+    if(!email) {
+        alert("Lütfen e-posta adresinizi girin.");
+        return;
+    }
+
+    btn.disabled = true; 
+    btn.textContent = "Gönderiliyor...";
+
+    // İşte sihirli kod bu. Python'a değil, Google'a söylüyoruz.
+    sendPasswordResetEmail(auth, email)
+        .then(() => {
+            // Başarılı oldu
+            loginSuccessEl.style.display = 'block';
+            loginSuccessEl.textContent = "✅ Sıfırlama linki e-posta adresine gönderildi! (Spam kutusuna da bak)";
             loginErrorEl.style.display = 'none';
+            document.getElementById('forgot-email').value = ''; // Kutuyu temizle
+        })
+        .catch((error) => {
+            // Hata oldu
+            console.error(error);
             loginSuccessEl.style.display = 'none';
-
-            try {
-                const res = await fetch(`${API_URL}/forgot-password`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({email}),
-                });
-                
-                const data = await res.json();
-
-                if(res.ok) { 
-                    // (Demo) yazısını kaldırdık
-                    loginSuccessEl.textContent = "✅ Yeni şifreniz e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünü kontrol edin.";
-                    loginSuccessEl.style.display = 'block';
-                    
-                    // İsteğe bağlı: Başarılı olunca inputu temizle
-                    document.getElementById('forgot-email').value = '';
-                } else {
-                    // Backend'den gelen "Kayıtlı değil" hatasını burada gösteriyoruz
-                    loginErrorEl.textContent = data.error || "İşlem başarısız.";
-                    loginErrorEl.style.display = 'block';
-                }
-            } catch (e) {
-                loginErrorEl.textContent = "Sunucu hatası.";
-                loginErrorEl.style.display = 'block';
-            } finally {
-                btn.disabled = false; btn.textContent = "Sıfırlama Bağlantısı Gönder";
+            loginErrorEl.style.display = 'block';
+            
+            if (error.code === 'auth/user-not-found') {
+                loginErrorEl.textContent = "Bu e-posta ile kayıtlı kullanıcı bulunamadı.";
+            } else if (error.code === 'auth/invalid-email') {
+                loginErrorEl.textContent = "Geçersiz e-posta formatı.";
+            } else {
+                loginErrorEl.textContent = "Hata oluştu: " + error.message;
             }
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = "Sıfırlama Bağlantısı Gönder";
         });
+});
 
         // Oturum Kontrolü
         async function checkSession() {
