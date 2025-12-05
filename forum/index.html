@@ -135,103 +135,157 @@
         .chat-area::-webkit-scrollbar-thumb { background: var(--bg-input); border-radius: 3px; }
 
         /* --- MESSAGES --- */
-/* --- PRO FORUM POST TASARIMI (FINAL V3) --- */
-        .message-group { margin-bottom: 15px; }
-
-        .message { 
-            display: flex; /* Yanyana diz */
-            background-color: #18181b; /* Kart rengi */
-            border: 1px solid rgba(255,255,255,0.08); /* Çok ince çerçeve */
-            border-radius: 8px;
-            overflow: hidden; /* Köşeler taşmasın */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            align-items: stretch; /* İki tarafın boyu eşit olsun */
+/* --- CYBERPUNK / NEON FORUM KARTI (FINAL) --- */
+        .message-group { 
+            margin-bottom: 24px; 
+            padding: 0 10px;
         }
 
-        /* --- SOL TARAF: KULLANICI BİLGİLERİ --- */
-        .msg-left {
-            width: 140px; /* Sabit genişlik */
-            background-color: #131316; /* Biraz daha koyu ton */
-            border-right: 1px solid rgba(255,255,255,0.08);
-            padding: 20px 10px;
+        .message { 
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+            
+            /* SİMSİYAH ZEMİN */
+            background-color: #050505; 
+            
+            /* NEON KENARLIK (Normalde sönük) */
+            border: 1px solid rgba(139, 92, 246, 0.15); 
+            
+            border-radius: 8px; /* Köşeler biraz daha keskin */
+            
+            /* Boyutlandırma */
+            max-width: 850px; 
+            margin: 0 auto; 
+            
+            /* Gölge yerine hafif bir karanlık derinlik */
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,1);
+            
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        /* --- GLOW EFEKTİ (HOVER) --- */
+        .message:hover {
+            transform: translateY(-2px);
+            /* Kenarlık parlasın */
+            border-color: rgba(139, 92, 246, 0.6); 
+            /* Arkadan mor ışık süzülsün */
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), 
+                        inset 0 0 20px rgba(139, 92, 246, 0.05); 
+        }
+
+        /* Sol tarafa ince bir neon çizgi (Dekoratif) */
+        .message::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        .message:hover::before { opacity: 1; box-shadow: 0 0 10px #8b5cf6; }
+
+        /* --- SOL TARAF (PROFİL) --- */
+        .msg-left {
+            width: 140px;
+            background: #09090b; /* Çok hafif açık siyah */
+            border-right: 1px solid rgba(255,255,255,0.05);
+            padding: 24px 10px;
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
             flex-shrink: 0;
         }
 
         .msg-avatar {
-            width: 64px; height: 64px; /* Avatar büyüdü */
-            border-radius: 12px; /* Hafif karemsi */
-            background: #27272a;
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: #000;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 700; color: #a1a1aa;
+            font-size: 20px; font-weight: 700; color: #a1a1aa;
             margin-bottom: 12px;
-            border: 2px solid #27272a;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            
+            /* Avatarın etrafında dönen neon halka */
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
+            transition: 0.3s;
+        }
+        
+        .message:hover .msg-avatar {
+            border-color: #06b6d4;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            color: #fff;
         }
 
         .msg-author { 
-            font-size: 14px; 
-            font-weight: 700; 
-            color: #f4f4f5; 
-            margin-bottom: 4px;
-            word-break: break-all;
+            font-size: 13px; font-weight: 700; color: #e4e4e7; margin-bottom: 6px;
+            letter-spacing: 0.5px;
         }
         
         .user-rank {
-            font-size: 10px;
-            background: rgba(139, 92, 246, 0.15); /* Morumsu */
-            color: #a78bfa;
-            padding: 2px 8px;
+            font-size: 9px; text-transform: uppercase; letter-spacing: 1px;
+            background: transparent;
+            color: #c4b5fd;
+            padding: 4px 10px;
+            border: 1px solid rgba(139, 92, 246, 0.4);
             border-radius: 4px;
             font-weight: 600;
-            margin-bottom: 8px;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(139, 92, 246, 0.1);
         }
 
         .user-stats {
-            font-size: 10px;
-            color: #52525b;
-            margin-top: auto; /* En alta it */
+            font-size: 10px; color: #52525b; font-family: monospace;
+            margin-top: auto;
         }
 
-        /* --- SAĞ TARAF: İÇERİK --- */
+        /* --- SAĞ TARAF (İÇERİK) --- */
         .msg-right {
             flex-grow: 1;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            min-width: 0; /* İçerik taşmasını engeller */
+            padding: 20px 24px;
+            display: flex; flex-direction: column;
+            background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.03), transparent 40%);
+            min-width: 0;
         }
 
         .msg-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            display: flex; justify-content: space-between;
+            border-bottom: 1px dashed rgba(255,255,255,0.1); /* Çizgi yerine tireli çizgi (Terminal havası) */
+            padding-bottom: 10px; margin-bottom: 16px;
         }
 
-        .msg-date { font-size: 11px; color: #71717a; }
+        .msg-date { font-size: 11px; color: #71717a; font-family: monospace; }
 
         .msg-text { 
-            font-size: 14px; 
-            line-height: 1.6; 
-            color: #d4d4d8; 
-            white-space: pre-wrap;
-            flex-grow: 1;
+            font-size: 14px; line-height: 1.7; color: #d4d4d8; 
+            white-space: pre-wrap; font-weight: 300;
+            text-shadow: 0 0 1px rgba(0,0,0,0.5);
         }
 
         /* Butonlar */
         .msg-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            justify-content: flex-end;
+            margin-top: auto; padding-top: 15px;
+            display: flex; justify-content: flex-end; gap: 15px;
+            opacity: 0.4; transition: 0.3s; /* Normalde sönük */
+        }
+        .message:hover .msg-actions { opacity: 1; } /* Kartın üstüne gelince parlasın */
+
+        .action-btn { 
+            font-size: 11px; cursor: pointer; color: #71717a; transition: 0.2s;
+            background: transparent; border: 1px solid transparent; padding: 4px 8px; border-radius: 4px;
+        }
+        
+        .action-edit:hover { color: #06b6d4; border-color: rgba(6, 182, 212, 0.3); box-shadow: 0 0 8px rgba(6, 182, 212, 0.2); }
+        .action-delete:hover { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); box-shadow: 0 0 8px rgba(239, 68, 68, 0.2); }
+
+        /* MOBİL */
+        @media (max-width: 600px) {
+            .message { flex-direction: column; }
+            .msg-left { width: 100%; flex-direction: row; padding: 15px; gap: 15px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: transparent; }
+            .msg-avatar { width: 45px; height: 45px; margin-bottom: 0; }
+            .user-rank { margin-left: auto; margin-bottom: 0; }
+            .user-stats { display: none; }
+            .message::before { width: 100%; height: 2px; bottom: auto; top: 0; background: linear-gradient(to right, #8b5cf6, #06b6d4); }
         }
 
         .action-btn { 
