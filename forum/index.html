@@ -1,13 +1,187 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <meta http-equiv="refresh" content="0; url=https://turgaykara.github.io/#forum" />
-    <script type="text/javascript">
-        window.location.href = "https://turgaykara.github.io/#forum";
-    </script>
-    <title>Forum Yükleniyor...</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bug Bounty Akademi | Forum</title>
+  <link rel="icon" type="image/png" href="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png">
+  
+  <style>
+      :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--glass: rgba(255,255,255,0.03);}
+      body {
+          margin: 0;
+          background-color: var(--bg);
+          color: #e6eef6;
+          font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+      }
+      .forum-container {
+          width: 100%;
+          max-width: 800px;
+          padding: 40px 20px;
+      }
+      .card { background: rgba(0,0,0,0.25); padding: 20px; border-radius: 12px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05); }
+      h1 { color: var(--accent); font-size: 28px; margin-bottom: 10px; text-align: center; }
+      p.lead { color: var(--muted); text-align: center; margin-bottom: 30px; }
+      
+      input, textarea {
+          width: 100%; padding: 12px; margin-bottom: 12px;
+          background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+          color: white; border-radius: 8px; box-sizing: border-box;
+      }
+      button {
+          background: var(--accent); border: none; color: white;
+          padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;
+          transition: 0.2s; width: 100%;
+      }
+      button:hover { opacity: 0.9; }
+      .small { font-size: 13px; color: var(--muted); }
+      .hidden { display: none; }
+      
+      /* Geri Dön Butonu */
+      .back-link {
+          display: block; text-align: center; margin-bottom: 20px;
+          color: var(--muted); text-decoration: none; font-size: 14px;
+      }
+      .back-link:hover { color: white; }
+  </style>
 </head>
 <body>
-    Foruma yönlendiriliyorsunuz...
+
+  <div class="forum-container">
+      <a href="/" class="back-link">← Ana Sayfaya Dön</a>
+      
+      <h1>Topluluk Forumu</h1>
+      <p class="lead">Siber güvenlik tartışmalarına katılın.</p>
+
+      <div id="auth-section" class="card">
+          <h3 style="margin-top:0">Giriş Yap</h3>
+          <form id="login-form">
+              <input type="email" id="email" placeholder="E-posta" required>
+              <input type="password" id="password" placeholder="Parola" required>
+              <button type="submit">Giriş Yap</button>
+              <p class="small" style="margin-top:10px; text-align:center;">*Kayıtlar şimdilik kapalıdır.</p>
+          </form>
+      </div>
+
+      <div id="user-section" class="card hidden">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+              <span id="welcome-msg" style="color:var(--accent); font-weight:bold;"></span>
+              <button id="logout-btn" style="width:auto; padding: 6px 12px; font-size:12px; background:var(--glass);">Çıkış</button>
+          </div>
+          <textarea id="post-content" placeholder="Bir şeyler yaz..."></textarea>
+          <button id="send-btn">Gönder</button>
+      </div>
+
+      <h3 style="margin-top:30px; padding-left:5px;">Son Mesajlar</h3>
+      <div id="posts-area">
+          <p class="small">Yükleniyor...</p>
+      </div>
+  </div>
+
+  <script>
+      const API_URL = 'https://admin3131.pythonanywhere.com';
+
+      // HTML Escape (Güvenlik için)
+      const escapeHTML = str => {
+          const p = document.createElement("p");
+          p.textContent = str;
+          return p.innerHTML;
+      };
+
+      // UI Güncelleme
+      function updateUI(isLoggedIn, username) {
+          const authSec = document.getElementById('auth-section');
+          const userSec = document.getElementById('user-section');
+          
+          if (isLoggedIn) {
+              authSec.classList.add('hidden');
+              userSec.classList.remove('hidden');
+              document.getElementById('welcome-msg').textContent = `Hoş geldin, ${username}`;
+          } else {
+              authSec.classList.remove('hidden');
+              userSec.classList.add('hidden');
+          }
+      }
+
+      // Mesajları Çek
+      async function loadPosts() {
+          const area = document.getElementById('posts-area');
+          try {
+              const res = await fetch(`${API_URL}/posts`);
+              const posts = await res.json();
+              
+              if (posts.length > 0) {
+                  area.innerHTML = posts.map(p => `
+                      <div class="card" style="border-left:3px solid var(--accent)">
+                          <p style="white-space:pre-wrap; margin-top:0;">${escapeHTML(p.content)}</p>
+                          <div class="small" style="border-top:1px solid rgba(255,255,255,0.05); margin-top:10px; padding-top:8px; display:flex; justify-content:space-between;">
+                              <span>👤 ${escapeHTML(p.author_email || 'Anonim')}</span>
+                              <span>🕒 ${new Date(p.created_at).toLocaleString('tr-TR')}</span>
+                          </div>
+                      </div>
+                  `).join('');
+              } else {
+                  area.innerHTML = '<p class="small">Henüz mesaj yok.</p>';
+              }
+          } catch (e) {
+              area.innerHTML = '<p class="small" style="color:#f87171">Bağlantı hatası.</p>';
+          }
+      }
+
+      // Oturum Kontrol
+      async function checkSession() {
+          try {
+              const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
+              const data = await res.json();
+              updateUI(data.is_logged_in, data.user?.username);
+          } catch { updateUI(false); }
+      }
+
+      // Event Listeners
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          
+          const res = await fetch(`${API_URL}/login`, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({email, password}),
+              credentials: 'include'
+          });
+          const data = await res.json();
+          if(res.ok) checkSession(); else alert(data.error);
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+          await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' });
+          checkSession();
+      });
+
+      document.getElementById('send-btn').addEventListener('click', async () => {
+          const content = document.getElementById('post-content').value;
+          if(!content.trim()) return;
+          
+          const res = await fetch(`${API_URL}/posts`, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({content}),
+              credentials: 'include'
+          });
+          if(res.ok) {
+              document.getElementById('post-content').value = '';
+              loadPosts();
+          } else {
+              alert('Hata oluştu.');
+          }
+      });
+
+      // Başlat
+      checkSession();
+      loadPosts();
+  </script>
 </body>
 </html>
