@@ -491,7 +491,22 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+        apiKey: "AIzaSyBYZH2eNta0Xm5DkaNMbCrx9og4F6P6jOU",
+        authDomain: "pentest-b71d5.firebaseapp.com",
+        projectId: "pentest-b71d5",
+        storageBucket: "pentest-b71d5.firebasestorage.app",
+        messagingSenderId: "733965925244",
+        appId: "1:733965925244:web:5b0faa927b0089a18482f9",
+        measurementId: "G-4N6KTXFKG7"
+        };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
         const API_URL = 'https://admin3131.pythonanywhere.com';
         
         // Elementler
@@ -547,42 +562,33 @@
         });
 
         // --- ŞİFRE SIFIRLAMA İSTEĞİ ---
-// --- YENİ VE DOĞRU HALİ (Firebase Kullanır) ---
-import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-// Senin Firebase Config Ayarların (Login sayfasındakiyle aynı olacak)
-// const firebaseConfig = { ... BURAYA SENİN CONFİGLER GELECEK ... };
-// const app = initializeApp(firebaseConfig); 
-// const auth = getAuth(app); 
-// (Yukarıdakiler zaten sayfanın başında tanımlıysa tekrar yazma)
-
+// --- ŞİFRE SIFIRLAMA İSTEĞİ (FIREBASE VERSİYONU) ---
 document.getElementById('send-reset-btn').addEventListener('click', () => {
     const email = document.getElementById('forgot-email').value;
     const btn = document.getElementById('send-reset-btn');
-    const loginErrorEl = document.getElementById('login-error'); // Hata mesajı alanı
-    const loginSuccessEl = document.getElementById('login-success'); // Başarı mesajı alanı
+    const loginErrorEl = document.getElementById('login-error'); 
+    const loginSuccessEl = document.getElementById('login-success');
 
     if(!email) {
-        alert("Lütfen e-posta adresinizi girin.");
+        loginErrorEl.style.display = 'block';
+        loginErrorEl.textContent = "Lütfen e-posta adresinizi girin.";
         return;
     }
 
     btn.disabled = true; 
     btn.textContent = "Gönderiliyor...";
+    loginErrorEl.style.display = 'none';
+    loginSuccessEl.style.display = 'none';
 
-    // İşte sihirli kod bu. Python'a değil, Google'a söylüyoruz.
+    // Firebase'e emir veriyoruz
     sendPasswordResetEmail(auth, email)
         .then(() => {
-            // Başarılı oldu
             loginSuccessEl.style.display = 'block';
             loginSuccessEl.textContent = "✅ Sıfırlama linki e-posta adresine gönderildi! (Spam kutusuna da bak)";
-            loginErrorEl.style.display = 'none';
-            document.getElementById('forgot-email').value = ''; // Kutuyu temizle
+            document.getElementById('forgot-email').value = '';
         })
         .catch((error) => {
-            // Hata oldu
             console.error(error);
-            loginSuccessEl.style.display = 'none';
             loginErrorEl.style.display = 'block';
             
             if (error.code === 'auth/user-not-found') {
@@ -590,7 +596,7 @@ document.getElementById('send-reset-btn').addEventListener('click', () => {
             } else if (error.code === 'auth/invalid-email') {
                 loginErrorEl.textContent = "Geçersiz e-posta formatı.";
             } else {
-                loginErrorEl.textContent = "Hata oluştu: " + error.message;
+                loginErrorEl.textContent = "Hata: " + error.message;
             }
         })
         .finally(() => {
