@@ -3049,6 +3049,7 @@ function renderMenu() {
     const vulnerabilities = [];
     const regular = [];
     
+    // CONTENT objesini tarıyoruz
     Object.keys(CONTENT).forEach(key => {
         if (key === 'home') return;
         const item = CONTENT[key];
@@ -3058,10 +3059,20 @@ function renderMenu() {
             regular.push({key, ...item});
         }
     });
+
+    // Normal Menü Öğelerini Ekle
     regular.forEach(item => {
-        nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
+        // --- KRİTİK GÜNCELLEME BURASI ---
+        if (item.key === 'forum') {
+            // Forum ise: /forum/ adresine git ve yeni sekmede (_blank) aç
+            nav.innerHTML += `<a href="/forum/" target="_blank" class="${item.icon}">${item.menuName} <span style="font-size:10px; margin-left:5px; opacity:0.7;">↗</span></a>`;
+        } else {
+            // Diğerleri: Normal SPA geçişi yap
+            nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
+        }
     });
 
+    // Vulnerabilities Açılır Menüsünü Ekle
     if (vulnerabilities.length > 0) {
         let vulnerabilitiesHtml = '<details class="accordion-menu"><summary class="icon-database">Vulnerabilities</summary><div class="accordion-content">';
         vulnerabilities.sort((a, b) => a.menuName.localeCompare(b.menuName)).forEach(item => {
@@ -3071,13 +3082,16 @@ function renderMenu() {
         nav.innerHTML += vulnerabilitiesHtml;
     }
 
+    // Tıklama olaylarını sadece 'data-page' olanlara bağla (Forum hariç tutulmuş olur)
     document.querySelectorAll('[data-page]').forEach(el => {
         el.addEventListener('click', e => {
             e.preventDefault();
+            window.location.hash = el.dataset.page; 
             showPage(el.dataset.page);
         });
     });
 }
+
   function showPage(pageId) {
       document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
       const activeEl = document.querySelector(`[data-page="${pageId}"]`);
