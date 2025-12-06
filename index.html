@@ -781,45 +781,33 @@ html,body{
     opacity: 0.9;
 }
 
-/* --- BAŞLIKLARI BEYAZ YAPMA AYARI --- */
 h1, h2, h3, h4, h5, h6 {
     color: #ffffff !important;
 }
 
-/* Kartların içindeki başlıklar */
 .tool-title {
     color: #ffffff !important;
 }
 
-/* Yan menüdeki ana başlık (DarkSec Akademi yazısı) */
 .sidebar-title {
     color: #ffffff !important;
 }
 
-/* İçerik alanındaki lead/açıklama yazılarını hafif parlatalım (isteğe bağlı) */
 p.lead {
     color: #cbd5e1 !important; 
 }
 .search-bar input::placeholder {
-    color: #586375 !important; /* Çok daha sönük gri */
+    color: #586375 !important;
 }
-/* --- ARAMA ÖNERİLERİ KUTUSU (MOR TEMA) --- */
 
 .search-suggestions {
-    /* Arka planı tam mat KOYU MOR yapıyoruz */
     background-color: #130f1a !important; 
-    
-    /* Çerçevesi hafif mor olsun */
     border: 1px solid rgba(139, 92, 246, 0.2) !important;
-    
-    /* Altına sağlam gölge */
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9) !important;
 }
 
-/* Her bir öneri satırı */
 .search-suggestion {
     color: #e6eef6 !important;
-    /* Satır aralarına çok silik mor çizgi */
     border-bottom: 1px solid rgba(139, 92, 246, 0.05) !important; 
 }
 
@@ -827,73 +815,53 @@ p.lead {
     border-bottom: none !important;
 }
 
-/* Mouse ile üzerine gelince (Hover) */
 .search-suggestion:hover,
 .search-suggestion.highlight {
-    /* Parlak mor vurgu */
     background-color: rgba(139, 92, 246, 0.25) !important; 
-    
     color: #ffffff !important;
-    
-    /* Sol tarafa neon mor çizgi */
     border-left: 3px solid #8b5cf6 !important; 
 }
-/* --- İLETİŞİM (CHAT) PENCERESİ MATLAŞTIRMA (MOR TEMA) --- */
 
-/* 1. Pencerenin Ana Kutusu */
 #chat-window {
-    /* Arkası şeffaf olmasın, koyu mat mor olsun */
     background-color: #130f1a !important; 
-    
-    /* Etrafına ince neon mor çerçeve */
     border: 1px solid rgba(139, 92, 246, 0.3) !important;
-    
-    /* Altına sağlam gölge atalım, öne çıksın */
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9) !important;
 }
 
-/* 2. Başlık Kısmı (İletişim yazan yer) */
 .chat-header {
-    /* Gövdeden bir tık daha açık mor olsun ki ayırt edilsin */
     background-color: #1f1b29 !important;
     border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
 }
 
 .chat-header h4 {
-    color: #ffffff !important; /* Başlık bembeyaz */
+    color: #ffffff !important;
 }
 
-/* 3. Mesaj Yazma Alanı (Arka planı) */
 .chat-input-area {
-    background-color: #130f1a !important; /* Ana kutuyla aynı renk */
+    background-color: #130f1a !important;
 }
 
-/* 4. Textarea (Mesaj yazdığın kutu) */
 .chat-input-area textarea {
-    background-color: #09090b !important; /* Çok koyu (neredeyse siyah) zemin */
-    color: #e6eef6 !important;             /* Yazı rengi kırık beyaz */
-    border: 1px solid rgba(139, 92, 246, 0.2) !important; /* İnce mor kenarlık */
+    background-color: #09090b !important;
+    color: #e6eef6 !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
     border-radius: 8px !important;
 }
 
-/* Textarea'ya tıklayınca (Focus) */
 .chat-input-area textarea:focus {
     outline: none !important;
-    border-color: var(--accent) !important; /* Kenarlık parlasın */
+    border-color: var(--accent) !important;
     box-shadow: 0 0 10px rgba(139, 92, 246, 0.1) !important;
 }
 
-/* 5. Gönder Butonu */
 .chat-input-area button {
     width: 100% !important;
     margin-top: 5px !important;
-    /* Diğer butonlar için yazdığımız stil zaten buraya da etki eder,
-       ama garanti olsun diye buraya da ekleyebiliriz */
 }
 .content h2 {
-    color: #B7C0CC !important; /* Tam beyaz yerine mat metalik gri */
-    text-shadow: none !important; /* Varsa parlamayı kapat */
-    border-bottom-color: rgba(139, 92, 246, 0.3) !important; /* Altındaki çizgiyi de uyumlu mor yapalım */
+    color: #B7C0CC !important;
+    text-shadow: none !important;
+    border-bottom-color: rgba(139, 92, 246, 0.3) !important;
 }
 
     </style>
@@ -4863,7 +4831,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusable = Array.from(document.querySelectorAll(focusableElements));
+        const index = focusable.indexOf(document.activeElement);
 
+        if (index > -1 && index + 1 < focusable.length) {
+            const nextElement = focusable[index + 1];
+
+            nextElement.focus();
+
+            if (nextElement.tagName === 'BUTTON' || nextElement.tagName === 'A' || nextElement.type === 'submit') {
+                nextElement.click();
+                
+                nextElement.style.transform = "scale(0.95)";
+                setTimeout(() => nextElement.style.transform = "scale(1)", 100);
+            }
+        }
+    }
+});
   </script>
 <div id="chat-widget-container">
     <div id="chat-window" class="hidden">
