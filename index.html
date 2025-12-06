@@ -2,30 +2,63 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dark Security | Akademi</title>
-  <link rel="icon" type="image/png" href="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png">
-  <link rel="apple-touch-icon" href="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png">
+  <link rel="icon" type="image/png" href="pp2.png">
+  <link rel="apple-touch-icon" href="pp.png">
     <style>
-      :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--glass: rgba(255,255,255,0.03);}
-      html,body{
-          height:100%;
-          margin:0;
-          font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
-          background-color: #071021;
-          color:#e6eef6
-      }      
-      .wrap{display:grid;grid-template-columns:260px 1fr;gap:20px;min-height:100vh;padding:28px}
+html,body{
+    height:100%;
+    margin:0;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
+    background-color: var(--bg-body);
+    color:var(--text-main);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 20%);
+    background-attachment: fixed;
+
+    background-size: cover;
+    }
+:root{
+    --accent:#8b5cf6;
+    --bg-body: #09090b;
+    --bg-sidebar: #120f18;
+    --bg-card: #120f18;
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --secondary: #06b6d4;
+    --text-main: #9aa4b2;
+    --text-muted: #a1a1aa;
+    --border: rgba(255, 255, 255, 0.08);
+    --glass: rgba(139, 92, 246, 0.1);
+    --danger: #ef4444;
+}       
+.wrap{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:20px;
+    min-height:100vh;
+    padding:28px;
+}
       .sidebar{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
       .nav{display:flex;flex-direction:column;gap:6px}
       .nav a{padding:10px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:14px;transition:all 0.2s}
       .nav a:hover{background:var(--glass)}
       .nav a.active{background:var(--glass);color:#fff}
-      .content{padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));box-shadow:0 6px 24px rgba(2,6,23,0.5)}
+
+.content{
+    padding:18px;
+    border-radius:12px;
+    background: var(--bg-sidebar); 
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+}
       h1{margin:0 0 8px;font-size:22px}
       h2{font-size:18px;margin:0 0 12px}
       h3{font-size:16px;margin:0 0 8px}
       p.lead{margin:0 0 16px;color:var(--muted)}
       .card{background:rgba(0,0,0,0.25);padding:14px;border-radius:10px;transition:all 0.3s;margin-bottom:12px}
       .card:hover{background:rgba(0,0,0,0.35);transform:translateY(-2px)}
+
       pre{background:#071226;padding:12px;border-radius:8px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:#d6f4ff}
       .copybtn{border:0;background:transparent;color:var(--accent);cursor:pointer;font-weight:600;transition:all 0.2s}
       .copybtn:hover{color:#fff}
@@ -63,8 +96,21 @@
       .resource-title{font-weight:600;margin-bottom:4px;font-size:14px}
       .resource-desc{font-size:12px;color:var(--muted)}
       @media (max-width:900px){
-        .wrap{grid-template-columns:1fr;padding:14px}
-        .sidebar{order:2}
+.wrap{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:20px;
+    min-height:100vh;
+    padding:28px;
+    width: 100%;
+}
+.sidebar{
+    background:var(--bg-sidebar);
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 0 10px rgba(0,0,0,0.5); 
+    border: 1px solid var(--border);
+}
         .stats{grid-template-columns:1fr}
         .quick-links{grid-template-columns:1fr}
         .resource-grid{grid-template-columns:1fr}
@@ -735,6 +781,120 @@
     opacity: 0.9;
 }
 
+/* --- BAŞLIKLARI BEYAZ YAPMA AYARI --- */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+/* Kartların içindeki başlıklar */
+.tool-title {
+    color: #ffffff !important;
+}
+
+/* Yan menüdeki ana başlık (DarkSec Akademi yazısı) */
+.sidebar-title {
+    color: #ffffff !important;
+}
+
+/* İçerik alanındaki lead/açıklama yazılarını hafif parlatalım (isteğe bağlı) */
+p.lead {
+    color: #cbd5e1 !important; 
+}
+.search-bar input::placeholder {
+    color: #586375 !important; /* Çok daha sönük gri */
+}
+/* --- ARAMA ÖNERİLERİ KUTUSU (MOR TEMA) --- */
+
+.search-suggestions {
+    /* Arka planı tam mat KOYU MOR yapıyoruz */
+    background-color: #130f1a !important; 
+    
+    /* Çerçevesi hafif mor olsun */
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+    
+    /* Altına sağlam gölge */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Her bir öneri satırı */
+.search-suggestion {
+    color: #e6eef6 !important;
+    /* Satır aralarına çok silik mor çizgi */
+    border-bottom: 1px solid rgba(139, 92, 246, 0.05) !important; 
+}
+
+.search-suggestion:last-child {
+    border-bottom: none !important;
+}
+
+/* Mouse ile üzerine gelince (Hover) */
+.search-suggestion:hover,
+.search-suggestion.highlight {
+    /* Parlak mor vurgu */
+    background-color: rgba(139, 92, 246, 0.25) !important; 
+    
+    color: #ffffff !important;
+    
+    /* Sol tarafa neon mor çizgi */
+    border-left: 3px solid #8b5cf6 !important; 
+}
+/* --- İLETİŞİM (CHAT) PENCERESİ MATLAŞTIRMA (MOR TEMA) --- */
+
+/* 1. Pencerenin Ana Kutusu */
+#chat-window {
+    /* Arkası şeffaf olmasın, koyu mat mor olsun */
+    background-color: #130f1a !important; 
+    
+    /* Etrafına ince neon mor çerçeve */
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    
+    /* Altına sağlam gölge atalım, öne çıksın */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* 2. Başlık Kısmı (İletişim yazan yer) */
+.chat-header {
+    /* Gövdeden bir tık daha açık mor olsun ki ayırt edilsin */
+    background-color: #1f1b29 !important;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
+}
+
+.chat-header h4 {
+    color: #ffffff !important; /* Başlık bembeyaz */
+}
+
+/* 3. Mesaj Yazma Alanı (Arka planı) */
+.chat-input-area {
+    background-color: #130f1a !important; /* Ana kutuyla aynı renk */
+}
+
+/* 4. Textarea (Mesaj yazdığın kutu) */
+.chat-input-area textarea {
+    background-color: #09090b !important; /* Çok koyu (neredeyse siyah) zemin */
+    color: #e6eef6 !important;             /* Yazı rengi kırık beyaz */
+    border: 1px solid rgba(139, 92, 246, 0.2) !important; /* İnce mor kenarlık */
+    border-radius: 8px !important;
+}
+
+/* Textarea'ya tıklayınca (Focus) */
+.chat-input-area textarea:focus {
+    outline: none !important;
+    border-color: var(--accent) !important; /* Kenarlık parlasın */
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.1) !important;
+}
+
+/* 5. Gönder Butonu */
+.chat-input-area button {
+    width: 100% !important;
+    margin-top: 5px !important;
+    /* Diğer butonlar için yazdığımız stil zaten buraya da etki eder,
+       ama garanti olsun diye buraya da ekleyebiliriz */
+}
+.content h2 {
+    color: #B7C0CC !important; /* Tam beyaz yerine mat metalik gri */
+    text-shadow: none !important; /* Varsa parlamayı kapat */
+    border-bottom-color: rgba(139, 92, 246, 0.3) !important; /* Altındaki çizgiyi de uyumlu mor yapalım */
+}
 
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
@@ -743,7 +903,7 @@
     <div class="wrap">
       <aside class="sidebar">
 <div class="sidebar-header">
-        <img src="https://sourcecodered.com/wp-content/uploads/2024/07/bug-bounty-circle-general-logo.png" alt="Bug Bounty Logo" class="sidebar-logo">
+        <img src="pp.png" alt="Bug Bounty Logo" class="sidebar-logo">
         <div class="sidebar-title">DarkSec Akademi</div>
         <div class="sidebar-subtitle">Sızma Testi Kütüphanesi</div>
       </div>
@@ -3049,7 +3209,6 @@ function renderMenu() {
     const vulnerabilities = [];
     const regular = [];
     
-    // CONTENT objesini tarıyoruz
     Object.keys(CONTENT).forEach(key => {
         if (key === 'home') return;
         const item = CONTENT[key];
@@ -3060,19 +3219,14 @@ function renderMenu() {
         }
     });
 
-    // Normal Menü Öğelerini Ekle
     regular.forEach(item => {
-        // --- KRİTİK GÜNCELLEME BURASI ---
         if (item.key === 'forum') {
-            // Forum ise: /forum/ adresine git ve yeni sekmede (_blank) aç
             nav.innerHTML += `<a href="/forum/" target="_blank" class="${item.icon}">${item.menuName} <span style="font-size:10px; margin-left:5px; opacity:0.7;">↗</span></a>`;
         } else {
-            // Diğerleri: Normal SPA geçişi yap
             nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
         }
     });
 
-    // Vulnerabilities Açılır Menüsünü Ekle
     if (vulnerabilities.length > 0) {
         let vulnerabilitiesHtml = '<details class="accordion-menu"><summary class="icon-database">Vulnerabilities</summary><div class="accordion-content">';
         vulnerabilities.sort((a, b) => a.menuName.localeCompare(b.menuName)).forEach(item => {
@@ -3082,7 +3236,6 @@ function renderMenu() {
         nav.innerHTML += vulnerabilitiesHtml;
     }
 
-    // Tıklama olaylarını sadece 'data-page' olanlara bağla (Forum hariç tutulmuş olur)
     document.querySelectorAll('[data-page]').forEach(el => {
         el.addEventListener('click', e => {
             e.preventDefault();
@@ -3115,10 +3268,26 @@ function renderMenu() {
             <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
         </div>
         
-        <div class="hero" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(124, 58, 237, 0.2)); border: 1px solid var(--accent); padding: 40px; margin-bottom: 30px;">
-            <h1 style="font-size: 38px; margin-bottom: 12px; font-family: monospace; color: #00ff88; text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);">
-                &gt; PENTEST_LIBRARY_INIT: SUCCESS
-            </h1>
+        <div class="hero" style="background: linear-gradient(135deg, rgba(1, 1, 1, 0.2), rgba(124, 58, 237, 0.2)); border: 1px solid var(); padding: 40px; margin-bottom: 30px;">
+        <h1 style="
+            font-size: 38px;
+            margin-bottom: 12px;
+            font-family: monospace;
+
+            /* Yumuşak geçişli mor */
+            background: linear-gradient(180deg, #b38cff, #8f5fe8);
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+
+            /* Mor tonlarla uyumlu hafif parlama */
+            text-shadow:
+                0 0 6px rgba(179, 140, 255, 0.4),
+                0 0 12px rgba(143, 95, 232, 0.25);
+        ">
+            &gt; PENTEST_LIBRARY_INIT: SUCCESS
+        </h1>
+
             <p class="subtitle" style="font-size: 17px; color: #cbd5e1; line-height: 1.6; font-family: monospace;">
                 [INFO] >> Gerçek dünya senaryoları - Pratik Araçlar - Zafiyet Analizi! <<<br>[WARNING] Yalnızca yetkiniz olan Hedeflerde test yapın!"
             </p>
@@ -3127,16 +3296,16 @@ function renderMenu() {
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                <h2 style="font-size: 20px; color: var(--accent); border-bottom: 1px solid var(--glass); padding-bottom: 8px;">ATTACK FLOW (Saldırı Aşaması)</h2>
+                <h2 style="font-size: 20px; color: #dddddd; border-bottom: 1px solid var(--glass); padding-bottom: 8px;">ATTACK FLOW (Saldırı Aşaması)</h2>
                 
-                ${generateFlowCard('icon-search', 'RECON & KEŞİF', 'javascriptrecon', 'Subdomain, endpoint ve eski URL\'leri toplayarak saldırı yüzeyini genişlet.', '#34d399')}
-                ${generateFlowCard('icon-file-export', 'ENDPOINT VURGUSU', 'informationDisclosure', 'Gömülü anahtarlar, debug panelleri ve hassas veri sızıntılarını sömür.', '#06b6d4')}
-                ${generateFlowCard('icon-code', 'İSTİSMAR (EXPLOIT)', 'xss', 'API/web katmanında SQLi, XSS, SSRF ve RCE tekniklerini uygula.', '#f87171')}
-                ${generateFlowCard('icon-user-slash', 'YETKİ YÜKSELTME', 'privilege_escalation', 'Kullanıcı/Admin rollerinde dikey ve yatay yetki atlatma tekniklerini kullan.', '#7c3aed')}
+                ${generateFlowCard('icon-search', 'RECON & KEŞİF', 'javascriptrecon', 'Subdomain, endpoint ve eski URL\'leri toplayarak saldırı yüzeyini genişlet.', '#8b5cf6')}
+                ${generateFlowCard('icon-file-export', 'ENDPOINT VURGUSU', 'informationDisclosure', 'Gömülü anahtarlar, debug panelleri ve hassas veri sızıntılarını sömür.', '#8b5cf6')}
+                ${generateFlowCard('icon-code', 'İSTİSMAR (EXPLOIT)', 'xss', 'API/web katmanında SQLi, XSS, SSRF ve RCE tekniklerini uygula.', '#8b5cf6')}
+                ${generateFlowCard('icon-user-slash', 'YETKİ YÜKSELTME', 'privilege_escalation', 'Kullanıcı/Admin rollerinde dikey ve yatay yetki atlatma tekniklerini kullan.', '#8b5cf6')}
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                <h2 style="font-size: 20px; color: var(--accent); border-bottom: 1px solid var(--glass); padding-bottom: 8px;">CRITICAL TARGETS (Kritik Hedefler)</h2>
+                <h2 style="font-size: 20px; color: #dddddd; border-bottom: 1px solid var(--glass); padding-bottom: 8px;">CRITICAL TARGETS (Kritik Hedefler)</h2>
                 
                 ${generateTargetCard('icon-database', 'SQL Injection Adayları', 'sqli', 'Formlar, API JSON gövdeleri ve her türlü GET/POST parametresi.')}
                 ${generateTargetCard('icon-key', 'IDOR & Yetkilendirme', 'idor', 'Sıralı ID\'ler, Base64 ID\'ler ve UUID ile referans verilen tüm nesneler.')}
@@ -4232,7 +4401,7 @@ if (registerBtn) {
       } else if (toolId === 'sslanalyzer') {
           html = `
               <h1><i class="${tool.icon}"></i> ${tool.title}</h1>
-              <p class="small" style="margin-bottom:12px;">Bir alan adının SSL/TLS sertifika detaylarını ve geçerliliğini kontrol edin.<br>(Sunucuya 5$ veremediğim için şimdilik sadece popüler sitelerde çalışıyor :p)</p>
+              <p class="small" style="margin-bottom:12px;">Bir alan adının SSL/TLS sertifika detaylarını ve geçerliliğini kontrol edin.
               
               <div class="card" style="max-width: 600px;">
                   <div class="search-bar" style="margin-bottom: 16px;">
@@ -4253,7 +4422,6 @@ if (registerBtn) {
               <h1><i class="${tool.icon}"></i> HTTP Başlık Analizörü</h1>
               <p class="small" style="margin-bottom:12px;">
                   <strong>HSTS, CSP, X-Frame-Options ve X-Content-Type-Options</strong> gibi kritik başlıkları kontrol ederek dijital zayıflıkları tespit eder.<br>
-                  (Sunucuya 5$ veremediğim için şimdilik sadece popüler sitelerde çalışıyor :p)
               </p>
               <div class="card" style="max-width: 600px;">
                   <div class="search-bar" style="margin-bottom: 16px;">
@@ -4616,15 +4784,14 @@ activateEncoderDecoder();
   }
 renderMenu();
 
-// Sayfa yüklendiğinde URL'de #forum veya başka bir sayfa var mı kontrol et
-const hash = window.location.hash.substring(1); // # işaretini atar
+
+const hash = window.location.hash.substring(1);
 if (hash && CONTENT[hash]) {
     showPage(hash);
 } else {
-    showPage('home'); // Hash yoksa ana sayfayı aç
+    showPage('home');
 }
 
-// Tarayıcı geri/ileri butonları için dinleyici
 window.addEventListener('hashchange', () => {
     const currentHash = window.location.hash.substring(1);
     if (currentHash && CONTENT[currentHash]) {
@@ -4633,7 +4800,6 @@ window.addEventListener('hashchange', () => {
         showPage('home');
     }
 });
-// ---------------------
 
 document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.getElementById('chat-window');
@@ -4729,5 +4895,3 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     </body>
 </html>
-
-
