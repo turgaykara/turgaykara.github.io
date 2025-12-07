@@ -377,6 +377,26 @@
             .chat-area { padding: 20px; }
             .auth-container { width: 90%; padding: 30px 20px; }
         }
+/* --- HİBRİT MODEL İÇİN MİSAFİR BARI --- */
+.guest-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(9, 9, 11, 0.95);
+    border-top: 1px solid var(--primary);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 150;
+    backdrop-filter: blur(10px);
+    transform: translateY(100%); /* Başlangıçta gizli */
+    transition: transform 0.3s ease-out;
+    box-shadow: 0 -10px 40px rgba(139, 92, 246, 0.15);
+}
+.guest-bar.active { transform: translateY(0); }
+.guest-bar-text { font-size: 14px; color: #fff; }
+.blur-content { filter: blur(3px); pointer-events: none; user-select: none; }
     </style>
 </head>
 <body>
@@ -493,6 +513,7 @@
 
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
+        let isGuest = true; // Varsayılan olarak herkes misafir
         
         // Elementler
         const authScreen = document.getElementById('auth-screen');
@@ -592,25 +613,45 @@
         });
 
         // Oturum Kontrolü
-        async function checkSession() {
-            try {
-                const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
-                const data = await res.json();
-                
-                if (data.is_logged_in) {
-                    authScreen.classList.remove('active');
-                    const username = data.user?.username || 'Anonim';
-                    userNameEl.textContent = username;
-                    avatarEl.textContent = username.charAt(0).toUpperCase();
-                    loadMessages();
-                } else {
-                    authScreen.classList.add('active');
-                }
-            } catch (e) {
-                console.error(e);
-                authScreen.classList.add('active');
-            }
+// Oturum Kontrolü (HİBRİT VERSİYON)
+async function checkSession() {
+    try {
+        const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
+        const data = await res.json();
+        
+        if (data.is_logged_in) {
+            // KULLANICI GİRİŞ YAPMIŞ
+            isGuest = false;
+            authScreen.classList.remove('active'); // Login ekranını kapat
+            document.getElementById('guest-bar').classList.remove('active'); // Misafir barını kapat
+            
+            const username = data.user?.username || 'Anonim';
+            userNameEl.textContent = username;
+            avatarEl.textContent = username.charAt(0).toUpperCase();
+            
+            loadMessages(); // Mesajları yükle
+        } else {
+            // MİSAFİR (GOOGLE VE ZİYARETÇİ)
+            isGuest = true;
+            authScreen.classList.remove('active'); // DİKKAT: Login ekranını açmıyoruz!
+            
+            userNameEl.textContent = "Ziyaretçi";
+            avatarEl.textContent = "?";
+            
+            // Misafir barını göster
+            document.getElementById('guest-bar').classList.add('active');
+            
+            // Mesajları yine de yükle (Okuma izni)
+            loadMessages(); 
         }
+    } catch (e) {
+        console.error(e);
+        // Hata varsa da misafir gibi davran, siteyi kapatma
+        isGuest = true;
+        authScreen.classList.remove('active');
+        loadMessages();
+    }
+}
 
         // Mesajları Yükle
 async function loadMessages() {
@@ -762,6 +803,12 @@ async function loadMessages() {
         });
 
         document.getElementById('open-post-modal').addEventListener('click', () => {
+            if (isGuest) {
+                // Eğer misafirse login ekranını aç
+                authScreen.classList.add('active');
+                return;
+            }
+            // Üye ise normal modalı aç
             modal.classList.add('active');
             setTimeout(() => document.getElementById('post-content').focus(), 100);
         });
@@ -788,6 +835,17 @@ async function loadMessages() {
                 }
             } catch (e) {
                 alert("Bağlantı hatası.");
+            }
+        }
+        // Misafir barındaki butonlar için
+        function handleAuthTrigger(type) {
+            authScreen.classList.add('active');
+            if(type === 'register') {
+                // Kayıt sekmesine geçiş mantığını buraya ekleyebilirsin veya default login gelir
+                // Basitlik olsun diye direkt ekranı açıyoruz.
+                document.getElementById('register-btn').click(); // Kayıt ol butonunu tetikle (varsa görsel geçiş için)
+            } else {
+                document.getElementById('back-to-login-btn').click();
             }
         }
 
@@ -857,6 +915,15 @@ async function loadMessages() {
                 editModal.classList.remove('active');
             }
         });
+<div id="guest-bar" class="guest-bar">
+    <div class="guest-bar-text">
+        🔒 Bu topluluğun tüm özelliklerini kullanmak, mesaj yazmak ve konuları tartışmak için aramıza katıl.
+    </div>
+    <div style="display:flex; gap:10px;">
+        <button onclick="handleAuthTrigger('login')" class="btn btn-outline" style="padding: 8px 20px;">Giriş Yap</button>
+        <button onclick="handleAuthTrigger('register')" class="btn" style="padding: 8px 20px;">Kayıt Ol</button>
+    </div>
+</div>
     </script>
 </body>
 </html>
