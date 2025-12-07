@@ -336,29 +336,36 @@
             .auth-container { width: 90%; padding: 30px 20px; }
             .guest-bar { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
         }
-/* --- TİKTOK TARZI YANIT CSS --- */
+/* --- MODERN YANIT SİSTEMİ CSS --- */
 .replies-container {
-    margin-left: 50px; /* Yanıtları içeri kaydır */
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-    margin-top: 10px;
-    display: none; /* Başlangıçta gizli */
+    margin-left: 20px; /* Her seviyede 20px içeri girer */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* Sol tarafa ince çizgi */
+    padding-left: 10px;
+    display: none; /* Varsayılan kapalı */
 }
 .replies-container.show { display: block; animation: fadeIn 0.3s ease; }
 
-/* "____ yanıtları gör" butonu */
+/* Şık Yanıt Butonu */
 .view-replies-btn {
-    margin-left: 60px; margin-top: 8px;
-    font-size: 12px; font-weight: 600; color: #71717a;
-    cursor: pointer; display: flex; align-items: center; gap: 8px; width: fit-content;
+    margin-left: 20px; margin-top: 10px; margin-bottom: 10px;
+    font-size: 12px; font-weight: 500; color: #a1a1aa;
+    cursor: pointer; display: flex; align-items: center; gap: 12px;
+    transition: 0.2s; user-select: none;
 }
-.view-replies-btn::before { content: ''; display: block; width: 30px; height: 1px; background: #71717a; }
 .view-replies-btn:hover { color: #fff; }
-.view-replies-btn:hover::before { background: #fff; }
 
-/* Yanıt Mesajı Kutusu (Biraz daha ufak) */
-.message.reply-msg { transform: scale(0.98); border-color: rgba(255,255,255,0.05); }
+/* Butonun solundaki çizgi */
+.view-replies-btn::before { 
+    content: ''; display: block; width: 20px; height: 1px; 
+    background: #3f3f46; transition: 0.2s;
+}
+.view-replies-btn:hover::before { background: #fff; width: 30px; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* Buton İkonu */
+.view-replies-btn i { font-size: 10px; transition: transform 0.3s; }
+.view-replies-btn.open i { transform: rotate(180deg); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -492,6 +499,136 @@
         const API_URL = 'https://admin3131.pythonanywhere.com';
         let isGuest = true;
 
+        // --- HAFIZA SİSTEMİ (Açık olan yanıtları tutar) ---
+        let openRepliesSet = new Set(); 
+
+        // --- YENİ RECURSIVE (İÇ İÇE) MESAJ YÜKLEME ---
+        async function loadMessages() {
+            try {
+                const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
+                const posts = await res.json();
+                const feed = document.getElementById('chat-feed');
+
+                if (posts.length === 0) { feed.innerHTML = "<div style='text-align:center; color:gray; margin-top:20px;'>Mesaj yok.</div>"; return; }
+
+                // Tüm postları bir haritaya çevir (Hızlı erişim için)
+                const postMap = {};
+                posts.forEach(p => postMap[p.id] = { ...p, children: [] });
+
+                // Ağaç yapısını kur (Parent -> Children)
+                const roots = [];
+                posts.forEach(p => {
+                    if (p.parent_id && postMap[p.parent_id]) {
+                        postMap[p.parent_id].children.push(postMap[p.id]);
+                    } else {
+                        roots.push(postMap[p.id]); // Ana konu
+                    }
+                });
+
+                // Tarihe göre sırala
+                roots.sort((a,b) => new Date(a.created_at) - new Date(b.created_at)); // Eskiden yeniye (veya tam tersi)
+
+                // HTML oluştur (Recursive fonksiyon ile)
+                let html = roots.map(root => buildPostHTML(root)).join('');
+                feed.innerHTML = html;
+
+                // --- RESTORE STATE (Açık olanları tekrar aç) ---
+                openRepliesSet.forEach(id => {
+                    const container = document.getElementById(`replies-${id}`);
+                    const btn = document.getElementById(`btn-${id}`);
+                    if (container) {
+                        container.classList.add('show');
+                        if (btn) {
+                            btn.classList.add('open');
+                            const count = btn.getAttribute('data-count');
+                            btn.innerHTML = `Gizle <i class="fa-solid fa-chevron-up"></i>`;
+                        }
+                    }
+                });
+
+            } catch (e) { console.error(e); }
+        }
+
+        // --- TEK BİR POST VE ÇOCUKLARINI OLUŞTURAN FONKSİYON ---
+        function buildPostHTML(post) {
+            // Önce postun kendisini çiz
+            let html = `<div class="message-wrapper" style="margin-bottom:15px;">`;
+            html += renderSingleMessage(post, post.parent_id !== null);
+
+            // Eğer çocukları (yanıtları) varsa
+            if (post.children.length > 0) {
+                // Çocukları tarihe göre sırala
+                post.children.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+
+                // Buton (ID ve Sayı bilgisini saklıyoruz)
+                html += `
+                <div id="btn-${post.id}" class="view-replies-btn" data-count="${post.children.length}" onclick="toggleReplies(${post.id})">
+                    ${post.children.length} yanıtı gör <i class="fa-solid fa-chevron-down"></i>
+                </div>`;
+
+                // Kapsayıcı (Recursive çağırma burada oluyor!)
+                html += `<div id="replies-${post.id}" class="replies-container">`;
+                post.children.forEach(child => {
+                    html += buildPostHTML(child); // <-- KENDİNİ TEKRAR ÇAĞIRIYOR (Sonsuz derinlik)
+                });
+                html += `</div>`;
+            }
+            
+            html += `</div>`;
+            return html;
+        }
+
+        // --- GÖRÜNÜM FONKSİYONLARI ---
+        function renderSingleMessage(p, isReply) {
+            const initial = (p.author_email || 'A').charAt(0).toUpperCase();
+            const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
+            const date = formatTime(p.created_at);
+            // Yanıt ise biraz daha soluk çerçeve
+            const replyStyle = isReply ? 'border-color:rgba(255,255,255,0.05); transform:scale(0.98);' : '';
+
+            const replyBtn = `<span class="action-btn action-reply" onclick="openReplyModal(${p.id}, '${name}')"><i class="fa-solid fa-reply"></i> Yanıtla</span>`;
+            const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-solid fa-trash"></i></span>` : '';
+            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i></span>` : '';
+
+            return `
+            <div class="message" style="${replyStyle}">
+                <div class="msg-left">
+                    <div class="msg-avatar">${initial}</div>
+                </div>
+                <div class="msg-right">
+                    <div class="msg-header">
+                        <span class="msg-author">${name}</span>
+                        <span class="msg-date">${date}</span>
+                    </div>
+                    <div class="msg-text">${escapeHTML(p.content)}</div>
+                    <div class="msg-actions">
+                        ${replyBtn} ${editBtn} ${deleteBtn}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // --- AÇ/KAPA SİSTEMİ (DURUMU KAYDEDER) ---
+        window.toggleReplies = function(id) {
+            const container = document.getElementById(`replies-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+            const count = btn.getAttribute('data-count');
+            
+            if (container.classList.contains('show')) {
+                // Kapatıyor
+                container.classList.remove('show');
+                btn.classList.remove('open');
+                btn.innerHTML = `${count} yanıtı gör <i class="fa-solid fa-chevron-down"></i>`;
+                openRepliesSet.delete(id); // Hafızadan sil
+            } else {
+                // Açıyor
+                container.classList.add('show');
+                btn.classList.add('open');
+                btn.innerHTML = `Gizle <i class="fa-solid fa-chevron-up"></i>`;
+                openRepliesSet.add(id); // Hafızaya ekle
+            }
+        }
+
         // --- ELEMENTLER ---
         const authScreen = document.getElementById('auth-screen');
         const loginView = document.getElementById('login-view');
@@ -590,81 +727,7 @@
         }
 
         // --- MESAJLARI YÜKLE (TİKTOK STYLE) ---
-        async function loadMessages() {
-            try {
-                const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
-                const posts = await res.json();
-                const feed = document.getElementById('chat-feed');
 
-                if (posts.length === 0) { feed.innerHTML = "<div style='text-align:center; color:gray; margin-top:20px;'>Mesaj yok.</div>"; return; }
-
-                // Gruplama
-                const parents = posts.filter(p => !p.parent_id);
-                const replies = posts.filter(p => p.parent_id);
-
-                let html = '';
-                parents.forEach(parent => {
-                    const myReplies = replies.filter(r => r.parent_id === parent.id);
-                    myReplies.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-
-                    html += `
-                    <div class="message-wrapper" style="margin-bottom:24px;">
-                        ${renderSingleMessage(parent, false)}
-                        ${myReplies.length > 0 ? `
-                            <div class="view-replies-btn" onclick="toggleReplies(${parent.id})">
-                                ____ ${myReplies.length} yanıtı gör
-                            </div>
-                            <div id="replies-${parent.id}" class="replies-container">
-                                ${myReplies.map(r => renderSingleMessage(r, true)).join('')}
-                            </div>
-                        ` : ''}
-                    </div>`;
-                });
-                feed.innerHTML = html;
-            } catch (e) { console.error(e); }
-        }
-
-        // --- MESAJ KUTUSU HTML OLUŞTURUCU ---
-        function renderSingleMessage(p, isReply) {
-            const initial = (p.author_email || 'A').charAt(0).toUpperCase();
-            const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
-            const date = formatTime(p.created_at);
-            const replyClass = isReply ? 'reply-msg' : '';
-
-            const replyBtn = `<span class="action-btn action-reply" onclick="openReplyModal(${p.id}, '${name}')"><i class="fa-solid fa-reply"></i> Yanıtla</span>`;
-            const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-solid fa-trash"></i> Sil</span>` : '';
-            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i> Düzenle</span>` : '';
-
-            return `
-            <div class="message ${replyClass}">
-                <div class="msg-left">
-                    <div class="msg-avatar">${initial}</div>
-                </div>
-                <div class="msg-right">
-                    <div class="msg-header">
-                        <span class="msg-author">${name}</span>
-                        <span class="msg-date">${date}</span>
-                    </div>
-                    <div class="msg-text">${escapeHTML(p.content)}</div>
-                    <div class="msg-actions">
-                        ${replyBtn} ${editBtn} ${deleteBtn}
-                    </div>
-                </div>
-            </div>`;
-        }
-
-        // --- UI ETKİLEŞİMLERİ ---
-        window.toggleReplies = function(id) {
-            const container = document.getElementById(`replies-${id}`);
-            const btn = document.querySelector(`[onclick="toggleReplies(${id})"]`);
-            if (container.classList.contains('show')) {
-                container.classList.remove('show');
-                btn.innerHTML = `____ yanıtları gör`;
-            } else {
-                container.classList.add('show');
-                btn.innerHTML = `____ yanıtları gizle`;
-            }
-        }
 
         window.openReplyModal = function(parentId, authorName) {
             if(isGuest) { window.openAuthModal('login'); return; }
