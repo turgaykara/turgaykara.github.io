@@ -458,6 +458,13 @@
             color: #71717a;
             font-family: monospace;
         }
+        .msg-edited {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-left: 5px;
+            opacity: 0.7;
+        }
 
         .msg-text {
             font-size: 14px;
@@ -1069,6 +1076,13 @@
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
 
+            // DÜZENLEME KONTROLÜ (YENİ EKLENEN KISIM)
+            let editedHtml = "";
+            if (p.updated_at && p.updated_at !== p.created_at) {
+                const editDate = formatTime(p.updated_at);
+                editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
+            }
+
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
@@ -1081,7 +1095,7 @@
                 <div class="msg-right">
                     <div class="msg-header">
                         <span class="msg-author">@${name}</span>
-                        <span class="msg-date">· ${date}</span>
+                        <span class="msg-date">· ${date} ${editedHtml}</span>
                     </div>
                     <div class="msg-text">${escapeHTML(p.content)}</div>
                     <div class="msg-actions">
