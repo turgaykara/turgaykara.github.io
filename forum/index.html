@@ -336,6 +336,29 @@
             .auth-container { width: 90%; padding: 30px 20px; }
             .guest-bar { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
         }
+/* --- TİKTOK TARZI YANIT CSS --- */
+.replies-container {
+    margin-left: 50px; /* Yanıtları içeri kaydır */
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
+    display: none; /* Başlangıçta gizli */
+}
+.replies-container.show { display: block; animation: fadeIn 0.3s ease; }
+
+/* "____ yanıtları gör" butonu */
+.view-replies-btn {
+    margin-left: 60px; margin-top: 8px;
+    font-size: 12px; font-weight: 600; color: #71717a;
+    cursor: pointer; display: flex; align-items: center; gap: 8px; width: fit-content;
+}
+.view-replies-btn::before { content: ''; display: block; width: 30px; height: 1px; background: #71717a; }
+.view-replies-btn:hover { color: #fff; }
+.view-replies-btn:hover::before { background: #fff; }
+
+/* Yanıt Mesajı Kutusu (Biraz daha ufak) */
+.message.reply-msg { transform: scale(0.98); border-color: rgba(255,255,255,0.05); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -439,12 +462,19 @@
 
     <div id="post-modal" class="modal-overlay">
         <div class="modal-box">
-            <h3 style="margin:0 0 20px 0;">Düşüncelerini Paylaş</h3>
+            <h3 id="modal-title" style="margin:0 0 20px 0;">Yeni Konu</h3>
+            
+            <p id="reply-info" style="font-size:12px; color:var(--primary); margin-bottom:10px; display:none;"></p>
+            
             <textarea id="post-content" class="form-input form-textarea" placeholder="Buraya bir şeyler yaz..."></textarea>
+            
+            <input type="hidden" id="parent-id-input" value="">
+
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
                 <button id="close-modal" class="btn btn-outline">Vazgeç</button>
                 <button id="submit-post" class="btn">Gönder <i class="fa-solid fa-paper-plane"></i></button>
             </div>
+        </div>
         </div>
     </div>
     <div id="edit-modal" class="modal-overlay">
@@ -458,18 +488,16 @@
         </div>
     </div>
 
-    <script>
+<script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
-        
-        let isGuest = true; // Varsayılan
+        let isGuest = true;
 
-        // Elementler
+        // --- ELEMENTLER ---
         const authScreen = document.getElementById('auth-screen');
         const loginView = document.getElementById('login-view');
         const forgotView = document.getElementById('forgot-view');
         const authTitle = document.getElementById('auth-title');
         const authDesc = document.getElementById('auth-desc');
-        
         const chatFeed = document.getElementById('chat-feed');
         const modal = document.getElementById('post-modal');
         const userNameEl = document.getElementById('user-name');
@@ -477,14 +505,12 @@
         const loginErrorEl = document.getElementById('login-error');
         const loginSuccessEl = document.getElementById('login-success');
 
-        // Zaman formatı
+        // --- YARDIMCI FONKSİYONLAR ---
         const formatTime = (dateStr) => {
             let date = new Date(dateStr);
             date.setHours(date.getHours() + 3);
-
             const now = new Date();
             const diff = (now - date) / 1000;
-
             if (diff < 60) return "Az önce";
             if (diff < 3600) return Math.floor(diff / 60) + " dakika önce";
             if (diff < 86400) return Math.floor(diff / 3600) + " saat önce";
@@ -492,285 +518,165 @@
         };
 
         const escapeHTML = (str) => {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
         };
 
-        // --- GÖRÜNÜM YÖNETİMİ ---
-        document.getElementById('show-forgot-btn').addEventListener('click', () => {
-            loginView.classList.add('hidden');
-            forgotView.classList.remove('hidden');
-            authTitle.textContent = "Şifremi Unuttum";
-            authDesc.textContent = "Endişelenmeyin, hesabınızı kurtaralım.";
-            loginErrorEl.style.display = 'none';
-        });
+        // --- AUTH GÖRÜNÜM ---
+        document.getElementById('show-forgot-btn').onclick = () => {
+            loginView.classList.add('hidden'); forgotView.classList.remove('hidden');
+            authTitle.textContent = "Şifremi Unuttum"; authDesc.textContent = "Endişelenmeyin, hesabınızı kurtaralım.";
+        };
+        document.getElementById('back-to-login-btn').onclick = () => {
+            forgotView.classList.add('hidden'); loginView.classList.remove('hidden');
+            authTitle.textContent = "Hoş Geldiniz"; authDesc.textContent = "Giriş yapın.";
+        };
 
-        document.getElementById('back-to-login-btn').addEventListener('click', () => {
-            forgotView.classList.add('hidden');
-            loginView.classList.remove('hidden');
-            authTitle.textContent = "Hoş Geldiniz";
-            authDesc.textContent = "Topluluğa katılmak için giriş yapın.";
-            loginErrorEl.style.display = 'none';
-        });
-
-        // --- AUTH & SESSION ---
+        // --- AUTH İŞLEMLERİ ---
         async function handleAuth(endpoint, btnId) {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const btn = document.getElementById(btnId);
+            const btn = document.getElementById(btnId); // btnId parametresini kullan
 
-            if(!email || !password) {
-                loginErrorEl.textContent = "Lütfen tüm alanları doldurun.";
-                loginErrorEl.style.display = 'block';
-                return;
+            if(!email || (!password && endpoint !== 'forgot-password')) {
+                loginErrorEl.innerText = "Lütfen alanları doldurun."; loginErrorEl.style.display = 'block'; return;
             }
 
-            if (endpoint === 'register') {
-                if (password.length < 8) {
-                    loginErrorEl.textContent = "Şifre en az 8 karakter olmalıdır.";
-                    loginErrorEl.style.display = 'block'; return;
-                }
-            }
-
-            const originalText = btn.textContent;
-            btn.disabled = true; btn.textContent = "İşleniyor...";
-            loginErrorEl.style.display = 'none';
-            loginSuccessEl.style.display = 'none';
-
+            // Butonu kilitle
+            if(btn) btn.disabled = true; 
+            
             try {
                 const res = await fetch(`${API_URL}/${endpoint}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({email, password}),
-                    credentials: 'include'
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password}), credentials: 'include'
                 });
                 const data = await res.json();
 
                 if (res.ok) {
                     if(endpoint === 'register') {
-                        alert("✅ Kayıt Başarılı! E-postanızı onaylayın.");
+                        alert("Kayıt Başarılı! E-postanızı onaylayın.");
                         document.getElementById('back-to-login-btn').click();
+                    } else if (endpoint === 'login') {
+                        checkSession();
                     } else {
-                        checkSession(); 
+                        alert("İşlem başarılı.");
                     }
                 } else {
-                    loginErrorEl.textContent = data.error || "İşlem başarısız.";
-                    loginErrorEl.style.display = 'block';
+                    loginErrorEl.innerText = data.error || "Hata."; loginErrorEl.style.display = 'block';
                 }
-            } catch (e) {
-                loginErrorEl.textContent = "Sunucu hatası.";
-                loginErrorEl.style.display = 'block';
-            } finally {
-                btn.disabled = false; btn.textContent = originalText;
-            }
+            } catch (e) { loginErrorEl.innerText = "Sunucu hatası."; loginErrorEl.style.display = 'block'; }
+            finally { if(btn) btn.disabled = false; }
         }
 
         async function checkSession() {
             try {
                 const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
                 const data = await res.json();
-                
                 if (data.is_logged_in) {
                     isGuest = false;
                     document.getElementById('auth-screen').classList.remove('active');
                     document.getElementById('guest-bar').classList.remove('active');
-                    
-                    const username = data.user?.username || 'Anonim';
-                    userNameEl.textContent = username;
-                    avatarEl.textContent = username.charAt(0).toUpperCase();
-                    loadMessages();
+                    userNameEl.textContent = data.user.username || "Üye";
+                    avatarEl.textContent = (data.user.username || "U").charAt(0).toUpperCase();
                 } else {
                     isGuest = true;
                     document.getElementById('guest-bar').classList.add('active');
-                    document.getElementById('auth-screen').classList.remove('active'); // Login ekranını kapalı başlat
-                    userNameEl.textContent = "Ziyaretçi";
-                    avatarEl.textContent = "?";
-                    loadMessages();
                 }
-            } catch (e) {
-                console.error(e);
+                loadMessages();
+            } catch (e) { 
+                console.log(e); 
                 isGuest = true;
                 document.getElementById('guest-bar').classList.add('active');
-                document.getElementById('auth-screen').classList.remove('active'); 
-                loadMessages();
             }
         }
 
-        // --- MESAJLARI YÜKLEME ---
+        // --- MESAJLARI YÜKLE (TİKTOK STYLE) ---
         async function loadMessages() {
             try {
                 const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
                 const posts = await res.json();
-                
-                if (posts.length > 0) {
-                    chatFeed.innerHTML = posts.map(p => {
-                        const initial = (p.author_email || 'A').charAt(0).toUpperCase();
-                        const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
-                        
-                        let rank = "Üye";
-                        if(name.toLowerCase().includes("admin")) rank = "Admin";
-                        
-                        // XSS ve Kesme işareti hatası önlemek için güvenli içerik
-                        const safeContent = p.content.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
-                        const safeAuthor = escapeHTML(name).replace(/'/g, "\\'");
+                const feed = document.getElementById('chat-feed');
 
-                        // Butonlar HTML
-                        let actionsHTML = '<div class="msg-actions">';
-                        
-                        // HERKESE AÇIK BUTON: YANITLA
-                        actionsHTML += `
-                            <span class="action-btn action-reply" onclick="replyToPost('${safeAuthor}', '${safeContent}')">
-                                <i class="fa-solid fa-reply"></i> Yanıtla
-                            </span>
-                        `;
+                if (posts.length === 0) { feed.innerHTML = "<div style='text-align:center; color:gray; margin-top:20px;'>Mesaj yok.</div>"; return; }
 
-                        // SADECE SAHİBİNE AÇIK BUTONLAR
-                        if (p.is_mine) {
-                            actionsHTML += `
-                                <span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${safeContent}')">
-                                    <i class="fa-solid fa-pen"></i> Düzenle
-                                </span>
-                                <span class="action-btn action-delete" onclick="deletePost(${p.id})">
-                                    <i class="fa-solid fa-trash"></i> Sil
-                                </span>
-                            `;
-                        }
-                        actionsHTML += '</div>';
+                // Gruplama
+                const parents = posts.filter(p => !p.parent_id);
+                const replies = posts.filter(p => p.parent_id);
 
-                        return `
-                        <div class="message-group">
-                            <div class="message">
-                                <div class="msg-left">
-                                    <div class="msg-avatar">${initial}</div>
-                                    <div class="msg-author">${escapeHTML(name)}</div>
-                                    <div class="user-rank">${rank}</div>
-                                </div>
-                                <div class="msg-right">
-                                    <div class="msg-header">
-                                        <span class="msg-date"><i class="fa-regular fa-clock"></i> ${formatTime(p.created_at)}</span>
-                                        <span style="font-size:10px; color:#52525b">#${p.id}</span>
-                                    </div>
-                                    <div class="msg-text">${escapeHTML(p.content)}</div>
-                                    ${actionsHTML}
-                                </div>
+                let html = '';
+                parents.forEach(parent => {
+                    const myReplies = replies.filter(r => r.parent_id === parent.id);
+                    myReplies.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+
+                    html += `
+                    <div class="message-wrapper" style="margin-bottom:24px;">
+                        ${renderSingleMessage(parent, false)}
+                        ${myReplies.length > 0 ? `
+                            <div class="view-replies-btn" onclick="toggleReplies(${parent.id})">
+                                ____ ${myReplies.length} yanıtı gör
                             </div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    chatFeed.innerHTML = `<div style="text-align:center; margin-top:50px; color:gray;">Henüz mesaj yok.</div>`;
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        // --- YENİ: YANITLA FONKSİYONU ---
-        function replyToPost(author, content) {
-            // Misafir kontrolü
-            if (isGuest) {
-                openAuthModal('login');
-                return;
-            }
-
-            // Alıntı formatı
-            const quote = `> @${author}: ${content}\n\n`;
-            
-            // Yeni konu modalını aç
-            modal.classList.add('active');
-            
-            // İçeriği yaz ve imleci sona odakla
-            const textarea = document.getElementById('post-content');
-            textarea.value = quote;
-            setTimeout(() => {
-                textarea.focus();
-                textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-            }, 100);
-        }
-
-        // --- EVENT LISTENERS ---
-        document.getElementById('login-btn').addEventListener('click', () => handleAuth('login', 'login-btn'));
-        document.getElementById('register-btn').addEventListener('click', () => handleAuth('register', 'register-btn'));
-
-        document.getElementById('submit-post').addEventListener('click', async () => {
-            const content = document.getElementById('post-content').value;
-            if(!content.trim()) return;
-            
-            const btn = document.getElementById('submit-post');
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({content}), credentials: 'include'
+                            <div id="replies-${parent.id}" class="replies-container">
+                                ${myReplies.map(r => renderSingleMessage(r, true)).join('')}
+                            </div>
+                        ` : ''}
+                    </div>`;
                 });
-                if (res.ok) {
-                    document.getElementById('post-content').value = '';
-                    modal.classList.remove('active');
-                    loadMessages();
-                } else alert('Mesaj gönderilemedi.');
-            } catch (e) { alert('Hata oluştu.'); } 
-            finally { btn.disabled = false; btn.innerHTML = 'Gönder <i class="fa-solid fa-paper-plane"></i>'; }
-        });
+                feed.innerHTML = html;
+            } catch (e) { console.error(e); }
+        }
 
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' });
-            window.location.reload();
-        });
+        // --- MESAJ KUTUSU HTML OLUŞTURUCU ---
+        function renderSingleMessage(p, isReply) {
+            const initial = (p.author_email || 'A').charAt(0).toUpperCase();
+            const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
+            const date = formatTime(p.created_at);
+            const replyClass = isReply ? 'reply-msg' : '';
 
-        document.getElementById('open-post-modal').addEventListener('click', () => {
-            if (isGuest) { openAuthModal('login'); return; }
-            modal.classList.add('active');
+            const replyBtn = `<span class="action-btn action-reply" onclick="openReplyModal(${p.id}, '${name}')"><i class="fa-solid fa-reply"></i> Yanıtla</span>`;
+            const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-solid fa-trash"></i> Sil</span>` : '';
+            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i> Düzenle</span>` : '';
+
+            return `
+            <div class="message ${replyClass}">
+                <div class="msg-left">
+                    <div class="msg-avatar">${initial}</div>
+                </div>
+                <div class="msg-right">
+                    <div class="msg-header">
+                        <span class="msg-author">${name}</span>
+                        <span class="msg-date">${date}</span>
+                    </div>
+                    <div class="msg-text">${escapeHTML(p.content)}</div>
+                    <div class="msg-actions">
+                        ${replyBtn} ${editBtn} ${deleteBtn}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // --- UI ETKİLEŞİMLERİ ---
+        window.toggleReplies = function(id) {
+            const container = document.getElementById(`replies-${id}`);
+            const btn = document.querySelector(`[onclick="toggleReplies(${id})"]`);
+            if (container.classList.contains('show')) {
+                container.classList.remove('show');
+                btn.innerHTML = `____ yanıtları gör`;
+            } else {
+                container.classList.add('show');
+                btn.innerHTML = `____ yanıtları gizle`;
+            }
+        }
+
+        window.openReplyModal = function(parentId, authorName) {
+            if(isGuest) { window.openAuthModal('login'); return; }
+            const postModal = document.getElementById('post-modal');
+            document.getElementById('parent-id-input').value = parentId;
+            document.getElementById('reply-info').textContent = `@${authorName} kullanıcısına yanıt veriyorsun`;
+            document.getElementById('reply-info').style.display = 'block';
+            document.getElementById('modal-title').textContent = "Yanıt Yaz";
+            postModal.classList.add('active');
             setTimeout(() => document.getElementById('post-content').focus(), 100);
-        });
+        };
 
-        document.getElementById('close-modal').addEventListener('click', () => modal.classList.remove('active'));
-
-        // --- SİLME VE DÜZENLEME ---
-        async function deletePost(id) {
-            if (!confirm("Bu mesajı silmek istediğine emin misin?")) return;
-            try {
-                const res = await fetch(`${API_URL}/posts/${id}`, {
-                    method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include'
-                });
-                if (res.ok) loadMessages();
-                else alert("Silinemedi.");
-            } catch (e) { alert("Bağlantı hatası."); }
-        }
-
-        const editModal = document.getElementById('edit-modal');
-        const editInput = document.getElementById('edit-content');
-        const editIdInput = document.getElementById('edit-post-id');
-        const saveEditBtn = document.getElementById('save-edit-btn');
-        
-        function openEditModal(id, content) {
-            editInput.value = content;
-            editIdInput.value = id;
-            editModal.classList.add('active');
-            setTimeout(() => editInput.focus(), 100);
-        }
-        
-        document.getElementById('close-edit-modal').addEventListener('click', () => editModal.classList.remove('active'));
-        
-        saveEditBtn.addEventListener('click', async () => {
-            const id = editIdInput.value;
-            const newContent = editInput.value;
-            if (!newContent.trim()) { alert("Mesaj boş olamaz!"); return; }
-            
-            saveEditBtn.disabled = true; saveEditBtn.innerHTML = 'Kaydediliyor...';
-            try {
-                const res = await fetch(`${API_URL}/posts/${id}`, {
-                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: newContent }), credentials: 'include'
-                });
-                if (res.ok) {
-                    editModal.classList.remove('active');
-                    loadMessages();
-                } else alert("Hata oluştu.");
-            } catch (e) { alert("Sunucu hatası."); } 
-            finally { saveEditBtn.disabled = false; saveEditBtn.textContent = 'Kaydet'; }
-        });
-
-        // --- AUTH MODAL YÖNETİMİ ---
         window.openAuthModal = function(type) {
             const modal = document.getElementById('auth-screen');
             modal.classList.add('active');
@@ -778,12 +684,84 @@
             document.getElementById('forgot-view').classList.add('hidden');
             document.getElementById('auth-title').textContent = (type === 'register') ? "Hesap Oluştur" : "Hoş Geldiniz";
         }
-
+        
         window.closeAuthModal = function() {
             document.getElementById('auth-screen').classList.remove('active');
         }
 
-        // Başlangıç
+        // --- BUTTON LISTENERLAR ---
+        document.getElementById('login-btn').onclick = () => handleAuth('login', 'login-btn');
+        document.getElementById('register-btn').onclick = () => handleAuth('register', 'register-btn');
+        document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, {method:'POST', credentials:'include'}); location.reload(); };
+
+        document.getElementById('open-post-modal').onclick = () => {
+            if(isGuest) { window.openAuthModal('login'); return; }
+            const postModal = document.getElementById('post-modal');
+            document.getElementById('parent-id-input').value = ""; // ID temizle
+            document.getElementById('reply-info').style.display = 'none';
+            document.getElementById('modal-title').textContent = "Yeni Konu";
+            postModal.classList.add('active');
+            setTimeout(() => document.getElementById('post-content').focus(), 100);
+        };
+
+        document.getElementById('close-modal').onclick = () => modal.classList.remove('active');
+
+        // GÖNDER BUTONU
+        document.getElementById('submit-post').onclick = async () => {
+            const content = document.getElementById('post-content').value;
+            const parentId = document.getElementById('parent-id-input').value || null;
+            if(!content.trim()) return;
+
+            const btn = document.getElementById('submit-post');
+            btn.disabled = true; btn.innerText = "Gönderiliyor...";
+
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ content: content, parent_id: parentId }),
+                    credentials: 'include'
+                });
+                if(res.ok) {
+                    document.getElementById('post-content').value = '';
+                    modal.classList.remove('active');
+                    loadMessages();
+                } else alert("Hata.");
+            } catch(e) { alert("Sunucu hatası."); }
+            finally { btn.disabled = false; btn.innerHTML = 'Gönder <i class="fa-solid fa-paper-plane"></i>'; }
+        };
+
+        // --- SİLME VE DÜZENLEME ---
+        async function deletePost(id) {
+            if (!confirm("Silinsin mi?")) return;
+            try {
+                const res = await fetch(`${API_URL}/posts/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' });
+                if (res.ok) loadMessages(); else alert("Hata.");
+            } catch (e) { alert("Hata."); }
+        }
+
+        // Edit Modal İşlemleri
+        const editModal = document.getElementById('edit-modal');
+        window.openEditModal = function(id, content) {
+            document.getElementById('edit-content').value = content;
+            document.getElementById('edit-post-id').value = id;
+            editModal.classList.add('active');
+        }
+        document.getElementById('close-edit-modal').onclick = () => editModal.classList.remove('active');
+        document.getElementById('save-edit-btn').onclick = async () => {
+            const id = document.getElementById('edit-post-id').value;
+            const content = document.getElementById('edit-content').value;
+            if(!content.trim()) return;
+            try {
+                await fetch(`${API_URL}/posts/${id}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content }), credentials: 'include'
+                });
+                editModal.classList.remove('active');
+                loadMessages();
+            } catch(e) { alert("Hata"); }
+        }
+
+        // Başlat
         checkSession();
         setInterval(loadMessages, 30000);
     </script>
