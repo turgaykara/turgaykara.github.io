@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dark Security | Akış</title>
-    <link rel="icon" type="image/png" href="pp2.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -75,10 +74,9 @@
         .channel-info { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .channel-icon { color: var(--text-muted); font-size: 18px; }
 
-        /* --- COMPOSE AREA (ARTIK MESAJ KARTI GİBİ) --- */
+        /* --- COMPOSE AREA (Mesaj Yazma Alanı) --- */
         .compose-area {
             padding: 24px 32px;
-            /* Arka planı transparan yaptım ki kart öne çıksın */
             background: transparent; 
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
@@ -86,7 +84,6 @@
         }
 
         .compose-wrapper {
-            /* Mesaj kartı ile AYNI stil */
             background-color: #050505; 
             border: 1px solid rgba(139, 92, 246, 0.15); 
             border-radius: 8px; 
@@ -94,17 +91,16 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             display: flex; flex-direction: column; gap: 10px;
-            overflow: hidden; /* Çizgi taşmasın */
+            overflow: hidden; 
         }
 
-        /* Sol Çizgi (Mesaj kartı ile aynı) */
+        /* Sol Çizgi */
         .compose-wrapper::before {
             content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
             background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
             opacity: 0.6; transition: 0.3s;
         }
 
-        /* Odaklanınca Parlama (Mesaj kartı hover efekti gibi) */
         .compose-wrapper:focus-within {
             border-color: rgba(139, 92, 246, 0.6); 
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05); 
@@ -114,31 +110,50 @@
 
         .compose-input {
             width: 100%; background: transparent; border: none;
-            color: #d4d4d8; font-family: inherit; resize: none;
-            font-size: 14px; min-height: 60px; font-weight: 200;
-            margin-left: 10px; /* Çizgiden uzaklaşsın */
+            color: #d4d4d8; font-family: inherit; 
+            font-size: 14px; min-height: 40px; font-weight: 300;
+            margin-left: 10px;
+            /* Scrollbar Gizleme ve Auto Resize için */
+            resize: none; 
+            overflow: hidden; 
+            line-height: 1.5;
         }
         .compose-input::placeholder { color: #52525b; }
 
+        /* Scrollbar Gizleme (Chrome, Safari) */
+        .compose-input::-webkit-scrollbar { display: none; }
+
+        /* Buton ve İkonların Durduğu Footer */
         .compose-footer {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; 
+            justify-content: center; /* Butonu ortala */
+            align-items: center;
             padding-top: 10px; margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.1);
             margin-left: 10px;
+            position: relative; /* İkonları sola sabitlemek için */
         }
 
+        .action-icons {
+            position: absolute; left: 0; /* İkonları sola çivile */
+        }
         .action-icons i {
             color: #52525b; margin-right: 15px; cursor: pointer; transition: 0.2s; font-size: 14px;
         }
         .action-icons i:hover { color: var(--primary); transform: scale(1.1); }
 
+        /* GÖNDER BUTONU TASARIMI */
         .send-btn-modern {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 6px 20px; border-radius: 6px;
+            color: white; border: none; 
+            padding: 8px 0; /* İç boşluk */
+            width: 150px; /* BUTON KISALDI */
+            border-radius: 6px;
             font-size: 12px; font-weight: 600; cursor: pointer;
             transition: 0.3s; opacity: 0.8;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .send-btn-modern:hover { opacity: 1; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
-        .send-btn-modern:disabled { opacity: 0.4; cursor: not-allowed; }
+        .send-btn-modern:disabled { opacity: 0.4; cursor: not-allowed; background: #333; }
 
 
         /* --- AKIŞ ALANI --- */
@@ -229,27 +244,19 @@
             font-size: 12px; 
             color: var(--primary); 
             cursor: pointer; 
-            
-            /* Hizalama Büyüsü: Mesaj kartıyla aynı hizaya getir */
             max-width: 1000px; 
-            margin: 4px auto 0 auto; /* Üstten az boşluk, yanlardan ortala */
-            padding-left: 20px; /* İkonla aynı hizaya gelmesi için */
-            
+            margin: 4px auto 0 auto; 
+            padding-left: 20px; 
             font-weight: 600; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            user-select: none;
-            transition: 0.2s;
+            display: flex; align-items: center; gap: 8px;
+            user-select: none; transition: 0.2s;
         }
         .view-replies-btn:hover { color: #fff; transform: translateX(5px); }
         
         .replies-container {
-            /* Yanıt kutusunu da ortala */
-            max-width: 960px; /* Ana mesajdan tık daha dar olsun ki hiyerarşi belli olsun */
+            max-width: 960px; 
             margin: 10px auto;
-            
-            border-left: 2px solid rgba(139, 92, 246, 0.2); /* Çizgi rengini belirginleştir */
+            border-left: 2px solid rgba(139, 92, 246, 0.2); 
             padding-left: 15px; 
             display: none; 
         }
@@ -264,6 +271,8 @@
             .message::before { width: 100%; height: 2px; bottom: auto; top: 0; background: linear-gradient(to right, #8b5cf6, #06b6d4); }
             .compose-area { padding: 15px; }
             .chat-area { padding: 15px; }
+            .compose-footer { justify-content: space-between; }
+            .action-icons { position: relative; } /* Mobilde ikonlar normal akışta kalsın */
         }
 
         /* --- MODALS & AUTH --- */
@@ -322,8 +331,8 @@
     <div id="guest-bar" class="guest-bar">
         <div class="guest-bar-text">🔒 Bu topluluğun tüm özelliklerini kullanmak için aramıza katıl.</div>
         <div style="display:flex; gap:10px;">
-            <button onclick="openAuthModal('login')" class="send-btn-modern" style="background:transparent; border:1px solid #555;">Giriş</button>
-            <button onclick="openAuthModal('register')" class="send-btn-modern">Kayıt Ol</button>
+            <button onclick="openAuthModal('login')" class="send-btn-modern" style="width:auto; padding:6px 20px; background:transparent; border:1px solid #555;">Giriş</button>
+            <button onclick="openAuthModal('register')" class="send-btn-modern" style="width:auto; padding:6px 20px;">Kayıt Ol</button>
         </div>
     </div>
 
@@ -348,8 +357,8 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button type="button" id="login-btn" class="send-btn-modern" style="flex:1; border-radius:8px;">Giriş Yap</button>
-                        <button type="button" id="register-btn" class="send-btn-modern" style="flex:1; background:transparent; border:1px solid #555; border-radius:8px;">Kayıt Ol</button>
+                        <button type="button" id="login-btn" class="send-btn-modern" style="flex:1; width:auto; border-radius:8px;">Giriş Yap</button>
+                        <button type="button" id="register-btn" class="send-btn-modern" style="flex:1; width:auto; background:transparent; border:1px solid #555; border-radius:8px;">Kayıt Ol</button>
                     </div>
                 </form>
             </div>
@@ -400,6 +409,7 @@
         <div class="compose-area">
             <div class="compose-wrapper">
                 <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..."></textarea>
+                
                 <div class="compose-footer">
                     <div class="action-icons">
                         <i class="fa-regular fa-image" title="Resim Ekle"></i>
@@ -426,8 +436,8 @@
             <textarea id="post-content" class="form-input form-textarea" placeholder="Yanıtını yaz..."></textarea>
             <input type="hidden" id="parent-id-input" value="">
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
-                <button id="close-modal" class="send-btn-modern" style="background:transparent; border:1px solid #555;">Vazgeç</button>
-                <button id="submit-post" class="send-btn-modern">Yanıtla</button>
+                <button id="close-modal" class="send-btn-modern" style="width:auto; background:transparent; border:1px solid #555;">Vazgeç</button>
+                <button id="submit-post" class="send-btn-modern" style="width:auto;">Yanıtla</button>
             </div>
         </div>
     </div>
@@ -438,8 +448,8 @@
             <textarea id="edit-content" class="form-input form-textarea"></textarea>
             <input type="hidden" id="edit-post-id"> 
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
-                <button id="close-edit-modal" class="send-btn-modern" style="background:transparent; border:1px solid #555;">İptal</button>
-                <button id="save-edit-btn" class="send-btn-modern">Kaydet</button>
+                <button id="close-edit-modal" class="send-btn-modern" style="width:auto; background:transparent; border:1px solid #555;">İptal</button>
+                <button id="save-edit-btn" class="send-btn-modern" style="width:auto;">Kaydet</button>
             </div>
         </div>
     </div>
@@ -599,30 +609,32 @@
 
         window.toggleReplies = function(id) {
             const container = document.getElementById(`replies-${id}`);
-            const btn = document.getElementById(`btn-${id}`); // Butonu seç
-            const count = btn.getAttribute('data-count');     // Sayıyı al
+            const btn = document.getElementById(`btn-${id}`); 
+            const count = btn.getAttribute('data-count');     
             
             if (container.classList.contains('show')) {
-                // KAPATIRKEN
                 container.classList.remove('show');
                 openRepliesSet.delete(id);
-                // Eski haline döndür
                 btn.innerHTML = `<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${count} yanıtı gör`;
             } else {
-                // AÇARKEN
                 container.classList.add('show');
                 openRepliesSet.add(id);
-                // Gizle yazısı yap
                 btn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Yanıtları gizle`;
             }
         }
 
-// --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
+        // --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
         const mainInput = document.getElementById('main-chat-input');
         const mainSendBtn = document.getElementById('main-send-btn');
-        let cooldownInterval = null; // Sayaç için değişken
+        let cooldownInterval = null; 
 
-        // Enter tuşu desteği
+        // 1. TEXTAREA AUTO RESIZE (Shift+Enter yaptıkça uzar)
+        mainInput.addEventListener('input', function() {
+            this.style.height = 'auto'; // Önce sıfırla
+            this.style.height = (this.style.scrollHeight) + 'px'; // Sonra içeriğe göre uzat
+        });
+
+        // 2. Enter tuşu desteği (Shift+Enter yeni satır, Enter gönderir)
         mainInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); 
@@ -636,7 +648,7 @@
             const content = mainInput.value;
             if(!content.trim()) return;
 
-            // 1. Gönderiliyor Modu
+            // Gönderiliyor Modu
             mainSendBtn.disabled = true;
             mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
@@ -648,22 +660,24 @@
                 });
 
                 if(res.ok) {
-                    // 2. BAŞARILI: Inputu temizle
+                    // BAŞARILI: Temizle
                     mainInput.value = '';
+                    mainInput.style.height = 'auto'; // Boyutu sıfırla
+                    
                     lastMessageTime = Date.now();
-                    lastPostsString = ""; // Ekranı yenilemeye zorla
+                    lastPostsString = ""; 
                     loadMessages();
                     
-                    // 3. SAYAÇ BAŞLAT (3 Saniye)
+                    // SAYAÇ BAŞLAT (3 Saniye Timeout)
                     startButtonCooldown(3);
 
                 } else { 
                     alert("Hata oluştu.");
-                    resetButton(); // Hata varsa hemen aç
+                    resetButton(); 
                 }
             } catch(e) { 
                 alert("Bağlantı hatası."); 
-                resetButton(); // Hata varsa hemen aç
+                resetButton(); 
             } 
         }
 
@@ -671,14 +685,14 @@
         function startButtonCooldown(seconds) {
             let counter = seconds;
             mainSendBtn.disabled = true; 
-            mainSendBtn.innerText = `Paylaş (${counter})`; 
+            mainSendBtn.innerText = `Bekle (${counter})`; 
 
             if (cooldownInterval) clearInterval(cooldownInterval); 
 
             cooldownInterval = setInterval(() => {
                 counter--;
                 if (counter > 0) {
-                    mainSendBtn.innerText = `Paylaş (${counter})`;
+                    mainSendBtn.innerText = `Bekle (${counter})`;
                 } else {
                     clearInterval(cooldownInterval);
                     resetButton();
@@ -686,11 +700,11 @@
             }, 1000);
         }
 
-        // --- BUTONU NORMALE DÖNDÜRME ---
         function resetButton() {
             mainSendBtn.disabled = false;
             mainSendBtn.innerHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>';
         }
+
         // --- DİĞER FONKSİYONLAR ---
         window.openAuthModal = function(type) {
             document.getElementById('auth-screen').classList.add('active');
