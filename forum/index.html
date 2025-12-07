@@ -591,7 +591,7 @@
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i></span>` : '';
 
             return `
-            <div class="message" style="${replyStyle}">
+            <div id="msg-${p.id}" class="message" style="${replyStyle}"> 
                 <div class="msg-left">
                     <div class="msg-avatar">${initial}</div>
                 </div>
@@ -770,9 +770,13 @@
         document.getElementById('close-modal').onclick = () => modal.classList.remove('active');
 
         // GÖNDER BUTONU
+// GÖNDER BUTONU (OTO-SCROLL EKLENDİ)
         document.getElementById('submit-post').onclick = async () => {
             const content = document.getElementById('post-content').value;
-            const parentId = document.getElementById('parent-id-input').value || null;
+            // Input value string olabilir, sayıya çeviriyoruz (veya null)
+            const parentIdVal = document.getElementById('parent-id-input').value;
+            const parentId = parentIdVal ? parseInt(parentIdVal) : null;
+            
             if(!content.trim()) return;
 
             const btn = document.getElementById('submit-post');
@@ -784,12 +788,38 @@
                     body: JSON.stringify({ content: content, parent_id: parentId }),
                     credentials: 'include'
                 });
+                
+                const data = await res.json(); // Backend'den gelen veriyi al (içinde ID var)
+
                 if(res.ok) {
                     document.getElementById('post-content').value = '';
                     modal.classList.remove('active');
-                    loadMessages();
-                } else alert("Hata.");
-            } catch(e) { alert("Sunucu hatası."); }
+
+                    // 1. Eğer bu bir yanıtsa, babasını "Açıklar Listesi"ne ekle
+                    if (parentId) {
+                        openRepliesSet.add(parentId);
+                    }
+
+                    // 2. Mesajları yeniden yükle ve bitmesini bekle
+                    await loadMessages();
+
+                    // 3. Yeni mesaja kaydır (Scroll)
+                    if (data.id) {
+                        const newMsgElement = document.getElementById(`msg-${data.id}`);
+                        if (newMsgElement) {
+                            newMsgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // Opsiyonel: 1 saniyelik bir parlama efekti verelim ki hangisi olduğunu anlasın
+                            newMsgElement.style.transition = "0.5s";
+                            newMsgElement.style.boxShadow = "0 0 20px rgba(16, 185, 129, 0.6)"; // Yeşilimsi parlama
+                            setTimeout(() => {
+                                newMsgElement.style.boxShadow = "none";
+                            }, 1500);
+                        }
+                    }
+
+                } else alert(data.error || "Hata.");
+            } catch(e) { console.error(e); alert("Sunucu hatası."); }
             finally { btn.disabled = false; btn.innerHTML = 'Gönder <i class="fa-solid fa-paper-plane"></i>'; }
         };
 
