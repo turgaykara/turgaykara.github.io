@@ -792,8 +792,8 @@
                         <input type="password" id="password" class="form-input" placeholder="Parola" required>
                         <div style="text-align: right; margin-top: 6px;">
                             <button type="button" id="show-forgot-btn" class="action-btn"
-                                style="color:gray; font-size:12px; background:none; border:none; cursor:pointer;">Şifremi
-                                unuttum?</button>
+                                style="color:gray; font-size:12px; background:none; border:none; cursor:pointer;">*Şifremi
+                                unuttum 🐟</button>
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -807,14 +807,14 @@
             </div>
 
             <div id="forgot-view" class="hidden">
-                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">E-posta adresinizi girin.</p>
+                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">E-posta adresinizi giriniz:</p>
                 <div class="input-group">
                     <input type="email" id="forgot-email" class="form-input" placeholder="E-posta adresi">
                 </div>
                 <button type="button" id="send-reset-btn" class="send-btn-modern" style="width:100%; border-radius:8px;"
                     disabled>Sıfırlama Bağlantısını Gönder!</button>
                 <button type="button" id="back-to-login-btn" class="action-btn"
-                    style="margin-top:10px; color:gray; background:none; border:none; cursor:pointer; width:100%;">Geri
+                    style="margin-top:10px; color:gray; background:none; border:none; cursor:pointer; width:100%;">⭠ Geri
                     Dön</button>
             </div>
             <p id="login-error" style="color:var(--danger); font-size:13px; margin-top:16px; display:none;"></p>
@@ -916,44 +916,78 @@
             const btn = document.getElementById(btnId);
             const errEl = document.getElementById('login-error');
 
+            errEl.style.display = 'none';
+            errEl.innerText = '';
+
+            // 1. Boş alan kontrolü
             if (!email || (!password && endpoint !== 'forgot-password')) {
-                errEl.innerText = "Alanları doldurun."; errEl.style.display = 'block'; return;
-            }
-            if (endpoint === 'register') {
-            if (password.length < 8) {
-                errEl.innerText = "Güvenlik gereği şifre en az 8 karakter olmalıdır.";
+                errEl.innerText = "Lütfen tüm alanları doldurun.";
                 errEl.style.display = 'block';
                 return;
             }
 
-            const specialCharRegex = /[^a-zA-Z0-9]/;
-            if (!specialCharRegex.test(password)) {
-                errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, $, % vb.) içermelidir.";
-                errEl.style.display = 'block';
-                return;
+            // --- GÜVENLİK KONTROLÜ (Sadece Kayıt Olurken) ---
+            if (endpoint === 'register') {
+                // Kural 1: Uzunluk
+                if (password.length < 8) {
+                    errEl.innerText = "Şifre en az 8 karakter olmalıdır.";
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                // Kural 2: Büyük Harf (A-Z)
+                if (!/[A-Z]/.test(password)) {
+                    errEl.innerText = "Şifre en az 1 BÜYÜK harf içermelidir.";
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                // Kural 3: Küçük Harf (a-z)
+                if (!/[a-z]/.test(password)) {
+                    errEl.innerText = "Şifre en az 1 küçük harf içermelidir.";
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                // Kural 4: Özel Karakter (Harf ve sayı dışı her şey)
+                if (!/[^a-zA-Z0-9]/.test(password)) {
+                    errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, _ vb.) içermelidir.";
+                    errEl.style.display = 'block';
+                    return;
+                }
             }
-        }
+            // ----------------------------------------------
+
             if (btn) btn.disabled = true;
 
             try {
                 const res = await fetch(`${API_URL}/${endpoint}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }), credentials: 'include'
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include'
                 });
                 const data = await res.json();
 
                 if (res.ok) {
                     if (endpoint === 'register') {
-                        alert("Kayıt başarılı! E-postana gönderilen aktivasyon bağlantısını onayladıktan sonra giriş yapabilirsiniz.");
+                        alert("Kayıt Başarılı! Şimdi giriş yapabilirsin.");
                         document.getElementById('back-to-login-btn').click();
                     } else if (endpoint === 'login') {
                         checkSession();
-                    } else { alert("İşlem başarılı."); }
+                    } else {
+                        alert("İşlem başarılı.");
+                    }
                 } else {
-                    errEl.innerText = data.error || "Hata."; errEl.style.display = 'block';
+                    errEl.innerText = data.error || "Hata.";
+                    errEl.style.display = 'block';
                 }
-            } catch (e) { errEl.innerText = "Sunucu hatası."; errEl.style.display = 'block'; }
-            finally { if (btn) btn.disabled = false; }
+            } catch (e) {
+                errEl.innerText = "Sunucu hatası.";
+                errEl.style.display = 'block';
+            } finally {
+                if (btn) btn.disabled = false;
+            }
         }
 
         // --- LOAD MESSAGES ---
@@ -966,7 +1000,6 @@
 
                 const currentDataString = JSON.stringify(posts);
                 if (currentDataString === lastPostsString && !activeEditId) {
-                    // !activeEditId: Eğer biri düzenleme yapıyorsa yenileme yapma ki kutu kapanmasın
                     return;
                 }
                 lastPostsString = currentDataString;
@@ -990,8 +1023,6 @@
 
                 roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-                // Eğer düzenleme yapılıyorsa HTML'i komple yenilemek yerine sadece farkları bulmak gerekir
-                // Ama şimdilik basitlik için düzenleme modundaysa yenilemeyi atlıyoruz (yukarıdaki if)
                 if (!activeEditId) {
                     let html = roots.map(root => buildPostHTML(root)).join('');
                     feed.innerHTML = html;
@@ -1040,7 +1071,6 @@
 
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
-            // Edit butonu artık toggleEditMode'u çağırıyor
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
 
             return `
@@ -1084,8 +1114,8 @@
 
         // 1. TEXTAREA AUTO RESIZE
         mainInput.addEventListener('input', function () {
-            this.style.height = 'auto'; // Önce sıfırla
-            this.style.height = (this.style.scrollHeight) + 'px'; // Sonra içeriğe göre uzat
+            this.style.height = 'auto';
+            this.style.height = (this.style.scrollHeight) + 'px';
         });
 
         // 2. Enter tuşu desteği
@@ -1102,7 +1132,6 @@
             const content = mainInput.value;
             if (!content.trim()) return;
 
-            // Gönderiliyor Modu
             mainSendBtn.disabled = true;
             mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
@@ -1281,7 +1310,7 @@
             const msgText = msgRight.querySelector('.msg-text');
             const originalContent = unescapeHTML(msgText.innerHTML);
 
-            msgText.style.display = 'none'; // Metni gizle
+            msgText.style.display = 'none';
 
             const editHTML = `
                 <div id="inline-edit-${id}" class="inline-edit-area">
@@ -1292,7 +1321,6 @@
                     </div>
                 </div>
             `;
-            // Metnin hemen altına ekle (ama gizlenen metnin yerine geçecek)
             msgText.insertAdjacentHTML('afterend', editHTML);
         }
 
@@ -1316,10 +1344,9 @@
                     body: JSON.stringify({ content }), credentials: 'include'
                 });
 
-                // Başarılı olursa:
-                cancelEdit(id); // Edit modunu kapat (bu eski metni açar)
+                cancelEdit(id);
                 lastPostsString = "";
-                loadMessages(); // Yeni metni sunucudan çek
+                loadMessages();
             } catch (e) { alert("Hata"); }
         }
 
