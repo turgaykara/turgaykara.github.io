@@ -75,58 +75,70 @@
         .channel-info { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .channel-icon { color: var(--text-muted); font-size: 18px; }
 
-        /* --- MODERN GÖNDERİ ALANI (COMPOSE) --- */
+        /* --- COMPOSE AREA (ARTIK MESAJ KARTI GİBİ) --- */
         .compose-area {
             padding: 24px 32px;
-            background: linear-gradient(to bottom, rgba(9,9,11,1) 0%, rgba(9,9,11,0.8) 100%);
+            /* Arka planı transparan yaptım ki kart öne çıksın */
+            background: transparent; 
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
             z-index: 20;
         }
 
         .compose-wrapper {
-            background: #121215;
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            /* Mesaj kartı ile AYNI stil */
+            background-color: #050505; 
+            border: 1px solid rgba(139, 92, 246, 0.15); 
+            border-radius: 8px; 
             padding: 16px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             display: flex; flex-direction: column; gap: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            overflow: hidden; /* Çizgi taşmasın */
         }
-        
-        /* Inputa tıklayınca havalı bir efekt */
+
+        /* Sol Çizgi (Mesaj kartı ile aynı) */
+        .compose-wrapper::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+            background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
+            opacity: 0.6; transition: 0.3s;
+        }
+
+        /* Odaklanınca Parlama (Mesaj kartı hover efekti gibi) */
         .compose-wrapper:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 1px var(--primary), 0 10px 30px rgba(139, 92, 246, 0.1);
-            background: #18181b;
+            border-color: rgba(139, 92, 246, 0.6); 
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05); 
             transform: translateY(-2px);
         }
+        .compose-wrapper:focus-within::before { opacity: 1; box-shadow: 0 0 10px #8b5cf6; }
 
         .compose-input {
             width: 100%; background: transparent; border: none;
-            color: white; font-family: inherit; resize: none;
-            font-size: 15px; min-height: 40px;
+            color: #d4d4d8; font-family: inherit; resize: none;
+            font-size: 14px; min-height: 40px; font-weight: 300;
+            margin-left: 10px; /* Çizgiden uzaklaşsın */
         }
-        .compose-input::placeholder { color: #52525b; font-weight: 400; }
+        .compose-input::placeholder { color: #52525b; }
 
         .compose-footer {
             display: flex; justify-content: space-between; align-items: center;
-            padding-top: 10px; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.03);
+            padding-top: 10px; margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.1);
+            margin-left: 10px;
         }
 
         .action-icons i {
-            color: #52525b; margin-right: 15px; cursor: pointer; transition: 0.2s; font-size: 16px;
+            color: #52525b; margin-right: 15px; cursor: pointer; transition: 0.2s; font-size: 14px;
         }
         .action-icons i:hover { color: var(--primary); transform: scale(1.1); }
 
         .send-btn-modern {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 8px 24px; border-radius: 20px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            transition: 0.3s; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            color: white; border: none; padding: 6px 20px; border-radius: 6px;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            transition: 0.3s; opacity: 0.8;
         }
-        .send-btn-modern:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
-        .send-btn-modern:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(100%); }
+        .send-btn-modern:hover { opacity: 1; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+        .send-btn-modern:disabled { opacity: 0.4; cursor: not-allowed; }
 
 
         /* --- AKIŞ ALANI --- */
@@ -136,7 +148,7 @@
         .chat-area::-webkit-scrollbar { width: 6px; }
         .chat-area::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
 
-        /* --- MESSAGES (ESKİ SEVDİĞİN KART TASARIMI - RETRO) --- */
+        /* --- MESSAGES --- */
         .message-wrapper { margin-bottom: 24px; padding: 0 10px; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -145,7 +157,7 @@
             background-color: #050505; 
             border: 1px solid rgba(139, 92, 246, 0.15); 
             border-radius: 8px; 
-            max-width: 1000px; /* Genişlik */
+            max-width: 1000px; 
             margin: 0 auto; 
             box-shadow: 0 10px 40px -10px rgba(0,0,0,1);
             overflow: hidden;
@@ -153,14 +165,12 @@
             position: relative;
         }
 
-        /* Hoverda Glow Efekti */
         .message:hover {
             transform: translateY(-2px);
             border-color: rgba(139, 92, 246, 0.6); 
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05); 
         }
 
-        /* Soldaki Çizgi */
         .message::before {
             content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
             background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
@@ -215,7 +225,6 @@
         .action-delete:hover { color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
         .action-reply:hover { color: var(--success); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
 
-        /* Yanıt Butonu */
         .view-replies-btn {
             font-size: 12px; color: var(--primary); cursor: pointer; 
             margin: 5px 0 0 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
@@ -264,7 +273,6 @@
         .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2); }
         .form-textarea { min-height: 120px; resize: vertical; }
 
-        /* --- AUTH SCREEN --- */
         #auth-screen { z-index: 200; background: rgba(9, 9, 11, 0.9); }
         .auth-container { 
             width: 400px; text-align: center; background: #18181b;
@@ -274,7 +282,6 @@
         .auth-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
         .hidden { display: none !important; }
 
-        /* --- MİSAFİR BARI --- */
         .guest-bar {
             position: fixed; bottom: 30px; left: 50%; width: 90%; max-width: 800px;
             background: rgba(24, 24, 27, 0.95); border: 1px solid var(--primary);
@@ -427,8 +434,6 @@
         const MESSAGE_COOLDOWN = 5; 
         let lastMessageTime = 0;    
         let openRepliesSet = new Set(); 
-        
-        // TİTREME ENGELLEYİCİ
         let lastPostsString = ""; 
 
         // --- AUTH & SESSION ---
@@ -485,7 +490,7 @@
             finally { if(btn) btn.disabled = false; }
         }
 
-        // --- LOAD MESSAGES (TİTREMEZ & YENİDEN ESKİYE) ---
+        // --- LOAD MESSAGES ---
         async function loadMessages() {
             try {
                 const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
@@ -495,7 +500,7 @@
 
                 const currentDataString = JSON.stringify(posts);
                 if (currentDataString === lastPostsString) {
-                    return; // DEĞİŞİKLİK YOK
+                    return; 
                 }
                 lastPostsString = currentDataString;
 
@@ -516,13 +521,11 @@
                     }
                 });
 
-                // EN YENİ EN ÜSTTE
                 roots.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
                 let html = roots.map(root => buildPostHTML(root)).join('');
                 feed.innerHTML = html;
 
-                // Açık yanıtları geri yükle
                 openRepliesSet.forEach(id => {
                     const container = document.getElementById(`replies-${id}`);
                     if (container) container.classList.add('show');
@@ -536,7 +539,6 @@
             html += renderSingleMessage(post, post.parent_id !== null);
 
             if (post.children.length > 0) {
-                // Yanıtlar Eskiden Yeniye (Konuşma takibi için)
                 post.children.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
                 
                 html += `
@@ -556,7 +558,7 @@
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
             
-            const replyBtn = `<span class="action-btn" onclick="openReplyModal(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
+            const replyBtn = `<span class="action-btn action-reply" onclick="openReplyModal(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i></span>` : '';
 
@@ -589,9 +591,17 @@
             }
         }
 
-        // --- GÖNDERME İŞLEMİ (ÜST MODERN BAR) ---
+        // --- GÖNDERME (ENTER TUŞU DESTEĞİ) ---
         const mainInput = document.getElementById('main-chat-input');
         const mainSendBtn = document.getElementById('main-send-btn');
+
+        // YENİ: Enter tuşu ile gönderme
+        mainInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // Alt satıra geçmeyi engelle
+                mainSendBtn.click(); // Gönder butonunu tetikle
+            }
+        });
 
         mainSendBtn.onclick = async () => {
             if(isGuest) { window.openAuthModal('login'); return; }
@@ -619,13 +629,14 @@
                 if(res.ok) {
                     mainInput.value = '';
                     lastMessageTime = Date.now();
-                    lastPostsString = ""; // Zorla yenile
+                    lastPostsString = ""; 
                     loadMessages();
                 } else { alert("Hata."); }
             } catch(e) { alert("Bağlantı hatası."); } 
             finally {
                 mainSendBtn.disabled = false;
                 mainSendBtn.innerHTML = originalHTML;
+                mainInput.focus();
             }
         }
 
@@ -689,7 +700,7 @@
             try {
                 const res = await fetch(`${API_URL}/posts/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' });
                 if (res.ok) {
-                    lastPostsString = ""; // Zorla yenile
+                    lastPostsString = ""; 
                     loadMessages(); 
                 }
             } catch (e) { alert("Hata."); }
@@ -712,7 +723,7 @@
                     body: JSON.stringify({ content }), credentials: 'include'
                 });
                 editModal.classList.remove('active');
-                lastPostsString = ""; // Zorla yenile
+                lastPostsString = "";
                 loadMessages();
             } catch(e) { alert("Hata"); }
         }
