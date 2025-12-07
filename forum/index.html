@@ -1072,12 +1072,17 @@
         }
 
         function renderSingleMessage(p, isReply) {
+            // --- DEBUG BAŞLANGIÇ (Veriyi kontrol ediyoruz) ---
+            if (p.is_mine) { console.log("Mesaj ID:", p.id, "Veriler:", p); }
+            // ------------------------------------------------
+            
             const initial = (p.author_email || 'A').charAt(0).toUpperCase();
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
 
-            // DÜZENLEME KONTROLÜ (YENİ EKLENEN KISIM)
+            // DÜZENLEME KONTROLÜ
             let editedHtml = "";
+            // Şimdilik sadece updated_at var mı diye bakıyoruz
             if (p.updated_at && p.updated_at !== p.created_at) {
                 const editDate = formatTime(p.updated_at);
                 editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
@@ -1103,22 +1108,6 @@
                     </div>
                 </div>
             </div>`;
-        }
-
-        window.toggleReplies = function (id) {
-            const container = document.getElementById(`replies-${id}`);
-            const btn = document.getElementById(`btn-${id}`);
-            const count = btn.getAttribute('data-count');
-
-            if (container.classList.contains('show')) {
-                container.classList.remove('show');
-                openRepliesSet.delete(id);
-                btn.innerHTML = `<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${count} yanıtı gör`;
-            } else {
-                container.classList.add('show');
-                openRepliesSet.add(id);
-                btn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Yanıtları gizle`;
-            }
         }
 
         // --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
