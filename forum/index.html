@@ -902,12 +902,11 @@
                 const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
                 const data = await res.json();
                 if (data.is_logged_in) {
-                    isGuest = false;
-                    document.getElementById('auth-screen').classList.remove('active');
-                    document.getElementById('guest-bar').classList.remove('active');
-                    const username = data.user.email ? data.user.email.split('@')[0] : "Anonim";
-                    document.getElementById('user-name').innerText = username;
-                    document.getElementById('avatar-initial').innerText = (username || "U").charAt(0).toUpperCase();
+                    // Backend'den gelen anonim ismi doğrudan kullanıyoruz
+                    const displayName = data.user.anonymous_name || "Hacker"; // Güvenli fallback
+                    
+                    document.getElementById('user-name').innerText = displayName;
+                    document.getElementById('avatar-initial').innerText = (displayName || "U").charAt(0).toUpperCase();
                 } else {
                     isGuest = true;
                     document.getElementById('guest-bar').classList.add('active');
