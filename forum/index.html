@@ -905,8 +905,9 @@
                     isGuest = false;
                     document.getElementById('auth-screen').classList.remove('active');
                     document.getElementById('guest-bar').classList.remove('active');
-                    document.getElementById('user-name').innerText = data.user.username || "Hacker";
-                    document.getElementById('avatar-initial').innerText = (data.user.username || "U").charAt(0).toUpperCase();
+                    const username = data.user.email ? data.user.email.split('@')[0] : "Anonim";
+                    document.getElementById('user-name').innerText = username;
+                    document.getElementById('avatar-initial').innerText = (username || "U").charAt(0).toUpperCase();
                 } else {
                     isGuest = true;
                     document.getElementById('guest-bar').classList.add('active');
