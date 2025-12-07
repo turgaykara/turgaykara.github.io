@@ -902,11 +902,11 @@
                 const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
                 const data = await res.json();
                 if (data.is_logged_in) {
-                    // Backend'den gelen anonim ismi doğrudan kullanıyoruz
-                    const displayName = data.user.anonymous_name || "Hacker"; // Güvenli fallback
-                    
-                    document.getElementById('user-name').innerText = displayName;
-                    document.getElementById('avatar-initial').innerText = (displayName || "U").charAt(0).toUpperCase();
+                    isGuest = false;
+                    document.getElementById('auth-screen').classList.remove('active');
+                    document.getElementById('guest-bar').classList.remove('active');
+                    document.getElementById('user-name').innerText = data.user.username || "Hacker";
+                    document.getElementById('avatar-initial').innerText = (data.user.username || "U").charAt(0).toUpperCase();
                 } else {
                     isGuest = true;
                     document.getElementById('guest-bar').classList.add('active');
@@ -979,7 +979,7 @@
 
                 if (res.ok) {
                     if (endpoint === 'register') {
-                        alert("Kayıt başarılı! E-postana gönderilen aktivasyon bağlantısını onayladıktan sonra giriş yapabilirsin.");
+                        alert("Kayıt başarılı! E-postana gönderilen aktivasyon bağlantısını onayladıktan sonra giriş yapabilirsiniz.");
                         document.getElementById('back-to-login-btn').click();
                     } else if (endpoint === 'login') {
                         checkSession();
