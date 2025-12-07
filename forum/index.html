@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -936,9 +935,9 @@
         }
 
         async function handleAuth(endpoint, btnId) {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password-input').value; // ARTIK password-input ID'sini kullanıyoruz
-            const btn = document.getElementById(btnId);
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById(btnId);
             const errEl = document.getElementById('login-error');
 
             errEl.style.display = 'none';
@@ -1400,47 +1399,6 @@
                         btn.innerText = `Bekle (${newRem})`;
                     }
                 }, 1000);
-            }
-        }
-        // --- YENİ: ŞİFRE GÖSTER/GİZLE İŞLEVİ ---
-        document.getElementById('password-toggle-btn').onclick = function() {
-            const passwordInput = document.getElementById('password-input');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            
-            // Göz ikonunu değiştir
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        };
-
-        // --- YENİ: KAYIP ID DÜZELTMESİ ---
-        // 1. handleAuth fonksiyonu password'u 'password' ID'sinden çekiyordu, bunu 'password-input' olarak düzeltmeliyiz.
-
-        const loginPasswordInput = document.getElementById('password-input');
-        const loginEmailInput = document.getElementById('email');
-
-        if (loginEmailInput && loginPasswordInput) {
-            loginEmailInput.addEventListener('input', updateMonkeyVisual);
-            loginPasswordInput.addEventListener('input', updateMonkeyVisual);
-        }
-
-        // Maymun Görsel Animasyonu (Göz Takibi)
-        function updateMonkeyVisual() {
-            // Bu kısım normalde bir resim veya SVG ile yapılmalıdır.
-            // Şimdilik sadece konsola veya bir alana çıktı verelim.
-            const email = loginEmailInput.value;
-            const password = loginPasswordInput.value;
-            const loginButton = document.getElementById('login-btn');
-            const authTitle = document.getElementById('auth-title');
-
-            if (email.length > 5 && password.length > 0) {
-                // Maymunun Gözleri Açık/Logine Bakıyor (Görseli hayal et/ekle)
-                loginButton.style.boxShadow = '0 0 15px rgba(139, 92, 246, 0.8)';
-                authTitle.innerText = "👀 Seni görüyorum!";
-            } else {
-                // Maymunun Gözleri Kapalı
-                loginButton.style.boxShadow = 'none';
-                authTitle.innerText = "Hoş Geldiniz";
             }
         }
     </script>
