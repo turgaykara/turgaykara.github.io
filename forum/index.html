@@ -94,8 +94,8 @@
             overflow: hidden; 
 
             /* İŞTE BURASI: KUTUYU DARALTIP ORTALIYORUZ */
-            max-width: 700px; 
-            margin: 0 auto; 
+            max-width: 1000px; /* 700px yerine 1000px yaptık */
+            margin: 0 auto;
         }
 
         /* Sol Çizgi */
@@ -130,11 +130,13 @@
         /* Buton ve İkonların Durduğu Footer */
         .compose-footer {
             display: flex; 
-            justify-content: center; /* Butonu ortala */
+            /* DEĞİŞECEK KISIM BURASI: */
+            justify-content: flex-end; /* Butonu sağa iter */
+            
             align-items: center;
             padding-top: 10px; margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.1);
             margin-left: 10px;
-            position: relative; /* İkonları sola sabitlemek için */
+            position: relative; 
         }
 
         .action-icons {
