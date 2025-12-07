@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dark Security | Forum</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="pp2.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -15,16 +14,13 @@
             --bg-sidebar: #18181b;
             --bg-card: #27272a;
             --bg-input: #3f3f46;
-
             --primary: #8b5cf6;
             /* Mor */
             --primary-hover: #7c3aed;
             --secondary: #06b6d4;
             /* Turkuaz */
-
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
-
             --border: rgba(255, 255, 255, 0.08);
             --danger: #ef4444;
             --success: #10b981;
@@ -76,6 +72,7 @@
         .brand span {
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -196,7 +193,7 @@
             font-size: 18px;
         }
 
-        /* --- COMPOSE AREA (Mesaj Yazma Alanı) --- */
+        /* --- COMPOSE AREA --- */
         .compose-area {
             padding: 24px 32px;
             background: transparent;
@@ -663,11 +660,6 @@
             box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
         }
 
-        .form-textarea {
-            min-height: 120px;
-            resize: none;
-        }
-
         #auth-screen {
             z-index: 200;
             background: rgba(9, 9, 11, 0.9);
@@ -744,8 +736,9 @@
             }
         }
 
-        /* --- INLINE REPLY (SATIR İÇİ YANIT) --- */
-        .inline-reply-area {
+        /* --- INLINE REPLY & EDIT STYLES --- */
+        .inline-reply-area,
+        .inline-edit-area {
             margin-top: 15px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(139, 92, 246, 0.2);
@@ -772,9 +765,9 @@
         <div class="guest-bar-text">🔒 Bu topluluğun tüm özelliklerini kullanmak için aramıza katıl.</div>
         <div style="display:flex; gap:10px;">
             <button onclick="openAuthModal('login')" class="send-btn-modern"
-                style="width:auto; padding:6px 20px; background:transparent; border:1px solid #555;">Giriş</button>
+                style="width:auto; padding:12px 24px; background:transparent; border:1px solid #555;">Giriş</button>
             <button onclick="openAuthModal('register')" class="send-btn-modern"
-                style="width:auto; padding:6px 20px;">Kayıt Ol</button>
+                style="width:auto; padding:12px 24px;">Kayıt Ol</button>
         </div>
     </div>
 
@@ -784,7 +777,7 @@
                 onclick="closeAuthModal()">
                 <i class="fa-solid fa-xmark fa-lg"></i>
             </div>
-            <img src="pp2.png" width="80" style="border-radius:10%">
+            <img src="pp2.png" class="auth-logo">
             <h2 id="auth-title" style="margin-bottom:8px; font-size:24px;">Hoş Geldiniz</h2>
             <p id="auth-desc" style="color:var(--text-muted); margin-bottom:32px; font-size:14px;">Topluluğa katılmak
                 için giriş yapın.</p>
@@ -885,19 +878,6 @@
         </div>
     </div>
 
-    <div id="edit-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h3 style="margin:0 0 20px 0;">Düzenle</h3>
-            <textarea id="edit-content" class="form-input form-textarea" maxlength="500"></textarea>
-            <input type="hidden" id="edit-post-id">
-            <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
-                <button id="close-edit-modal" class="send-btn-modern"
-                    style="width:auto; background:transparent; border:1px solid #555;">İptal</button>
-                <button id="save-edit-btn" class="send-btn-modern" style="width:auto;">Kaydet</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
         let isGuest = true;
@@ -970,7 +950,8 @@
                 const feed = document.getElementById('chat-feed');
 
                 const currentDataString = JSON.stringify(posts);
-                if (currentDataString === lastPostsString) {
+                if (currentDataString === lastPostsString && !activeEditId) {
+                    // !activeEditId: Eğer biri düzenleme yapıyorsa yenileme yapma ki kutu kapanmasın
                     return;
                 }
                 lastPostsString = currentDataString;
@@ -994,13 +975,17 @@
 
                 roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-                let html = roots.map(root => buildPostHTML(root)).join('');
-                feed.innerHTML = html;
+                // Eğer düzenleme yapılıyorsa HTML'i komple yenilemek yerine sadece farkları bulmak gerekir
+                // Ama şimdilik basitlik için düzenleme modundaysa yenilemeyi atlıyoruz (yukarıdaki if)
+                if (!activeEditId) {
+                    let html = roots.map(root => buildPostHTML(root)).join('');
+                    feed.innerHTML = html;
 
-                openRepliesSet.forEach(id => {
-                    const container = document.getElementById(`replies-${id}`);
-                    if (container) container.classList.add('show');
-                });
+                    openRepliesSet.forEach(id => {
+                        const container = document.getElementById(`replies-${id}`);
+                        if (container) container.classList.add('show');
+                    });
+                }
 
             } catch (e) { console.error(e); }
         }
@@ -1012,25 +997,18 @@
             if (post.children.length > 0) {
                 post.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-                // --- DÜZELTME BAŞLANGICI ---
-                // Bu postun yanıtları şu an açıklar listesinde mi?
                 const isOpen = openRepliesSet.has(post.id);
-
-                // Duruma göre ikon ve yazı belirle
                 const icon = isOpen
                     ? '<i class="fa-solid fa-chevron-up"></i>'
                     : '<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i>';
-
                 const text = isOpen
                     ? 'Yanıtları gizle'
                     : `${post.children.length} yanıtı gör`;
 
-                // Buton HTML'ini buna göre oluştur
                 html += `
                 <div id="btn-${post.id}" class="view-replies-btn" data-count="${post.children.length}" onclick="toggleReplies(${post.id})">
                     ${icon} ${text}
                 </div>`;
-                // --- DÜZELTME BİTİŞİ ---
 
                 html += `<div id="replies-${post.id}" class="replies-container">`;
                 post.children.forEach(child => { html += buildPostHTML(child); });
@@ -1047,7 +1025,8 @@
 
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
-            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i></span>` : '';
+            // Edit butonu artık toggleEditMode'u çağırıyor
+            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
 
             return `
             <div id="msg-${p.id}" class="message"> 
@@ -1122,13 +1101,12 @@
                 if (res.ok) {
                     // BAŞARILI: Temizle
                     mainInput.value = '';
-                    mainInput.style.height = 'auto'; // Boyutu sıfırla
+                    mainInput.style.height = 'auto';
 
                     lastMessageTime = Date.now();
                     lastPostsString = "";
                     loadMessages();
 
-                    // SAYAÇ BAŞLAT (3 Saniye Timeout)
                     startButtonCooldown(3);
 
                 } else {
@@ -1195,28 +1173,6 @@
             } catch (e) { alert("Hata."); }
         }
 
-        const editModal = document.getElementById('edit-modal');
-        window.openEditModal = function (id, content) {
-            document.getElementById('edit-content').value = content;
-            document.getElementById('edit-post-id').value = id;
-            editModal.classList.add('active');
-        }
-        document.getElementById('close-edit-modal').onclick = () => editModal.classList.remove('active');
-        document.getElementById('save-edit-btn').onclick = async () => {
-            const id = document.getElementById('edit-post-id').value;
-            const content = document.getElementById('edit-content').value;
-            if (!content.trim()) return;
-            try {
-                await fetch(`${API_URL}/posts/${id}`, {
-                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content }), credentials: 'include'
-                });
-                editModal.classList.remove('active');
-                lastPostsString = "";
-                loadMessages();
-            } catch (e) { alert("Hata"); }
-        }
-
         const formatTime = (dateStr) => {
             let date = new Date(dateStr); date.setHours(date.getHours() + 3);
             const now = new Date(); const diff = (now - date) / 1000;
@@ -1226,38 +1182,28 @@
             return date.toLocaleDateString('tr-TR');
         };
         const escapeHTML = (str) => str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+        const unescapeHTML = (str) => str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"');
 
         checkSession();
         setInterval(loadMessages, POLL_INTERVAL);
 
         // --- YENİ: SATIR İÇİ YANIT SİSTEMİ ---
-        let activeReplyId = null; // Hangi mesajda kutu açık?
+        let activeReplyId = null;
 
-        // 1. Kutuyu Aç/Kapat Fonksiyonu
         window.toggleReplyBox = function (id, authorName) {
             if (isGuest) { window.openAuthModal('login'); return; }
-
-            // Eğer zaten bu mesajda kutu açıksa, kapat
-            if (activeReplyId === id) {
-                closeReplyBox();
-                return;
-            }
-
-            // Başka bir yerde açıksa, önce onu kapat
-            if (activeReplyId !== null) {
-                closeReplyBox();
-            }
+            if (activeReplyId === id) { closeReplyBox(); return; }
+            if (activeReplyId !== null) { closeReplyBox(); }
 
             activeReplyId = id;
             const messageEl = document.getElementById(`msg-${id}`).querySelector('.msg-right');
 
-            // HTML'i oluştur
             const replyHTML = `
                 <div id="inline-reply-${id}" class="inline-reply-area">
                     <div style="font-size:12px; color:var(--primary); margin-bottom:5px;">
                         <i class="fa-solid fa-share"></i> @${authorName} kullanıcısına yanıt veriyorsun
                     </div>
-                    <textarea id="inline-input-${id}" class="form-input form-textarea" 
+                    <textarea id="inline-input-${id}" class="form-input" 
                         placeholder="Yanıtını buraya yaz..." maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;"></textarea>
                     <div class="inline-footer">
                         <button onclick="closeReplyBox()" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
@@ -1265,23 +1211,12 @@
                     </div>
                 </div>
             `;
-
-            // Kutuyu mesajın içine (en sona) ekle
             messageEl.insertAdjacentHTML('beforeend', replyHTML);
-
-            // Otomatik odaklan ve Auto-Resize özelliğini ekle
             const textarea = document.getElementById(`inline-input-${id}`);
             textarea.focus();
-            textarea.addEventListener('input', function () {
-                this.style.height = 'auto';
-                this.style.height = (this.style.scrollHeight) + 'px';
-            });
-
-            // Eğer cooldown varsa butonu pasif başlat
             checkCooldownState(id);
         }
 
-        // 2. Kutuyu Kapatma Fonksiyonu
         window.closeReplyBox = function () {
             if (activeReplyId) {
                 const box = document.getElementById(`inline-reply-${activeReplyId}`);
@@ -1290,16 +1225,13 @@
             }
         }
 
-        // 3. Yanıtı Gönderme Fonksiyonu
         window.submitInlineReply = async function (parentId) {
             const input = document.getElementById(`inline-input-${parentId}`);
             const btn = document.getElementById(`btn-reply-${parentId}`);
             const content = input.value;
 
             if (!content.trim()) return;
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
             try {
                 const res = await fetch(`${API_URL}/posts`, {
@@ -1307,19 +1239,11 @@
                     body: JSON.stringify({ content: content, parent_id: parentId }),
                     credentials: 'include'
                 });
-
                 if (res.ok) {
-                    // BAŞARILI: Kutuyu hemen kapat
                     closeReplyBox();
-
-                    // Listeyi yenile
                     if (parentId) openRepliesSet.add(parseInt(parentId));
-                    lastPostsString = "";
-                    loadMessages();
-
-                    // Sayacı arka planda başlat (Global Cooldown)
+                    lastPostsString = ""; loadMessages();
                     startGlobalReplyCooldown();
-
                 } else {
                     alert("Hata oluştu.");
                     btn.disabled = false; btn.innerText = "Yanıtla";
@@ -1330,31 +1254,74 @@
             }
         }
 
-        // --- COOLDOWN YÖNETİMİ (GLOBAL) ---
-        let globalCooldownEnd = 0;
+        // --- YENİ: SATIR İÇİ DÜZENLEME SİSTEMİ ---
+        let activeEditId = null;
 
-        function startGlobalReplyCooldown() {
-            // Şu andan itibaren 3 saniye yasak
-            globalCooldownEnd = Date.now() + 3000;
+        window.toggleEditMode = function (id) {
+            if (activeEditId && activeEditId !== id) { cancelEdit(activeEditId); }
+            if (activeEditId === id) { cancelEdit(id); return; }
+
+            activeEditId = id;
+            const msgRight = document.getElementById(`msg-${id}`).querySelector('.msg-right');
+            const msgText = msgRight.querySelector('.msg-text');
+            const originalContent = unescapeHTML(msgText.innerHTML);
+
+            msgText.style.display = 'none'; // Metni gizle
+
+            const editHTML = `
+                <div id="inline-edit-${id}" class="inline-edit-area">
+                    <textarea id="edit-input-${id}" class="form-input" maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;">${originalContent}</textarea>
+                    <div class="inline-footer">
+                        <button onclick="cancelEdit(${id})" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
+                        <button onclick="saveEdit(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Kaydet</button>
+                    </div>
+                </div>
+            `;
+            // Metnin hemen altına ekle (ama gizlenen metnin yerine geçecek)
+            msgText.insertAdjacentHTML('afterend', editHTML);
         }
 
-        function checkCooldownState(id) {
-            // Kutu açıldığında ceza süresi bitmemişse butonu ayarla
-            const remaining = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
+        window.cancelEdit = function (id) {
+            const editBox = document.getElementById(`inline-edit-${id}`);
+            if (editBox) editBox.remove();
 
+            const msgText = document.getElementById(`msg-${id}`).querySelector('.msg-right .msg-text');
+            if (msgText) msgText.style.display = 'block';
+
+            activeEditId = null;
+        }
+
+        window.saveEdit = async function (id) {
+            const content = document.getElementById(`edit-input-${id}`).value;
+            if (!content.trim()) return;
+
+            try {
+                await fetch(`${API_URL}/posts/${id}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content }), credentials: 'include'
+                });
+
+                // Başarılı olursa:
+                cancelEdit(id); // Edit modunu kapat (bu eski metni açar)
+                lastPostsString = "";
+                loadMessages(); // Yeni metni sunucudan çek
+            } catch (e) { alert("Hata"); }
+        }
+
+        // --- COOLDOWN YÖNETİMİ (GLOBAL) ---
+        let globalCooldownEnd = 0;
+        function startGlobalReplyCooldown() { globalCooldownEnd = Date.now() + 3000; }
+        function checkCooldownState(id) {
+            const remaining = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
             if (remaining > 0) {
                 const btn = document.getElementById(`btn-reply-${id}`);
                 if (!btn) return;
-
-                btn.disabled = true;
-                btn.innerText = `Bekle (${remaining})`;
-
+                btn.disabled = true; btn.innerText = `Bekle (${remaining})`;
                 const interval = setInterval(() => {
                     const newRem = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
                     if (newRem <= 0) {
                         clearInterval(interval);
-                        btn.disabled = false;
-                        btn.innerText = "Yanıtla";
+                        btn.disabled = false; btn.innerText = "Yanıtla";
                     } else {
                         btn.innerText = `Bekle (${newRem})`;
                     }
@@ -1363,5 +1330,4 @@
         }
     </script>
 </body>
-
 </html>
