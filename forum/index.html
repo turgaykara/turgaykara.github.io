@@ -115,7 +115,7 @@
         .compose-input {
             width: 100%; background: transparent; border: none;
             color: #d4d4d8; font-family: inherit; resize: none;
-            font-size: 14px; min-height: 60px; font-weight: 300;
+            font-size: 14px; min-height: 60px; font-weight: 200;
             margin-left: 10px; /* Çizgiden uzaklaşsın */
         }
         .compose-input::placeholder { color: #52525b; }
@@ -315,58 +315,6 @@
             .guest-bar { flex-direction: column; padding: 20px; bottom: 20px; gap: 15px; text-align: center; }
             .guest-bar-text { white-space: normal; }
         }
-.chat-wrapper {
-    width: 100%;
-    max-width: 600px; /* İsteğe bağlı genişlik */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Butonu yatayda ortalar */
-    gap: 10px;
-}
-
-textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background-color: #000;
-    color: #0f0; /* Hacker yeşili, temana uygun */
-    resize: none; /* Kullanıcının elle büyütmesini engeller */
-    overflow: hidden; /* Scrollbar'ı gizler */
-    min-height: 40px;
-    line-height: 1.5;
-    font-family: monospace;
-}
-
-/* Chrome, Safari, Opera için Scrollbar'ı tamamen yok etme */
-textarea::-webkit-scrollbar {
-    display: none;
-}
-
-
-#sendBtn {
-    /* Butonu daha kısa yapalım */
-    width: 150px; 
-    padding: 10px;
-    background-color: #d32f2f; /* Kırmızı tonu */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s, opacity 0.3s;
-}
-
-#sendBtn:hover {
-    background-color: #b71c1c;
-}
-
-/* Timeout (bekleme) sırasındaki sönük stil */
-#sendBtn:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
     </style>
 </head>
 <body>
@@ -844,46 +792,5 @@ textarea::-webkit-scrollbar {
         checkSession();
         setInterval(loadMessages, POLL_INTERVAL);
     </script>
-    const textarea = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-
-    // Kutunun yazdıkça aşağı uzaması kodu
-    textarea.addEventListener('input', function() {
-        this.style.height = 'auto'; 
-        this.style.height = (this.style.scrollHeight) + 'px'; 
-    });
-
-    // Mesaj gönderme ve Timeout (Zamanlayıcı) kodu
-    function sendMessage() {
-        if (sendBtn.disabled) return; // Buton kilitliyse dur
-
-        const message = textarea.value.trim();
-        
-        if (message) {
-            // --- Mesaj gönderme işlemleri buraya (Fetch/Ajax vs) ---
-            console.log("Gönderildi: " + message);
-
-            textarea.value = ''; // Kutuyu temizle
-            textarea.style.height = 'auto'; // Boyutu sıfırla
-
-            // Butonu kilitle ve rengini değiştir
-            sendBtn.disabled = true;
-            sendBtn.innerText = "BEKLE..."; 
-            
-            // 3 Saniye sonra kilidi aç
-            setTimeout(() => {
-                sendBtn.disabled = false;
-                sendBtn.innerText = "GÖNDER";
-            }, 3000); 
-        }
-    }
-
-    // Shift+Enter ile alt satır, sadece Enter ile gönderme
-    textarea.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); 
-            sendMessage();
-        }
-    });
 </body>
 </html>
