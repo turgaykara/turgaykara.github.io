@@ -92,13 +92,10 @@
             position: relative;
             display: flex; flex-direction: column; gap: 10px;
             overflow: hidden; 
-
-            /* İŞTE BURASI: KUTUYU DARALTIP ORTALIYORUZ */
-            max-width: 1000px; /* 700px yerine 1000px yaptık */
+            max-width: 1000px; 
             margin: 0 auto;
         }
 
-        /* Sol Çizgi */
         .compose-wrapper::before {
             content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
             background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
@@ -117,42 +114,31 @@
             color: #d4d4d8; font-family: inherit; 
             font-size: 14px; min-height: 40px; font-weight: 300;
             margin-left: 10px;
-            /* Scrollbar Gizleme ve Auto Resize için */
             resize: none; 
             overflow-y: auto;
             line-height: 1.5;
         }
         .compose-input::placeholder { color: #52525b; }
-
-        /* Scrollbar Gizleme (Chrome, Safari) */
         .compose-input::-webkit-scrollbar { display: none; }
 
-        /* Buton ve İkonların Durduğu Footer */
         .compose-footer {
             display: flex; 
-            /* DEĞİŞECEK KISIM BURASI: */
-            justify-content: flex-end; /* Butonu sağa iter */
-            
+            justify-content: flex-end; 
             align-items: center;
             padding-top: 10px; margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.1);
             margin-left: 10px;
             position: relative; 
         }
 
-        .action-icons {
-            position: absolute; left: 0; /* İkonları sola çivile */
-        }
-        .action-icons i {
-            color: #52525b; margin-right: 15px; cursor: pointer; transition: 0.2s; font-size: 14px;
-        }
+        .action-icons { position: absolute; left: 0; }
+        .action-icons i { color: #52525b; margin-right: 15px; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .action-icons i:hover { color: var(--primary); transform: scale(1.1); }
 
-        /* GÖNDER BUTONU TASARIMI */
         .send-btn-modern {
             background-color: var(--primary);
             color: white; border: none; 
-            padding: 8px 0; /* İç boşluk */
-            width: 150px; /* BUTON KISA */
+            padding: 8px 0; 
+            width: 150px; 
             border-radius: 6px;
             font-size: 12px; font-weight: 600; cursor: pointer;
             transition: 0.3s; opacity: 0.8;
@@ -160,7 +146,6 @@
         }
         .send-btn-modern:hover { opacity: 1; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
         .send-btn-modern:disabled { opacity: 0.4; cursor: not-allowed; background: #333; }
-
 
         /* --- AKIŞ ALANI --- */
         .chat-area { 
@@ -233,12 +218,9 @@
             font-size: 14px; 
             line-height: 1.7; 
             color: #d4d4d8; 
-            
-            /* ÖNEMLİ KISIM: */
-            white-space: pre-wrap;      /* Enter boşluklarını korur ve satır sonuna gelince alta atar */
-            word-break: break-word;     /* Çok uzun tek parça kelime varsa kırar */
-            overflow-wrap: anywhere;    /* Tarayıcı uyumluluğu için ek kırma ayarı */
-            
+            white-space: pre-wrap;     
+            word-break: break-word;    
+            overflow-wrap: anywhere;   
             font-weight: 300; 
         }
 
@@ -258,24 +240,16 @@
         .action-reply:hover { color: var(--success); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
 
         .view-replies-btn {
-            font-size: 12px; 
-            color: var(--primary); 
-            cursor: pointer; 
-            max-width: 1000px; 
-            margin: 4px auto 0 auto; 
-            padding-left: 20px; 
-            font-weight: 600; 
+            font-size: 12px; color: var(--primary); cursor: pointer; max-width: 1000px; 
+            margin: 4px auto 0 auto; padding-left: 20px; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             user-select: none; transition: 0.2s;
         }
         .view-replies-btn:hover { color: #fff; transform: translateX(5px); }
         
         .replies-container {
-            max-width: 960px; 
-            margin: 10px auto;
-            border-left: 2px solid rgba(139, 92, 246, 0.2); 
-            padding-left: 15px; 
-            display: none; 
+            max-width: 960px; margin: 10px auto;
+            border-left: 2px solid rgba(139, 92, 246, 0.2); padding-left: 15px; display: none; 
         }
         .replies-container.show { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -289,7 +263,7 @@
             .compose-area { padding: 15px; }
             .chat-area { padding: 15px; }
             .compose-footer { justify-content: space-between; }
-            .action-icons { position: relative; } /* Mobilde ikonlar normal akışta kalsın */
+            .action-icons { position: relative; } 
         }
 
         /* --- MODALS & AUTH --- */
@@ -340,6 +314,21 @@
         @media (max-width: 600px) {
             .guest-bar { flex-direction: column; padding: 20px; bottom: 20px; gap: 15px; text-align: center; }
             .guest-bar-text { white-space: normal; }
+        }
+
+        /* --- INLINE REPLY (SATIR İÇİ YANIT) --- */
+        .inline-reply-area {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            animation: fadeIn 0.3s ease;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .inline-footer {
+            display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px;
         }
     </style>
 </head>
@@ -446,19 +435,6 @@
         </div>
     </div>
 
-    <div id="post-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h3 id="modal-title" style="margin:0 0 20px 0;">Yanıtla</h3>
-            <p id="reply-info" style="font-size:12px; color:var(--primary); margin-bottom:10px; display:none;"></p>
-            <textarea id="post-content" class="form-input form-textarea" placeholder="Yanıtını yaz..." maxlength="500"></textarea>
-            <input type="hidden" id="parent-id-input" value="">
-            <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
-                <button id="close-modal" class="send-btn-modern" style="background:transparent; border:1px solid #555;">Vazgeç</button>
-                <button id="submit-post" class="send-btn-modern">Yanıtla</button>
-            </div>
-        </div>
-    </div>
-
     <div id="edit-modal" class="modal-overlay">
         <div class="modal-box">
             <h3 style="margin:0 0 20px 0;">Düzenle</h3>
@@ -473,7 +449,6 @@
 
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
-        let replyCooldownInterval = null; // Yanıt butonu sayacı için
         let isGuest = true;
         const POLL_INTERVAL = 3000; 
         const MESSAGE_COOLDOWN = 5; 
@@ -603,7 +578,7 @@
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
             
-            const replyBtn = `<span class="action-btn action-reply" onclick="openReplyModal(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
+            const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i></span>` : '';
 
@@ -646,13 +621,13 @@
         const mainSendBtn = document.getElementById('main-send-btn');
         let cooldownInterval = null; 
 
-        // 1. TEXTAREA AUTO RESIZE (Shift+Enter yaptıkça uzar)
+        // 1. TEXTAREA AUTO RESIZE
         mainInput.addEventListener('input', function() {
             this.style.height = 'auto'; // Önce sıfırla
             this.style.height = (this.style.scrollHeight) + 'px'; // Sonra içeriğe göre uzat
         });
 
-        // 2. Enter tuşu desteği (Shift+Enter yeni satır, Enter gönderir)
+        // 2. Enter tuşu desteği
         mainInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); 
@@ -699,7 +674,6 @@
             } 
         }
 
-        // --- BUTON SAYAÇ FONKSİYONU ---
         function startButtonCooldown(seconds) {
             let counter = seconds;
             mainSendBtn.disabled = true; 
@@ -742,63 +716,6 @@
         document.getElementById('login-btn').onclick = () => handleAuth('login', 'login-btn');
         document.getElementById('register-btn').onclick = () => handleAuth('register', 'register-btn');
         document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, {method:'POST', credentials:'include'}); location.reload(); };
-
-        window.openReplyModal = function(parentId, authorName) {
-            if(isGuest) { window.openAuthModal('login'); return; }
-            document.getElementById('parent-id-input').value = parentId;
-            document.getElementById('reply-info').textContent = `@${authorName} kullanıcısına yanıt veriyorsun`;
-            document.getElementById('reply-info').style.display = 'block';
-            document.getElementById('post-modal').classList.add('active');
-            setTimeout(() => document.getElementById('post-content').focus(), 100);
-        };
-        document.getElementById('close-modal').onclick = () => {
-        document.getElementById('post-modal').classList.remove('active'); // Pencereyi kapat
-        document.getElementById('post-content').value = ''; // İçeriği temizle
-    };
-
-document.getElementById('submit-post').onclick = async () => {
-    const content = document.getElementById('post-content').value;
-    const parentId = document.getElementById('parent-id-input').value;
-    const btn = document.getElementById('submit-post');
-    const modal = document.getElementById('post-modal'); // Modal'ı seçtik
-
-    if(!content.trim()) return;
-    
-    // Gönderiliyor...
-    btn.disabled = true; 
-    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-
-    try {
-        const res = await fetch(`${API_URL}/posts`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ content: content, parent_id: parentId ? parseInt(parentId) : null }),
-            credentials: 'include'
-        });
-        
-        if(res.ok) {
-            // --- BAŞARILI ---
-            
-            // 1. PENCEREYİ HEMEN KAPAT VE TEMİZLE
-            modal.classList.remove('active'); 
-            document.getElementById('post-content').value = '';
-
-            // 2. SAYACI ARKADA ÇALIŞTIR (Buton pasif kalsın)
-            startReplyCooldown(3); 
-            
-            // 3. Verileri Güncelle
-            if (parentId) openRepliesSet.add(parseInt(parentId));
-            lastPostsString = ""; 
-            loadMessages();
-
-        } else { 
-            alert("Hata oluştu.");
-            btn.disabled = false; btn.innerText = "Yanıtla";
-        }
-    } catch(e) { 
-        alert("Bağlantı hatası."); 
-        btn.disabled = false; btn.innerText = "Yanıtla";
-    }
-};
 
         async function deletePost(id) {
             if (!confirm("Silinsin mi?")) return;
@@ -845,28 +762,137 @@ document.getElementById('submit-post').onclick = async () => {
 
         checkSession();
         setInterval(loadMessages, POLL_INTERVAL);
-        function startReplyCooldown(seconds) {
-            const btn = document.getElementById('submit-post');
-            // const modal = document.getElementById('post-modal'); // Buna artık burada gerek yok
-            let counter = seconds;
+
+        // --- YENİ: SATIR İÇİ YANIT SİSTEMİ ---
+        let activeReplyId = null; // Hangi mesajda kutu açık?
+
+        // 1. Kutuyu Aç/Kapat Fonksiyonu
+        window.toggleReplyBox = function(id, authorName) {
+            if(isGuest) { window.openAuthModal('login'); return; }
+
+            // Eğer zaten bu mesajda kutu açıksa, kapat
+            if (activeReplyId === id) {
+                closeReplyBox();
+                return;
+            }
+
+            // Başka bir yerde açıksa, önce onu kapat
+            if (activeReplyId !== null) {
+                closeReplyBox();
+            }
+
+            activeReplyId = id;
+            const messageEl = document.getElementById(`msg-${id}`).querySelector('.msg-right');
             
-            btn.disabled = true; 
-            btn.innerText = `Bekle (${counter})`; 
+            // HTML'i oluştur
+            const replyHTML = `
+                <div id="inline-reply-${id}" class="inline-reply-area">
+                    <div style="font-size:12px; color:var(--primary); margin-bottom:5px;">
+                        <i class="fa-solid fa-share"></i> @${authorName} kullanıcısına yanıt veriyorsun
+                    </div>
+                    <textarea id="inline-input-${id}" class="form-input form-textarea" 
+                        placeholder="Yanıtını buraya yaz..." maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;"></textarea>
+                    <div class="inline-footer">
+                        <button onclick="closeReplyBox()" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
+                        <button id="btn-reply-${id}" onclick="submitInlineReply(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Yanıtla</button>
+                    </div>
+                </div>
+            `;
 
-            if (replyCooldownInterval) clearInterval(replyCooldownInterval); 
+            // Kutuyu mesajın içine (en sona) ekle
+            messageEl.insertAdjacentHTML('beforeend', replyHTML);
 
-            replyCooldownInterval = setInterval(() => {
-                counter--;
-                if (counter > 0) {
-                    btn.innerText = `Bekle (${counter})`;
+            // Otomatik odaklan ve Auto-Resize özelliğini ekle
+            const textarea = document.getElementById(`inline-input-${id}`);
+            textarea.focus();
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.style.scrollHeight) + 'px';
+            });
+
+            // Eğer cooldown varsa butonu pasif başlat
+            checkCooldownState(id);
+        }
+
+        // 2. Kutuyu Kapatma Fonksiyonu
+        window.closeReplyBox = function() {
+            if (activeReplyId) {
+                const box = document.getElementById(`inline-reply-${activeReplyId}`);
+                if (box) box.remove();
+                activeReplyId = null;
+            }
+        }
+
+        // 3. Yanıtı Gönderme Fonksiyonu
+        window.submitInlineReply = async function(parentId) {
+            const input = document.getElementById(`inline-input-${parentId}`);
+            const btn = document.getElementById(`btn-reply-${parentId}`);
+            const content = input.value;
+
+            if(!content.trim()) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ content: content, parent_id: parentId }),
+                    credentials: 'include'
+                });
+
+                if(res.ok) {
+                    // BAŞARILI: Kutuyu hemen kapat
+                    closeReplyBox();
+                    
+                    // Listeyi yenile
+                    if (parentId) openRepliesSet.add(parseInt(parentId));
+                    lastPostsString = ""; 
+                    loadMessages();
+
+                    // Sayacı arka planda başlat (Global Cooldown)
+                    startGlobalReplyCooldown();
+
                 } else {
-                    // Süre bitince SADECE butonu açıyoruz, pencere zaten kapanmış olacak
-                    clearInterval(replyCooldownInterval);
-                    btn.disabled = false;
-                    btn.innerText = "Yanıtla";
-                    // modal.classList.remove('active'); // BU SATIRI SİLDİK
+                    alert("Hata oluştu.");
+                    btn.disabled = false; btn.innerText = "Yanıtla";
                 }
-            }, 1000);
+            } catch(e) {
+                alert("Bağlantı hatası.");
+                btn.disabled = false; btn.innerText = "Yanıtla";
+            }
+        }
+
+        // --- COOLDOWN YÖNETİMİ (GLOBAL) ---
+        let globalCooldownEnd = 0; 
+
+        function startGlobalReplyCooldown() {
+            // Şu andan itibaren 3 saniye yasak
+            globalCooldownEnd = Date.now() + 3000;
+        }
+
+        function checkCooldownState(id) {
+            // Kutu açıldığında ceza süresi bitmemişse butonu ayarla
+            const remaining = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
+            
+            if (remaining > 0) {
+                const btn = document.getElementById(`btn-reply-${id}`);
+                if(!btn) return;
+                
+                btn.disabled = true;
+                btn.innerText = `Bekle (${remaining})`;
+
+                const interval = setInterval(() => {
+                    const newRem = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
+                    if (newRem <= 0) {
+                        clearInterval(interval);
+                        btn.disabled = false;
+                        btn.innerText = "Yanıtla";
+                    } else {
+                        btn.innerText = `Bekle (${newRem})`;
+                    }
+                }, 1000);
+            }
         }
     </script>
 </body>
