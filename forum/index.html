@@ -760,7 +760,8 @@ document.getElementById('submit-post').onclick = async () => {
     const content = document.getElementById('post-content').value;
     const parentId = document.getElementById('parent-id-input').value;
     const btn = document.getElementById('submit-post');
-    
+    const modal = document.getElementById('post-modal'); // Modal'ı seçtik
+
     if(!content.trim()) return;
     
     // Gönderiliyor...
@@ -775,16 +776,20 @@ document.getElementById('submit-post').onclick = async () => {
         });
         
         if(res.ok) {
-            // BAŞARILI OLDUĞUNDA:
-            document.getElementById('post-content').value = '';
+            // --- BAŞARILI ---
             
+            // 1. PENCEREYİ HEMEN KAPAT VE TEMİZLE
+            modal.classList.remove('active'); 
+            document.getElementById('post-content').value = '';
+
+            // 2. SAYACI ARKADA ÇALIŞTIR (Buton pasif kalsın)
+            startReplyCooldown(3); 
+            
+            // 3. Verileri Güncelle
             if (parentId) openRepliesSet.add(parseInt(parentId));
             lastPostsString = ""; 
             loadMessages();
 
-            // PENCEREYİ HEMEN KAPATMA -> SAYACI BAŞLAT (3 Saniye)
-            startReplyCooldown(3); 
-            
         } else { 
             alert("Hata oluştu.");
             btn.disabled = false; btn.innerText = "Yanıtla";
@@ -842,7 +847,7 @@ document.getElementById('submit-post').onclick = async () => {
         setInterval(loadMessages, POLL_INTERVAL);
         function startReplyCooldown(seconds) {
             const btn = document.getElementById('submit-post');
-            const modal = document.getElementById('post-modal');
+            // const modal = document.getElementById('post-modal'); // Buna artık burada gerek yok
             let counter = seconds;
             
             btn.disabled = true; 
@@ -855,11 +860,11 @@ document.getElementById('submit-post').onclick = async () => {
                 if (counter > 0) {
                     btn.innerText = `Bekle (${counter})`;
                 } else {
-                    // Süre bitince:
+                    // Süre bitince SADECE butonu açıyoruz, pencere zaten kapanmış olacak
                     clearInterval(replyCooldownInterval);
                     btn.disabled = false;
                     btn.innerText = "Yanıtla";
-                    modal.classList.remove('active'); // Pencereyi kapat
+                    // modal.classList.remove('active'); // BU SATIRI SİLDİK
                 }
             }, 1000);
         }
