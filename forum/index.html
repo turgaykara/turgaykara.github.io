@@ -542,7 +542,7 @@
                 post.children.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
                 
                 html += `
-                <div class="view-replies-btn" onclick="toggleReplies(${post.id})">
+                <div id="btn-${post.id}" class="view-replies-btn" data-count="${post.children.length}" onclick="toggleReplies(${post.id})">
                     <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${post.children.length} yanıtı gör
                 </div>`;
                 html += `<div id="replies-${post.id}" class="replies-container">`;
@@ -582,41 +582,44 @@
 
         window.toggleReplies = function(id) {
             const container = document.getElementById(`replies-${id}`);
+            const btn = document.getElementById(`btn-${id}`); // Butonu seç
+            const count = btn.getAttribute('data-count');     // Sayıyı al
+            
             if (container.classList.contains('show')) {
+                // KAPATIRKEN
                 container.classList.remove('show');
                 openRepliesSet.delete(id);
+                // Eski haline döndür
+                btn.innerHTML = `<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${count} yanıtı gör`;
             } else {
+                // AÇARKEN
                 container.classList.add('show');
                 openRepliesSet.add(id);
+                // Gizle yazısı yap
+                btn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Yanıtları gizle`;
             }
         }
 
-        // --- GÖNDERME (ENTER TUŞU DESTEĞİ) ---
+// --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
         const mainInput = document.getElementById('main-chat-input');
         const mainSendBtn = document.getElementById('main-send-btn');
+        let cooldownInterval = null; // Sayaç için değişken
 
-        // YENİ: Enter tuşu ile gönderme
+        // Enter tuşu desteği
         mainInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); // Alt satıra geçmeyi engelle
-                mainSendBtn.click(); // Gönder butonunu tetikle
+                e.preventDefault(); 
+                if (!mainSendBtn.disabled) mainSendBtn.click();
             }
         });
 
         mainSendBtn.onclick = async () => {
             if(isGuest) { window.openAuthModal('login'); return; }
 
-            const now = Date.now();
-            if ((now - lastMessageTime) / 1000 < MESSAGE_COOLDOWN) {
-                mainSendBtn.innerText = "Bekle...";
-                setTimeout(() => mainSendBtn.innerHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>', 1000);
-                return; 
-            }
-
             const content = mainInput.value;
             if(!content.trim()) return;
 
-            const originalHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>';
+            // 1. Gönderiliyor Modu
             mainSendBtn.disabled = true;
             mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
@@ -626,20 +629,51 @@
                     body: JSON.stringify({ content: content, parent_id: null }),
                     credentials: 'include'
                 });
+
                 if(res.ok) {
+                    // 2. BAŞARILI: Inputu temizle
                     mainInput.value = '';
                     lastMessageTime = Date.now();
-                    lastPostsString = ""; 
+                    lastPostsString = ""; // Ekranı yenilemeye zorla
                     loadMessages();
-                } else { alert("Hata."); }
-            } catch(e) { alert("Bağlantı hatası."); } 
-            finally {
-                mainSendBtn.disabled = false;
-                mainSendBtn.innerHTML = originalHTML;
-                mainInput.focus();
-            }
+                    
+                    // 3. SAYAÇ BAŞLAT (3 Saniye)
+                    startButtonCooldown(3);
+
+                } else { 
+                    alert("Hata oluştu.");
+                    resetButton(); // Hata varsa hemen aç
+                }
+            } catch(e) { 
+                alert("Bağlantı hatası."); 
+                resetButton(); // Hata varsa hemen aç
+            } 
         }
 
+        // --- BUTON SAYAÇ FONKSİYONU ---
+        function startButtonCooldown(seconds) {
+            let counter = seconds;
+            mainSendBtn.disabled = true; 
+            mainSendBtn.innerText = `Paylaş (${counter})`; 
+
+            if (cooldownInterval) clearInterval(cooldownInterval); 
+
+            cooldownInterval = setInterval(() => {
+                counter--;
+                if (counter > 0) {
+                    mainSendBtn.innerText = `Paylaş (${counter})`;
+                } else {
+                    clearInterval(cooldownInterval);
+                    resetButton();
+                }
+            }, 1000);
+        }
+
+        // --- BUTONU NORMALE DÖNDÜRME ---
+        function resetButton() {
+            mainSendBtn.disabled = false;
+            mainSendBtn.innerHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>';
+        }
         // --- DİĞER FONKSİYONLAR ---
         window.openAuthModal = function(type) {
             document.getElementById('auth-screen').classList.add('active');
