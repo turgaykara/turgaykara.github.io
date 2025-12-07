@@ -470,6 +470,51 @@
             background: linear-gradient(135deg, #6366f1, #4f46e5);
         }
 
+        /* --- LEVEL SİSTEMİ RENKLERİ --- */
+        .user-rank.newbie {
+            background: linear-gradient(135deg, #71717a, #52525b);  /* Gri */
+        }
+
+        .user-rank.active {
+            background: linear-gradient(135deg, #10b981, #059669);  /* Yeşil */
+        }
+
+        .user-rank.expert {
+            background: linear-gradient(135deg, #f59e0b, #d97706);  /* Turuncu */
+        }
+
+        .user-rank.legend {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);  /* Mor */
+        }
+
+        .user-rank.master {
+            background: linear-gradient(135deg, #ec4899, #db2777);  /* Pembe */
+        }
+
+        /* XP BAR (Progress Bar) */
+        .xp-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+        }
+
+        .level-info {
+            font-size: 10px;
+            color: #a1a1aa;
+            margin-top: 4px;
+            text-align: center;
+        }
+
         .message:hover .msg-avatar {
             border-color: #06b6d4;
             box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
@@ -847,6 +892,36 @@
             margin-top: 5px;
         }
 
+        /* LEVEL UP POPUP -opsiyonel-*/
+        .level-up-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            padding: 30px 50px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .level-up-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .level-up-popup h2 {
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            color: white;
+        }
+
+        .level-up-popup p {
+            font-size: 18px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
     </style>
 </head>
 
@@ -1169,18 +1244,43 @@
             }
 
             // User stats varsa göster, yoksa default
-            const userStats = p.user_stats || {
-                rank: 'member',
-                message_count: 0,
-                join_date: null
-            };
+    // ✅ User stats kontrolü güvenli hale getirildi
+    const userStats = p.user_stats || {
+        rank: 'member',
+        message_count: 0,
+        join_date: null,
+        xp: 0,
+        level: 0,
+        level_title: '🔰 Çaylak',
+        level_color: 'newbie',
+        next_level_xp: 100
+    };
 
             // Rütbe türkçe çevirisi
-            const rankText = {
-                'admin': 'Admin',
-                'moderator': 'Moderatör', 
-                'member': 'Üye'
-            }[userStats.rank] || 'Üye';
+            // Admin/Moderator ise özel göster, değilse level sistemini kullan
+            let displayRank, rankClass;
+            if (userStats.rank === 'admin') {
+                displayRank = '👑 Admin';
+                rankClass = 'admin';
+            } else if (userStats.rank === 'moderator') {
+                displayRank = '🛡️ Moderatör';
+                rankClass = 'moderator';
+            } else {
+                // Level sistemi
+                displayRank = userStats.level_title || '🔰 Çaylak';
+                rankClass = userStats.level_color || 'newbie';
+            }
+
+            // XP Progress Bar için yüzde hesapla
+            let xpPercent = 0;
+            if (userStats.xp && userStats.next_level_xp) {
+                const currentLevelXp = userStats.xp;
+                const nextLevelXp = userStats.next_level_xp;
+                const prevLevelXp = userStats.level === 0 ? 0 : [0, 100, 250, 500, 1000, 1500, 2000, 3000, 4000, 5000, 7000, 10000][userStats.level] || 0;
+                
+                xpPercent = ((currentLevelXp - prevLevelXp) / (nextLevelXp - prevLevelXp)) * 100;
+                xpPercent = Math.min(Math.max(xpPercent, 0), 100);
+            }
 
             // Tarih formatla - Güvenli şekilde
             let joinDate = 'Bilinmiyor';
@@ -1207,7 +1307,15 @@
                 <div class="msg-left">
                     <div class="msg-avatar">${initial}</div>
                     <div class="user-stats">
-                        <div class="user-rank ${userStats.rank}">${rankText}</div>
+                        <div class="user-rank ${rankClass}">${displayRank}</div>
+                        
+                        ${userStats.rank !== 'admin' && userStats.rank !== 'moderator' ? `
+                            <div class="level-info">Level ${userStats.level || 0} • ${userStats.xp || 0} XP</div>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar-fill" style="width: ${xpPercent}%"></div>
+                            </div>
+                        ` : ''}
+                        
                         <div class="user-stats-item">
                             <i class="fa-solid fa-message"></i>
                             <span>${userStats.message_count} mesaj</span>
@@ -1267,41 +1375,51 @@
         });
 
         mainSendBtn.onclick = async () => {
-            if (isGuest) { window.openAuthModal('login'); return; }
+    if (isGuest) { window.openAuthModal('login'); return; }
 
-            const content = mainInput.value;
-            if (!content.trim()) return;
+    const content = mainInput.value;
+    if (!content.trim()) return;
 
-            mainSendBtn.disabled = true;
-            mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+    mainSendBtn.disabled = true;
+    mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: content, parent_id: null }),
-                    credentials: 'include'
-                });
+    try {
+        const res = await fetch(`${API_URL}/posts`, {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: content, parent_id: null }),
+            credentials: 'include'
+        });
 
-                if (res.ok) {
-                    // BAŞARILI: Temizle
-                    mainInput.value = '';
-                    mainInput.style.height = 'auto';
+        if (res.ok) {
+            const responseData = await res.json(); // ✅ Bu satır eklendi
+            
+            // Temizle
+            mainInput.value = '';
+            mainInput.style.height = 'auto';
 
-                    lastMessageTime = Date.now();
-                    lastPostsString = "";
-                    loadMessages();
-
-                    startButtonCooldown(3);
-
-                } else {
-                    alert("Hata oluştu.");
-                    resetButton();
-                }
-            } catch (e) {
-                alert("Bağlantı hatası.");
-                resetButton();
+            lastMessageTime = Date.now();
+            lastPostsString = "";
+            loadMessages();
+            
+            // Level up kontrolü
+            if (responseData.level_up) {
+                showLevelUpPopup(responseData.level);
             }
+
+            startButtonCooldown(3);
+
+        } else {
+            const errorData = await res.json();
+            alert(errorData.error || "Hata oluştu.");
+            resetButton();
         }
+    } catch (e) {
+        console.error(e);
+        alert("Bağlantı hatası.");
+        resetButton();
+    }
+}
 
         function startButtonCooldown(seconds) {
             let counter = seconds;
@@ -1524,6 +1642,22 @@
         icon.classList.add('fa-eye');
     }
 });
+// --- LEVEL UP POPUP ---
+function showLevelUpPopup(newLevel) {
+    const popup = document.createElement('div');
+    popup.className = 'level-up-popup';
+    popup.innerHTML = `
+        <h2>🎉 Level Atladın!</h2>
+        <p>Yeni Level: <strong>${newLevel}</strong></p>
+    `;
+    document.body.appendChild(popup);
+    
+    setTimeout(() => popup.classList.add('show'), 10);
+    setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 300);
+    }, 3000);
+}
     </script>
 </body>
 </html>
