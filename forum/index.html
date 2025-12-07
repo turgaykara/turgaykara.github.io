@@ -1157,47 +1157,60 @@
         }
 
         function renderSingleMessage(p, isReply) {
-            if (!p.user_stats) {
-                p.user_stats = {
-                    rank: 'member', // admin, moderator, member
-                    message_count: Math.floor(Math.random() * 500) + 1,
-                    join_date: '2024-03-15' // Örnek tarih
-                };
-            }
             const initial = (p.author_email || 'A').charAt(0).toUpperCase();
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
 
-            // DÜZENLEME KONTROLÜ (YENİ EKLENEN KISIM)
+            // Düzenleme kontrolü
             let editedHtml = "";
             if (p.updated_at && p.updated_at !== p.created_at) {
                 const editDate = formatTime(p.updated_at);
                 editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
             }
 
-            const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
-            const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
-            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
+            // User stats varsa göster, yoksa default
+            const userStats = p.user_stats || {
+                rank: 'member',
+                message_count: 0,
+                join_date: null
+            };
+
+            // Rütbe türkçe çevirisi
             const rankText = {
                 'admin': 'Admin',
                 'moderator': 'Moderatör', 
                 'member': 'Üye'
-            }[p.user_stats.rank] || 'Üye';
+            }[userStats.rank] || 'Üye';
 
-            // Tarih formatla
-            const joinDate = new Date(p.user_stats.join_date).toLocaleDateString('tr-TR', {
-                year: 'numeric',
-                month: 'short'
-            });
+            // Tarih formatla - Güvenli şekilde
+            let joinDate = 'Bilinmiyor';
+            if (userStats.join_date) {
+                try {
+                    const date = new Date(userStats.join_date);
+                    if (!isNaN(date.getTime())) {
+                        joinDate = date.toLocaleDateString('tr-TR', {
+                            year: 'numeric',
+                            month: 'short'
+                        });
+                    }
+                } catch (e) {
+                    console.error('Tarih formatla hatası:', e);
+                }
+            }
+
+            const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
+            const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
+            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
+
             return `
             <div id="msg-${p.id}" class="message"> 
                 <div class="msg-left">
                     <div class="msg-avatar">${initial}</div>
                     <div class="user-stats">
-                        <div class="user-rank ${p.user_stats.rank}">${rankText}</div>
+                        <div class="user-rank ${userStats.rank}">${rankText}</div>
                         <div class="user-stats-item">
                             <i class="fa-solid fa-message"></i>
-                            <span>${p.user_stats.message_count} mesaj</span>
+                            <span>${userStats.message_count} mesaj</span>
                         </div>
                         <div class="user-stats-item">
                             <i class="fa-solid fa-calendar-days"></i>
@@ -1206,7 +1219,16 @@
                     </div>
                 </div>
                 <div class="msg-right">
-            ```
+                    <div class="msg-header">
+                        <span class="msg-author">@${name}</span>
+                        <span class="msg-date">· ${date} ${editedHtml}</span>
+                    </div>
+                    <div class="msg-text">${escapeHTML(p.content)}</div>
+                    <div class="msg-actions">
+                        ${replyBtn} ${editBtn} ${deleteBtn}
+                    </div>
+                </div>
+            </div>`;
         }
 
         window.toggleReplies = function (id) {
