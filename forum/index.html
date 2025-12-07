@@ -115,7 +115,7 @@
         .compose-input {
             width: 100%; background: transparent; border: none;
             color: #d4d4d8; font-family: inherit; resize: none;
-            font-size: 14px; min-height: 40px; font-weight: 300;
+            font-size: 14px; min-height: 60px; font-weight: 300;
             margin-left: 10px; /* Çizgiden uzaklaşsın */
         }
         .compose-input::placeholder { color: #52525b; }
@@ -226,15 +226,32 @@
         .action-reply:hover { color: var(--success); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
 
         .view-replies-btn {
-            font-size: 12px; color: var(--primary); cursor: pointer; 
-            margin: 5px 0 0 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
+            font-size: 12px; 
+            color: var(--primary); 
+            cursor: pointer; 
+            
+            /* Hizalama Büyüsü: Mesaj kartıyla aynı hizaya getir */
+            max-width: 1000px; 
+            margin: 4px auto 0 auto; /* Üstten az boşluk, yanlardan ortala */
+            padding-left: 20px; /* İkonla aynı hizaya gelmesi için */
+            
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
             user-select: none;
+            transition: 0.2s;
         }
-        .view-replies-btn:hover { text-decoration: underline; color: #fff; }
+        .view-replies-btn:hover { color: #fff; transform: translateX(5px); }
         
         .replies-container {
-            margin-left: 20px; border-left: 1px solid rgba(255,255,255,0.1); 
-            padding-left: 10px; display: none; margin-top: 10px;
+            /* Yanıt kutusunu da ortala */
+            max-width: 960px; /* Ana mesajdan tık daha dar olsun ki hiyerarşi belli olsun */
+            margin: 10px auto;
+            
+            border-left: 2px solid rgba(139, 92, 246, 0.2); /* Çizgi rengini belirginleştir */
+            padding-left: 15px; 
+            display: none; 
         }
         .replies-container.show { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
