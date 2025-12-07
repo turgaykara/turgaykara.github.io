@@ -561,10 +561,26 @@
             if (post.children.length > 0) {
                 post.children.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
                 
+                // --- DÜZELTME BAŞLANGICI ---
+                // Bu postun yanıtları şu an açıklar listesinde mi?
+                const isOpen = openRepliesSet.has(post.id);
+
+                // Duruma göre ikon ve yazı belirle
+                const icon = isOpen 
+                    ? '<i class="fa-solid fa-chevron-up"></i>' 
+                    : '<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i>';
+                
+                const text = isOpen 
+                    ? 'Yanıtları gizle' 
+                    : `${post.children.length} yanıtı gör`;
+
+                // Buton HTML'ini buna göre oluştur
                 html += `
                 <div id="btn-${post.id}" class="view-replies-btn" data-count="${post.children.length}" onclick="toggleReplies(${post.id})">
-                    <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${post.children.length} yanıtı gör
+                    ${icon} ${text}
                 </div>`;
+                // --- DÜZELTME BİTİŞİ ---
+
                 html += `<div id="replies-${post.id}" class="replies-container">`;
                 post.children.forEach(child => { html += buildPostHTML(child); });
                 html += `</div>`;
