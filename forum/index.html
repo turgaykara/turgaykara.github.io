@@ -119,7 +119,7 @@
             margin-left: 10px;
             /* Scrollbar Gizleme ve Auto Resize için */
             resize: none; 
-            overflow: hidden; 
+            overflow-y: auto;
             line-height: 1.5;
         }
         .compose-input::placeholder { color: #52525b; }
@@ -229,7 +229,18 @@
 
         .msg-author { font-size: 14px; font-weight: 700; color: #e4e4e7; letter-spacing: 0.5px; }
         .msg-date { font-size: 11px; color: #71717a; font-family: monospace; }
-        .msg-text { font-size: 14px; line-height: 1.7; color: #d4d4d8; white-space: pre-wrap; font-weight: 300; }
+        .msg-text {
+            font-size: 14px; 
+            line-height: 1.7; 
+            color: #d4d4d8; 
+            
+            /* ÖNEMLİ KISIM: */
+            white-space: pre-wrap;      /* Enter boşluklarını korur ve satır sonuna gelince alta atar */
+            word-break: break-word;     /* Çok uzun tek parça kelime varsa kırar */
+            overflow-wrap: anywhere;    /* Tarayıcı uyumluluğu için ek kırma ayarı */
+            
+            font-weight: 300; 
+        }
 
         .msg-actions {
             margin-top: 15px; display: flex; justify-content: flex-end; gap: 15px;
@@ -303,7 +314,7 @@
             color: white; font-family: inherit; transition: 0.2s;
         }
         .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2); }
-        .form-textarea { min-height: 120px; resize: vertical; }
+        .form-textarea { min-height: 120px; resize: none; }
 
         #auth-screen { z-index: 200; background: rgba(9, 9, 11, 0.9); }
         .auth-container { 
@@ -363,8 +374,8 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button type="button" id="login-btn" class="send-btn-modern" style="flex:1; width:auto; border-radius:8px;">Giriş Yap</button>
-                        <button type="button" id="register-btn" class="send-btn-modern" style="flex:1; width:auto; background:transparent; border:1px solid #555; border-radius:8px;">Kayıt Ol</button>
+                        <button type="button" id="login-btn" class="send-btn-modern" style="flex:1; width:auto; border-radius:8px; padding: 12px;">Giriş Yap</button>
+                        <button type="button" id="register-btn" class="send-btn-modern" style="flex:1; width:auto; background:transparent; border:1px solid #555; border-radius:8px; padding: 12px;">Kayıt Ol</button>
                     </div>
                 </form>
             </div>
@@ -414,7 +425,7 @@
 
         <div class="compose-area">
             <div class="compose-wrapper">
-                <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..."></textarea>
+                <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..." maxlength="500"></textarea>
                 
                 <div class="compose-footer">
                     <div class="action-icons">
@@ -439,11 +450,11 @@
         <div class="modal-box">
             <h3 id="modal-title" style="margin:0 0 20px 0;">Yanıtla</h3>
             <p id="reply-info" style="font-size:12px; color:var(--primary); margin-bottom:10px; display:none;"></p>
-            <textarea id="post-content" class="form-input form-textarea" placeholder="Yanıtını yaz..."></textarea>
+            <textarea id="post-content" class="form-input form-textarea" placeholder="Yanıtını yaz..." maxlength="500"></textarea>
             <input type="hidden" id="parent-id-input" value="">
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
-                <button id="close-modal" class="send-btn-modern" style="width:auto; background:transparent; border:1px solid #555;">Vazgeç</button>
-                <button id="submit-post" class="send-btn-modern" style="width:auto;">Yanıtla</button>
+                <button id="close-modal" class="send-btn-modern" style="background:transparent; border:1px solid #555;">Vazgeç</button>
+                <button id="submit-post" class="send-btn-modern">Yanıtla</button>
             </div>
         </div>
     </div>
@@ -451,7 +462,7 @@
     <div id="edit-modal" class="modal-overlay">
         <div class="modal-box">
             <h3 style="margin:0 0 20px 0;">Düzenle</h3>
-            <textarea id="edit-content" class="form-input form-textarea"></textarea>
+            <textarea id="edit-content" class="form-input form-textarea" maxlength="500"></textarea>
             <input type="hidden" id="edit-post-id"> 
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
                 <button id="close-edit-modal" class="send-btn-modern" style="width:auto; background:transparent; border:1px solid #555;">İptal</button>
@@ -462,6 +473,7 @@
 
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
+        let replyCooldownInterval = null; // Yanıt butonu sayacı için
         let isGuest = true;
         const POLL_INTERVAL = 3000; 
         const MESSAGE_COOLDOWN = 5; 
@@ -739,32 +751,49 @@
             document.getElementById('post-modal').classList.add('active');
             setTimeout(() => document.getElementById('post-content').focus(), 100);
         };
-        document.getElementById('close-modal').onclick = () => document.getElementById('post-modal').classList.remove('active');
+        document.getElementById('close-modal').onclick = () => {
+        document.getElementById('post-modal').classList.remove('active'); // Pencereyi kapat
+        document.getElementById('post-content').value = ''; // İçeriği temizle
+    };
 
-        document.getElementById('submit-post').onclick = async () => {
-            const content = document.getElementById('post-content').value;
-            const parentId = document.getElementById('parent-id-input').value;
-            const btn = document.getElementById('submit-post');
+document.getElementById('submit-post').onclick = async () => {
+    const content = document.getElementById('post-content').value;
+    const parentId = document.getElementById('parent-id-input').value;
+    const btn = document.getElementById('submit-post');
+    
+    if(!content.trim()) return;
+    
+    // Gönderiliyor...
+    btn.disabled = true; 
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+    try {
+        const res = await fetch(`${API_URL}/posts`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ content: content, parent_id: parentId ? parseInt(parentId) : null }),
+            credentials: 'include'
+        });
+        
+        if(res.ok) {
+            // BAŞARILI OLDUĞUNDA:
+            document.getElementById('post-content').value = '';
             
-            if(!content.trim()) return;
-            btn.disabled = true; btn.innerText = "...";
+            if (parentId) openRepliesSet.add(parseInt(parentId));
+            lastPostsString = ""; 
+            loadMessages();
 
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ content: content, parent_id: parentId ? parseInt(parentId) : null }),
-                    credentials: 'include'
-                });
-                if(res.ok) {
-                    document.getElementById('post-content').value = '';
-                    document.getElementById('post-modal').classList.remove('active');
-                    if (parentId) openRepliesSet.add(parseInt(parentId));
-                    lastPostsString = ""; // Zorla yenile
-                    loadMessages();
-                } else alert("Hata");
-            } catch(e) { alert("Hata"); }
-            finally { btn.disabled = false; btn.innerText = "Yanıtla"; }
-        };
+            // PENCEREYİ HEMEN KAPATMA -> SAYACI BAŞLAT (3 Saniye)
+            startReplyCooldown(3); 
+            
+        } else { 
+            alert("Hata oluştu.");
+            btn.disabled = false; btn.innerText = "Yanıtla";
+        }
+    } catch(e) { 
+        alert("Bağlantı hatası."); 
+        btn.disabled = false; btn.innerText = "Yanıtla";
+    }
+};
 
         async function deletePost(id) {
             if (!confirm("Silinsin mi?")) return;
@@ -811,6 +840,29 @@
 
         checkSession();
         setInterval(loadMessages, POLL_INTERVAL);
+        function startReplyCooldown(seconds) {
+            const btn = document.getElementById('submit-post');
+            const modal = document.getElementById('post-modal');
+            let counter = seconds;
+            
+            btn.disabled = true; 
+            btn.innerText = `Bekle (${counter})`; 
+
+            if (replyCooldownInterval) clearInterval(replyCooldownInterval); 
+
+            replyCooldownInterval = setInterval(() => {
+                counter--;
+                if (counter > 0) {
+                    btn.innerText = `Bekle (${counter})`;
+                } else {
+                    // Süre bitince:
+                    clearInterval(replyCooldownInterval);
+                    btn.disabled = false;
+                    btn.innerText = "Yanıtla";
+                    modal.classList.remove('active'); // Pencereyi kapat
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>
