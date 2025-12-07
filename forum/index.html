@@ -423,6 +423,53 @@
             transition: 0.3s;
         }
 
+        .user-stats {
+            width: 100%;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: #71717a;
+            line-height: 1.6;
+        }
+
+        .user-stats-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .user-stats-item i {
+            color: var(--primary);
+            font-size: 10px;
+            width: 12px;
+        }
+
+        .user-rank {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-rank.admin {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .user-rank.moderator {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .user-rank.member {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+        }
+
         .message:hover .msg-avatar {
             border-color: #06b6d4;
             box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
@@ -1110,6 +1157,13 @@
         }
 
         function renderSingleMessage(p, isReply) {
+            if (!p.user_stats) {
+                p.user_stats = {
+                    rank: 'member', // admin, moderator, member
+                    message_count: Math.floor(Math.random() * 500) + 1,
+                    join_date: '2024-03-15' // Örnek tarih
+                };
+            }
             const initial = (p.author_email || 'A').charAt(0).toUpperCase();
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
@@ -1124,23 +1178,35 @@
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
+            const rankText = {
+                'admin': 'Admin',
+                'moderator': 'Moderatör', 
+                'member': 'Üye'
+            }[p.user_stats.rank] || 'Üye';
 
+            // Tarih formatla
+            const joinDate = new Date(p.user_stats.join_date).toLocaleDateString('tr-TR', {
+                year: 'numeric',
+                month: 'short'
+            });
             return `
             <div id="msg-${p.id}" class="message"> 
                 <div class="msg-left">
                     <div class="msg-avatar">${initial}</div>
+                    <div class="user-stats">
+                        <div class="user-rank ${p.user_stats.rank}">${rankText}</div>
+                        <div class="user-stats-item">
+                            <i class="fa-solid fa-message"></i>
+                            <span>${p.user_stats.message_count} mesaj</span>
+                        </div>
+                        <div class="user-stats-item">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span>${joinDate}</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="msg-right">
-                    <div class="msg-header">
-                        <span class="msg-author">@${name}</span>
-                        <span class="msg-date">· ${date} ${editedHtml}</span>
-                    </div>
-                    <div class="msg-text">${escapeHTML(p.content)}</div>
-                    <div class="msg-actions">
-                        ${replyBtn} ${editBtn} ${deleteBtn}
-                    </div>
-                </div>
-            </div>`;
+            ```
         }
 
         window.toggleReplies = function (id) {
