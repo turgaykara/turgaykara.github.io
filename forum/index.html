@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dark Security | Forum</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="pp2.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -777,7 +778,7 @@
                 onclick="closeAuthModal()">
                 <i class="fa-solid fa-xmark fa-lg"></i>
             </div>
-            <img src="pp2.png" class="auth-logo">
+            <img src="pp2.png" width="80" style="border-radius:10%">
             <h2 id="auth-title" style="margin-bottom:8px; font-size:24px;">Hoş Geldiniz</h2>
             <p id="auth-desc" style="color:var(--text-muted); margin-bottom:32px; font-size:14px;">Topluluğa katılmak
                 için giriş yapın.</p>
@@ -806,12 +807,12 @@
             </div>
 
             <div id="forgot-view" class="hidden">
-                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">E-posta adresini gir.</p>
+                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">E-posta adresinizi girin.</p>
                 <div class="input-group">
                     <input type="email" id="forgot-email" class="form-input" placeholder="E-posta adresi">
                 </div>
                 <button type="button" id="send-reset-btn" class="send-btn-modern" style="width:100%; border-radius:8px;"
-                    disabled>Gönder</button>
+                    disabled>Sıfırlama Bağlantısını Gönder!</button>
                 <button type="button" id="back-to-login-btn" class="action-btn"
                     style="margin-top:10px; color:gray; background:none; border:none; cursor:pointer; width:100%;">Geri
                     Dön</button>
@@ -918,6 +919,20 @@
             if (!email || (!password && endpoint !== 'forgot-password')) {
                 errEl.innerText = "Alanları doldurun."; errEl.style.display = 'block'; return;
             }
+            if (endpoint === 'register') {
+            if (password.length < 8) {
+                errEl.innerText = "Güvenlik gereği şifre en az 8 karakter olmalıdır.";
+                errEl.style.display = 'block';
+                return;
+            }
+
+            const specialCharRegex = /[^a-zA-Z0-9]/;
+            if (!specialCharRegex.test(password)) {
+                errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, $, % vb.) içermelidir.";
+                errEl.style.display = 'block';
+                return;
+            }
+        }
             if (btn) btn.disabled = true;
 
             try {
@@ -929,7 +944,7 @@
 
                 if (res.ok) {
                     if (endpoint === 'register') {
-                        alert("Kayıt Başarılı! Şimdi giriş yapabilirsin.");
+                        alert("Kayıt başarılı! E-postana gönderilen aktivasyon bağlantısını onayladıktan sonra giriş yapabilirsiniz.");
                         document.getElementById('back-to-login-btn').click();
                     } else if (endpoint === 'login') {
                         checkSession();
