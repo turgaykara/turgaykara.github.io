@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dark Security | Forum</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="pp2.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -13,20 +15,25 @@
             --bg-sidebar: #18181b;
             --bg-card: #27272a;
             --bg-input: #3f3f46;
-            
-            --primary: #8b5cf6; /* Mor */
+
+            --primary: #8b5cf6;
+            /* Mor */
             --primary-hover: #7c3aed;
-            --secondary: #06b6d4; /* Turkuaz */
-            
+            --secondary: #06b6d4;
+            /* Turkuaz */
+
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
-            
+
             --border: rgba(255, 255, 255, 0.08);
             --danger: #ef4444;
             --success: #10b981;
         }
 
-        * { box-sizing: border-box; outline: none; }
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
 
         body {
             margin: 0;
@@ -36,136 +43,331 @@
             height: 100vh;
             display: flex;
             overflow: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 20%);
         }
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 260px; background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(12px);
-            border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px; flex-shrink: 0; z-index: 10;
+            width: 260px;
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            flex-shrink: 0;
+            z-index: 10;
         }
-        .brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; color: #fff; text-decoration: none; margin-bottom: 32px; letter-spacing: -0.5px; }
-        .brand span { background: linear-gradient(135deg, var(--secondary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .user-profile { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); padding: 12px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-        .avatar { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 14px; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
-        .user-info h4 { margin: 0; font-size: 14px; font-weight: 600; }
-        .user-info p { margin: 2px 0 0; font-size: 11px; color: #10b981; }
-        .nav-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.8px; margin-bottom: 12px; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 500; text-decoration: none; margin-bottom: 4px; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .nav-item.active { background: rgba(139, 92, 246, 0.15); color: var(--primary); }
-        .nav-item i { width: 18px; text-align: center; }
-        .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand span {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-profile {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .user-info h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-info p {
+            margin: 2px 0 0;
+            font-size: 11px;
+            color: #10b981;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
 
         /* --- MAIN AREA --- */
-        .main { 
-            flex-grow: 1; display: flex; flex-direction: column; 
-            height: 100vh; overflow: hidden; position: relative;
+        .main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
         .header {
-            height: 70px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px; background: rgba(9, 9, 11, 0.6); backdrop-filter: blur(8px);
+            height: 70px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(9, 9, 11, 0.6);
+            backdrop-filter: blur(8px);
             flex-shrink: 0;
         }
-        .channel-info { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .channel-icon { color: var(--text-muted); font-size: 18px; }
+
+        .channel-info {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .channel-icon {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
 
         /* --- COMPOSE AREA (Mesaj Yazma Alanı) --- */
         .compose-area {
             padding: 24px 32px;
-            background: transparent; 
+            background: transparent;
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
             z-index: 20;
         }
 
         .compose-wrapper {
-            background-color: #050505; 
-            border: 1px solid rgba(139, 92, 246, 0.15); 
-            border-radius: 8px; 
+            background-color: #050505;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 8px;
             padding: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            display: flex; flex-direction: column; gap: 10px;
-            overflow: hidden; 
-            max-width: 1000px; 
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .compose-wrapper::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
             background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
-            opacity: 0.6; transition: 0.3s;
+            opacity: 0.6;
+            transition: 0.3s;
         }
 
         .compose-wrapper:focus-within {
-            border-color: rgba(139, 92, 246, 0.6); 
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05); 
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05);
             transform: translateY(-2px);
         }
-        .compose-wrapper:focus-within::before { opacity: 1; box-shadow: 0 0 10px #8b5cf6; }
+
+        .compose-wrapper:focus-within::before {
+            opacity: 1;
+            box-shadow: 0 0 10px #8b5cf6;
+        }
 
         .compose-input {
-            width: 100%; background: transparent; border: none;
-            color: #d4d4d8; font-family: inherit; 
-            font-size: 14px; min-height: 40px; font-weight: 300;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #d4d4d8;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 40px;
+            font-weight: 300;
             margin-left: 10px;
-            resize: none; 
+            resize: none;
             overflow-y: auto;
             line-height: 1.5;
         }
-        .compose-input::placeholder { color: #52525b; }
-        .compose-input::-webkit-scrollbar { display: none; }
 
-        .compose-footer {
-            display: flex; 
-            justify-content: flex-end; 
-            align-items: center;
-            padding-top: 10px; margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.1);
-            margin-left: 10px;
-            position: relative; 
+        .compose-input::placeholder {
+            color: #52525b;
         }
 
-        .action-icons { position: absolute; left: 0; }
-        .action-icons i { color: #52525b; margin-right: 15px; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .action-icons i:hover { color: var(--primary); transform: scale(1.1); }
+        .compose-input::-webkit-scrollbar {
+            display: none;
+        }
+
+        .compose-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-top: 10px;
+            margin-top: 5px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            margin-left: 10px;
+            position: relative;
+        }
+
+        .action-icons {
+            position: absolute;
+            left: 0;
+        }
+
+        .action-icons i {
+            color: #52525b;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .action-icons i:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
 
         .send-btn-modern {
             background-color: var(--primary);
-            color: white; border: none; 
-            padding: 8px 0; 
-            width: 150px; 
+            color: white;
+            border: none;
+            padding: 8px 0;
+            width: 150px;
             border-radius: 6px;
-            font-size: 12px; font-weight: 600; cursor: pointer;
-            transition: 0.3s; opacity: 0.8;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .send-btn-modern:hover { opacity: 1; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
-        .send-btn-modern:disabled { opacity: 0.4; cursor: not-allowed; background: #333; }
+
+        .send-btn-modern:hover {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .send-btn-modern:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #333;
+        }
 
         /* --- AKIŞ ALANI --- */
-        .chat-area { 
-            flex-grow: 1; overflow-y: auto; padding: 32px; scroll-behavior: smooth; 
+        .chat-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 32px;
+            scroll-behavior: smooth;
         }
-        .chat-area::-webkit-scrollbar { width: 6px; }
-        .chat-area::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 3px;
+        }
 
         /* --- MESSAGES --- */
-        .message-wrapper { margin-bottom: 24px; padding: 0 10px; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .message-wrapper {
+            margin-bottom: 24px;
+            padding: 0 10px;
+            animation: slideIn 0.3s ease;
+        }
 
-        .message { 
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message {
             display: flex;
-            background-color: #050505; 
-            border: 1px solid rgba(139, 92, 246, 0.15); 
-            border-radius: 8px; 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,1);
+            background-color: #050505;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 8px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 1);
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -173,147 +375,373 @@
 
         .message:hover {
             transform: translateY(-2px);
-            border-color: rgba(139, 92, 246, 0.6); 
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05); 
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05);
         }
 
         .message::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
             background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
-            opacity: 0.6; transition: 0.3s;
+            opacity: 0.6;
+            transition: 0.3s;
         }
-        .message:hover::before { opacity: 1; box-shadow: 0 0 10px #8b5cf6; }
+
+        .message:hover::before {
+            opacity: 1;
+            box-shadow: 0 0 10px #8b5cf6;
+        }
 
         .msg-left {
-            width: 120px; background: #09090b; 
-            border-right: 1px solid rgba(255,255,255,0.05);
-            padding: 24px 10px; display: flex; flex-direction: column;
-            align-items: center; text-align: center; flex-shrink: 0;
+            width: 120px;
+            background: #09090b;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex-shrink: 0;
         }
 
         .msg-avatar {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: #000; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 700; color: #a1a1aa;
-            margin-bottom: 12px; border: 1px solid rgba(139, 92, 246, 0.3);
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.1); transition: 0.3s;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #a1a1aa;
+            margin-bottom: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
+            transition: 0.3s;
         }
-        .message:hover .msg-avatar { border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); color: #fff; }
+
+        .message:hover .msg-avatar {
+            border-color: #06b6d4;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            color: #fff;
+        }
 
         .msg-right {
-            flex-grow: 1; padding: 20px 24px; display: flex; flex-direction: column;
+            flex-grow: 1;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
             background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.03), transparent 40%);
             min-width: 0;
         }
 
         .msg-header {
-            display: flex; justify-content: space-between;
-            border-bottom: 1px dashed rgba(255,255,255,0.1); 
-            padding-bottom: 8px; margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 14px;
         }
 
-        .msg-author { font-size: 14px; font-weight: 700; color: #e4e4e7; letter-spacing: 0.5px; }
-        .msg-date { font-size: 11px; color: #71717a; font-family: monospace; }
+        .msg-author {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e4e4e7;
+            letter-spacing: 0.5px;
+        }
+
+        .msg-date {
+            font-size: 11px;
+            color: #71717a;
+            font-family: monospace;
+        }
+
         .msg-text {
-            font-size: 14px; 
-            line-height: 1.7; 
-            color: #d4d4d8; 
-            white-space: pre-wrap;     
-            word-break: break-word;    
-            overflow-wrap: anywhere;   
-            font-weight: 300; 
+            font-size: 14px;
+            line-height: 1.7;
+            color: #d4d4d8;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            font-weight: 300;
         }
 
         .msg-actions {
-            margin-top: 15px; display: flex; justify-content: flex-end; gap: 15px;
-            opacity: 0.4; transition: 0.3s;
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            opacity: 0.4;
+            transition: 0.3s;
         }
-        .message:hover .msg-actions { opacity: 1; } 
 
-        .action-btn { 
-            font-size: 11px; cursor: pointer; color: #71717a; transition: 0.2s;
-            background: transparent; border: 1px solid transparent; padding: 4px 8px; border-radius: 4px;
-            display: flex; align-items: center; gap: 4px; font-weight: 600;
+        .message:hover .msg-actions {
+            opacity: 1;
         }
-        .action-edit:hover { color: var(--secondary); border-color: rgba(6, 182, 212, 0.3); }
-        .action-delete:hover { color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
-        .action-reply:hover { color: var(--success); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
+
+        .action-btn {
+            font-size: 11px;
+            cursor: pointer;
+            color: #71717a;
+            transition: 0.2s;
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .action-edit:hover {
+            color: var(--secondary);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        .action-delete:hover {
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .action-reply:hover {
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+        }
 
         .view-replies-btn {
-            font-size: 12px; color: var(--primary); cursor: pointer; max-width: 1000px; 
-            margin: 4px auto 0 auto; padding-left: 20px; font-weight: 600; 
-            display: flex; align-items: center; gap: 8px;
-            user-select: none; transition: 0.2s;
+            font-size: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            max-width: 1000px;
+            margin: 4px auto 0 auto;
+            padding-left: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+            transition: 0.2s;
         }
-        .view-replies-btn:hover { color: #fff; transform: translateX(5px); }
-        
+
+        .view-replies-btn:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
         .replies-container {
-            max-width: 960px; margin: 10px auto;
-            border-left: 2px solid rgba(139, 92, 246, 0.2); padding-left: 15px; display: none; 
+            max-width: 960px;
+            margin: 10px auto;
+            border-left: 2px solid rgba(139, 92, 246, 0.2);
+            padding-left: 15px;
+            display: none;
         }
-        .replies-container.show { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .replies-container.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
 
         /* MOBİL */
         @media (max-width: 600px) {
-            .message { flex-direction: column; }
-            .msg-left { width: 100%; flex-direction: row; padding: 15px; gap: 15px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: transparent; }
-            .msg-avatar { width: 45px; height: 45px; margin-bottom: 0; }
-            .message::before { width: 100%; height: 2px; bottom: auto; top: 0; background: linear-gradient(to right, #8b5cf6, #06b6d4); }
-            .compose-area { padding: 15px; }
-            .chat-area { padding: 15px; }
-            .compose-footer { justify-content: space-between; }
-            .action-icons { position: relative; } 
+            .message {
+                flex-direction: column;
+            }
+
+            .msg-left {
+                width: 100%;
+                flex-direction: row;
+                padding: 15px;
+                gap: 15px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                text-align: left;
+                background: transparent;
+            }
+
+            .msg-avatar {
+                width: 45px;
+                height: 45px;
+                margin-bottom: 0;
+            }
+
+            .message::before {
+                width: 100%;
+                height: 2px;
+                bottom: auto;
+                top: 0;
+                background: linear-gradient(to right, #8b5cf6, #06b6d4);
+            }
+
+            .compose-area {
+                padding: 15px;
+            }
+
+            .chat-area {
+                padding: 15px;
+            }
+
+            .compose-footer {
+                justify-content: space-between;
+            }
+
+            .action-icons {
+                position: relative;
+            }
         }
 
         /* --- MODALS & AUTH --- */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            display: flex; align-items: center; justify-content: center; z-index: 100;
-            opacity: 0; pointer-events: none; transition: 0.3s;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
         }
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
 
         .modal-box {
-            width: 100%; max-width: 500px; background: #18181b;
-            border: 1px solid var(--border); border-radius: 16px; padding: 32px;
-            transform: scale(0.95); transition: 0.3s; box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            width: 100%;
+            max-width: 500px;
+            background: #18181b;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transform: scale(0.95);
+            transition: 0.3s;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
         }
-        .modal-overlay.active .modal-box { transform: scale(1); }
 
-        .input-group { margin-bottom: 15px; position: relative; }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
         .form-input {
-            width: 100%; padding: 12px 16px; background: #09090b;
-            border: 1px solid var(--border); border-radius: 8px;
-            color: white; font-family: inherit; transition: 0.2s;
+            width: 100%;
+            padding: 12px 16px;
+            background: #09090b;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            transition: 0.2s;
         }
-        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2); }
-        .form-textarea { min-height: 120px; resize: none; }
 
-        #auth-screen { z-index: 200; background: rgba(9, 9, 11, 0.9); }
-        .auth-container { 
-            width: 400px; text-align: center; background: #18181b;
-            padding: 40px; border-radius: 16px; border: 1px solid var(--border);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6); position: relative;
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
         }
-        .auth-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
-        .hidden { display: none !important; }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: none;
+        }
+
+        #auth-screen {
+            z-index: 200;
+            background: rgba(9, 9, 11, 0.9);
+        }
+
+        .auth-container {
+            width: 400px;
+            text-align: center;
+            background: #18181b;
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .hidden {
+            display: none !important;
+        }
 
         .guest-bar {
-            position: fixed; bottom: 30px; left: 50%; width: 90%; max-width: 800px;
-            background: rgba(24, 24, 27, 0.95); border: 1px solid var(--primary);
-            border-radius: 20px; padding: 12px 24px;
-            display: flex; align-items: center; justify-content: space-between; gap: 20px;
-            z-index: 150; backdrop-filter: blur(12px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 20px rgba(139, 92, 246, 0.2);
-            transform: translate(-50%, 200%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            width: 90%;
+            max-width: 800px;
+            background: rgba(24, 24, 27, 0.95);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            z-index: 150;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.2);
+            transform: translate(-50%, 200%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .guest-bar.active { transform: translate(-50%, 0); }
-        .guest-bar-text { font-size: 13px; color: #fff; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
+
+        .guest-bar.active {
+            transform: translate(-50%, 0);
+        }
+
+        .guest-bar-text {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         @media (max-width: 600px) {
-            .guest-bar { flex-direction: column; padding: 20px; bottom: 20px; gap: 15px; text-align: center; }
-            .guest-bar-text { white-space: normal; }
+            .guest-bar {
+                flex-direction: column;
+                padding: 20px;
+                bottom: 20px;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .guest-bar-text {
+                white-space: normal;
+            }
         }
 
         /* --- INLINE REPLY (SATIR İÇİ YANIT) --- */
@@ -324,33 +752,43 @@
             border-radius: 8px;
             padding: 15px;
             animation: fadeIn 0.3s ease;
-            display: flex; flex-direction: column; gap: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .inline-footer {
-            display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 5px;
         }
     </style>
 </head>
+
 <body>
 
     <div id="guest-bar" class="guest-bar">
         <div class="guest-bar-text">🔒 Bu topluluğun tüm özelliklerini kullanmak için aramıza katıl.</div>
         <div style="display:flex; gap:10px;">
-            <button onclick="openAuthModal('login')" class="send-btn-modern" style="width:auto; padding:6px 20px; background:transparent; border:1px solid #555;">Giriş</button>
-            <button onclick="openAuthModal('register')" class="send-btn-modern" style="width:auto; padding:6px 20px;">Kayıt Ol</button>
+            <button onclick="openAuthModal('login')" class="send-btn-modern"
+                style="width:auto; padding:6px 20px; background:transparent; border:1px solid #555;">Giriş</button>
+            <button onclick="openAuthModal('register')" class="send-btn-modern"
+                style="width:auto; padding:6px 20px;">Kayıt Ol</button>
         </div>
     </div>
 
     <div id="auth-screen" class="modal-overlay">
         <div class="auth-container">
-            <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; color: #71717a;" onclick="closeAuthModal()">
+            <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; color: #71717a;"
+                onclick="closeAuthModal()">
                 <i class="fa-solid fa-xmark fa-lg"></i>
             </div>
             <img src="pp2.png" width="80" style="border-radius:10%">
             <h2 id="auth-title" style="margin-bottom:8px; font-size:24px;">Hoş Geldiniz</h2>
-            <p id="auth-desc" style="color:var(--text-muted); margin-bottom:32px; font-size:14px;">Topluluğa katılmak için giriş yapın.</p>
-            
+            <p id="auth-desc" style="color:var(--text-muted); margin-bottom:32px; font-size:14px;">Topluluğa katılmak
+                için giriş yapın.</p>
+
             <div id="login-view">
                 <form id="login-form">
                     <div class="input-group">
@@ -359,12 +797,17 @@
                     <div class="input-group">
                         <input type="password" id="password" class="form-input" placeholder="Parola" required>
                         <div style="text-align: right; margin-top: 6px;">
-                            <button type="button" id="show-forgot-btn" class="action-btn" style="color:gray; font-size:12px; background:none; border:none; cursor:pointer;">Şifremi unuttum?</button>
+                            <button type="button" id="show-forgot-btn" class="action-btn"
+                                style="color:gray; font-size:12px; background:none; border:none; cursor:pointer;">Şifremi
+                                unuttum?</button>
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button type="button" id="login-btn" class="send-btn-modern" style="flex:1; width:auto; border-radius:8px; padding: 12px;">Giriş Yap</button>
-                        <button type="button" id="register-btn" class="send-btn-modern" style="flex:1; width:auto; background:transparent; border:1px solid #555; border-radius:8px; padding: 12px;">Kayıt Ol</button>
+                        <button type="button" id="login-btn" class="send-btn-modern"
+                            style="flex:1; width:auto; border-radius:8px; padding: 12px;">Giriş Yap</button>
+                        <button type="button" id="register-btn" class="send-btn-modern"
+                            style="flex:1; width:auto; background:transparent; border:1px solid #555; border-radius:8px; padding: 12px;">Kayıt
+                            Ol</button>
                     </div>
                 </form>
             </div>
@@ -374,8 +817,11 @@
                 <div class="input-group">
                     <input type="email" id="forgot-email" class="form-input" placeholder="E-posta adresi">
                 </div>
-                <button type="button" id="send-reset-btn" class="send-btn-modern" style="width:100%; border-radius:8px;" disabled>Gönder</button>
-                <button type="button" id="back-to-login-btn" class="action-btn" style="margin-top:10px; color:gray; background:none; border:none; cursor:pointer; width:100%;">Geri Dön</button>
+                <button type="button" id="send-reset-btn" class="send-btn-modern" style="width:100%; border-radius:8px;"
+                    disabled>Gönder</button>
+                <button type="button" id="back-to-login-btn" class="action-btn"
+                    style="margin-top:10px; color:gray; background:none; border:none; cursor:pointer; width:100%;">Geri
+                    Dön</button>
             </div>
             <p id="login-error" style="color:var(--danger); font-size:13px; margin-top:16px; display:none;"></p>
         </div>
@@ -398,9 +844,10 @@
         <div class="nav-item"><i class="fa-solid fa-bug"></i> Zafiyet Raporları</div>
         <div class="nav-item"><i class="fa-solid fa-shield-halved"></i> Defansif Güvenlik</div>
         <div class="nav-item"><i class="fa-solid fa-terminal"></i> CTF Çözümleri</div>
-        
+
         <div class="sidebar-footer">
-            <div id="logout-btn" class="nav-item" style="color:var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
+            <div id="logout-btn" class="nav-item" style="color:var(--danger);"><i
+                    class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
         </div>
     </div>
 
@@ -414,21 +861,24 @@
 
         <div class="compose-area">
             <div class="compose-wrapper">
-                <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..." maxlength="500"></textarea>
-                
+                <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..."
+                    maxlength="500"></textarea>
+
                 <div class="compose-footer">
                     <div class="action-icons">
                         <i class="fa-regular fa-image" title="Resim Ekle"></i>
                         <i class="fa-solid fa-code" title="Kod Bloğu"></i>
                         <i class="fa-solid fa-paperclip" title="Dosya Ekle"></i>
                     </div>
-                    <button id="main-send-btn" class="send-btn-modern">Paylaş <i class="fa-solid fa-paper-plane"></i></button>
+                    <button id="main-send-btn" class="send-btn-modern">Paylaş <i
+                            class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
 
         <div class="chat-area" id="chat-feed">
-            <div style="display:flex; justify-content:center; align-items:center; height:100%; color:var(--text-muted); flex-direction:column;">
+            <div
+                style="display:flex; justify-content:center; align-items:center; height:100%; color:var(--text-muted); flex-direction:column;">
                 <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="margin-bottom:15px;"></i>
                 <span>Veriler şifreli kanaldan çekiliyor...</span>
             </div>
@@ -439,9 +889,10 @@
         <div class="modal-box">
             <h3 style="margin:0 0 20px 0;">Düzenle</h3>
             <textarea id="edit-content" class="form-input form-textarea" maxlength="500"></textarea>
-            <input type="hidden" id="edit-post-id"> 
+            <input type="hidden" id="edit-post-id">
             <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
-                <button id="close-edit-modal" class="send-btn-modern" style="width:auto; background:transparent; border:1px solid #555;">İptal</button>
+                <button id="close-edit-modal" class="send-btn-modern"
+                    style="width:auto; background:transparent; border:1px solid #555;">İptal</button>
                 <button id="save-edit-btn" class="send-btn-modern" style="width:auto;">Kaydet</button>
             </div>
         </div>
@@ -450,11 +901,11 @@
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
         let isGuest = true;
-        const POLL_INTERVAL = 3000; 
-        const MESSAGE_COOLDOWN = 5; 
-        let lastMessageTime = 0;    
-        let openRepliesSet = new Set(); 
-        let lastPostsString = ""; 
+        const POLL_INTERVAL = 3000;
+        const MESSAGE_COOLDOWN = 5;
+        let lastMessageTime = 0;
+        let openRepliesSet = new Set();
+        let lastPostsString = "";
 
         // --- AUTH & SESSION ---
         async function checkSession() {
@@ -472,7 +923,7 @@
                     document.getElementById('guest-bar').classList.add('active');
                 }
                 loadMessages();
-            } catch (e) { 
+            } catch (e) {
                 isGuest = true;
                 document.getElementById('guest-bar').classList.add('active');
             }
@@ -484,20 +935,20 @@
             const btn = document.getElementById(btnId);
             const errEl = document.getElementById('login-error');
 
-            if(!email || (!password && endpoint !== 'forgot-password')) {
+            if (!email || (!password && endpoint !== 'forgot-password')) {
                 errEl.innerText = "Alanları doldurun."; errEl.style.display = 'block'; return;
             }
-            if(btn) btn.disabled = true; 
-            
+            if (btn) btn.disabled = true;
+
             try {
                 const res = await fetch(`${API_URL}/${endpoint}`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({email, password}), credentials: 'include'
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }), credentials: 'include'
                 });
                 const data = await res.json();
 
                 if (res.ok) {
-                    if(endpoint === 'register') {
+                    if (endpoint === 'register') {
                         alert("Kayıt Başarılı! Şimdi giriş yapabilirsin.");
                         document.getElementById('back-to-login-btn').click();
                     } else if (endpoint === 'login') {
@@ -507,32 +958,32 @@
                     errEl.innerText = data.error || "Hata."; errEl.style.display = 'block';
                 }
             } catch (e) { errEl.innerText = "Sunucu hatası."; errEl.style.display = 'block'; }
-            finally { if(btn) btn.disabled = false; }
+            finally { if (btn) btn.disabled = false; }
         }
 
         // --- LOAD MESSAGES ---
         async function loadMessages() {
             try {
                 const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
-                if(!res.ok) throw new Error("Sunucu Hatası");
+                if (!res.ok) throw new Error("Sunucu Hatası");
                 const posts = await res.json();
                 const feed = document.getElementById('chat-feed');
 
                 const currentDataString = JSON.stringify(posts);
                 if (currentDataString === lastPostsString) {
-                    return; 
+                    return;
                 }
                 lastPostsString = currentDataString;
 
-                if (posts.length === 0) { 
-                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'><i class='fa-solid fa-ghost fa-2x'></i><br><br>Burası çok sessiz... İlk mesajı sen at!</div>"; 
-                    return; 
+                if (posts.length === 0) {
+                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'><i class='fa-solid fa-ghost fa-2x'></i><br><br>Burası çok sessiz... İlk mesajı sen at!</div>";
+                    return;
                 }
 
                 const postMap = {};
                 posts.forEach(p => postMap[p.id] = { ...p, children: [] });
                 const roots = [];
-                
+
                 posts.forEach(p => {
                     if (p.parent_id && postMap[p.parent_id]) {
                         postMap[p.parent_id].children.push(postMap[p.id]);
@@ -541,7 +992,7 @@
                     }
                 });
 
-                roots.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+                roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
                 let html = roots.map(root => buildPostHTML(root)).join('');
                 feed.innerHTML = html;
@@ -559,19 +1010,19 @@
             html += renderSingleMessage(post, post.parent_id !== null);
 
             if (post.children.length > 0) {
-                post.children.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-                
+                post.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
                 // --- DÜZELTME BAŞLANGICI ---
                 // Bu postun yanıtları şu an açıklar listesinde mi?
                 const isOpen = openRepliesSet.has(post.id);
 
                 // Duruma göre ikon ve yazı belirle
-                const icon = isOpen 
-                    ? '<i class="fa-solid fa-chevron-up"></i>' 
+                const icon = isOpen
+                    ? '<i class="fa-solid fa-chevron-up"></i>'
                     : '<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i>';
-                
-                const text = isOpen 
-                    ? 'Yanıtları gizle' 
+
+                const text = isOpen
+                    ? 'Yanıtları gizle'
                     : `${post.children.length} yanıtı gör`;
 
                 // Buton HTML'ini buna göre oluştur
@@ -593,7 +1044,7 @@
             const initial = (p.author_email || 'A').charAt(0).toUpperCase();
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
-            
+
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="openEditModal(${p.id}, '${escapeHTML(p.content)}')"><i class="fa-solid fa-pen"></i></span>` : '';
@@ -616,11 +1067,11 @@
             </div>`;
         }
 
-        window.toggleReplies = function(id) {
+        window.toggleReplies = function (id) {
             const container = document.getElementById(`replies-${id}`);
-            const btn = document.getElementById(`btn-${id}`); 
-            const count = btn.getAttribute('data-count');     
-            
+            const btn = document.getElementById(`btn-${id}`);
+            const count = btn.getAttribute('data-count');
+
             if (container.classList.contains('show')) {
                 container.classList.remove('show');
                 openRepliesSet.delete(id);
@@ -635,27 +1086,27 @@
         // --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
         const mainInput = document.getElementById('main-chat-input');
         const mainSendBtn = document.getElementById('main-send-btn');
-        let cooldownInterval = null; 
+        let cooldownInterval = null;
 
         // 1. TEXTAREA AUTO RESIZE
-        mainInput.addEventListener('input', function() {
+        mainInput.addEventListener('input', function () {
             this.style.height = 'auto'; // Önce sıfırla
             this.style.height = (this.style.scrollHeight) + 'px'; // Sonra içeriğe göre uzat
         });
 
         // 2. Enter tuşu desteği
-        mainInput.addEventListener('keydown', function(e) {
+        mainInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); 
+                e.preventDefault();
                 if (!mainSendBtn.disabled) mainSendBtn.click();
             }
         });
 
         mainSendBtn.onclick = async () => {
-            if(isGuest) { window.openAuthModal('login'); return; }
+            if (isGuest) { window.openAuthModal('login'); return; }
 
             const content = mainInput.value;
-            if(!content.trim()) return;
+            if (!content.trim()) return;
 
             // Gönderiliyor Modu
             mainSendBtn.disabled = true;
@@ -663,39 +1114,39 @@
 
             try {
                 const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ content: content, parent_id: null }),
                     credentials: 'include'
                 });
 
-                if(res.ok) {
+                if (res.ok) {
                     // BAŞARILI: Temizle
                     mainInput.value = '';
                     mainInput.style.height = 'auto'; // Boyutu sıfırla
-                    
+
                     lastMessageTime = Date.now();
-                    lastPostsString = ""; 
+                    lastPostsString = "";
                     loadMessages();
-                    
+
                     // SAYAÇ BAŞLAT (3 Saniye Timeout)
                     startButtonCooldown(3);
 
-                } else { 
+                } else {
                     alert("Hata oluştu.");
-                    resetButton(); 
+                    resetButton();
                 }
-            } catch(e) { 
-                alert("Bağlantı hatası."); 
-                resetButton(); 
-            } 
+            } catch (e) {
+                alert("Bağlantı hatası.");
+                resetButton();
+            }
         }
 
         function startButtonCooldown(seconds) {
             let counter = seconds;
-            mainSendBtn.disabled = true; 
-            mainSendBtn.innerText = `Bekle (${counter})`; 
+            mainSendBtn.disabled = true;
+            mainSendBtn.innerText = `Bekle (${counter})`;
 
-            if (cooldownInterval) clearInterval(cooldownInterval); 
+            if (cooldownInterval) clearInterval(cooldownInterval);
 
             cooldownInterval = setInterval(() => {
                 counter--;
@@ -714,13 +1165,13 @@
         }
 
         // --- DİĞER FONKSİYONLAR ---
-        window.openAuthModal = function(type) {
+        window.openAuthModal = function (type) {
             document.getElementById('auth-screen').classList.add('active');
             document.getElementById('login-view').classList.remove('hidden');
             document.getElementById('forgot-view').classList.add('hidden');
             document.getElementById('auth-title').textContent = (type === 'register') ? "Hesap Oluştur" : "Hoş Geldiniz";
         }
-        window.closeAuthModal = function() { document.getElementById('auth-screen').classList.remove('active'); }
+        window.closeAuthModal = function () { document.getElementById('auth-screen').classList.remove('active'); }
         document.getElementById('show-forgot-btn').onclick = () => {
             document.getElementById('login-view').classList.add('hidden');
             document.getElementById('forgot-view').classList.remove('hidden');
@@ -731,21 +1182,21 @@
         };
         document.getElementById('login-btn').onclick = () => handleAuth('login', 'login-btn');
         document.getElementById('register-btn').onclick = () => handleAuth('register', 'register-btn');
-        document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, {method:'POST', credentials:'include'}); location.reload(); };
+        document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' }); location.reload(); };
 
         async function deletePost(id) {
             if (!confirm("Silinsin mi?")) return;
             try {
                 const res = await fetch(`${API_URL}/posts/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' });
                 if (res.ok) {
-                    lastPostsString = ""; 
-                    loadMessages(); 
+                    lastPostsString = "";
+                    loadMessages();
                 }
             } catch (e) { alert("Hata."); }
         }
 
         const editModal = document.getElementById('edit-modal');
-        window.openEditModal = function(id, content) {
+        window.openEditModal = function (id, content) {
             document.getElementById('edit-content').value = content;
             document.getElementById('edit-post-id').value = id;
             editModal.classList.add('active');
@@ -754,7 +1205,7 @@
         document.getElementById('save-edit-btn').onclick = async () => {
             const id = document.getElementById('edit-post-id').value;
             const content = document.getElementById('edit-content').value;
-            if(!content.trim()) return;
+            if (!content.trim()) return;
             try {
                 await fetch(`${API_URL}/posts/${id}`, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' },
@@ -763,7 +1214,7 @@
                 editModal.classList.remove('active');
                 lastPostsString = "";
                 loadMessages();
-            } catch(e) { alert("Hata"); }
+            } catch (e) { alert("Hata"); }
         }
 
         const formatTime = (dateStr) => {
@@ -783,8 +1234,8 @@
         let activeReplyId = null; // Hangi mesajda kutu açık?
 
         // 1. Kutuyu Aç/Kapat Fonksiyonu
-        window.toggleReplyBox = function(id, authorName) {
-            if(isGuest) { window.openAuthModal('login'); return; }
+        window.toggleReplyBox = function (id, authorName) {
+            if (isGuest) { window.openAuthModal('login'); return; }
 
             // Eğer zaten bu mesajda kutu açıksa, kapat
             if (activeReplyId === id) {
@@ -799,7 +1250,7 @@
 
             activeReplyId = id;
             const messageEl = document.getElementById(`msg-${id}`).querySelector('.msg-right');
-            
+
             // HTML'i oluştur
             const replyHTML = `
                 <div id="inline-reply-${id}" class="inline-reply-area">
@@ -821,7 +1272,7 @@
             // Otomatik odaklan ve Auto-Resize özelliğini ekle
             const textarea = document.getElementById(`inline-input-${id}`);
             textarea.focus();
-            textarea.addEventListener('input', function() {
+            textarea.addEventListener('input', function () {
                 this.style.height = 'auto';
                 this.style.height = (this.style.scrollHeight) + 'px';
             });
@@ -831,7 +1282,7 @@
         }
 
         // 2. Kutuyu Kapatma Fonksiyonu
-        window.closeReplyBox = function() {
+        window.closeReplyBox = function () {
             if (activeReplyId) {
                 const box = document.getElementById(`inline-reply-${activeReplyId}`);
                 if (box) box.remove();
@@ -840,30 +1291,30 @@
         }
 
         // 3. Yanıtı Gönderme Fonksiyonu
-        window.submitInlineReply = async function(parentId) {
+        window.submitInlineReply = async function (parentId) {
             const input = document.getElementById(`inline-input-${parentId}`);
             const btn = document.getElementById(`btn-reply-${parentId}`);
             const content = input.value;
 
-            if(!content.trim()) return;
+            if (!content.trim()) return;
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
             try {
                 const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ content: content, parent_id: parentId }),
                     credentials: 'include'
                 });
 
-                if(res.ok) {
+                if (res.ok) {
                     // BAŞARILI: Kutuyu hemen kapat
                     closeReplyBox();
-                    
+
                     // Listeyi yenile
                     if (parentId) openRepliesSet.add(parseInt(parentId));
-                    lastPostsString = ""; 
+                    lastPostsString = "";
                     loadMessages();
 
                     // Sayacı arka planda başlat (Global Cooldown)
@@ -873,14 +1324,14 @@
                     alert("Hata oluştu.");
                     btn.disabled = false; btn.innerText = "Yanıtla";
                 }
-            } catch(e) {
+            } catch (e) {
                 alert("Bağlantı hatası.");
                 btn.disabled = false; btn.innerText = "Yanıtla";
             }
         }
 
         // --- COOLDOWN YÖNETİMİ (GLOBAL) ---
-        let globalCooldownEnd = 0; 
+        let globalCooldownEnd = 0;
 
         function startGlobalReplyCooldown() {
             // Şu andan itibaren 3 saniye yasak
@@ -890,11 +1341,11 @@
         function checkCooldownState(id) {
             // Kutu açıldığında ceza süresi bitmemişse butonu ayarla
             const remaining = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
-            
+
             if (remaining > 0) {
                 const btn = document.getElementById(`btn-reply-${id}`);
-                if(!btn) return;
-                
+                if (!btn) return;
+
                 btn.disabled = true;
                 btn.innerText = `Bekle (${remaining})`;
 
@@ -912,4 +1363,5 @@
         }
     </script>
 </body>
+
 </html>
