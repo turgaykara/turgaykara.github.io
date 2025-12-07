@@ -593,41 +593,63 @@
         let openRepliesSet = new Set(); 
 
         // --- YENİ RECURSIVE (İÇ İÇE) MESAJ YÜKLEME ---
+        // --- YENİ HATA KORUMALI LOAD MESSAGES ---
         async function loadMessages() {
+            const feed = document.getElementById('chat-feed');
             try {
                 const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
+                
+                // Sunucu hatası kontrolü (Örn: 500 hatası veriyorsa)
+                if (!res.ok) {
+                    throw new Error(`Sunucu Hatası: ${res.status}`);
+                }
+
                 const posts = await res.json();
-                const feed = document.getElementById('chat-feed');
 
-                if (posts.length === 0) { feed.innerHTML = "<div style='text-align:center; color:gray; margin-top:20px;'>Mesaj yok.</div>"; return; }
+                // Gelen veri liste (array) mi kontrol et? (Bazen hata mesajı döner)
+                if (!Array.isArray(posts)) {
+                    console.error("Gelen veri:", posts); // Konsola yaz
+                    // Eğer giriş yapılmadıysa ve sunucu hata döndürdüyse
+                    if (posts.error) throw new Error(posts.error);
+                    throw new Error("Veri formatı bozuk.");
+                }
 
-                // Tüm postları bir haritaya çevir (Hızlı erişim için)
+                if (posts.length === 0) { 
+                    feed.innerHTML = "<div style='text-align:center; color:gray; margin-top:20px;'>Henüz mesaj yok. İlk mesajı sen at!</div>"; 
+                    return; 
+                }
+
+                // --- Veri İşleme Kısmı ---
                 const postMap = {};
                 posts.forEach(p => postMap[p.id] = { ...p, children: [] });
 
-                // Ağaç yapısını kur (Parent -> Children)
                 const roots = [];
+                // Scroll kontrolü
                 const isAtBottom = feed.scrollHeight - feed.scrollTop <= feed.clientHeight + 100;
-                if (isAtBottom || !window.hasLoadedOnce) {
-                feed.scrollTop = feed.scrollHeight;
-                window.hasLoadedOnce = true;
-                }
+
                 posts.forEach(p => {
                     if (p.parent_id && postMap[p.parent_id]) {
                         postMap[p.parent_id].children.push(postMap[p.id]);
                     } else {
-                        roots.push(postMap[p.id]); // Ana konu
+                        roots.push(postMap[p.id]);
                     }
                 });
 
-                // Tarihe göre sırala
-                roots.sort((a,b) => new Date(a.created_at) - new Date(b.created_at)); // Eskiden yeniye (veya tam tersi)
+                // Sıralama
+                roots.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
 
-                // HTML oluştur (Recursive fonksiyon ile)
+                // HTML oluştur
                 let html = roots.map(root => buildPostHTML(root)).join('');
                 feed.innerHTML = html;
 
-                // --- RESTORE STATE (Açık olanları tekrar aç) ---
+                // --- Scroll Ayarı ---
+                // Sayfa ilk kez açılıyorsa veya kullanıcı en alttaysa aşağı kaydır
+                if (!window.hasLoadedOnce || isAtBottom) {
+                    feed.scrollTop = feed.scrollHeight;
+                    window.hasLoadedOnce = true;
+                }
+
+                // --- Açık Yanıtları Geri Yükle ---
                 openRepliesSet.forEach(id => {
                     const container = document.getElementById(`replies-${id}`);
                     const btn = document.getElementById(`btn-${id}`);
@@ -641,9 +663,17 @@
                     }
                 });
 
-            } catch (e) { console.error(e); }
+            } catch (e) { 
+                console.error("Hata Detayı:", e);
+                // Ekrana hatayı bas ki görelim
+                feed.innerHTML = `
+                    <div style="text-align:center; color:var(--danger); margin-top:50px;">
+                        <i class="fa-solid fa-triangle-exclamation fa-2x"></i><br><br>
+                        Bağlantı Sorunu!<br>
+                        <small style="color:gray;">${e.message}</small>
+                    </div>`;
+            }
         }
-
         // --- TEK BİR POST VE ÇOCUKLARINI OLUŞTURAN FONKSİYON ---
         function buildPostHTML(post) {
             // Önce postun kendisini çiz
