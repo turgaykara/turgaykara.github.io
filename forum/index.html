@@ -883,6 +883,67 @@
         }
         .char-counter.limit-near { color: #facc15; } /* Limite yaklaşınca sarı */
         .char-counter.limit-reached { color: var(--danger); } /* Limit dolunca kırmızı */
+
+
+        /* --- YAZI BOYUTU VE OKUNABİLİRLİK GÜNCELLEMESİ --- */
+        
+        /* 1. Genel Yazı Boyutunu Artır */
+        body {
+            font-size: 16px; /* Eskisi muhtemelen 14px idi */
+        }
+
+        /* 2. Sidebar (Yan Menü) İyileştirmesi */
+        .nav-item {
+            font-size: 16px !important; /* Menü linkleri */
+            padding: 12px 14px; /* Tıklama alanını da genişletelim */
+        }
+        .nav-label {
+            font-size: 12px !important; /* "KANALLAR" gibi başlıklar */
+            margin-top: 15px;
+        }
+        .user-info h4 {
+            font-size: 16px !important; /* Kullanıcı adı */
+        }
+        .user-info p {
+            font-size: 13px !important; /* "Çevrimiçi" yazısı */
+        }
+
+        /* 3. Mesaj Kartları ve İçerik */
+        .msg-text {
+            font-size: 16px !important; /* Mesajın kendisi */
+            line-height: 1.6 !important; /* Satır aralığını açtık, gözü yormaz */
+            color: #e4e4e7; /* Yazı rengini bir tık daha parlak yaptık */
+        }
+        .msg-author {
+            font-size: 15px !important; /* Yazar ismi */
+        }
+        .msg-date {
+            font-size: 13px !important; /* Tarih */
+        }
+
+        /* 4. Formlar ve Input Alanları */
+        .form-input, 
+        .compose-input, 
+        textarea, 
+        select.form-input {
+            font-size: 16px !important; /* Yazı yazarkenki boyut */
+        }
+
+        /* 5. Butonlar ve Linkler */
+        .send-btn-modern {
+            font-size: 14px !important;
+        }
+        .view-replies-btn {
+            font-size: 14px !important;
+        }
+        .action-btn {
+            font-size: 13px !important; /* Düzenle/Sil butonları */
+        }
+
+        /* 6. Modal Başlıkları */
+        .modal-box h3, .modal-box h2 {
+            font-size: 20px !important;
+        }
     </style>
 </head>
 
