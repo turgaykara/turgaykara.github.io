@@ -522,12 +522,14 @@
         }
 
         .msg-actions {
-            margin-top: 15px;
+            margin-top: auto; /* <-- Bu satır grubu en alta iter */
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-end; /* Sağa yaslar */
+            align-items: flex-end; /* <-- Bu satır butonları zemine (aşağı) hizalar */
             gap: 15px;
             opacity: 0.4;
             transition: 0.3s;
+            padding-top: 15px; /* Üstteki yazıyla arasına biraz nefes payı */
         }
 
         .message:hover .msg-actions {
