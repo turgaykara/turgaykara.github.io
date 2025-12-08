@@ -1040,12 +1040,12 @@
     <div id="new-topic-modal" class="modal-overlay">
         <div class="modal-box" style="width: 500px; max-width:90%;">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <h3>Yeni Konu Başlat</h3>
+                <h2>Yeni Konu Başlat</h2>
                 <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeNewTopicModal()"></i>
             </div>
             
             <div class="input-group">
-                <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:5px;">Kategori Seç</label>
+                <label style="font-size:14px; color:var(--text-muted); display:block; margin-bottom:5px;">Kategori Seç</label>
                 <select id="topic-category" class="form-input" style="background-color:#09090b;">
                     <option value="soru-cevap">❓ Soru - Cevap</option>
                     <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
@@ -2043,48 +2043,84 @@ async function loadAllUsers() {
                 counterEl.classList.remove('limit-near', 'limit-reached');
             }
         }
-        async function sendDetailReply(topicId) {
-            if (isGuest) { window.openAuthModal('login'); return; }
+        // --- KONU CEVAPLAMA İÇİN SOĞUMA SÜRESİ ---
+        let detailCooldownInterval = null;
 
-            const input = document.getElementById('detail-reply-input');
+        function startDetailButtonCooldown(seconds) {
             const btn = document.getElementById('btn-detail-reply');
-            const content = input.value;
+            if (!btn) return;
+            
+            let counter = seconds;
+            btn.disabled = true; // Butonu kilitle
+            btn.innerHTML = `Bekle (${counter})`; // Geri sayımı göster
 
-            if (!content.trim()) return;
+            if (detailCooldownInterval) clearInterval(detailCooldownInterval);
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-
-            try {
-                // --- BURASI DEĞİŞTİ (Category eklendi) ---
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        content: content, 
-                        parent_id: topicId,
-                        category: currentCategory // <--- İŞTE BU EKSİKTİ!
-                    }),
-                    credentials: 'include'
-                });
-                // -----------------------------------------
-
-                if (res.ok) {
-                    input.value = ''; // Kutuyu temizle
-                    lastPostsString = ""; // Verileri yenile
-                    loadMessages(); // Sayfayı güncelle
+            detailCooldownInterval = setInterval(() => {
+                counter--;
+                if (counter > 0) {
+                    btn.innerHTML = `Bekle (${counter})`;
                 } else {
-                    alert("Hata oluştu.");
+                    // Süre bitti, butonu aç
+                    clearInterval(detailCooldownInterval);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
                 }
-            } catch (e) {
-                alert("Bağlantı hatası.");
-            } finally {
+            }, 1000);
+        }
+        async function sendDetailReply(topicId) {
+    if (isGuest) { window.openAuthModal('login'); return; }
+
+    const input = document.getElementById('detail-reply-input');
+    const btn = document.getElementById('btn-detail-reply');
+    const content = input.value;
+
+    if (!content.trim()) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+    try {
+        const res = await fetch(`${API_URL}/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                content: content, 
+                parent_id: topicId,
+                category: currentCategory 
+            }),
+            credentials: 'include'
+        });
+
+        if (res.ok) {
+            input.value = ''; // Kutuyu temizle
+            lastPostsString = ""; // Verileri yenile
+            loadMessages(); // Ekranı güncelle
+            
+            // --- COOLDOWN (FREN) BURADA DEVREYE GİRİYOR ---
+            if (currentUserRank !== 'admin') {
+                startDetailButtonCooldown(3); // Admin değilse 3 saniye beklet
+            } else {
+                // Adminse bekleme yapma, hemen butonu aç
                 btn.disabled = false;
                 btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
-                // Odaklanmayı tekrar inputa ver ki seri yazabilsin
-                if(input) input.focus(); 
             }
+        } else {
+            const data = await res.json();
+            alert(data.error || "Hata oluştu.");
+            // Hata varsa butonu hemen aç (cezalandırma)
+            btn.disabled = false;
+            btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
         }
+    } catch (e) {
+        alert("Bağlantı hatası.");
+        btn.disabled = false;
+        btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+    } 
+    
+    // Odaklanmayı tekrar inputa ver
+    if(input) input.focus(); 
+}
 
         // --- BEĞENİ VE KAYDETME SİSTEMİ (FRONTEND) ---
 // --- BEĞENİ VE KAYDETME SİSTEMİ (LOCAL STORAGE / HAFIZALI) ---
