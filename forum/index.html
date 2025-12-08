@@ -1289,39 +1289,83 @@
                 
                 // GÖRÜNÜM 2: FORUM LİSTESİ (KONU KARTLARI)
                 else if (currentViewMode === 'forum-list') {
-                    // Sadece ana konular listelenir (Title, Author, Reply Count)
                     let html = '';
                     posts.forEach(p => {
-                        // Sadece ana konuları listele (Cevapları değil)
+                        // Sadece ana konuları listele
                         if (!p.parent_id) {
+                            
+                            // --- 1. İSTATİSTİK VERİLERİNİ HAZIRLA ---
+                            const initial = (p.author_email || 'A').charAt(0).toUpperCase();
+                            const userStats = p.user_stats || { rank: 'member', message_count: 0, join_date: null };
+                            
+                            // Rütbe Rengi ve Yazısı
+                            const rankText = {
+                                'admin': 'Admin',
+                                'moderator': 'Moderatör',
+                                'member': 'Üye'
+                            }[userStats.rank] || 'Üye';
+
+                            // Kayıt Tarihi Formatı
+                            let joinDate = 'Bilinmiyor';
+                            if (userStats.join_date) {
+                                try {
+                                    const d = new Date(userStats.join_date);
+                                    joinDate = d.toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' });
+                                } catch (e) {}
+                            }
+                            // ----------------------------------------
+
                             html += `
-                            <div class="message" style="cursor:pointer; flex-direction:row; align-items:center; padding:15px;" onclick="viewTopic(${p.id})">
-                                <div class="msg-avatar" style="margin-bottom:0; width:40px; height:40px; font-size:16px;">
-                                    ${(p.author_email || 'A').charAt(0).toUpperCase()}
+                            <div class="message" style="cursor:pointer; flex-direction:row; padding:0; align-items:stretch;" onclick="viewTopic(${p.id})">
+                                
+                                <div class="msg-left" style="width: 110px; padding: 15px 5px; border-right: 1px solid rgba(255,255,255,0.05); background: transparent; flex-shrink:0; display:flex; flex-direction:column; justify-content:center;">
+                                    <div class="msg-avatar" style="width:40px; height:40px; font-size:16px; margin-bottom:10px;">
+                                        ${initial}
+                                    </div>
+                                    <div class="user-stats" style="border-top:none; padding-top:0;">
+                                        <div class="user-rank ${userStats.rank}" style="margin-bottom:6px;">${rankText}</div>
+                                        <div class="user-stats-item">
+                                            <i class="fa-solid fa-message"></i> ${userStats.message_count}
+                                        </div>
+                                        <div class="user-stats-item">
+                                            <i class="fa-solid fa-calendar-days"></i> ${joinDate}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div style="margin-left:15px; flex-grow:1;">
+
+                                <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
                                     <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
                                         ${p.title || 'Başlıksız Konu'}
                                     </div>
                                     <div style="font-size:12px; color:var(--text-muted);">
                                         @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
                                     </div>
-                                    <div style="font-size:13px; color:#d4d4d8; margin-top:6px;">
-                                        ${escapeHTML(p.content.length > 100 ? p.content.substring(0, 100) + '...' : p.content)}
+                                    
+                                    <div style="
+                                        font-size: 13px; 
+                                        color: #a1a1aa; 
+                                        margin-top: 6px; 
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 2;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    ">
+                                        ${escapeHTML(p.content)}
                                     </div>
                                 </div>
-                                <div style="text-align:center; min-width:60px;">
+
+                                <div style="text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:1px solid rgba(255,255,255,0.05);">
                                     <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
-                                    <div style="font-size:12px; color:var(--text-muted);">${p.reply_count || 0}</div>
+                                    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">${p.reply_count || 0}</div>
                                 </div>
                             </div>`;
                         }
                     });
                     feed.innerHTML = html;
                 }
-
-            } catch (e) { console.error(e); }
-        }
+                            } catch (e) { console.error(e); }
+                        }
         // --- KONU DETAY GÖRÜNTÜLEME (FORUM İÇİN) ---
         // Bu kısım biraz trick gerektirir. Backend şu an tüm category postlarını çekiyor.
         // İleride tek post çeken endpoint yazılabilir ama şimdilik client-side filtre yapalım.
