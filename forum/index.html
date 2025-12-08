@@ -1202,6 +1202,11 @@
 
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const isAdmin = currentUserRank === 'admin';
+            let banBtn = '';
+            if (isAdmin && !p.is_mine) {
+                banBtn = `<span class="action-btn action-delete" style="color: #ff0000; border-color: #ff0000;" onclick="banUser(${p.author_id}, '${name}')"><i class="fa-solid fa-gavel"></i> Banla</span>`;
+            }
+
             const canDelete = p.is_mine || isAdmin;
             const deleteBtn = canDelete ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
             const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i> Düzenle</span>` : '';
@@ -1295,7 +1300,11 @@
                     lastPostsString = "";
                     loadMessages();
 
-                    startButtonCooldown(3);
+                    if (currentUserRank !== 'admin') {
+                        startButtonCooldown(3);
+                    } else {
+                        resetButton(); // Adminse butonu hemen aktif et
+                    }
 
                 } else {
                     alert("Hata oluştu.");
@@ -1520,6 +1529,29 @@
                 }, 1000);
             }
         }
+        async function banUser(userId, username) {
+        if (!confirm(`DİKKAT! @${username} kullanıcısını banlamak (veya banını açmak) üzeresin. Emin misin?`)) return;
+            try {
+                const res = await fetch(`${API_URL}/users/${userId}/ban`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    alert(data.message);
+                    // Sayfayı yenilemeye gerek yok ama mesajları tazelemek iyi olur
+                    lastPostsString = "";
+                    loadMessages();
+                } else {
+                    alert("Hata: " + data.error);
+                }
+            } catch (e) {
+                alert("Bağlantı hatası.");
+            }
+        }
+        
         document.getElementById('toggle-password').addEventListener('click', function() {
     const passwordInput = document.getElementById('password');
     const icon = this;
