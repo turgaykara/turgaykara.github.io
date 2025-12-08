@@ -1024,10 +1024,22 @@
         <div class="compose-area" id="general-compose-area">
             <div class="compose-wrapper">
                 <textarea id="main-chat-input" class="compose-input" placeholder="Genel sohbete yaz..." maxlength="500"></textarea>
-                <div class="compose-footer">
-                    <div class="action-icons">
-                        <i class="fa-solid fa-code"></i>
+                <div class="compose-wrapper">
+                    <textarea id="main-chat-input" class="compose-input" 
+                        placeholder="Genel sohbete yaz..." 
+                        maxlength="2000" 
+                        oninput="updateCharCount(this, 'main-char-count')"></textarea>
+                    
+                    <div class="compose-footer">
+                        <div class="action-icons">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div id="main-char-count" class="char-counter">0 / 2000</div>
+                            <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
                     </div>
+                </div>
                     <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
@@ -1475,12 +1487,17 @@
             html += `
                 <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
                     <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
+                    
                     <textarea id="detail-reply-input" class="form-input" 
                         placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
                         style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
+                        maxlength="2000"
+                        oninput="updateCharCount(this, 'detail-char-count')"
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
                     
-                    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                        <div id="detail-char-count" class="char-counter">0 / 2000</div>
+                        
                         <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;" ${btnAttr}>
                             ${btnContent}
                         </button>
@@ -2180,28 +2197,7 @@ async function toggleLike(id) {
     }
 }
 
-function toggleSave(id) {
-    // Mevcut kaydedilenleri hafızadan çek
-    let savedPosts = JSON.parse(localStorage.getItem('saved_posts') || '[]');
-    
-    const btn = document.getElementById(`save-btn-${id}`);
-    const icon = btn.querySelector('i');
 
-    if (savedPosts.includes(id)) {
-        // Kaydetmeyi kaldır
-        savedPosts = savedPosts.filter(itemId => itemId !== id);
-        btn.classList.remove('saved');
-        icon.className = 'fa-regular fa-bookmark';
-    } else {
-        // Kaydet
-        savedPosts.push(id);
-        btn.classList.add('saved');
-        icon.className = 'fa-solid fa-bookmark';
-    }
-
-    // Güncel listeyi tekrar hafızaya yaz
-    localStorage.setItem('saved_posts', JSON.stringify(savedPosts));
-}
 // --- KARAKTER SAYACI ---
 function updateCharCount(textarea, displayId) {
     const maxLength = textarea.getAttribute('maxlength');
