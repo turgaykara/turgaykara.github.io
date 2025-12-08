@@ -1363,66 +1363,67 @@
                 feed.innerHTML = html;
             }
             else if (currentViewMode === 'forum-detail') {
-            // 1. Ana konuyu ve cevaplarını bul
-            const topic = posts.find(p => p.id === currentTopicId);
-            const replies = posts.filter(p => p.parent_id === currentTopicId);
+    // 1. Ana konuyu ve cevaplarını bul
+    const topic = posts.find(p => p.id === currentTopicId);
+    const replies = posts.filter(p => p.parent_id === currentTopicId);
+    
+    // Eğer konu silinmişse veya bulunamazsa listeye at
+    if (!topic) { backToForum(); return; }
+
+    let html = '';
+
+    // --- A. GERİ DÖN BUTONU VE BAŞLIK (HİZALANDI) ---
+    html += `
+        <div style="max-width: 1000px; margin: 0 auto 20px auto; display:flex; align-items:center; gap:10px;">
+            <button onclick="backToForum()" class="action-btn" style="color:var(--text-muted); font-size:14px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:8px;">
+                <i class="fa-solid fa-arrow-left"></i> Listeye Dön
+            </button>
+            <h3 style="margin:0; color:#fff; font-size:18px;">${escapeHTML(topic.title)}</h3>
+        </div>
+    `;
+
+    // --- B. ANA KONU (Geniş Gösterim) ---
+    html += renderSingleMessage(topic, false);
+
+    // --- C. CEVAPLAR BAŞLIĞI (HİZALANDI) ---
+    html += `
+        <div style="max-width: 1000px; margin: 30px auto 15px auto; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--primary); font-weight:600; font-size:14px;">
+            <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> YANITLAR (${replies.length})
+        </div>
+    `;
+
+    // --- D. CEVAPLARI LİSTELE ---
+    if (replies.length > 0) {
+        // Eskiden yeniye sırala (İlk mesaj en üstte)
+        replies.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        replies.forEach(reply => {
+            html += renderSingleMessage(reply, true);
+        });
+    } else {
+        html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
+    }
+
+    // --- E. CEVAP YAZMA KUTUSU (HİZALANDI VE ENTER EKLENDİ) ---
+    html += `
+        <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+            <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
             
-            // Eğer konu silinmişse veya bulunamazsa listeye at
-            if (!topic) { backToForum(); return; }
+            <textarea id="detail-reply-input" class="form-input" 
+                placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
+                style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
+                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
+            
+            <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
+                    Yanıtla <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <div style="height: 50px;"></div>
+    `;
 
-            let html = '';
-
-            // --- A. GERİ DÖN BUTONU ---
-            html += `
-                <div style="margin-bottom: 20px; display:flex; align-items:center; gap:10px;">
-                    <button onclick="backToForum()" class="action-btn" style="color:var(--text-muted); font-size:14px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:8px;">
-                        <i class="fa-solid fa-arrow-left"></i> Listeye Dön
-                    </button>
-                    <h3 style="margin:0; color:#fff; font-size:18px;">${escapeHTML(topic.title)}</h3>
-                </div>
-            `;
-
-            // --- B. ANA KONU (Geniş Gösterim) ---
-            // renderSingleMessage fonksiyonunu kullanarak ana mesajı basıyoruz
-            html += renderSingleMessage(topic, false);
-
-            // --- C. CEVAPLAR BAŞLIĞI ---
-            html += `
-                <div style="margin: 30px 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--primary); font-weight:600; font-size:14px;">
-                    <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> YANITLAR (${replies.length})
-                </div>
-            `;
-
-            // --- D. CEVAPLARI LİSTELE ---
-            if (replies.length > 0) {
-                // Eskiden yeniye sırala (İlk mesaj en üstte)
-                replies.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                replies.forEach(reply => {
-                    html += renderSingleMessage(reply, true);
-                });
-            } else {
-                html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
-            }
-
-            // --- E. CEVAP YAZMA KUTUSU (En Altta) ---
-            html += `
-                <div style="margin-top: 30px; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-                    <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
-                    <textarea id="detail-reply-input" class="form-input" 
-                        placeholder="Düşüncelerini paylaş..." 
-                        style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"></textarea>
-                    
-                    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-                        <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
-                            Yanıtla <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-                <div style="height: 50px;"></div>
-            `;
-
-            feed.innerHTML = html;
-        }
+    feed.innerHTML = html;
+}
                             } catch (e) { console.error(e); }
                         }
 
