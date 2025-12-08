@@ -943,7 +943,7 @@
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px;">
         <a href="/forum" class="brand" style="margin-bottom:0;">
             <img src="pp2.png" width="40" style="border-radius:10%">
-            <span>DarkSec</span>
+            <span>Dark|Security</span>
         </a>
         <div onclick="openNewTopicModal()" style="cursor:pointer; width:30px; height:30px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; box-shadow:0 0 10px rgba(139,92,246,0.4);">
             <i class="fa-solid fa-plus"></i>
@@ -1082,319 +1082,271 @@
         </div>
     </div>
 </div>
-    <script>
-        const API_URL = 'https://admin3131.pythonanywhere.com';
-        let currentTopicId = null;
-        let currentUserRank = 'member';
-        let isGuest = true;
-        const POLL_INTERVAL = 10000;
-        const MESSAGE_COOLDOWN = 5;
-        let lastMessageTime = 0;
-        let openRepliesSet = new Set();
-        let lastPostsString = "";
-        let currentCategory = 'general';
-        let currentViewMode = 'chat';
+<script>
+    const API_URL = 'https://admin3131.pythonanywhere.com';
+    
+    // --- GLOBAL DEĞİŞKENLER ---
+    let currentTopicId = null;
+    let currentUserRank = 'member';
+    let isGuest = true;
+    const POLL_INTERVAL = 10000;
+    const MESSAGE_COOLDOWN = 5;
+    let lastMessageTime = 0;
+    let openRepliesSet = new Set();
+    let lastPostsString = "";
+    let currentCategory = 'general';
+    let currentViewMode = 'chat';
+    
+    // YENİ: Verileri hafızada tutmak için değişken
+    let allPostsData = []; 
 
-        // --- AUTH & SESSION ---
-        async function checkSession() {
-            try {
-                const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
-                const data = await res.json();
-                if (data.is_logged_in) {
-                    isGuest = false;
-                    if (data.user.rank === 'admin') {
-                        document.getElementById('admin-panel-btn').style.display = 'flex';
-                    }
-                    currentUserRank = data.user.rank || 'member';
-                    document.getElementById('auth-screen').classList.remove('active');
-                    document.getElementById('guest-bar').classList.remove('active');
-                    document.getElementById('user-name').innerText = data.user.username || "Hacker";
-                    document.getElementById('avatar-initial').innerText = (data.user.username || "U").charAt(0).toUpperCase();
-                } else {
-                    isGuest = true;
-                    document.getElementById('guest-bar').classList.add('active');
+    // --- AUTH & SESSION ---
+    async function checkSession() {
+        try {
+            const res = await fetch(`${API_URL}/session`, { credentials: 'include' });
+            const data = await res.json();
+            if (data.is_logged_in) {
+                isGuest = false;
+                if (data.user.rank === 'admin') {
+                    document.getElementById('admin-panel-btn').style.display = 'flex';
                 }
-                loadMessages();
-            } catch (e) {
+                currentUserRank = data.user.rank || 'member';
+                document.getElementById('auth-screen').classList.remove('active');
+                document.getElementById('guest-bar').classList.remove('active');
+                document.getElementById('user-name').innerText = data.user.username || "Hacker";
+                document.getElementById('avatar-initial').innerText = (data.user.username || "U").charAt(0).toUpperCase();
+            } else {
                 isGuest = true;
                 document.getElementById('guest-bar').classList.add('active');
             }
+            loadMessages();
+        } catch (e) {
+            isGuest = true;
+            document.getElementById('guest-bar').classList.add('active');
+        }
+    }
+
+    async function handleAuth(endpoint, btnId) {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById(btnId);
+        const errEl = document.getElementById('login-error');
+
+        errEl.style.display = 'none';
+        errEl.innerText = '';
+
+        if (!email || (!password && endpoint !== 'forgot-password')) {
+            errEl.innerText = "Lütfen tüm alanları doldurun.";
+            errEl.style.display = 'block';
+            return;
         }
 
-        async function handleAuth(endpoint, btnId) {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btn = document.getElementById(btnId);
-            const errEl = document.getElementById('login-error');
+        if (endpoint === 'register') {
+            if (password.length < 8) { errEl.innerText = "Şifre en az 8 karakter olmalıdır."; errEl.style.display = 'block'; return; }
+            if (!/[A-Z]/.test(password)) { errEl.innerText = "Şifre en az 1 BÜYÜK harf içermelidir."; errEl.style.display = 'block'; return; }
+            if (!/[a-z]/.test(password)) { errEl.innerText = "Şifre en az 1 küçük harf içermelidir."; errEl.style.display = 'block'; return; }
+            if (!/[^a-zA-Z0-9]/.test(password)) { errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, _ vb.) içermelidir."; errEl.style.display = 'block'; return; }
+        }
 
-            errEl.style.display = 'none';
-            errEl.innerText = '';
+        if (btn) btn.disabled = true;
 
-            // 1. Boş alan kontrolü
-            if (!email || (!password && endpoint !== 'forgot-password')) {
-                errEl.innerText = "Lütfen tüm alanları doldurun.";
-                errEl.style.display = 'block';
-                return;
-            }
+        try {
+            const res = await fetch(`${API_URL}/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include'
+            });
+            const data = await res.json();
 
-            // --- GÜVENLİK KONTROLÜ (Sadece Kayıt Olurken) ---
-            if (endpoint === 'register') {
-                if (password.length < 8) {
-                    errEl.innerText = "Şifre en az 8 karakter olmalıdır.";
-                    errEl.style.display = 'block';
-                    return;
-                }
-                if (!/[A-Z]/.test(password)) {
-                    errEl.innerText = "Şifre en az 1 BÜYÜK harf içermelidir.";
-                    errEl.style.display = 'block';
-                    return;
-                }
-                if (!/[a-z]/.test(password)) {
-                    errEl.innerText = "Şifre en az 1 küçük harf içermelidir.";
-                    errEl.style.display = 'block';
-                    return;
-                }
-                if (!/[^a-zA-Z0-9]/.test(password)) {
-                    errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, _ vb.) içermelidir.";
-                    errEl.style.display = 'block';
-                    return;
-                }
-            }
-            // ----------------------------------------------
-
-            if (btn) btn.disabled = true;
-
-            try {
-                const res = await fetch(`${API_URL}/${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }),
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                if (res.ok) {
-                    if (endpoint === 'register') {
-                        alert("Kayıt başarılı! E-postan adresine gönderilen aktivasyon bağlantısını onayladıktan sonra giriş yapabilirsiniz.");
-                        document.getElementById('back-to-login-btn').click();
-                    } else if (endpoint === 'login') {
-                        checkSession();
-                    } else {
-                        alert("İşlem başarılı.");
-                    }
+            if (res.ok) {
+                if (endpoint === 'register') {
+                    alert("Kayıt başarılı! E-postan adresine gönderilen aktivasyon bağlantısını onayladıktan sonra giriş yapabilirsiniz.");
+                    document.getElementById('back-to-login-btn').click();
+                } else if (endpoint === 'login') {
+                    checkSession();
                 } else {
-                    errEl.innerText = data.error || "Hata.";
-                    errEl.style.display = 'block';
+                    alert("İşlem başarılı.");
                 }
-            } catch (e) {
-                errEl.innerText = "Sunucu hatası.";
-                errEl.style.display = 'block';
-            } finally {
-                if (btn) btn.disabled = false;
-            }
-        }
-        // --- KATEGORİ DEĞİŞTİRME ---
-        function switchCategory(category, element) {
-            currentCategory = category;
-            
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(element) element.classList.add('active');
-
-            const headerTitle = {
-                'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
-                'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
-                'siber-guvenlik': '<i class="fa-solid fa-shield-halved"></i> Siber Güvenlik',
-                'pentesting': '<i class="fa-solid fa-chess-knight"></i> Pentesting',
-                'bug-bounty': '<i class="fa-solid fa-sack-dollar"></i> Bug Bounty',
-                'donanim': '<i class="fa-solid fa-laptop-code"></i> Yazılım & Donanım',
-                'tool-paylasim': '<i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı',
-                'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
-                'diger': '<i class="fa-solid fa-mug-hot"></i> Diğer Konular'
-            };
-            document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
-
-            if (category === 'general') {
-                currentViewMode = 'chat';
-                document.getElementById('general-compose-area').style.display = 'block'; // Inputu göster
             } else {
-                currentViewMode = 'forum-list';
-                document.getElementById('general-compose-area').style.display = 'none'; // Inputu gizle
+                errEl.innerText = data.error || "Hata.";
+                errEl.style.display = 'block';
             }
-
-            lastPostsString = "";
-            document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
-            loadMessages();
+        } catch (e) {
+            errEl.innerText = "Sunucu hatası.";
+            errEl.style.display = 'block';
+        } finally {
+            if (btn) btn.disabled = false;
         }
-        // Konunun içine girme fonksiyonu
-        function viewTopic(id) {
-            currentTopicId = parseInt(id); // ID'yi sayıya çeviriyoruz ki hata olmasın
-            currentViewMode = 'forum-detail';
-            
-            document.getElementById('general-compose-area').style.display = 'none'; 
-            
-            lastPostsString = ""; 
-            loadMessages();
-        }
+    }
 
-        // Listeye geri dönme fonksiyonu
-        function backToForum() {
-            currentTopicId = null;
+    // --- KATEGORİ DEĞİŞTİRME ---
+    function switchCategory(category, element) {
+        currentCategory = category;
+        
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        if(element) element.classList.add('active');
+
+        const headerTitle = {
+            'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
+            'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
+            'siber-guvenlik': '<i class="fa-solid fa-shield-halved"></i> Siber Güvenlik',
+            'pentesting': '<i class="fa-solid fa-chess-knight"></i> Pentesting',
+            'bug-bounty': '<i class="fa-solid fa-sack-dollar"></i> Bug Bounty',
+            'donanim': '<i class="fa-solid fa-laptop-code"></i> Yazılım & Donanım',
+            'tool-paylasim': '<i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı',
+            'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
+            'diger': '<i class="fa-solid fa-mug-hot"></i> Diğer Konular'
+        };
+        document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
+
+        if (category === 'general') {
+            currentViewMode = 'chat';
+            document.getElementById('general-compose-area').style.display = 'block'; 
+        } else {
             currentViewMode = 'forum-list';
-            lastPostsString = ""; // İçeriği yenilemeye zorla
-            loadMessages();
+            document.getElementById('general-compose-area').style.display = 'none'; 
         }
-        // --- MESAJLARI / KONULARI ÇEKME ---
-        async function loadMessages() {
-            // --- YENİLEME FRENİ ---
-            // 1. Satır içi düzenleme veya yanıtlama açıksa dur
-            if (activeEditId || activeReplyId) return;
 
-            // 2. Detay sayfasındaysak ve yazı kutusunda metin varsa dur (yazdıkların silinmesin)
-            const detailInput = document.getElementById('detail-reply-input');
-            if (detailInput && detailInput.value.trim().length > 0) return;
-            // -----------------------
+        lastPostsString = "";
+        document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
+        loadMessages();
+    }
 
-            try {
-                const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
-                const posts = await res.json();
-                const feed = document.getElementById('chat-feed');
-                
-                const currentDataString = JSON.stringify(posts);
-                if (currentDataString === lastPostsString && !activeEditId) return;
-                lastPostsString = currentDataString;
+    // --- HIZLANDIRILMIŞ GEÇİŞ FONKSİYONLARI ---
+    
+    // Konunun içine girme (Cache Kullanır - Hızlı)
+    function viewTopic(id) {
+        currentTopicId = parseInt(id);
+        currentViewMode = 'forum-detail';
+        document.getElementById('general-compose-area').style.display = 'none';
+        
+        // Fetch yapmadan, eldeki veriyle ekranı çiz
+        renderMessages(); 
+    }
 
-                feed.innerHTML = '';
+    // Listeye geri dönme (Cache Kullanır - Hızlı)
+    function backToForum() {
+        currentTopicId = null;
+        currentViewMode = 'forum-list';
+        document.getElementById('general-compose-area').style.display = 'none';
+        
+        // Fetch yapmadan, eldeki veriyle ekranı çiz
+        renderMessages(); 
+    }
 
-                if (posts.length === 0) {
-                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'>Henüz bu kategoride bir konu yok. İlkini sen aç! (+ Butonu)</div>";
-                    return;
-                }
+    // --- VERİ ÇEKME FONKSİYONU ---
+    async function loadMessages() {
+        if (activeEditId || activeReplyId) return;
+        const detailInput = document.getElementById('detail-reply-input');
+        if (detailInput && detailInput.value.trim().length > 0) return;
 
-                // GÖRÜNÜM 1: GENEL AKIŞ (CHAT TARZI)
-                if (currentViewMode === 'chat') {
-                    const postMap = {};
-                    posts.forEach(p => postMap[p.id] = { ...p, children: [] });
-                    const roots = [];
-                    posts.forEach(p => {
-                        if (p.parent_id && postMap[p.parent_id]) {
-                            postMap[p.parent_id].children.push(postMap[p.id]);
-                        } else if (!p.parent_id) {
-                            roots.push(postMap[p.id]);
-                        }
-                    });
-                    let html = roots.map(root => buildPostHTML(root)).join('');
-                    feed.innerHTML = html;
-                } 
-                
-                // GÖRÜNÜM 2: FORUM LİSTESİ (KONU KARTLARI)
-                else if (currentViewMode === 'forum-list') {
-                let html = '';
-                posts.forEach(p => {
-                    if (!p.parent_id) {
-                        
-                        // --- VERİ HAZIRLIĞI ---
-                        const initial = (p.author_email || 'A').charAt(0).toUpperCase();
-                        const userStats = p.user_stats || { rank: 'member', message_count: 0, join_date: null };
-                        
-                        const rankText = {
-                            'admin': 'Admin',
-                            'moderator': 'Moderatör',
-                            'member': 'Üye'
-                        }[userStats.rank] || 'Üye';
-
-                        let joinDate = 'Bilinmiyor';
-                        if (userStats.join_date) {
-                            try {
-                                const d = new Date(userStats.join_date);
-                                joinDate = d.toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' });
-                            } catch (e) {}
-                        }
-
-                        // --- SİLME YETKİSİ KONTROLÜ ---
-                        const canDelete = p.is_mine || (currentUserRank === 'admin');
-                        const deleteBtnHtml = canDelete ? 
-                            `<div onclick="deletePost(${p.id}); event.stopPropagation();" 
-                                  style="margin-top: 15px; color: #ef4444; font-size: 16px; cursor: pointer; transition: 0.2s;" 
-                                  onmouseover="this.style.transform='scale(1.2)'" 
-                                  onmouseout="this.style.transform='scale(1)'"
-                                  title="Konuyu Sil">
-                                <i class="fa-regular fa-trash-can"></i>
-                             </div>` : '';
-
-                        html += `
-                        <div class="message" style="cursor:pointer; flex-direction:row; padding:0; align-items:stretch;" onclick="viewTopic(${p.id})">
-                            
-                            <div class="msg-left" style="width: 110px; padding: 15px 5px; border-right: 1px solid rgba(255,255,255,0.05); background: transparent; flex-shrink:0; display:flex; flex-direction:column; justify-content:center;">
-                                <div class="msg-avatar" style="width:40px; height:40px; font-size:16px; margin-bottom:10px;">
-                                    ${initial}
-                                </div>
-                                <div class="user-stats" style="border-top:none; padding-top:0;">
-                                    <div class="user-rank ${userStats.rank}" style="margin-bottom:15px;">${rankText}</div>
-                                    
-                                    <div class="user-stats-item" style="margin-left: 10px;">
-                                        <i class="fa-solid fa-message"></i> ${userStats.message_count}
-                                    </div>
-                                    
-                                    <div class="user-stats-item" style="margin-left: 10px;">
-                                        <i class="fa-solid fa-calendar-days"></i> ${joinDate}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column; justify-content:flex-start;">
-                                <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
-                                    ${p.title || 'Başlıksız Konu'}
-                                </div>
-                                <div style="font-size:12px; color:var(--text-muted);">
-                                    @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
-                                </div>
-                                
-                                <div style="
-                                    font-size: 14px; 
-                                    color: #a1a1aa; 
-                                    margin-top: 22px; 
-                                    display: -webkit-box;
-                                    -webkit-line-clamp: 2;
-                                    -webkit-box-orient: vertical;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                ">
-                                    ${escapeHTML(p.content)}
-                                </div>
-                            </div>
-
-                            <div style="text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:1px solid rgba(255,255,255,0.05);">
-                                <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
-                                <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">${p.reply_count || 0}</div>
-                                ${deleteBtnHtml}
-                            </div>
-                        </div>`;
-                    }
-                });
-                feed.innerHTML = html;
-            }
+        try {
+            const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
+            const posts = await res.json();
             
-            else if (currentViewMode === 'forum-detail') {
-            // --- 1. VERİLERİ AĞAÇ YAPISINA ÇEVİR (Genel Akış Mantığıyla Aynı) ---
+            const currentDataString = JSON.stringify(posts);
+            if (currentDataString === lastPostsString && !activeEditId) return;
+            
+            lastPostsString = currentDataString;
+            allPostsData = posts; // Veriyi hafızaya al
+            
+            renderMessages(); // Ekranı çiz
+        } catch (e) { console.error(e); }
+    }
+
+    // --- EKRANA BASMA (RENDER) FONKSİYONU ---
+    // Bu fonksiyon hafızadaki 'allPostsData'yı kullanır, fetch yapmaz.
+    function renderMessages() {
+        const feed = document.getElementById('chat-feed');
+        const posts = allPostsData; // Hafızadan oku
+
+        if (posts.length === 0) {
+            feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'>Henüz bu kategoride bir konu yok. İlkini sen aç! (+ Butonu)</div>";
+            return;
+        }
+
+        // --- MOD 1: GENEL AKIŞ (CHAT) ---
+        if (currentViewMode === 'chat') {
             const postMap = {};
-            // Tüm postları bir haritaya at
             posts.forEach(p => postMap[p.id] = { ...p, children: [] });
-            // Çocukları babalarının altına ekle
+            const roots = [];
+            posts.forEach(p => {
+                if (p.parent_id && postMap[p.parent_id]) {
+                    postMap[p.parent_id].children.push(postMap[p.id]);
+                } else if (!p.parent_id) {
+                    roots.push(postMap[p.id]);
+                }
+            });
+            let html = roots.map(root => buildPostHTML(root)).join('');
+            feed.innerHTML = html;
+        } 
+        
+        // --- MOD 2: FORUM LİSTESİ ---
+        else if (currentViewMode === 'forum-list') {
+            let html = '';
+            posts.forEach(p => {
+                if (!p.parent_id) {
+                    const initial = (p.author_email || 'A').charAt(0).toUpperCase();
+                    const userStats = p.user_stats || { rank: 'member', message_count: 0, join_date: null };
+                    const rankText = { 'admin': 'Admin', 'moderator': 'Moderatör', 'member': 'Üye' }[userStats.rank] || 'Üye';
+                    let joinDate = 'Bilinmiyor';
+                    if (userStats.join_date) {
+                        try { joinDate = new Date(userStats.join_date).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' }); } catch (e) {}
+                    }
+
+                    const canDelete = p.is_mine || (currentUserRank === 'admin');
+                    const deleteBtnHtml = canDelete ? 
+                        `<div onclick="deletePost(${p.id}); event.stopPropagation();" 
+                              style="margin-top: 15px; color: #ef4444; font-size: 16px; cursor: pointer; transition: 0.2s;" 
+                              onmouseover="this.style.transform='scale(1.2)'" 
+                              onmouseout="this.style.transform='scale(1)'"
+                              title="Konuyu Sil">
+                            <i class="fa-regular fa-trash-can"></i>
+                         </div>` : '';
+
+                    html += `
+                    <div class="message" style="cursor:pointer; flex-direction:row; padding:0; align-items:stretch;" onclick="viewTopic(${p.id})">
+                        <div class="msg-left" style="width: 110px; padding: 15px 5px; border-right: 1px solid rgba(255,255,255,0.05); background: transparent; flex-shrink:0; display:flex; flex-direction:column; justify-content:center;">
+                            <div class="msg-avatar" style="width:40px; height:40px; font-size:16px; margin-bottom:10px;">${initial}</div>
+                            <div class="user-stats" style="border-top:none; padding-top:0;">
+                                <div class="user-rank ${userStats.rank}" style="margin-bottom:15px;">${rankText}</div>
+                                <div class="user-stats-item" style="margin-left: 10px;"><i class="fa-solid fa-message"></i> ${userStats.message_count}</div>
+                                <div class="user-stats-item" style="margin-left: 10px;"><i class="fa-solid fa-calendar-days"></i> ${joinDate}</div>
+                            </div>
+                        </div>
+                        <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column; justify-content:flex-start;">
+                            <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">${p.title || 'Başlıksız Konu'}</div>
+                            <div style="font-size:12px; color:var(--text-muted);">@${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}</div>
+                            <div style="font-size: 14px; color: #a1a1aa; margin-top: 22px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+                                ${escapeHTML(p.content)}
+                            </div>
+                        </div>
+                        <div style="text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">${p.reply_count || 0}</div>
+                            ${deleteBtnHtml}
+                        </div>
+                    </div>`;
+                }
+            });
+            feed.innerHTML = html;
+        }
+        
+        // --- MOD 3: KONU DETAY (AĞAÇ YAPILI) ---
+        else if (currentViewMode === 'forum-detail') {
+            const postMap = {};
+            posts.forEach(p => postMap[p.id] = { ...p, children: [] });
             posts.forEach(p => {
                 if (p.parent_id && postMap[p.parent_id]) {
                     postMap[p.parent_id].children.push(postMap[p.id]);
                 }
             });
 
-            // Ana konuyu haritadan çek (Böylece children dizisi dolu gelir)
             const topic = postMap[currentTopicId];
-            
-            // Eğer konu silinmişse veya bulunamazsa listeye at
             if (!topic) { backToForum(); return; }
 
             let html = '';
-
-            // --- A. GERİ DÖN BUTONU ---
             html += `
                 <div style="max-width: 1000px; margin: 0 auto 20px auto; display:flex; align-items:center; gap:10px;">
                     <button onclick="backToForum()" class="action-btn" style="color:var(--text-muted); font-size:14px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:8px;">
@@ -1404,34 +1356,26 @@
                 </div>
             `;
 
-            // --- B. ANA KONU ---
-            // Buraya FALSE gönderiyoruz -> Ana konunun altında "Yanıtla" butonu ÇIKMAZ.
+            // Ana Konu (Yanıtla butonu gizli - false)
             html += renderSingleMessage(topic, false); 
 
-            // --- C. YANITLAR BAŞLIĞI ---
-            // Doğrudan ana konuya bağlı kaç yorum var?
             const directRepliesCount = topic.children.length;
-            
             html += `
                 <div style="max-width: 1000px; margin: 30px auto 15px auto; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--primary); font-weight:600; font-size:14px;">
                     <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> YANITLAR (${directRepliesCount})
                 </div>
             `;
 
-            // --- D. YANITLARI LİSTELE (RECURSIVE / AĞAÇ YAPISI) ---
             if (directRepliesCount > 0) {
                 topic.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                
                 topic.children.forEach(child => {
-                    // BURASI DEĞİŞTİ: Artık renderSingleMessage yerine buildPostHTML kullanıyoruz.
-                    // Bu sayede yorumun yorumu varsa "Yanıtları Gör" butonu otomatik çıkıyor.
+                    // Yorumlarda Yanıtla butonu ve ağaç yapısı aktif
                     html += buildPostHTML(child); 
                 });
             } else {
                 html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
             }
 
-            // --- E. CEVAP YAZMA KUTUSU ---
             html += `
                 <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
                     <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
@@ -1448,594 +1392,310 @@
                 </div>
                 <div style="height: 50px;"></div>
             `;
-
             feed.innerHTML = html;
         }
-            } catch (e) { console.error(e); }
-        }
+    }
 
-
-        // --- YENİ KONU MODAL ---
-        function openNewTopicModal() {
-            document.getElementById('topic-title').value = '';
-            document.getElementById('topic-content').value = '';
-            document.getElementById('topic-category').selectedIndex = 0;
-            document.getElementById('char-count-display').innerText = "0 / 2000";
-            document.getElementById('char-count-display').className = "char-counter";
-
-            document.getElementById('new-topic-modal').classList.add('active');
-        }
-
-        function closeNewTopicModal() {
-            document.getElementById('new-topic-modal').classList.remove('active');
-        }
-
-        async function submitNewTopic() {
-            const category = document.getElementById('topic-category').value;
-            const title = document.getElementById('topic-title').value;
-            const content = document.getElementById('topic-content').value;
-
-            if(!title || !content) { alert("Başlık ve içerik gerekli!"); return; }
-
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content, category, parent_id: null }),
-                    credentials: 'include'
-                });
-                if(res.ok) {
-                    closeNewTopicModal();
-                    switchCategory(category, null); 
-
-                } else {
-                    alert("Hata oluştu");
-                }
-            } catch(e) { alert("Hata"); }
-        }
-        function buildPostHTML(post) {
-            let html = `<div class="message-wrapper">`;
-            
-            // BURASI ÖNEMLİ: true gönderiyoruz ki "Yanıtla" butonu çıksın.
-            // Hem genel akışta hem de konu altındaki yorumlarda bu fonksiyonu kullanacağız.
-            html += renderSingleMessage(post, true); 
-
-            if (post.children.length > 0) {
-                post.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                const isOpen = openRepliesSet.has(post.id);
-                const icon = isOpen ? '<i class="fa-solid fa-chevron-up"></i>' : '<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i>';
-                const text = isOpen ? 'Yanıtları gizle' : `${post.children.length} yanıtı gör`;
-
-                html += `
-                <div id="btn-${post.id}" class="view-replies-btn" data-count="${post.children.length}" onclick="toggleReplies(${post.id})">
-                    ${icon} ${text}
-                </div>`;
-
-                html += `<div id="replies-${post.id}" class="replies-container ${isOpen ? 'show' : ''}">`;
-                // Recursive (Kendini tekrar çağıran) yapı
-                post.children.forEach(child => { html += buildPostHTML(child); });
-                html += `</div>`;
-            }
+    // --- ORTAK HTML OLUŞTURUCULAR ---
+    function buildPostHTML(post) {
+        let html = `<div class="message-wrapper">`;
+        html += renderSingleMessage(post, true); // Yanıtla butonu VAR
+        if (post.children.length > 0) {
+            post.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            const isOpen = openRepliesSet.has(post.id);
+            const icon = isOpen ? '<i class="fa-solid fa-chevron-up"></i>' : '<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i>';
+            const text = isOpen ? 'Yanıtları gizle' : `${post.children.length} yanıtı gör`;
+            html += `<div id="btn-${post.id}" class="view-replies-btn" data-count="${post.children.length}" onclick="toggleReplies(${post.id})">${icon} ${text}</div>`;
+            html += `<div id="replies-${post.id}" class="replies-container ${isOpen ? 'show' : ''}">`;
+            post.children.forEach(child => { html += buildPostHTML(child); });
             html += `</div>`;
-            return html;
         }
-
-        // --- MESAJ KUTUSU TASARIMI ---
-function renderSingleMessage(p, showReplyBtn = true) {
-    const initial = (p.author_email || 'A').charAt(0).toUpperCase();
-    const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
-    const date = formatTime(p.created_at);
-
-    let editedHtml = "";
-    if (p.updated_at && p.updated_at !== p.created_at) {
-        const editDate = formatTime(p.updated_at);
-        editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
+        html += `</div>`;
+        return html;
     }
 
-    const userStats = p.user_stats || { rank: 'member', message_count: 0, join_date: null };
-    const rankText = { 'admin': 'Admin', 'moderator': 'Moderatör', 'member': 'Üye' }[userStats.rank] || 'Üye';
+    function renderSingleMessage(p, showReplyBtn = true) {
+        const initial = (p.author_email || 'A').charAt(0).toUpperCase();
+        const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
+        const date = formatTime(p.created_at);
+        let editedHtml = (p.updated_at && p.updated_at !== p.created_at) ? `<span class="msg-edited">(düzenlendi: ${formatTime(p.updated_at)})</span>` : "";
+        const userStats = p.user_stats || { rank: 'member', message_count: 0, join_date: null };
+        const rankText = { 'admin': 'Admin', 'moderator': 'Moderatör', 'member': 'Üye' }[userStats.rank] || 'Üye';
+        let joinDate = 'Bilinmiyor';
+        try { if(userStats.join_date) joinDate = new Date(userStats.join_date).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' }); } catch (e) {}
 
-    let joinDate = 'Bilinmiyor';
-    if (userStats.join_date) {
-        try { joinDate = new Date(userStats.join_date).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' }); } catch (e) {}
-    }
+        const replyBtn = showReplyBtn ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` : '';
+        const isAdmin = currentUserRank === 'admin';
+        let banBtn = '';
+        if (isAdmin && !p.is_mine) {
+            const isBanned = p.author_is_banned;
+            const btnText = isBanned ? "Banı Aç" : "Banla";
+            const btnColor = isBanned ? "#10b981" : "#ef4444";
+            const btnIcon = isBanned ? "fa-lock-open" : "fa-gavel";
+            banBtn = `<span class="action-btn" style="color: ${btnColor}; border-color: ${btnColor};" onclick="banUser(${p.author_id}, '${name}')"><i class="fa-solid ${btnIcon}"></i> ${btnText}</span>`;
+        }
+        const canDelete = p.is_mine || isAdmin;
+        const deleteBtn = canDelete ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
+        const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i> Düzenle</span>` : '';
 
-    // --- BUTON MANTIĞI DÜZELTİLDİ ---
-    // showReplyBtn true gelirse butonu koy, false gelirse (ana konu için) boş geç.
-    const replyBtn = showReplyBtn 
-        ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` 
-        : '';
-    // ---------------------------------
-
-    const isAdmin = currentUserRank === 'admin';
-    let banBtn = '';
-    if (isAdmin && !p.is_mine) {
-        const isBanned = p.author_is_banned;
-        const btnText = isBanned ? "Banı Aç" : "Banla";
-        const btnColor = isBanned ? "#10b981" : "#ef4444";
-        const btnIcon = isBanned ? "fa-lock-open" : "fa-gavel";
-        banBtn = `<span class="action-btn" style="color: ${btnColor}; border-color: ${btnColor};" onclick="banUser(${p.author_id}, '${name}')"><i class="fa-solid ${btnIcon}"></i> ${btnText}</span>`;
-    }
-
-    const canDelete = p.is_mine || isAdmin;
-    const deleteBtn = canDelete ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
-    const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i> Düzenle</span>` : '';
-
-    return `
-    <div id="msg-${p.id}" class="message"> 
-        <div class="msg-left">
-            <div class="msg-avatar">${initial}</div>
-            <div class="user-stats">
-                <div class="user-rank ${userStats.rank}" style="margin-bottom: 15px;">${rankText}</div>
-                <div class="user-stats-item" style="margin-left: 10px;">
-                    <i class="fa-solid fa-message"></i> <span>${userStats.message_count} mesaj</span>
-                </div>
-                <div class="user-stats-item" style="margin-left: 10px;">
-                    <i class="fa-solid fa-calendar-days"></i> <span>${joinDate}</span>
+        return `
+        <div id="msg-${p.id}" class="message"> 
+            <div class="msg-left">
+                <div class="msg-avatar">${initial}</div>
+                <div class="user-stats">
+                    <div class="user-rank ${userStats.rank}" style="margin-bottom: 15px;">${rankText}</div>
+                    <div class="user-stats-item" style="margin-left: 10px;"><i class="fa-solid fa-message"></i> <span>${userStats.message_count} mesaj</span></div>
+                    <div class="user-stats-item" style="margin-left: 10px;"><i class="fa-solid fa-calendar-days"></i> <span>${joinDate}</span></div>
                 </div>
             </div>
-        </div>
-        <div class="msg-right">
-            <div class="msg-header">
-                <span class="msg-author">@${name}</span>
-                <span class="msg-date">· ${date} ${editedHtml}</span>
+            <div class="msg-right">
+                <div class="msg-header">
+                    <span class="msg-author">@${name}</span>
+                    <span class="msg-date">· ${date} ${editedHtml}</span>
+                </div>
+                <div class="msg-text">${escapeHTML(p.content)}</div>
+                <div class="msg-actions">${replyBtn} ${editBtn} ${deleteBtn} ${banBtn}</div>
             </div>
-            <div class="msg-text">${escapeHTML(p.content)}</div>
-            <div class="msg-actions">
-                ${replyBtn} ${editBtn} ${deleteBtn} ${banBtn}
-            </div>
-        </div>
-    </div>`;
-}
-
-        window.toggleReplies = function (id) {
-            const container = document.getElementById(`replies-${id}`);
-            const btn = document.getElementById(`btn-${id}`);
-            const count = btn.getAttribute('data-count');
-
-            if (container.classList.contains('show')) {
-                container.classList.remove('show');
-                openRepliesSet.delete(id);
-                btn.innerHTML = `<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${count} yanıtı gör`;
-            } else {
-                container.classList.add('show');
-                openRepliesSet.add(id);
-                btn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Yanıtları gizle`;
-            }
-        }
-
-        // --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
-        const mainInput = document.getElementById('main-chat-input');
-        const mainSendBtn = document.getElementById('main-send-btn');
-        let cooldownInterval = null;
-
-        // 1. TEXTAREA AUTO RESIZE
-        mainInput.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = (this.style.scrollHeight) + 'px';
-        });
-
-        // 2. Enter tuşu desteği
-        mainInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (!mainSendBtn.disabled) mainSendBtn.click();
-            }
-        });
-
-        mainSendBtn.onclick = async () => {
-            if (isGuest) { window.openAuthModal('login'); return; }
-
-            const content = mainInput.value;
-            if (!content.trim()) return;
-
-            mainSendBtn.disabled = true;
-            mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: content, parent_id: null }),
-                    credentials: 'include'
-                });
-
-                if (res.ok) {
-
-                    mainInput.value = '';
-                    mainInput.style.height = 'auto';
-
-                    lastMessageTime = Date.now();
-                    lastPostsString = "";
-                    loadMessages();
-
-                    if (currentUserRank !== 'admin') {
-                        startButtonCooldown(3);
-                    } else {
-                        resetButton();
-                    }
-
-                } else {
-                    alert("Hata oluştu.");
-                    resetButton();
-                }
-            } catch (e) {
-                alert("Bağlantı hatası.");
-                resetButton();
-            }
-        }
-
-        function startButtonCooldown(seconds) {
-            let counter = seconds;
-            mainSendBtn.disabled = true;
-            mainSendBtn.innerText = `Bekle (${counter})`;
-
-            if (cooldownInterval) clearInterval(cooldownInterval);
-
-            cooldownInterval = setInterval(() => {
-                counter--;
-                if (counter > 0) {
-                    mainSendBtn.innerText = `Bekle (${counter})`;
-                } else {
-                    clearInterval(cooldownInterval);
-                    resetButton();
-                }
-            }, 1000);
-        }
-
-        function resetButton() {
-            mainSendBtn.disabled = false;
-            mainSendBtn.innerHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>';
-        }
-
-        // --- DİĞER FONKSİYONLAR ---
-        window.openAuthModal = function (type) {
-            document.getElementById('auth-screen').classList.add('active');
-            document.getElementById('login-view').classList.remove('hidden');
-            document.getElementById('forgot-view').classList.add('hidden');
-            document.getElementById('auth-title').textContent = (type === 'register') ? "Hesap Oluştur" : "Hoş Geldiniz";
-        }
-        window.closeAuthModal = function () { document.getElementById('auth-screen').classList.remove('active'); }
-        document.getElementById('show-forgot-btn').onclick = () => {
-            document.getElementById('login-view').classList.add('hidden');
-            document.getElementById('forgot-view').classList.remove('hidden');
-        };
-        document.getElementById('back-to-login-btn').onclick = () => {
-            document.getElementById('forgot-view').classList.add('hidden');
-            document.getElementById('login-view').classList.remove('hidden');
-        };
-        document.getElementById('login-btn').onclick = () => handleAuth('login', 'login-btn');
-        document.getElementById('register-btn').onclick = () => handleAuth('register', 'register-btn');
-        document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' }); location.reload(); };
-
-        async function deletePost(id) {
-    try {
-        const res = await fetch(`${API_URL}/posts/${id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include'
-        });
-
-        if (res.ok) {
-            lastPostsString = "";
-            loadMessages();
-        }
-    } catch (e) {
-        alert("Hata.");
+        </div>`;
     }
-}
 
-        const formatTime = (dateStr) => {
-            let date = new Date(dateStr); date.setHours(date.getHours() + 3);
-            const now = new Date(); const diff = (now - date) / 1000;
-            if (diff < 60) return "Şimdi";
-            if (diff < 3600) return Math.floor(diff / 60) + "dk";
-            if (diff < 86400) return Math.floor(diff / 3600) + "sa";
-            return date.toLocaleDateString('tr-TR');
-        };
-        const escapeHTML = (str) => str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
-        const unescapeHTML = (str) => str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+    // --- MODAL VE GÖNDERİM FONKSİYONLARI ---
+    function openNewTopicModal() {
+        document.getElementById('topic-title').value = '';
+        document.getElementById('topic-content').value = '';
+        document.getElementById('topic-category').selectedIndex = 0;
+        document.getElementById('char-count-display').innerText = "0 / 2000";
+        document.getElementById('char-count-display').className = "char-counter";
+        document.getElementById('new-topic-modal').classList.add('active');
+    }
+    function closeNewTopicModal() { document.getElementById('new-topic-modal').classList.remove('active'); }
 
-        checkSession();
-        setInterval(loadMessages, POLL_INTERVAL);
-
-        // --- YENİ: SATIR İÇİ YANIT SİSTEMİ ---
-        let activeReplyId = null;
-
-        window.toggleReplyBox = function (id, authorName) {
-            if (isGuest) { window.openAuthModal('login'); return; }
-            if (activeReplyId === id) { closeReplyBox(); return; }
-            if (activeReplyId !== null) { closeReplyBox(); }
-
-            activeReplyId = id;
-            const messageEl = document.getElementById(`msg-${id}`).querySelector('.msg-right');
-
-            const replyHTML = `
-                <div id="inline-reply-${id}" class="inline-reply-area">
-                    <div style="font-size:12px; color:var(--primary); margin-bottom:5px;">
-                        <i class="fa-solid fa-share"></i> @${authorName} kullanıcısına yanıt veriyorsun
-                    </div>
-                    
-                    <textarea id="inline-input-${id}" class="form-input" 
-                        placeholder="Yanıtını buraya yaz... (Enter: Gönder, Shift+Enter: Alt Satır)" 
-                        maxlength="500" 
-                        style="min-height:80px; resize:none; overflow-y:auto;"
-                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitInlineReply(${id}); }"></textarea>
-                    
-                    <div class="inline-footer">
-                        <button onclick="closeReplyBox()" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
-                        <button id="btn-reply-${id}" onclick="submitInlineReply(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Yanıtla</button>
-                    </div>
-                </div>
-            `;
-            messageEl.insertAdjacentHTML('beforeend', replyHTML);
-            const textarea = document.getElementById(`inline-input-${id}`);
-            textarea.focus();
-            checkCooldownState(id);
-        }
-
-        window.closeReplyBox = function () {
-            if (activeReplyId) {
-                const box = document.getElementById(`inline-reply-${activeReplyId}`);
-                if (box) box.remove();
-                activeReplyId = null;
-            }
-        }
-
-        window.submitInlineReply = async function (parentId) {
-            const input = document.getElementById(`inline-input-${parentId}`);
-            const btn = document.getElementById(`btn-reply-${parentId}`);
-            const content = input.value;
-
-            if (!content.trim()) return;
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: content, parent_id: parentId, category: currentCategory }), // Kategori eklendi
-                    credentials: 'include'
-                });
-                if (res.ok) {
-                    closeReplyBox();
-                    if (parentId) openRepliesSet.add(parseInt(parentId));
-                    lastPostsString = ""; loadMessages();
-                    startGlobalReplyCooldown();
-                } else {
-                    alert("Hata oluştu.");
-                    btn.disabled = false; btn.innerText = "Yanıtla";
-                }
-            } catch (e) {
-                alert("Bağlantı hatası.");
-                btn.disabled = false; btn.innerText = "Yanıtla";
-            }
-        }
-
-        // --- YENİ: SATIR İÇİ DÜZENLEME SİSTEMİ ---
-        let activeEditId = null;
-
-        window.toggleEditMode = function (id) {
-            if (activeEditId && activeEditId !== id) { cancelEdit(activeEditId); }
-            if (activeEditId === id) { cancelEdit(id); return; }
-
-            activeEditId = id;
-            const msgRight = document.getElementById(`msg-${id}`).querySelector('.msg-right');
-            const msgText = msgRight.querySelector('.msg-text');
-            const originalContent = unescapeHTML(msgText.innerHTML);
-
-            msgText.style.display = 'none';
-
-            const editHTML = `
-                <div id="inline-edit-${id}" class="inline-edit-area">
-                    <textarea id="edit-input-${id}" class="form-input" maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;">${originalContent}</textarea>
-                    <div class="inline-footer">
-                        <button onclick="cancelEdit(${id})" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
-                        <button onclick="saveEdit(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Kaydet</button>
-                    </div>
-                </div>
-            `;
-            msgText.insertAdjacentHTML('afterend', editHTML);
-        }
-
-        window.cancelEdit = function (id) {
-            const editBox = document.getElementById(`inline-edit-${id}`);
-            if (editBox) editBox.remove();
-
-            const msgText = document.getElementById(`msg-${id}`).querySelector('.msg-right .msg-text');
-            if (msgText) msgText.style.display = 'block';
-
-            activeEditId = null;
-        }
-
-        window.saveEdit = async function (id) {
-            const content = document.getElementById(`edit-input-${id}`).value;
-            if (!content.trim()) return;
-
-            try {
-                await fetch(`${API_URL}/posts/${id}`, {
-                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content }), credentials: 'include'
-                });
-
-                cancelEdit(id);
-                lastPostsString = "";
-                loadMessages();
-            } catch (e) { alert("Hata"); }
-        }
-
-        // --- COOLDOWN YÖNETİMİ (GLOBAL) ---
-        let globalCooldownEnd = 0;
-        function startGlobalReplyCooldown() { globalCooldownEnd = Date.now() + 3000; }
-        function checkCooldownState(id) {
-            const remaining = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
-            if (remaining > 0) {
-                const btn = document.getElementById(`btn-reply-${id}`);
-                if (!btn) return;
-                btn.disabled = true; btn.innerText = `Bekle (${remaining})`;
-                const interval = setInterval(() => {
-                    const newRem = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
-                    if (newRem <= 0) {
-                        clearInterval(interval);
-                        btn.disabled = false; btn.innerText = "Yanıtla";
-                    } else {
-                        btn.innerText = `Bekle (${newRem})`;
-                    }
-                }, 1000);
-            }
-        }
-        async function banUser(userId, username) {
-        if (!confirm(`@${username} kullanıcısının durumunu değiştirmek istiyor musun?`)) return;
-
+    async function submitNewTopic() {
+        const category = document.getElementById('topic-category').value;
+        const title = document.getElementById('topic-title').value;
+        const content = document.getElementById('topic-content').value;
+        if(!title || !content) { alert("Başlık ve içerik gerekli!"); return; }
         try {
-            const res = await fetch(`${API_URL}/users/${userId}/ban`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const res = await fetch(`${API_URL}/posts`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content, category, parent_id: null }),
                 credentials: 'include'
             });
+            if(res.ok) { closeNewTopicModal(); switchCategory(category, null); } else { alert("Hata oluştu"); }
+        } catch(e) { alert("Hata"); }
+    }
+
+    async function sendDetailReply(topicId) {
+        if (isGuest) { window.openAuthModal('login'); return; }
+        const input = document.getElementById('detail-reply-input');
+        const btn = document.getElementById('btn-detail-reply');
+        const content = input.value;
+        if (!content.trim()) return;
+        btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+        try {
+            const res = await fetch(`${API_URL}/posts`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: content, parent_id: topicId, category: currentCategory }),
+                credentials: 'include'
+            });
+            if (res.ok) { input.value = ''; lastPostsString = ""; loadMessages(); } else { alert("Hata oluştu."); }
+        } catch (e) { alert("Bağlantı hatası."); } 
+        finally { btn.disabled = false; btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>'; if(input) input.focus(); }
+    }
+
+    // --- YARDIMCI FONKSİYONLAR ---
+    window.toggleReplies = function (id) {
+        const container = document.getElementById(`replies-${id}`);
+        const btn = document.getElementById(`btn-${id}`);
+        const count = btn.getAttribute('data-count');
+        if (container.classList.contains('show')) {
+            container.classList.remove('show');
+            openRepliesSet.delete(id);
+            btn.innerHTML = `<i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> ${count} yanıtı gör`;
+        } else {
+            container.classList.add('show');
+            openRepliesSet.add(id);
+            btn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Yanıtları gizle`;
+        }
+    }
+
+    let activeReplyId = null;
+    window.toggleReplyBox = function (id, authorName) {
+        if (isGuest) { window.openAuthModal('login'); return; }
+        if (activeReplyId === id) { closeReplyBox(); return; }
+        if (activeReplyId !== null) { closeReplyBox(); }
+        activeReplyId = id;
+        const messageEl = document.getElementById(`msg-${id}`).querySelector('.msg-right');
+        const replyHTML = `
+            <div id="inline-reply-${id}" class="inline-reply-area">
+                <div style="font-size:12px; color:var(--primary); margin-bottom:5px;"><i class="fa-solid fa-share"></i> @${authorName} kullanıcısına yanıt veriyorsun</div>
+                <textarea id="inline-input-${id}" class="form-input" placeholder="Yanıtını buraya yaz... (Enter: Gönder)" maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;" onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitInlineReply(${id}); }"></textarea>
+                <div class="inline-footer">
+                    <button onclick="closeReplyBox()" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
+                    <button id="btn-reply-${id}" onclick="submitInlineReply(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Yanıtla</button>
+                </div>
+            </div>`;
+        messageEl.insertAdjacentHTML('beforeend', replyHTML);
+        const textarea = document.getElementById(`inline-input-${id}`);
+        textarea.focus();
+        checkCooldownState(id);
+    }
+    window.closeReplyBox = function () {
+        if (activeReplyId) { document.getElementById(`inline-reply-${activeReplyId}`).remove(); activeReplyId = null; }
+    }
+    window.submitInlineReply = async function (parentId) {
+        const input = document.getElementById(`inline-input-${parentId}`);
+        const btn = document.getElementById(`btn-reply-${parentId}`);
+        const content = input.value;
+        if (!content.trim()) return;
+        btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+        try {
+            const res = await fetch(`${API_URL}/posts`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: content, parent_id: parentId, category: currentCategory }),
+                credentials: 'include'
+            });
+            if (res.ok) { closeReplyBox(); if (parentId) openRepliesSet.add(parseInt(parentId)); lastPostsString = ""; loadMessages(); startGlobalReplyCooldown(); } 
+            else { alert("Hata oluştu."); btn.disabled = false; btn.innerText = "Yanıtla"; }
+        } catch (e) { alert("Bağlantı hatası."); btn.disabled = false; btn.innerText = "Yanıtla"; }
+    }
+
+    let activeEditId = null;
+    window.toggleEditMode = function (id) {
+        if (activeEditId && activeEditId !== id) { cancelEdit(activeEditId); }
+        if (activeEditId === id) { cancelEdit(id); return; }
+        activeEditId = id;
+        const msgRight = document.getElementById(`msg-${id}`).querySelector('.msg-right');
+        const msgText = msgRight.querySelector('.msg-text');
+        const originalContent = unescapeHTML(msgText.innerHTML);
+        msgText.style.display = 'none';
+        const editHTML = `
+            <div id="inline-edit-${id}" class="inline-edit-area">
+                <textarea id="edit-input-${id}" class="form-input" maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;">${originalContent}</textarea>
+                <div class="inline-footer">
+                    <button onclick="cancelEdit(${id})" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
+                    <button onclick="saveEdit(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Kaydet</button>
+                </div>
+            </div>`;
+        msgText.insertAdjacentHTML('afterend', editHTML);
+    }
+    window.cancelEdit = function (id) {
+        const editBox = document.getElementById(`inline-edit-${id}`); if (editBox) editBox.remove();
+        const msgText = document.getElementById(`msg-${id}`).querySelector('.msg-right .msg-text'); if (msgText) msgText.style.display = 'block';
+        activeEditId = null;
+    }
+    window.saveEdit = async function (id) {
+        const content = document.getElementById(`edit-input-${id}`).value;
+        if (!content.trim()) return;
+        try {
+            await fetch(`${API_URL}/posts/${id}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content }), credentials: 'include'
+            });
+            cancelEdit(id); lastPostsString = ""; loadMessages();
+        } catch (e) { alert("Hata"); }
+    }
+
+    let globalCooldownEnd = 0;
+    function startGlobalReplyCooldown() { globalCooldownEnd = Date.now() + 3000; }
+    function checkCooldownState(id) {
+        const remaining = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
+        if (remaining > 0) {
+            const btn = document.getElementById(`btn-reply-${id}`); if (!btn) return;
+            btn.disabled = true; btn.innerText = `Bekle (${remaining})`;
+            const interval = setInterval(() => {
+                const newRem = Math.ceil((globalCooldownEnd - Date.now()) / 1000);
+                if (newRem <= 0) { clearInterval(interval); btn.disabled = false; btn.innerText = "Yanıtla"; } 
+                else { btn.innerText = `Bekle (${newRem})`; }
+            }, 1000);
+        }
+    }
+
+    async function deletePost(id) {
+        try {
+            const res = await fetch(`${API_URL}/posts/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' });
+            if (res.ok) { lastPostsString = ""; loadMessages(); }
+        } catch (e) { alert("Hata."); }
+    }
+
+    async function banUser(userId, username) {
+        if (!confirm(`@${username} kullanıcısının durumunu değiştirmek istiyor musun?`)) return;
+        try {
+            const res = await fetch(`${API_URL}/users/${userId}/ban`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include' });
             const data = await res.json();
-            
-            if (res.ok) {
-                lastPostsString = "";
-                loadMessages();
-                if (document.getElementById('user-list-modal').classList.contains('active')) {
-                    loadAllUsers();
-                }
-            } else {
-                alert("Hata: " + data.error);
-            }
-        } catch (e) {
-            alert("Bağlantı hatası.");
-        }
+            if (res.ok) { lastPostsString = ""; loadMessages(); if (document.getElementById('user-list-modal').classList.contains('active')) loadAllUsers(); } 
+            else { alert("Hata: " + data.error); }
+        } catch (e) { alert("Bağlantı hatası."); }
     }
-        function openUserListModal() {
-    document.getElementById('user-list-modal').classList.add('active');
-    loadAllUsers();
-}
 
-function closeUserListModal() {
-    document.getElementById('user-list-modal').classList.remove('active');
-}
-
-async function loadAllUsers() {
-    const tbody = document.getElementById('user-list-body');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Yükleniyor...</td></tr>';
-
-    try {
-        const res = await fetch(`${API_URL}/users`, { credentials: 'include' });
-        if (!res.ok) throw new Error("Yetkisiz");
-        const users = await res.json();
-
-        tbody.innerHTML = '';
-        users.forEach(u => {
-            const isBanned = u.is_banned;
-            const statusBadge = isBanned 
-                ? '<span style="background:#ef4444; padding:2px 6px; border-radius:4px; font-size:10px; color:white;">BANLI</span>' 
-                : '<span style="color:#10b981;">Aktif</span>';
-            
-            const btnText = isBanned ? "Banı Aç" : "Banla";
-            const btnClass = isBanned ? "success" : "danger";
-            const btnStyle = isBanned 
-                ? "background:rgba(16, 185, 129, 0.2); color:#10b981; border:1px solid #10b981;" 
-                : "background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444;";
-
-            const actionButton = (u.rank === 'admin') 
-                ? '<span style="font-size:10px; opacity:0.5;">İşlem Yok</span>'
-                : `<button onclick="banUser(${u.id}, '${u.username}')" 
-                    style="${btnStyle} cursor:pointer; padding:4px 8px; border-radius:4px; font-weight:600; font-size:11px;">
-                    ${btnText}
-                   </button>`;
-
-            const row = `
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <td style="padding: 12px;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div class="avatar" style="width:30px; height:30px; font-size:12px;">${u.username.charAt(0).toUpperCase()}</div>
-                            <span>${u.username}</span>
-                        </div>
-                    </td>
-                    <td style="padding: 12px;"><span class="user-rank ${u.rank}">${u.rank}</span></td>
-                    <td style="padding: 12px;">${statusBadge}</td>
-                    <td style="padding: 12px; text-align:right;">${actionButton}</td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-
-    } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
+    function openUserListModal() { document.getElementById('user-list-modal').classList.add('active'); loadAllUsers(); }
+    function closeUserListModal() { document.getElementById('user-list-modal').classList.remove('active'); }
+    async function loadAllUsers() {
+        const tbody = document.getElementById('user-list-body'); tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Yükleniyor...</td></tr>';
+        try {
+            const res = await fetch(`${API_URL}/users`, { credentials: 'include' });
+            if (!res.ok) throw new Error("Yetkisiz");
+            const users = await res.json();
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                const isBanned = u.is_banned;
+                const statusBadge = isBanned ? '<span style="background:#ef4444; padding:2px 6px; border-radius:4px; font-size:10px; color:white;">BANLI</span>' : '<span style="color:#10b981;">Aktif</span>';
+                const btnText = isBanned ? "Banı Aç" : "Banla";
+                const btnStyle = isBanned ? "background:rgba(16, 185, 129, 0.2); color:#10b981; border:1px solid #10b981;" : "background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444;";
+                const actionButton = (u.rank === 'admin') ? '<span style="font-size:10px; opacity:0.5;">İşlem Yok</span>' : `<button onclick="banUser(${u.id}, '${u.username}')" style="${btnStyle} cursor:pointer; padding:4px 8px; border-radius:4px; font-weight:600; font-size:11px;">${btnText}</button>`;
+                tbody.innerHTML += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);"><td style="padding: 12px;"><div style="display:flex; align-items:center; gap:10px;"><div class="avatar" style="width:30px; height:30px; font-size:12px;">${u.username.charAt(0).toUpperCase()}</div><span>${u.username}</span></div></td><td style="padding: 12px;"><span class="user-rank ${u.rank}">${u.rank}</span></td><td style="padding: 12px;">${statusBadge}</td><td style="padding: 12px; text-align:right;">${actionButton}</td></tr>`;
+            });
+        } catch (e) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>'; }
     }
-}
-        function updateCharCount(textarea) {
-            const maxLength = textarea.getAttribute('maxlength');
-            const currentLength = textarea.value.length;
-            const counterEl = document.getElementById('char-count-display');
-            
-            counterEl.innerText = `${currentLength} / ${maxLength}`;
 
-            if (currentLength >= maxLength) {
-                counterEl.classList.add('limit-reached');
-            } else if (currentLength >= maxLength * 0.9) {
-                counterEl.classList.add('limit-near');
-                counterEl.classList.remove('limit-reached');
-            } else {
-                counterEl.classList.remove('limit-near', 'limit-reached');
-            }
-        }
-        async function sendDetailReply(topicId) {
-            if (isGuest) { window.openAuthModal('login'); return; }
+    function updateCharCount(textarea) {
+        const maxLength = textarea.getAttribute('maxlength');
+        const currentLength = textarea.value.length;
+        const counterEl = document.getElementById('char-count-display');
+        counterEl.innerText = `${currentLength} / ${maxLength}`;
+        if (currentLength >= maxLength) counterEl.classList.add('limit-reached');
+        else if (currentLength >= maxLength * 0.9) { counterEl.classList.add('limit-near'); counterEl.classList.remove('limit-reached'); }
+        else { counterEl.classList.remove('limit-near', 'limit-reached'); }
+    }
 
-            const input = document.getElementById('detail-reply-input');
-            const btn = document.getElementById('btn-detail-reply');
-            const content = input.value;
+    const mainInput = document.getElementById('main-chat-input');
+    const mainSendBtn = document.getElementById('main-send-btn');
+    mainInput.addEventListener('input', function () { this.style.height = 'auto'; this.style.height = (this.style.scrollHeight) + 'px'; });
+    mainInput.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!mainSendBtn.disabled) mainSendBtn.click(); } });
+    mainSendBtn.onclick = async () => {
+        if (isGuest) { window.openAuthModal('login'); return; }
+        const content = mainInput.value;
+        if (!content.trim()) return;
+        mainSendBtn.disabled = true; mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+        try {
+            const res = await fetch(`${API_URL}/posts`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: content, parent_id: null }), credentials: 'include' });
+            if (res.ok) { mainInput.value = ''; mainInput.style.height = 'auto'; lastMessageTime = Date.now(); lastPostsString = ""; loadMessages(); if (currentUserRank !== 'admin') startButtonCooldown(3); else resetButton(); } else { alert("Hata oluştu."); resetButton(); }
+        } catch (e) { alert("Bağlantı hatası."); resetButton(); }
+    }
+    function startButtonCooldown(seconds) {
+        let counter = seconds; mainSendBtn.disabled = true; mainSendBtn.innerText = `Bekle (${counter})`;
+        if (cooldownInterval) clearInterval(cooldownInterval);
+        cooldownInterval = setInterval(() => { counter--; if (counter > 0) { mainSendBtn.innerText = `Bekle (${counter})`; } else { clearInterval(cooldownInterval); resetButton(); } }, 1000);
+    }
+    function resetButton() { mainSendBtn.disabled = false; mainSendBtn.innerHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>'; }
 
-            if (!content.trim()) return;
+    const formatTime = (dateStr) => {
+        let date = new Date(dateStr); date.setHours(date.getHours() + 3);
+        const now = new Date(); const diff = (now - date) / 1000;
+        if (diff < 60) return "Şimdi"; if (diff < 3600) return Math.floor(diff / 60) + "dk"; if (diff < 86400) return Math.floor(diff / 3600) + "sa";
+        return date.toLocaleDateString('tr-TR');
+    };
+    const escapeHTML = (str) => str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+    const unescapeHTML = (str) => str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"');
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password'); const icon = this;
+        if (passwordInput.type === 'password') { passwordInput.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } 
+        else { passwordInput.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+    });
 
-            try {
-                // --- BURASI DEĞİŞTİ (Category eklendi) ---
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        content: content, 
-                        parent_id: topicId,
-                        category: currentCategory // <--- İŞTE BU EKSİKTİ!
-                    }),
-                    credentials: 'include'
-                });
-                // -----------------------------------------
-
-                if (res.ok) {
-                    input.value = ''; // Kutuyu temizle
-                    lastPostsString = ""; // Verileri yenile
-                    loadMessages(); // Sayfayı güncelle
-                } else {
-                    alert("Hata oluştu.");
-                }
-            } catch (e) {
-                alert("Bağlantı hatası.");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
-                // Odaklanmayı tekrar inputa ver ki seri yazabilsin
-                if(input) input.focus(); 
-            }
-        }
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const icon = this;
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-
-    </script>
+    checkSession();
+    setInterval(loadMessages, POLL_INTERVAL);
+</script>
 </body>
 </html>
