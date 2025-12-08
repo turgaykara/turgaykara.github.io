@@ -973,6 +973,7 @@
 
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
+        let currentUserRank = 'member';
         let isGuest = true;
         const POLL_INTERVAL = 3000;
         const MESSAGE_COOLDOWN = 5;
@@ -987,6 +988,7 @@
                 const data = await res.json();
                 if (data.is_logged_in) {
                     isGuest = false;
+                    currentUserRank = data.user.rank || 'member';
                     document.getElementById('auth-screen').classList.remove('active');
                     document.getElementById('guest-bar').classList.remove('active');
                     document.getElementById('user-name').innerText = data.user.username || "Hacker";
@@ -1199,8 +1201,10 @@
             }
 
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
-            const deleteBtn = p.is_mine ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
-            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i></span>` : '';
+            const isAdmin = currentUserRank === 'admin';
+            const canDelete = p.is_mine || isAdmin;
+            const deleteBtn = canDelete ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
+            const editBtn = p.is_mine ? `<span class="action-btn action-edit" onclick="toggleEditMode(${p.id})"><i class="fa-solid fa-pen"></i> Düzenle</span>` : '';
 
             return `
             <div id="msg-${p.id}" class="message"> 
@@ -1347,15 +1351,21 @@
         document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' }); location.reload(); };
 
         async function deletePost(id) {
-            if (!confirm("Silinsin mi?")) return;
-            try {
-                const res = await fetch(`${API_URL}/posts/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' });
-                if (res.ok) {
-                    lastPostsString = "";
-                    loadMessages();
-                }
-            } catch (e) { alert("Hata."); }
+    try {
+        const res = await fetch(`${API_URL}/posts/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        });
+
+        if (res.ok) {
+            lastPostsString = "";
+            loadMessages();
         }
+    } catch (e) {
+        alert("Hata.");
+    }
+}
 
         const formatTime = (dateStr) => {
             let date = new Date(dateStr); date.setHours(date.getHours() + 3);
