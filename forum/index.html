@@ -1139,28 +1139,21 @@
 
             // --- GÜVENLİK KONTROLÜ (Sadece Kayıt Olurken) ---
             if (endpoint === 'register') {
-                // Kural 1: Uzunluk
                 if (password.length < 8) {
                     errEl.innerText = "Şifre en az 8 karakter olmalıdır.";
                     errEl.style.display = 'block';
                     return;
                 }
-
-                // Kural 2: Büyük Harf (A-Z)
                 if (!/[A-Z]/.test(password)) {
                     errEl.innerText = "Şifre en az 1 BÜYÜK harf içermelidir.";
                     errEl.style.display = 'block';
                     return;
                 }
-
-                // Kural 3: Küçük Harf (a-z)
                 if (!/[a-z]/.test(password)) {
                     errEl.innerText = "Şifre en az 1 küçük harf içermelidir.";
                     errEl.style.display = 'block';
                     return;
                 }
-
-                // Kural 4: Özel Karakter (Harf ve sayı dışı her şey)
                 if (!/[^a-zA-Z0-9]/.test(password)) {
                     errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, _ vb.) içermelidir.";
                     errEl.style.display = 'block';
@@ -1252,7 +1245,15 @@
         }
         // --- MESAJLARI / KONULARI ÇEKME ---
         async function loadMessages() {
+            // --- YENİLEME FRENİ ---
+            // 1. Satır içi düzenleme veya yanıtlama açıksa dur
             if (activeEditId || activeReplyId) return;
+
+            // 2. Detay sayfasındaysak ve yazı kutusunda metin varsa dur (yazdıkların silinmesin)
+            const detailInput = document.getElementById('detail-reply-input');
+            if (detailInput && detailInput.value.trim().length > 0) return;
+            // -----------------------
+
             try {
                 const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
                 const posts = await res.json();
@@ -1308,7 +1309,17 @@
                                 joinDate = d.toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' });
                             } catch (e) {}
                         }
-                        // ---------------------
+
+                        // --- SİLME YETKİSİ KONTROLÜ ---
+                        const canDelete = p.is_mine || (currentUserRank === 'admin');
+                        const deleteBtnHtml = canDelete ? 
+                            `<div onclick="deletePost(${p.id}); event.stopPropagation();" 
+                                  style="margin-top: 15px; color: #ef4444; font-size: 16px; cursor: pointer; transition: 0.2s;" 
+                                  onmouseover="this.style.transform='scale(1.2)'" 
+                                  onmouseout="this.style.transform='scale(1)'"
+                                  title="Konuyu Sil">
+                                <i class="fa-regular fa-trash-can"></i>
+                             </div>` : '';
 
                         html += `
                         <div class="message" style="cursor:pointer; flex-direction:row; padding:0; align-items:stretch;" onclick="viewTopic(${p.id})">
@@ -1355,12 +1366,14 @@
                             <div style="text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:1px solid rgba(255,255,255,0.05);">
                                 <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
                                 <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">${p.reply_count || 0}</div>
+                                ${deleteBtnHtml}
                             </div>
                         </div>`;
                     }
                 });
                 feed.innerHTML = html;
             }
+            
             else if (currentViewMode === 'forum-detail') {
             // --- 1. VERİLERİ AĞAÇ YAPISINA ÇEVİR (Genel Akış Mantığıyla Aynı) ---
             const postMap = {};
@@ -1396,6 +1409,7 @@
             html += renderSingleMessage(topic, false); 
 
             // --- C. YANITLAR BAŞLIĞI ---
+            // Doğrudan ana konuya bağlı kaç yorum var?
             const directRepliesCount = topic.children.length;
             
             html += `
@@ -1437,8 +1451,8 @@
 
             feed.innerHTML = html;
         }
-                            } catch (e) { console.error(e); }
-                        }
+            } catch (e) { console.error(e); }
+        }
 
 
         // --- YENİ KONU MODAL ---
@@ -1741,7 +1755,7 @@ function renderSingleMessage(p, showReplyBtn = true) {
                     </div>
                     
                     <textarea id="inline-input-${id}" class="form-input" 
-                        placeholder="Yanıtını buraya yaz..." 
+                        placeholder="Yanıtını buraya yaz... (Enter: Gönder, Shift+Enter: Alt Satır)" 
                         maxlength="500" 
                         style="min-height:80px; resize:none; overflow-y:auto;"
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitInlineReply(${id}); }"></textarea>
@@ -1777,7 +1791,7 @@ function renderSingleMessage(p, showReplyBtn = true) {
             try {
                 const res = await fetch(`${API_URL}/posts`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: content, parent_id: parentId }),
+                    body: JSON.stringify({ content: content, parent_id: parentId, category: currentCategory }), // Kategori eklendi
                     credentials: 'include'
                 });
                 if (res.ok) {
