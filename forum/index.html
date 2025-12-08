@@ -1021,26 +1021,21 @@
             </div>
         </div>
 
-        <div class="compose-area" id="general-compose-area">
+<div class="compose-area" id="general-compose-area">
             <div class="compose-wrapper">
-                <textarea id="main-chat-input" class="compose-input" placeholder="Genel sohbete yaz..." maxlength="500"></textarea>
-                <div class="compose-wrapper">
-                    <textarea id="main-chat-input" class="compose-input" 
-                        placeholder="Genel sohbete yaz..." 
-                        maxlength="2000" 
-                        oninput="updateCharCount(this, 'main-char-count')"></textarea>
-                    
-                    <div class="compose-footer">
-                        <div class="action-icons">
-                            <i class="fa-solid fa-code"></i>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <div id="main-char-count" class="char-counter">0 / 2000</div>
-                            <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
-                        </div>
+                <textarea id="main-chat-input" class="compose-input" 
+                    placeholder="Genel sohbete yaz..." 
+                    maxlength="2000" 
+                    oninput="updateCharCount(this, 'main-char-count')"></textarea>
+                
+                <div class="compose-footer">
+                    <div class="action-icons">
+                        <i class="fa-solid fa-code"></i>
                     </div>
-                </div>
-                    <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div id="main-char-count" class="char-counter">0 / 2000</div>
+                        <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
