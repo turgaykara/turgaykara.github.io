@@ -1306,19 +1306,8 @@
                                     <div style="font-size:12px; color:var(--text-muted);">
                                         @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
                                     </div>
-                                    <div style="
-                                        font-size: 13px; 
-                                        color: #a1a1aa; /* İstediğin soluk renk */
-                                        margin-top: 6px; 
-                                        
-                                        /* 2 Satır Mantığı */
-                                        display: -webkit-box;
-                                        -webkit-line-clamp: 2; /* Burayı 3 yaparsan 3 satır gösterir */
-                                        -webkit-box-orient: vertical;
-                                        overflow: hidden;
-                                        text-overflow: ellipsis;
-                                    ">
-                                        ${escapeHTML(p.content)}
+                                    <div style="font-size:13px; color:#d4d4d8; margin-top:6px;">
+                                        ${escapeHTML(p.content.length > 100 ? p.content.substring(0, 100) + '...' : p.content)}
                                     </div>
                                 </div>
                                 <div style="text-align:center; min-width:60px;">
