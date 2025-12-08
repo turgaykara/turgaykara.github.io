@@ -16,10 +16,8 @@
             --bg-card: #27272a;
             --bg-input: #3f3f46;
             --primary: #8b5cf6;
-            /* Mor */
             --primary-hover: #7c3aed;
             --secondary: #06b6d4;
-            /* Turkuaz */
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: rgba(255, 255, 255, 0.08);
@@ -513,6 +511,7 @@
             margin-left: 5px;
             opacity: 0.7;
         }
+
         .msg-text {
             font-size: 14px;
             line-height: 1.7;
@@ -699,8 +698,6 @@
             position: relative;
         }
 
-        /* ↓↓↓ BURADAN SONRA EKLE ↓↓↓ */
-
         .input-with-icon {
             position: relative;
             display: flex;
@@ -846,7 +843,6 @@
             gap: 10px;
             margin-top: 5px;
         }
-
     </style>
 </head>
 
@@ -925,18 +921,6 @@
                 <p>● Çevrimiçi</p>
             </div>
         </div>
-<div class="sidebar">
-        <a href="/forum" class="brand">
-            <img src="pp2.png" width="48" style="border-radius:10%">
-            <span>DarkSec</span>Forum
-        </a>
-        <div class="user-profile">
-            <div class="avatar" id="avatar-initial">?</div>
-            <div class="user-info">
-                <h4 id="user-name">Ziyaretçi</h4>
-                <p>● Çevrimiçi</p>
-            </div>
-        </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-right:10px;">
             <div class="nav-label" style="margin:0;">KANALLAR</div>
@@ -993,64 +977,64 @@
             </div>
         </div>
     </div>
+
     <div id="user-list-modal" class="modal-overlay">
-    <div class="modal-box" style="max-width: 800px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="margin:0;">Kullanıcı Listesi</h2>
-            <i class="fa-solid fa-xmark fa-lg" style="cursor:pointer;" onclick="closeUserListModal()"></i>
-        </div>
-        
-        <div style="max-height: 400px; overflow-y: auto;">
-            <table style="width:100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
-                        <th style="padding: 10px;">Kullanıcı</th>
-                        <th style="padding: 10px;">Rütbe</th>
-                        <th style="padding: 10px;">Durum</th>
-                        <th style="padding: 10px; text-align:right;">İşlem</th>
-                    </tr>
-                </thead>
-                <tbody id="user-list-body">
+        <div class="modal-box" style="max-width: 800px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0;">Kullanıcı Listesi</h2>
+                <i class="fa-solid fa-xmark fa-lg" style="cursor:pointer;" onclick="closeUserListModal()"></i>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table style="width:100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
+                            <th style="padding: 10px;">Kullanıcı</th>
+                            <th style="padding: 10px;">Rütbe</th>
+                            <th style="padding: 10px;">Durum</th>
+                            <th style="padding: 10px; text-align:right;">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-list-body">
                     </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
+    <div id="topic-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0;">Yeni Konu Başlat</h2>
+                <i class="fa-solid fa-xmark fa-lg" style="cursor:pointer;" onclick="closeTopicModal()"></i>
+            </div>
 
-<div id="topic-modal" class="modal-overlay">
-    <div class="modal-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="margin:0;">Yeni Konu Başlat</h2>
-            <i class="fa-solid fa-xmark fa-lg" style="cursor:pointer;" onclick="closeTopicModal()"></i>
+            <p style="color:#a1a1aa; font-size:13px; margin-bottom:15px;">Hangi konuda tartışmak istersin?</p>
+
+            <div class="input-group">
+                <select id="topic-select" class="form-input" onchange="toggleCustomTopicInput()">
+                    <option value="soru-cevap">❓ Soru - Cevap</option>
+                    <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
+                    <option value="bug-bounty">💰 Bug Bounty</option>
+                    <option value="pentesting">⚔️ Pentesting</option>
+                    <option value="etik">⚖️ Etik & Hukuk</option>
+                    <option value="donanim">💻 Donanım</option>
+                    <option value="tool-paylasimi">🛠️ Tool Paylaşımı</option>
+                    <option value="custom">✨ Diğer (Kendin Yaz)</option>
+                </select>
+            </div>
+
+            <div id="custom-topic-group" class="input-group hidden">
+                <input type="text" id="custom-topic-input" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="30">
+            </div>
+
+            <div class="input-group">
+                <textarea id="new-topic-message" class="form-input" placeholder="İlk mesajını yaz..." style="height:100px; resize:none;"></textarea>
+            </div>
+
+            <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%;">Konuyu Başlat</button>
         </div>
-        
-        <p style="color:#a1a1aa; font-size:13px; margin-bottom:15px;">Hangi konuda tartışmak istersin?</p>
-        
-        <div class="input-group">
-            <select id="topic-select" class="form-input" onchange="toggleCustomTopicInput()">
-                <option value="soru-cevap">❓ Soru - Cevap</option>
-                <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
-                <option value="bug-bounty">💰 Bug Bounty</option>
-                <option value="pentesting">⚔️ Pentesting</option>
-                <option value="etik">⚖️ Etik & Hukuk</option>
-                <option value="donanim">💻 Donanım</option>
-                <option value="tool-paylasimi">🛠️ Tool Paylaşımı</option>
-                <option value="custom">✨ Diğer (Kendin Yaz)</option>
-            </select>
-        </div>
-
-        <div id="custom-topic-group" class="input-group hidden">
-            <input type="text" id="custom-topic-input" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="30">
-        </div>
-
-        <div class="input-group">
-            <textarea id="new-topic-message" class="form-input" placeholder="İlk mesajını yaz..." style="height:100px; resize:none;"></textarea>
-        </div>
-
-        <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%;">Konuyu Başlat</button>
     </div>
-</div>
 
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
@@ -1107,35 +1091,27 @@
 
             // --- GÜVENLİK KONTROLÜ (Sadece Kayıt Olurken) ---
             if (endpoint === 'register') {
-                // Kural 1: Uzunluk
                 if (password.length < 8) {
                     errEl.innerText = "Şifre en az 8 karakter olmalıdır.";
                     errEl.style.display = 'block';
                     return;
                 }
-
-                // Kural 2: Büyük Harf (A-Z)
                 if (!/[A-Z]/.test(password)) {
                     errEl.innerText = "Şifre en az 1 BÜYÜK harf içermelidir.";
                     errEl.style.display = 'block';
                     return;
                 }
-
-                // Kural 3: Küçük Harf (a-z)
                 if (!/[a-z]/.test(password)) {
                     errEl.innerText = "Şifre en az 1 küçük harf içermelidir.";
                     errEl.style.display = 'block';
                     return;
                 }
-
-                // Kural 4: Özel Karakter (Harf ve sayı dışı her şey)
                 if (!/[^a-zA-Z0-9]/.test(password)) {
                     errEl.innerText = "Şifre en az 1 özel karakter (!, @, #, _ vb.) içermelidir.";
                     errEl.style.display = 'block';
                     return;
                 }
             }
-            // ----------------------------------------------
 
             if (btn) btn.disabled = true;
 
@@ -1170,86 +1146,40 @@
         }
 
         // --- LOAD MESSAGES ---
-// ESKİ loadMessages'ı SİL, BUNU YAPIŞTIR:
-async function loadMessages() {
-    try {
-        // 👇 Burası değişti: topic parametresi eklendi
-        const res = await fetch(`${API_URL}/posts?topic=${currentTopic}`, { credentials: 'include' });
-        if (!res.ok) throw new Error("Hata");
-        const posts = await res.json();
-        
-        // ... Kodun geri kalanı (postMap, roots, sort, activeEditId kontrolleri) AYNEN KALSIN ...
-        // Sadece fetch satırını değiştirsen yeterli ama kafa karışmasın diye kısa tutuyorum.
-        // Eğer fonksiyonun içini değiştirmeyi biliyorsan sadece fetch URL'ini değiştir.
-        // Bilmiyorsan eski loadMessages'ı komple silip bana söyle, tam halini atayım.
-        
-        // KISA YOL: loadMessages içindeki fetch satırını bul ve şununla değiştir:
-        // const res = await fetch(`${API_URL}/posts?topic=${currentTopic}`, { credentials: 'include' });
-        
-        // --- DEVAMI MEVCUT KODUNDAKİ GİBİ ---
-        const feed = document.getElementById('chat-feed');
-        const currentDataString = JSON.stringify(posts);
-        if (currentDataString === lastPostsString && !activeEditId) return;
-        lastPostsString = currentDataString;
+        async function loadMessages() {
+            try {
+                const res = await fetch(`${API_URL}/posts?topic=${currentTopic}`, { credentials: 'include' });
+                if (!res.ok) throw new Error("Hata");
+                const posts = await res.json();
+                
+                const feed = document.getElementById('chat-feed');
+                const currentDataString = JSON.stringify(posts);
+                if (currentDataString === lastPostsString && !activeEditId) return;
+                lastPostsString = currentDataString;
 
-        if (posts.length === 0) {
-            feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'><i class='fa-solid fa-ghost fa-2x'></i><br><br>Bu konuda henüz mesaj yok.</div>";
-            return;
+                if (posts.length === 0) {
+                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'><i class='fa-solid fa-ghost fa-2x'></i><br><br>Bu konuda henüz mesaj yok.</div>";
+                    return;
+                }
+                
+                const postMap = {};
+                posts.forEach(p => postMap[p.id] = { ...p, children: [] });
+                const roots = [];
+                posts.forEach(p => {
+                    if (p.parent_id && postMap[p.parent_id]) postMap[p.parent_id].children.push(postMap[p.id]);
+                    else roots.push(postMap[p.id]);
+                });
+                roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                if (!activeEditId) {
+                    feed.innerHTML = roots.map(root => buildPostHTML(root)).join('');
+                    openRepliesSet.forEach(id => {
+                        const c = document.getElementById(`replies-${id}`);
+                        if (c) c.classList.add('show');
+                    });
+                }
+            } catch (e) { console.error(e); }
         }
-        
-        // (Geri kalan buildPostHTML vs. aynı...)
-        const postMap = {};
-        posts.forEach(p => postMap[p.id] = { ...p, children: [] });
-        const roots = [];
-        posts.forEach(p => {
-            if (p.parent_id && postMap[p.parent_id]) postMap[p.parent_id].children.push(postMap[p.id]);
-            else roots.push(postMap[p.id]);
-        });
-        roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-        if (!activeEditId) {
-            feed.innerHTML = roots.map(root => buildPostHTML(root)).join('');
-            openRepliesSet.forEach(id => {
-                const c = document.getElementById(`replies-${id}`);
-                if (c) c.classList.add('show');
-            });
-        }
-    } catch (e) { console.error(e); }
-}
-
-// MAIN SEND BUTONUNU GÜNCELLE (Sadece onclick kısmını):
-mainSendBtn.onclick = async () => {
-    if (isGuest) { window.openAuthModal('login'); return; }
-    const content = mainInput.value;
-    if (!content.trim()) return;
-    mainSendBtn.disabled = true;
-    mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-
-    try {
-        const res = await fetch(`${API_URL}/posts`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            // 👇 BURASI DEĞİŞTİ: topic eklendi
-            body: JSON.stringify({ content: content, parent_id: null, topic: currentTopic }),
-            credentials: 'include'
-        });
-
-        if (res.ok) {
-            mainInput.value = '';
-            mainInput.style.height = 'auto';
-            lastMessageTime = Date.now();
-            lastPostsString = "";
-            loadMessages();
-            if (currentUserRank !== 'admin') startButtonCooldown(3);
-            else resetButton();
-        } else {
-            alert("Hata oluştu.");
-            resetButton();
-        }
-    } catch (e) {
-        alert("Bağlantı hatası.");
-        resetButton();
-    }
-}
 
         function buildPostHTML(post) {
             let html = `<div class="message-wrapper">`;
@@ -1284,14 +1214,12 @@ mainSendBtn.onclick = async () => {
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
 
-            // Düzenleme kontrolü
             let editedHtml = "";
             if (p.updated_at && p.updated_at !== p.created_at) {
                 const editDate = formatTime(p.updated_at);
                 editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
             }
 
-            // User stats
             const userStats = p.user_stats || {
                 rank: 'member',
                 message_count: 0,
@@ -1316,16 +1244,14 @@ mainSendBtn.onclick = async () => {
 
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             
-            // --- BURASI DÜZELTİLDİ ---
             const isAdmin = currentUserRank === 'admin';
             let banBtn = '';
 
             if (isAdmin && !p.is_mine) {
-                // Backend'den gelen veriye göre buton rengi ve yazısı
                 const isBanned = p.author_is_banned;
                 
                 const btnText = isBanned ? "Banı Aç" : "Banla";
-                const btnColor = isBanned ? "#10b981" : "#ef4444"; // Yeşil veya Kırmızı
+                const btnColor = isBanned ? "#10b981" : "#ef4444"; 
                 const btnIcon = isBanned ? "fa-lock-open" : "fa-gavel";
                 
                 banBtn = `<span class="action-btn" 
@@ -1334,8 +1260,6 @@ mainSendBtn.onclick = async () => {
                             <i class="fa-solid ${btnIcon}"></i> ${btnText}
                         </span>`;
             }
-            // (Eski kod bloğu buradan silindi)
-            // ---------------------------
 
             const canDelete = p.is_mine || isAdmin;
             const deleteBtn = canDelete ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
@@ -1386,18 +1310,15 @@ mainSendBtn.onclick = async () => {
             }
         }
 
-        // --- GÖNDERME İŞLEMİ (SAYAÇLI & TIMERLI) ---
         const mainInput = document.getElementById('main-chat-input');
         const mainSendBtn = document.getElementById('main-send-btn');
         let cooldownInterval = null;
 
-        // 1. TEXTAREA AUTO RESIZE
         mainInput.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = (this.style.scrollHeight) + 'px';
         });
 
-        // 2. Enter tuşu desteği
         mainInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -1405,7 +1326,37 @@ mainSendBtn.onclick = async () => {
             }
         });
 
-    
+        mainSendBtn.onclick = async () => {
+            if (isGuest) { window.openAuthModal('login'); return; }
+            const content = mainInput.value;
+            if (!content.trim()) return;
+            mainSendBtn.disabled = true;
+            mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: content, parent_id: null, topic: currentTopic }),
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    mainInput.value = '';
+                    mainInput.style.height = 'auto';
+                    lastMessageTime = Date.now();
+                    lastPostsString = "";
+                    loadMessages();
+                    if (currentUserRank !== 'admin') startButtonCooldown(3);
+                    else resetButton();
+                } else {
+                    alert("Hata oluştu.");
+                    resetButton();
+                }
+            } catch (e) {
+                alert("Bağlantı hatası.");
+                resetButton();
+            }
+        }
 
         function startButtonCooldown(seconds) {
             let counter = seconds;
@@ -1430,7 +1381,6 @@ mainSendBtn.onclick = async () => {
             mainSendBtn.innerHTML = 'Paylaş <i class="fa-solid fa-paper-plane"></i>';
         }
 
-        // --- DİĞER FONKSİYONLAR ---
         window.openAuthModal = function (type) {
             document.getElementById('auth-screen').classList.add('active');
             document.getElementById('login-view').classList.remove('hidden');
@@ -1451,21 +1401,21 @@ mainSendBtn.onclick = async () => {
         document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' }); location.reload(); };
 
         async function deletePost(id) {
-    try {
-        const res = await fetch(`${API_URL}/posts/${id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include'
-        });
+            try {
+                const res = await fetch(`${API_URL}/posts/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
 
-        if (res.ok) {
-            lastPostsString = "";
-            loadMessages();
+                if (res.ok) {
+                    lastPostsString = "";
+                    loadMessages();
+                }
+            } catch (e) {
+                alert("Hata.");
+            }
         }
-    } catch (e) {
-        alert("Hata.");
-    }
-}
 
         const formatTime = (dateStr) => {
             let date = new Date(dateStr); date.setHours(date.getHours() + 3);
@@ -1481,7 +1431,6 @@ mainSendBtn.onclick = async () => {
         checkSession();
         setInterval(loadMessages, POLL_INTERVAL);
 
-        // --- YENİ: SATIR İÇİ YANIT SİSTEMİ ---
         let activeReplyId = null;
 
         window.toggleReplyBox = function (id, authorName) {
@@ -1548,7 +1497,6 @@ mainSendBtn.onclick = async () => {
             }
         }
 
-        // --- YENİ: SATIR İÇİ DÜZENLEME SİSTEMİ ---
         let activeEditId = null;
 
         window.toggleEditMode = function (id) {
@@ -1600,7 +1548,6 @@ mainSendBtn.onclick = async () => {
             } catch (e) { alert("Hata"); }
         }
 
-        // --- COOLDOWN YÖNETİMİ (GLOBAL) ---
         let globalCooldownEnd = 0;
         function startGlobalReplyCooldown() { globalCooldownEnd = Date.now() + 3000; }
         function checkCooldownState(id) {
@@ -1620,75 +1567,167 @@ mainSendBtn.onclick = async () => {
                 }, 1000);
             }
         }
+
         async function banUser(userId, username) {
-        if (!confirm(`@${username} kullanıcısının durumunu değiştirmek istiyor musun?`)) return;
+            if (!confirm(`@${username} kullanıcısının durumunu değiştirmek istiyor musun?`)) return;
 
-        try {
-            const res = await fetch(`${API_URL}/users/${userId}/ban`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            });
-            const data = await res.json();
-            
-            if (res.ok) {
-                // alert(data.message); // İstersen alerti kaldır, daha seri olur
-                
-                // 1. Mesajları yenile (Buton rengi değişsin diye)
-                lastPostsString = "";
-                loadMessages();
-                
-                // 2. Eğer kullanıcı listesi açıksa, orayı da yenile
-                if (document.getElementById('user-list-modal').classList.contains('active')) {
-                    loadAllUsers();
+            try {
+                const res = await fetch(`${API_URL}/users/${userId}/ban`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    lastPostsString = "";
+                    loadMessages();
+                    if (document.getElementById('user-list-modal').classList.contains('active')) {
+                        loadAllUsers();
+                    }
+                } else {
+                    alert("Hata: " + data.error);
                 }
-            } else {
-                alert("Hata: " + data.error);
+            } catch (e) {
+                alert("Bağlantı hatası.");
             }
-        } catch (e) {
-            alert("Bağlantı hatası.");
         }
-    }
+
+        document.getElementById('toggle-password').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = this;
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // --- YENİ KONU SİSTEMİ FONKSİYONLARI ---
+
+        function changeTopic(topicName) {
+            currentTopic = topicName;
+            lastPostsString = "";
+            document.getElementById('chat-feed').innerHTML = '<div style="text-align:center; padding:50px; color:#555;">Yükleniyor...</div>';
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            if (topicName === 'genel') {
+                document.getElementById('nav-genel').classList.add('active');
+                document.querySelector('.channel-info').innerHTML = '<i class="fa-solid fa-earth-americas channel-icon"></i> Genel Akış';
+            } else {
+                const el = document.getElementById(`topic-${topicName}`);
+                if (el) el.classList.add('active');
+                document.querySelector('.channel-info').innerHTML = `<i class="fa-solid fa-hashtag channel-icon"></i> ${topicName}`;
+            }
+            loadMessages();
+        }
+
+        async function loadSidebarTopics() {
+            try {
+                const res = await fetch(`${API_URL}/topics`);
+                const topics = await res.json();
+                const container = document.getElementById('dynamic-topic-list');
+                container.innerHTML = '';
+
+                topics.forEach(t => {
+                    const isActive = (t === currentTopic) ? 'active' : '';
+                    const html = `
+                <div id="topic-${t}" class="nav-item ${isActive}" onclick="changeTopic('${t}')">
+                    <i class="fa-solid fa-hashtag"></i> ${t}
+                </div>`;
+                    container.innerHTML += html;
+                });
+            } catch (e) { console.error("Konular yüklenemedi"); }
+        }
+
+        function openTopicModal() {
+            if (isGuest) { openAuthModal('login'); return; }
+            document.getElementById('topic-modal').classList.add('active');
+        }
+        function closeTopicModal() { document.getElementById('topic-modal').classList.remove('active'); }
+
+        function toggleCustomTopicInput() {
+            const val = document.getElementById('topic-select').value;
+            const group = document.getElementById('custom-topic-group');
+            if (val === 'custom') group.classList.remove('hidden');
+            else group.classList.add('hidden');
+        }
+
+        async function submitNewTopic() {
+            const select = document.getElementById('topic-select');
+            let topicName = select.value;
+
+            if (topicName === 'custom') {
+                const customInput = document.getElementById('custom-topic-input').value.trim();
+                if (!customInput) { alert("Konu başlığı yazın."); return; }
+                topicName = customInput.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-çğıöşü]/g, '');
+            }
+
+            const message = document.getElementById('new-topic-message').value.trim();
+            if (!message) { alert("İlk mesajı yazın."); return; }
+
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: message, parent_id: null, topic: topicName }),
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    closeTopicModal();
+                    document.getElementById('new-topic-message').value = '';
+                    if(document.getElementById('custom-topic-input')) document.getElementById('custom-topic-input').value = '';
+                    await loadSidebarTopics();
+                    changeTopic(topicName);
+                } else { alert("Hata."); }
+            } catch (e) { alert("Hata."); }
+        }
+
         function openUserListModal() {
-    document.getElementById('user-list-modal').classList.add('active');
-    loadAllUsers();
-}
+            document.getElementById('user-list-modal').classList.add('active');
+            loadAllUsers();
+        }
 
-function closeUserListModal() {
-    document.getElementById('user-list-modal').classList.remove('active');
-}
+        function closeUserListModal() {
+            document.getElementById('user-list-modal').classList.remove('active');
+        }
 
-async function loadAllUsers() {
-    const tbody = document.getElementById('user-list-body');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Yükleniyor...</td></tr>';
+        async function loadAllUsers() {
+            const tbody = document.getElementById('user-list-body');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Yükleniyor...</td></tr>';
 
-    try {
-        const res = await fetch(`${API_URL}/users`, { credentials: 'include' });
-        if (!res.ok) throw new Error("Yetkisiz");
-        const users = await res.json();
+            try {
+                const res = await fetch(`${API_URL}/users`, { credentials: 'include' });
+                if (!res.ok) throw new Error("Yetkisiz");
+                const users = await res.json();
 
-        tbody.innerHTML = '';
-        users.forEach(u => {
-            const isBanned = u.is_banned;
-            const statusBadge = isBanned 
-                ? '<span style="background:#ef4444; padding:2px 6px; border-radius:4px; font-size:10px; color:white;">BANLI</span>' 
-                : '<span style="color:#10b981;">Aktif</span>';
-            
-            const btnText = isBanned ? "Banı Aç" : "Banla";
-            const btnClass = isBanned ? "success" : "danger"; // CSS olmadığı için inline style vereceğiz
-            const btnStyle = isBanned 
-                ? "background:rgba(16, 185, 129, 0.2); color:#10b981; border:1px solid #10b981;" 
-                : "background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444;";
+                tbody.innerHTML = '';
+                users.forEach(u => {
+                    const isBanned = u.is_banned;
+                    const statusBadge = isBanned
+                        ? '<span style="background:#ef4444; padding:2px 6px; border-radius:4px; font-size:10px; color:white;">BANLI</span>'
+                        : '<span style="color:#10b981;">Aktif</span>';
 
-            // Kendimizi banlayamayız, butonu gizle
-            const actionButton = (u.rank === 'admin') 
-                ? '<span style="font-size:10px; opacity:0.5;">İşlem Yok</span>'
-                : `<button onclick="banUser(${u.id}, '${u.username}')" 
+                    const btnText = isBanned ? "Banı Aç" : "Banla";
+                    const btnStyle = isBanned
+                        ? "background:rgba(16, 185, 129, 0.2); color:#10b981; border:1px solid #10b981;"
+                        : "background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444;";
+
+                    const actionButton = (u.rank === 'admin')
+                        ? '<span style="font-size:10px; opacity:0.5;">İşlem Yok</span>'
+                        : `<button onclick="banUser(${u.id}, '${u.username}')" 
                     style="${btnStyle} cursor:pointer; padding:4px 8px; border-radius:4px; font-weight:600; font-size:11px;">
                     ${btnText}
                    </button>`;
 
-            const row = `
+                    const row = `
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
                     <td style="padding: 12px;">
                         <div style="display:flex; align-items:center; gap:10px;">
@@ -1701,114 +1740,18 @@ async function loadAllUsers() {
                     <td style="padding: 12px; text-align:right;">${actionButton}</td>
                 </tr>
             `;
-            tbody.innerHTML += row;
-        });
+                    tbody.innerHTML += row;
+                });
 
-    } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
-    }
-}
-        
-        document.getElementById('toggle-password').addEventListener('click', function() {
-    const passwordInput = document.getElementById('password');
-    const icon = this;
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-});
-// --- YENİ KONU SİSTEMİ FONKSİYONLARI ---
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
+            }
+        }
 
-function changeTopic(topicName) {
-    currentTopic = topicName;
-    lastPostsString = ""; 
-    document.getElementById('chat-feed').innerHTML = '<div style="text-align:center; padding:50px; color:#555;">Yükleniyor...</div>';
-    
-    // Aktif sınıfını güncelle
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    
-    if(topicName === 'genel') {
-        document.getElementById('nav-genel').classList.add('active');
-        document.querySelector('.channel-info').innerHTML = '<i class="fa-solid fa-earth-americas channel-icon"></i> Genel Akış';
-    } else {
-        const el = document.getElementById(`topic-${topicName}`);
-        if(el) el.classList.add('active');
-        document.querySelector('.channel-info').innerHTML = `<i class="fa-solid fa-hashtag channel-icon"></i> ${topicName}`;
-    }
-    loadMessages();
-}
-
-async function loadSidebarTopics() {
-    try {
-        const res = await fetch(`${API_URL}/topics`);
-        const topics = await res.json();
-        const container = document.getElementById('dynamic-topic-list');
-        container.innerHTML = '';
-        
-        topics.forEach(t => {
-            const isActive = (t === currentTopic) ? 'active' : '';
-            const html = `
-                <div id="topic-${t}" class="nav-item ${isActive}" onclick="changeTopic('${t}')">
-                    <i class="fa-solid fa-hashtag"></i> ${t}
-                </div>`;
-            container.innerHTML += html;
-        });
-    } catch (e) { console.error("Konular yüklenemedi"); }
-}
-
-function openTopicModal() {
-    if(isGuest) { openAuthModal('login'); return; }
-    document.getElementById('topic-modal').classList.add('active');
-}
-function closeTopicModal() { document.getElementById('topic-modal').classList.remove('active'); }
-
-function toggleCustomTopicInput() {
-    const val = document.getElementById('topic-select').value;
-    const group = document.getElementById('custom-topic-group');
-    if (val === 'custom') group.classList.remove('hidden');
-    else group.classList.add('hidden');
-}
-
-async function submitNewTopic() {
-    const select = document.getElementById('topic-select');
-    let topicName = select.value;
-    
-    if (topicName === 'custom') {
-        const customInput = document.getElementById('custom-topic-input').value.trim();
-        if (!customInput) { alert("Konu başlığı yazın."); return; }
-        // Türkçe karakterleri ve boşlukları düzelt
-        topicName = customInput.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-çğıöşü]/g, '');
-    }
-
-    const message = document.getElementById('new-topic-message').value.trim();
-    if (!message) { alert("İlk mesajı yazın."); return; }
-
-    try {
-        const res = await fetch(`${API_URL}/posts`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: message, parent_id: null, topic: topicName }),
-            credentials: 'include'
-        });
-
-        if (res.ok) {
-            closeTopicModal();
-            document.getElementById('new-topic-message').value = '';
-            await loadSidebarTopics(); 
-            changeTopic(topicName);
-        } else { alert("Hata."); }
-    } catch (e) { alert("Hata."); }
-}
-
-// Başlangıçta konuları çek ve her 10 saniyede bir yenile
-loadSidebarTopics();
-setInterval(loadSidebarTopics, 10000);
+        // Başlangıçta konuları çek ve her 10 saniyede bir yenile
+        loadSidebarTopics();
+        setInterval(loadSidebarTopics, 10000);
     </script>
 </body>
+
 </html>
