@@ -1020,7 +1020,7 @@
     </div>
 
     <div id="new-topic-modal" class="modal-overlay">
-        <div class="modal-box" style="width: 600px; max-width:90%;">
+        <div class="modal-box" style="width: 500px; max-width:90%;">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
                 <h3>Yeni Konu Başlat</h3>
                 <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeNewTopicModal()"></i>
@@ -1084,6 +1084,7 @@
 </div>
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
+        let currentTopicId = null;
         let currentUserRank = 'member';
         let isGuest = true;
         const POLL_INTERVAL = 10000;
@@ -1231,7 +1232,25 @@
             document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
             loadMessages();
         }
+        // Konunun içine girme fonksiyonu
+        function viewTopic(id) {
+            currentTopicId = id;
+            currentViewMode = 'forum-detail';
+            
+            // Genel mesaj yazma kutusunu gizle (zaten gizliydi ama garanti olsun)
+            document.getElementById('general-compose-area').style.display = 'none'; 
+            
+            lastPostsString = ""; // İçeriği yenilemeye zorla
+            loadMessages();
+        }
 
+        // Listeye geri dönme fonksiyonu
+        function backToForum() {
+            currentTopicId = null;
+            currentViewMode = 'forum-list';
+            lastPostsString = ""; // İçeriği yenilemeye zorla
+            loadMessages();
+        }
         // --- MESAJLARI / KONULARI ÇEKME ---
         async function loadMessages() {
             if (activeEditId || activeReplyId) return;
@@ -1343,6 +1362,67 @@
                 });
                 feed.innerHTML = html;
             }
+            else if (currentViewMode === 'forum-detail') {
+    // 1. Ana konuyu ve cevaplarını bul
+    const topic = posts.find(p => p.id === currentTopicId);
+    const replies = posts.filter(p => p.parent_id === currentTopicId);
+    
+    // Eğer konu silinmişse veya bulunamazsa listeye at
+    if (!topic) { backToForum(); return; }
+
+    let html = '';
+
+    // --- A. GERİ DÖN BUTONU ---
+    html += `
+        <div style="margin-bottom: 20px; display:flex; align-items:center; gap:10px;">
+            <button onclick="backToForum()" class="action-btn" style="color:var(--text-muted); font-size:14px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:8px;">
+                <i class="fa-solid fa-arrow-left"></i> Listeye Dön
+            </button>
+            <h3 style="margin:0; color:#fff; font-size:18px;">${escapeHTML(topic.title)}</h3>
+        </div>
+    `;
+
+    // --- B. ANA KONU (Geniş Gösterim) ---
+    // renderSingleMessage fonksiyonunu kullanarak ana mesajı basıyoruz
+    html += renderSingleMessage(topic, false);
+
+    // --- C. CEVAPLAR BAŞLIĞI ---
+    html += `
+        <div style="margin: 30px 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--primary); font-weight:600; font-size:14px;">
+            <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> YANITLAR (${replies.length})
+        </div>
+    `;
+
+    // --- D. CEVAPLARI LİSTELE ---
+    if (replies.length > 0) {
+        // Eskiden yeniye sırala (İlk mesaj en üstte)
+        replies.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        replies.forEach(reply => {
+            html += renderSingleMessage(reply, true);
+        });
+    } else {
+        html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
+    }
+
+    // --- E. CEVAP YAZMA KUTUSU (En Altta) ---
+    html += `
+        <div style="margin-top: 30px; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+            <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
+            <textarea id="detail-reply-input" class="form-input" 
+                placeholder="Düşüncelerini paylaş..." 
+                style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"></textarea>
+            
+            <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
+                    Yanıtla <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <div style="height: 50px;"></div>
+    `;
+
+    feed.innerHTML = html;
+}
                             } catch (e) { console.error(e); }
                         }
 
@@ -1893,7 +1973,40 @@ async function loadAllUsers() {
                 counterEl.classList.remove('limit-near', 'limit-reached');
             }
         }
-        
+        async function sendDetailReply(topicId) {
+            if (isGuest) { window.openAuthModal('login'); return; }
+
+            const input = document.getElementById('detail-reply-input');
+            const btn = document.getElementById('btn-detail-reply');
+            const content = input.value;
+
+            if (!content.trim()) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: content, parent_id: topicId }),
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    input.value = ''; // Kutuyu temizle
+                    lastPostsString = ""; // Verileri yenile
+                    loadMessages(); // Sayfayı güncelle (Cevabın düştüğünü gör)
+                } else {
+                    alert("Hata oluştu.");
+                }
+            } catch (e) {
+                alert("Bağlantı hatası.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+            }
+        }
         document.getElementById('toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
             const icon = this;
