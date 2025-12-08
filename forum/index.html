@@ -873,6 +873,22 @@
         .char-counter.limit-near { color: #facc15; }
         .char-counter.limit-reached { color: var(--danger); }
         
+        /* --- BEĞENİ & KAYDET BUTONLARI --- */
+        .action-btn.liked {
+            color: #ef4444; /* Kırmızı */
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .action-btn.saved {
+            color: #f59e0b; /* Turuncu/Sarı */
+            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(245, 158, 11, 0.1);
+        }
+        /* İkon animasyonu */
+        .action-btn:active i {
+            transform: scale(1.4);
+            transition: 0.1s;
+        }
     </style>
 </head>
 
@@ -1227,20 +1243,25 @@
         }
         // Konunun içine girme fonksiyonu
         function viewTopic(id) {
-            currentTopicId = parseInt(id);
+            currentTopicId = parseInt(id); // ID'yi sayıya çevir
             currentViewMode = 'forum-detail';
             
             document.getElementById('general-compose-area').style.display = 'none'; 
+            
+            lastPostsString = ""; // <-- BU ÇOK ÖNEMLİ! Bunu demezsek ekran yenilenmez.
             loadMessages();
-            renderCurrentView();
         }
 
+        // Listeye geri dönme fonksiyonu
         // Listeye geri dönme fonksiyonu
         function backToForum() {
             currentTopicId = null;
             currentViewMode = 'forum-list';
+            
+            document.getElementById('general-compose-area').style.display = 'none'; // Listede de input yok
+            
+            lastPostsString = ""; // <-- BU ÇOK ÖNEMLİ!
             loadMessages();
-            renderCurrentView();
         }
 
         // --- MESAJLARI / KONULARI ÇEKME ---
@@ -1520,6 +1541,7 @@
         }
 
         // --- MESAJ KUTUSU TASARIMI ---
+// --- MESAJ KUTUSU TASARIMI ---
 function renderSingleMessage(p, showReplyBtn = true) {
     const initial = (p.author_email || 'A').charAt(0).toUpperCase();
     const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
@@ -1539,12 +1561,27 @@ function renderSingleMessage(p, showReplyBtn = true) {
         try { joinDate = new Date(userStats.join_date).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' }); } catch (e) {}
     }
 
-    // --- BUTON MANTIĞI DÜZELTİLDİ ---
-    // showReplyBtn true gelirse butonu koy, false gelirse (ana konu için) boş geç.
+    // --- BUTONLARIN HAZIRLANMASI ---
     const replyBtn = showReplyBtn 
         ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` 
         : '';
-    // ---------------------------------
+
+    // YENİ: Beğeni ve Kaydet Butonları (Sadece Genel Akış DIŞINDA görünür)
+    let interactBtns = '';
+    if (currentCategory !== 'general') {
+        // Backend'den veri gelmediği için varsayılan 0 veriyoruz.
+        // is_liked ve is_saved backend'den gelirse buraya p.is_liked ? 'liked' : '' yazılır.
+        const likeCount = p.like_count || 0; 
+        
+        interactBtns = `
+            <span id="like-btn-${p.id}" class="action-btn" onclick="toggleLike(${p.id})">
+                <i class="fa-regular fa-heart"></i> <span id="like-count-${p.id}" style="margin-left:3px;">${likeCount}</span>
+            </span>
+            <span id="save-btn-${p.id}" class="action-btn" onclick="toggleSave(${p.id})">
+                <i class="fa-regular fa-bookmark"></i>
+            </span>
+        `;
+    }
 
     const isAdmin = currentUserRank === 'admin';
     let banBtn = '';
@@ -1580,8 +1617,12 @@ function renderSingleMessage(p, showReplyBtn = true) {
                 <span class="msg-date">· ${date} ${editedHtml}</span>
             </div>
             <div class="msg-text">${escapeHTML(p.content)}</div>
+            
             <div class="msg-actions">
-                ${replyBtn} ${editBtn} ${deleteBtn} ${banBtn}
+                ${interactBtns} ${replyBtn} 
+                ${editBtn} 
+                ${deleteBtn} 
+                ${banBtn}
             </div>
         </div>
     </div>`;
@@ -2021,6 +2062,53 @@ async function loadAllUsers() {
                 if(input) input.focus(); 
             }
         }
+
+        // --- BEĞENİ VE KAYDETME SİSTEMİ (FRONTEND) ---
+function toggleLike(id) {
+    const btn = document.getElementById(`like-btn-${id}`);
+    const icon = btn.querySelector('i');
+    const countSpan = document.getElementById(`like-count-${id}`);
+    let count = parseInt(countSpan.innerText);
+
+    if (btn.classList.contains('liked')) {
+        // Beğeniyi Geri Al
+        btn.classList.remove('liked');
+        icon.classList.remove('fa-solid');
+        icon.classList.add('fa-regular'); // İçi boş kalp
+        count--;
+    } else {
+        // Beğen
+        btn.classList.add('liked');
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid'); // İçi dolu kalp
+        count++;
+    }
+    countSpan.innerText = count;
+    
+    // BURAYA İLERİDE FETCH KODU GELECEK:
+    // fetch(`${API_URL}/posts/${id}/like`, { method: 'POST' ... });
+}
+
+function toggleSave(id) {
+    const btn = document.getElementById(`save-btn-${id}`);
+    const icon = btn.querySelector('i');
+
+    if (btn.classList.contains('saved')) {
+        // Kaydetmeyi Kaldır
+        btn.classList.remove('saved');
+        icon.classList.remove('fa-solid');
+        icon.classList.add('fa-regular'); // İçi boş bayrak
+    } else {
+        // Kaydet
+        btn.classList.add('saved');
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid'); // İçi dolu bayrak
+    }
+    
+    // BURAYA İLERİDE FETCH KODU GELECEK:
+    // fetch(`${API_URL}/posts/${id}/save`, { method: 'POST' ... });
+}
+
         document.getElementById('toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
             const icon = this;
