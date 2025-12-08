@@ -1544,6 +1544,7 @@
 
         // --- MESAJ KUTUSU TASARIMI ---
 // --- MESAJ KUTUSU TASARIMI ---
+// --- MESAJ KUTUSU TASARIMI ---
 function renderSingleMessage(p, showReplyBtn = true) {
     const initial = (p.author_email || 'A').charAt(0).toUpperCase();
     const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
@@ -1568,36 +1569,40 @@ function renderSingleMessage(p, showReplyBtn = true) {
         ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` 
         : '';
 
-    // YENİ: Beğeni ve Kaydet Butonları (Sadece Genel Akış DIŞINDA görünür)
-    // YENİ: Beğeni ve Kaydet Butonları (Hafızadan Okumalı)
+    // YENİ: Beğeni ve Kaydet Butonları (Kaydetme Sadece Ana Konuda)
     let interactBtns = '';
     if (currentCategory !== 'general') {
-        // 1. Hafızayı kontrol et: Bu ID listemizde var mı?
         const likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]');
         const savedPosts = JSON.parse(localStorage.getItem('saved_posts') || '[]');
         
         const isLiked = likedPosts.includes(p.id);
         const isSaved = savedPosts.includes(p.id);
 
-        // 2. Duruma göre ikon ve renk ayarla
+        // 1. BEĞENİ BUTONU (Hepsinde Var)
         const likeClass = isLiked ? 'liked' : '';
         const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-        
-        const saveClass = isSaved ? 'saved' : '';
-        const saveIcon = isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
-
-        // 3. Eğer biz beğendiysek sayıyı yapay olarak 1 artır (Sunucudan 0 gelse bile 1 görünsün)
         let displayCount = p.like_count || 0;
         if (isLiked) displayCount++; 
 
-        interactBtns = `
+        let likeBtnHtml = `
             <span id="like-btn-${p.id}" class="action-btn ${likeClass}" onclick="toggleLike(${p.id})">
                 <i class="${likeIcon}"></i> <span id="like-count-${p.id}" style="margin-left:3px;">${displayCount}</span>
             </span>
-            <span id="save-btn-${p.id}" class="action-btn ${saveClass}" onclick="toggleSave(${p.id})">
-                <i class="${saveIcon}"></i>
-            </span>
         `;
+
+        // 2. KAYDET BUTONU (Sadece Ana Konuda Var - parent_id yoksa)
+        let saveBtnHtml = '';
+        if (!p.parent_id) { 
+            const saveClass = isSaved ? 'saved' : '';
+            const saveIcon = isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
+            saveBtnHtml = `
+                <span id="save-btn-${p.id}" class="action-btn ${saveClass}" onclick="toggleSave(${p.id})">
+                    <i class="${saveIcon}"></i>
+                </span>
+            `;
+        }
+
+        interactBtns = likeBtnHtml + saveBtnHtml;
     }
 
     const isAdmin = currentUserRank === 'admin';
@@ -1636,7 +1641,8 @@ function renderSingleMessage(p, showReplyBtn = true) {
             <div class="msg-text">${escapeHTML(p.content)}</div>
             
             <div class="msg-actions">
-                ${interactBtns} ${replyBtn} 
+                ${interactBtns} 
+                ${replyBtn} 
                 ${editBtn} 
                 ${deleteBtn} 
                 ${banBtn}
