@@ -1071,7 +1071,7 @@
                 <div id="char-count-display" class="char-counter">0 / 2000</div>
             </div>
 
-            <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%; padding:12px; font-size:14px; background:var(--primary);">Konuyu Başlat</button>
+            <button onclick="submitNewTopic()" class="send-btn-modern" style="width:200px; margin: 20px auto 0 auto; padding:12px; font-size:14px; background:var(--primary);">Konuyu Başlat</button>
         </div>
     </div>
 
@@ -1102,6 +1102,8 @@
 </div>
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
+        let detailCooldownEnd = 0; // Soğuma süresinin biteceği zamanı tutacak
+        let detailTimerInterval = null; // Sayaç döngüsü
         let currentTopicId = null;
         let currentUserRank = 'member';
         let isGuest = true;
@@ -1454,18 +1456,33 @@
                 html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
             }
 
-            // --- E. CEVAP YAZMA KUTUSU ---
+// --- E. CEVAP YAZMA KUTUSU (COOLDOWN KORUMALI) ---
+            
+            // 1. Butonun durumunu hesapla (Sayfa yenilense bile hatırlasın)
+            const now = Date.now();
+            const remaining = Math.ceil((detailCooldownEnd - now) / 1000);
+            
+            let btnAttr = '';
+            let btnContent = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+            
+            if (remaining > 0) {
+                btnAttr = 'disabled'; // Tıklanamaz yap
+                btnContent = `Bekle (${remaining})`;
+                // Eğer sayaç çalışmıyorsa başlat ki saniye düşmeye devam etsin
+                startDetailButtonTicker(); 
+            }
+
             html += `
                 <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
                     <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
                     <textarea id="detail-reply-input" class="form-input" 
-                        placeholder="Düşüncelerini paylaş..." 
+                        placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
                         style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
                     
                     <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-                        <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
-                            Yanıtla <i class="fa-solid fa-paper-plane"></i>
+                        <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;" ${btnAttr}>
+                            ${btnContent}
                         </button>
                     </div>
                 </div>
@@ -2047,59 +2064,79 @@ async function loadAllUsers() {
                 }
             }, 1000);
         }
+        // --- KONU YANITLAMA FONKSİYONU ---
         async function sendDetailReply(topicId) {
-    if (isGuest) { window.openAuthModal('login'); return; }
+            if (isGuest) { window.openAuthModal('login'); return; }
 
-    const input = document.getElementById('detail-reply-input');
-    const btn = document.getElementById('btn-detail-reply');
-    const content = input.value;
+            const input = document.getElementById('detail-reply-input');
+            const btn = document.getElementById('btn-detail-reply');
+            const content = input.value;
 
-    if (!content.trim()) return;
+            if (!content.trim()) return;
 
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
-    try {
-        const res = await fetch(`${API_URL}/posts`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                content: content, 
-                parent_id: topicId,
-                category: currentCategory 
-            }),
-            credentials: 'include'
-        });
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        content: content, 
+                        parent_id: topicId,
+                        category: currentCategory 
+                    }),
+                    credentials: 'include'
+                });
 
-        if (res.ok) {
-            input.value = ''; // Kutuyu temizle
-            lastPostsString = ""; // Verileri yenile
-            loadMessages(); // Ekranı güncelle
-            
-            // --- COOLDOWN (FREN) BURADA DEVREYE GİRİYOR ---
-            if (currentUserRank !== 'admin') {
-                startDetailButtonCooldown(3); // Admin değilse 3 saniye beklet
-            } else {
-                // Adminse bekleme yapma, hemen butonu aç
+                if (res.ok) {
+                    input.value = ''; 
+                    
+                    // --- ZAMANLAYICIYI AYARLA ---
+                    if (currentUserRank !== 'admin') {
+                        detailCooldownEnd = Date.now() + 3000; // 3 Saniye ileri at
+                        startDetailButtonTicker(); // Sayacı başlat
+                    }
+                    
+                    lastPostsString = ""; 
+                    loadMessages(); // Ekranı yenile (Artık yenilese de 'Bekle' yazacak)
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "Hata oluştu.");
+                    btn.disabled = false;
+                    btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+                }
+            } catch (e) {
+                alert("Bağlantı hatası.");
                 btn.disabled = false;
                 btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
-            }
-        } else {
-            const data = await res.json();
-            alert(data.error || "Hata oluştu.");
-            // Hata varsa butonu hemen aç (cezalandırma)
-            btn.disabled = false;
-            btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+            } 
+            if(input) input.focus(); 
         }
-    } catch (e) {
-        alert("Bağlantı hatası.");
-        btn.disabled = false;
-        btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
-    } 
-    
-    // Odaklanmayı tekrar inputa ver
-    if(input) input.focus(); 
-}
+
+        // --- CANLI SAYAÇ FONKSİYONU ---
+        // Bu fonksiyon her saniye çalışıp butondaki yazıyı günceller
+        function startDetailButtonTicker() {
+            if (detailTimerInterval) clearInterval(detailTimerInterval);
+
+            detailTimerInterval = setInterval(() => {
+                const btn = document.getElementById('btn-detail-reply');
+                // Eğer sayfa değiştiyse ve buton yoksa durma, belki geri geliriz
+                if (!btn) return; 
+
+                const now = Date.now();
+                const remaining = Math.ceil((detailCooldownEnd - now) / 1000);
+
+                if (remaining > 0) {
+                    btn.disabled = true;
+                    btn.innerHTML = `Bekle (${remaining})`;
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+                    clearInterval(detailTimerInterval); // Süre bitti, sayacı durdur
+                }
+            }, 1000); // Her 1 saniyede bir kontrol et
+        }
 
         // --- BEĞENİ VE KAYDETME SİSTEMİ (FRONTEND) ---
 // --- BEĞENİ VE KAYDETME SİSTEMİ (LOCAL STORAGE / HAFIZALI) ---
