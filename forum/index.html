@@ -1362,77 +1362,81 @@
                 feed.innerHTML = html;
             }
             else if (currentViewMode === 'forum-detail') {
-                // --- ÖNCE VERİLERİ AĞAÇ YAPISINA ÇEVİR (Genel Akış Mantığı) ---
-                const postMap = {};
-                posts.forEach(p => postMap[p.id] = { ...p, children: [] });
-                posts.forEach(p => {
-                    if (p.parent_id && postMap[p.parent_id]) {
-                        postMap[p.parent_id].children.push(postMap[p.id]);
-                    }
-                });
-
-                // Ana konuyu bul (Artık children dizisi dolu!)
-                const topic = postMap[currentTopicId];
-                
-                if (!topic) { backToForum(); return; }
-
-                let html = '';
-
-                // --- A. GERİ DÖN BUTONU ---
-                html += `
-                    <div style="max-width: 1000px; margin: 0 auto 20px auto; display:flex; align-items:center; gap:10px;">
-                        <button onclick="backToForum()" class="action-btn" style="color:var(--text-muted); font-size:14px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:8px;">
-                            <i class="fa-solid fa-arrow-left"></i> Listeye Dön
-                        </button>
-                        <h3 style="margin:0; color:#fff; font-size:18px;">${escapeHTML(topic.title)}</h3>
-                    </div>
-                `;
-
-                // --- B. ANA KONU ---
-                // Buraya FALSE gönderiyoruz ki Ana Mesajın altında "Yanıtla" butonu çıkmasın.
-                html += renderSingleMessage(topic, false); 
-
-                // --- C. YANITLAR BAŞLIĞI ---
-                // Doğrudan ana konuya bağlı kaç yorum var?
-                const directRepliesCount = topic.children.length;
-                
-                html += `
-                    <div style="max-width: 1000px; margin: 30px auto 15px auto; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--primary); font-weight:600; font-size:14px;">
-                        <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> YANITLAR (${directRepliesCount})
-                    </div>
-                `;
-
-                // --- D. YANITLARI LİSTELE (RECURSIVE) ---
-                // Burada buildPostHTML kullanıyoruz, böylece "Yanıtı Gör" sistemi burada da çalışıyor!
-                if (directRepliesCount > 0) {
-                    topic.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                    topic.children.forEach(child => {
-                        html += buildPostHTML(child); 
-                    });
-                } else {
-                    html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
+            // --- 1. VERİLERİ AĞAÇ YAPISINA ÇEVİR (Genel Akış Mantığıyla Aynı) ---
+            const postMap = {};
+            // Tüm postları bir haritaya at
+            posts.forEach(p => postMap[p.id] = { ...p, children: [] });
+            // Çocukları babalarının altına ekle
+            posts.forEach(p => {
+                if (p.parent_id && postMap[p.parent_id]) {
+                    postMap[p.parent_id].children.push(postMap[p.id]);
                 }
+            });
 
-                // --- E. CEVAP YAZMA KUTUSU ---
-                html += `
-                    <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-                        <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
-                        <textarea id="detail-reply-input" class="form-input" 
-                            placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
-                            style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
-                            onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
-                        
-                        <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-                            <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
-                                Yanıtla <i class="fa-solid fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div style="height: 50px;"></div>
-                `;
+            // Ana konuyu haritadan çek (Böylece children dizisi dolu gelir)
+            const topic = postMap[currentTopicId];
+            
+            // Eğer konu silinmişse veya bulunamazsa listeye at
+            if (!topic) { backToForum(); return; }
 
-                feed.innerHTML = html;
+            let html = '';
+
+            // --- A. GERİ DÖN BUTONU ---
+            html += `
+                <div style="max-width: 1000px; margin: 0 auto 20px auto; display:flex; align-items:center; gap:10px;">
+                    <button onclick="backToForum()" class="action-btn" style="color:var(--text-muted); font-size:14px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:8px;">
+                        <i class="fa-solid fa-arrow-left"></i> Listeye Dön
+                    </button>
+                    <h3 style="margin:0; color:#fff; font-size:18px;">${escapeHTML(topic.title)}</h3>
+                </div>
+            `;
+
+            // --- B. ANA KONU ---
+            // Buraya FALSE gönderiyoruz -> Ana konunun altında "Yanıtla" butonu ÇIKMAZ.
+            html += renderSingleMessage(topic, false); 
+
+            // --- C. YANITLAR BAŞLIĞI ---
+            const directRepliesCount = topic.children.length;
+            
+            html += `
+                <div style="max-width: 1000px; margin: 30px auto 15px auto; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--primary); font-weight:600; font-size:14px;">
+                    <i class="fa-solid fa-turn-up" style="transform: rotate(90deg);"></i> YANITLAR (${directRepliesCount})
+                </div>
+            `;
+
+            // --- D. YANITLARI LİSTELE (RECURSIVE / AĞAÇ YAPISI) ---
+            if (directRepliesCount > 0) {
+                topic.children.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                
+                topic.children.forEach(child => {
+                    // BURASI DEĞİŞTİ: Artık renderSingleMessage yerine buildPostHTML kullanıyoruz.
+                    // Bu sayede yorumun yorumu varsa "Yanıtları Gör" butonu otomatik çıkıyor.
+                    html += buildPostHTML(child); 
+                });
+            } else {
+                html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
             }
+
+            // --- E. CEVAP YAZMA KUTUSU ---
+            html += `
+                <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+                    <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
+                    <textarea id="detail-reply-input" class="form-input" 
+                        placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
+                        style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
+                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
+                    
+                    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                        <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
+                            Yanıtla <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div style="height: 50px;"></div>
+            `;
+
+            feed.innerHTML = html;
+        }
                             } catch (e) { console.error(e); }
                         }
 
@@ -1476,7 +1480,9 @@
         }
         function buildPostHTML(post) {
             let html = `<div class="message-wrapper">`;
-            // Burada TRUE gönderiyoruz ki Genel Akışta ve Yorumlarda buton çıksın
+            
+            // BURASI ÖNEMLİ: true gönderiyoruz ki "Yanıtla" butonu çıksın.
+            // Hem genel akışta hem de konu altındaki yorumlarda bu fonksiyonu kullanacağız.
             html += renderSingleMessage(post, true); 
 
             if (post.children.length > 0) {
@@ -1491,6 +1497,7 @@
                 </div>`;
 
                 html += `<div id="replies-${post.id}" class="replies-container ${isOpen ? 'show' : ''}">`;
+                // Recursive (Kendini tekrar çağıran) yapı
                 post.children.forEach(child => { html += buildPostHTML(child); });
                 html += `</div>`;
             }
@@ -1734,7 +1741,7 @@ function renderSingleMessage(p, showReplyBtn = true) {
                     </div>
                     
                     <textarea id="inline-input-${id}" class="form-input" 
-                        placeholder="Yanıtını buraya yaz... (Enter: Gönder, Shift+Enter: Alt Satır)" 
+                        placeholder="Yanıtını buraya yaz..." 
                         maxlength="500" 
                         style="min-height:80px; resize:none; overflow-y:auto;"
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitInlineReply(${id}); }"></textarea>
