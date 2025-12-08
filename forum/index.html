@@ -847,83 +847,6 @@
             margin-top: 5px;
         }
 
-        /* --- GÜNCELLEMELER (Style etiketinin en altına ekle) --- */
-
-        /* 1. Mesajlar Arası Boşluk */
-        .message {
-            margin-bottom: 20px !important; /* Kartları birbirinden ayırır */
-        }
-
-        /* 2. Textarea Resize Kaldırma */
-        textarea {
-            resize: none !important; /* Kullanıcı elle büyütmesin */
-        }
-
-        /* 3. Kategori Seçim Kutusu (Select) Özelleştirme */
-        select.form-input {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            cursor: pointer;
-            /* Özel Ok İşareti (Gri renkli) */
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a1a1aa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 20px top 50%; /* Oku biraz daha sola aldık */
-            background-size: 12px auto;
-            padding-right: 40px; /* Yazı okun üstüne binmesin diye boşluk */
-        }
-
-        /* 4. Karakter Sayacı */
-        .char-counter {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-align: right;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-        .char-counter.limit-near { color: #facc15; } /* Limite yaklaşınca sarı */
-        .char-counter.limit-reached { color: var(--danger); } /* Limit dolunca kırmızı */
-
-        /* SADECE konu listesindeki veya mesaj alanındaki yazılar etkilenir */
-        .activity-feed .message-content { 
-            /* Metni kırma ve gizleme özellikleri */
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-break: break-word; /* Uzun asdasd... yazısını kırmak için */
-        }
-
-        /* Genel Kullanım İçin Yardımcı Sınıf */
-        .text-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* 2 Satır sınırı */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            
-            /* Uzun 'asdasd' gibi yazıları kırmak için kritik kod: */
-            word-break: break-word; 
-            overflow-wrap: break-word; 
-        }
-
-        .konu-basligi {
-            white-space: nowrap; /* Alt satıra inmesini engeller */
-            overflow: hidden;    /* Taşan kısmı gizler */
-            text-overflow: ellipsis; /* Sonuna ... ekler */
-            max-width: 100%;     /* Kapsayıcısından geniş olamaz */
-            display: block;      /* Block element gibi davranmalı */
-        }
-
-        /* Sadece post-card içindeki ozet-icerik etkilensin */
-        .post-card .ozet-icerik {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            word-break: break-word;
-        }
     </style>
 </head>
 
@@ -991,124 +914,84 @@
     </div>
 
     <div class="sidebar">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px;">
-        <a href="/forum" class="brand" style="margin-bottom:0;">
-            <img src="pp2.png" width="40" style="border-radius:10%">
-            <span>DarkSec</span>
+        <a href="/forum" class="brand">
+            <img src="pp2.png" width="48" style="border-radius:10%">
+            <span>DarkSec</span>Forum
         </a>
-        <div onclick="openNewTopicModal()" style="cursor:pointer; width:30px; height:30px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; box-shadow:0 0 10px rgba(139,92,246,0.4);">
-            <i class="fa-solid fa-plus"></i>
+        <div class="user-profile">
+            <div class="avatar" id="avatar-initial">?</div>
+            <div class="user-info">
+                <h4 id="user-name">Ziyaretçi</h4>
+                <p>● Çevrimiçi</p>
+            </div>
         </div>
-    </div>
+<div class="sidebar">
+        <a href="/forum" class="brand">
+            <img src="pp2.png" width="48" style="border-radius:10%">
+            <span>DarkSec</span>Forum
+        </a>
+        <div class="user-profile">
+            <div class="avatar" id="avatar-initial">?</div>
+            <div class="user-info">
+                <h4 id="user-name">Ziyaretçi</h4>
+                <p>● Çevrimiçi</p>
+            </div>
+        </div>
 
-    <div class="user-profile">
-        <div class="avatar" id="avatar-initial">?</div>
-        <div class="user-info">
-            <h4 id="user-name">Ziyaretçi</h4>
-            <p>● Çevrimiçi</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-right:10px;">
+            <div class="nav-label" style="margin:0;">KANALLAR</div>
+            <i class="fa-solid fa-plus" style="cursor:pointer; color:var(--primary); transition:0.3s;" onclick="openTopicModal()" title="Yeni Konu Aç"></i>
         </div>
-    </div>
-    
-    <div class="nav-label">KANALLAR</div>
-    <div class="nav-item active" onclick="switchCategory('general', this)">
-        <i class="fa-solid fa-earth-americas"></i> Genel Akış
-    </div>
-    <div class="nav-item" onclick="switchCategory('soru-cevap', this)">
-        <i class="fa-solid fa-circle-question"></i> Soru - Cevap
-    </div>
-    <div class="nav-item" onclick="switchCategory('siber-guvenlik', this)">
-        <i class="fa-solid fa-shield-halved"></i> Siber Güvenlik
-    </div>
-    <div class="nav-item" onclick="switchCategory('bug-bounty', this)">
-        <i class="fa-solid fa-sack-dollar"></i> Bug Bounty
-    </div>
-    <div class="nav-item" onclick="switchCategory('pentesting', this)">
-        <i class="fa-solid fa-chess-knight"></i> Pentesting
-    </div>
-    <div class="nav-item" onclick="switchCategory('etik-hukuk', this)">
-        <i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk
-    </div>
-    <div class="nav-item" onclick="switchCategory('donanim', this)">
-        <i class="fa-solid fa-microchip"></i> Donanım
-    </div>
-    <div class="nav-item" onclick="switchCategory('tool-paylasim', this)">
-        <i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı
-    </div>
-    <div class="nav-item" onclick="switchCategory('diger', this)">
-        <i class="fa-solid fa-mug-hot"></i> Diğer Konular
-    </div>
 
-    <div class="sidebar-footer">
-        <div id="admin-panel-btn" class="nav-item" onclick="openUserListModal()" style="display:none; color: #f472b6;">
-            <i class="fa-solid fa-users-gear"></i> Kullanıcı Yönetimi
+        <div id="nav-genel" class="nav-item active" onclick="changeTopic('genel')">
+            <i class="fa-solid fa-earth-americas"></i> Genel Akış
         </div>
-        <div id="logout-btn" class="nav-item" style="color:var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
+
+        <div id="dynamic-topic-list">
+            </div>
+
+        <div class="sidebar-footer">
+            <div id="admin-panel-btn" class="nav-item" onclick="openUserListModal()" style="display:none; color: #f472b6;">
+                <i class="fa-solid fa-users-gear"></i> Kullanıcı Yönetimi
+            </div>
+            <div id="logout-btn" class="nav-item" style="color:var(--danger);">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </div>
+        </div>
     </div>
-</div>
 
     <div class="main">
         <div class="header">
-            <div class="channel-info" id="channel-header-info">
-                <i class="fa-solid fa-earth-americas channel-icon"></i>
+            <div class="channel-info">
+                <i class="fa-solid fa-hashtag channel-icon"></i>
                 Genel Akış
             </div>
         </div>
 
-        <div class="compose-area" id="general-compose-area">
+        <div class="compose-area">
             <div class="compose-wrapper">
-                <textarea id="main-chat-input" class="compose-input" placeholder="Genel sohbete yaz..." maxlength="500"></textarea>
+                <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..."
+                    maxlength="500"></textarea>
+
                 <div class="compose-footer">
                     <div class="action-icons">
-                        <i class="fa-solid fa-code"></i>
+                        <i class="fa-regular fa-image" title="Resim Ekle"></i>
+                        <i class="fa-solid fa-code" title="Kod Bloğu"></i>
+                        <i class="fa-solid fa-paperclip" title="Dosya Ekle"></i>
                     </div>
-                    <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
+                    <button id="main-send-btn" class="send-btn-modern">Paylaş <i
+                            class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
 
         <div class="chat-area" id="chat-feed">
+            <div
+                style="display:flex; justify-content:center; align-items:center; height:100%; color:var(--text-muted); flex-direction:column;">
+                <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="margin-bottom:15px;"></i>
+                <span>Veriler şifreli kanaldan çekiliyor...</span>
             </div>
-    </div>
-
-    <div id="new-topic-modal" class="modal-overlay">
-        <div class="modal-box" style="width: 600px; max-width:90%;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <h3>Yeni Konu Başlat</h3>
-                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeNewTopicModal()"></i>
-            </div>
-            
-            <div class="input-group">
-                <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:5px;">Kategori Seç</label>
-                <select id="topic-category" class="form-input" style="background-color:#09090b;">
-                    <option value="soru-cevap">❓ Soru - Cevap</option>
-                    <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
-                    <option value="bug-bounty">💰 Bug Bounty</option>
-                    <option value="pentesting">⚔️ Pentesting</option>
-                    <option value="etik-hukuk">⚖️ Etik & Hukuk</option>
-                    <option value="donanim">💻 Donanım</option>
-                    <option value="tool-paylasim">🛠️ Tool Paylaşımı</option>
-                    <option value="diger">☕ Diğer Konular</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <input type="text" id="topic-title" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="50">
-            </div>
-
-            <div class="input-group">
-                <textarea id="topic-content" class="form-input" 
-                    placeholder="Konu içeriğini detaylıca yaz..." 
-                    style="min-height:150px; resize:none;" 
-                    maxlength="2000"
-                    oninput="updateCharCount(this)"></textarea>
-                <div id="char-count-display" class="char-counter">0 / 2000</div>
-            </div>
-
-            <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%; padding:12px; font-size:14px; background:var(--primary);">Konuyu Başlat</button>
         </div>
-    </div>
-
-
     </div>
     <div id="user-list-modal" class="modal-overlay">
     <div class="modal-box" style="max-width: 800px;">
@@ -1133,8 +1016,45 @@
         </div>
     </div>
 </div>
+
+
+<div id="topic-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="margin:0;">Yeni Konu Başlat</h2>
+            <i class="fa-solid fa-xmark fa-lg" style="cursor:pointer;" onclick="closeTopicModal()"></i>
+        </div>
+        
+        <p style="color:#a1a1aa; font-size:13px; margin-bottom:15px;">Hangi konuda tartışmak istersin?</p>
+        
+        <div class="input-group">
+            <select id="topic-select" class="form-input" onchange="toggleCustomTopicInput()">
+                <option value="soru-cevap">❓ Soru - Cevap</option>
+                <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
+                <option value="bug-bounty">💰 Bug Bounty</option>
+                <option value="pentesting">⚔️ Pentesting</option>
+                <option value="etik">⚖️ Etik & Hukuk</option>
+                <option value="donanim">💻 Donanım</option>
+                <option value="tool-paylasimi">🛠️ Tool Paylaşımı</option>
+                <option value="custom">✨ Diğer (Kendin Yaz)</option>
+            </select>
+        </div>
+
+        <div id="custom-topic-group" class="input-group hidden">
+            <input type="text" id="custom-topic-input" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="30">
+        </div>
+
+        <div class="input-group">
+            <textarea id="new-topic-message" class="form-input" placeholder="İlk mesajını yaz..." style="height:100px; resize:none;"></textarea>
+        </div>
+
+        <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%;">Konuyu Başlat</button>
+    </div>
+</div>
+
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
+        let currentTopic = 'genel';
         let currentUserRank = 'member';
         let isGuest = true;
         const POLL_INTERVAL = 3000;
@@ -1142,8 +1062,6 @@
         let lastMessageTime = 0;
         let openRepliesSet = new Set();
         let lastPostsString = "";
-        let currentCategory = 'general';
-        let currentViewMode = 'chat'; // 'chat', 'forum-list', 'forum-detail'
 
         // --- AUTH & SESSION ---
         async function checkSession() {
@@ -1250,172 +1168,89 @@
                 if (btn) btn.disabled = false;
             }
         }
-        // --- KATEGORİ DEĞİŞTİRME ---
-        function switchCategory(category, element) {
-            currentCategory = category;
-            
-            // Sidebar active class güncelle
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(element) element.classList.add('active');
 
-            // Header güncelle
-            const headerTitle = {
-                'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
-                'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
-                'siber-guvenlik': '<i class="fa-solid fa-shield-halved"></i> Siber Güvenlik',
-                'bug-bounty': '<i class="fa-solid fa-sack-dollar"></i> Bug Bounty',
-                'pentesting': '<i class="fa-solid fa-chess-knight"></i> Pentesting',
-                'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
-                'donanim': '<i class="fa-solid fa-microchip"></i> Donanım',
-                'tool-paylasim': '<i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı',
-                'diger': '<i class="fa-solid fa-mug-hot"></i> Diğer Konular'
-            };
-            document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
+        // --- LOAD MESSAGES ---
+// ESKİ loadMessages'ı SİL, BUNU YAPIŞTIR:
+async function loadMessages() {
+    try {
+        // 👇 Burası değişti: topic parametresi eklendi
+        const res = await fetch(`${API_URL}/posts?topic=${currentTopic}`, { credentials: 'include' });
+        if (!res.ok) throw new Error("Hata");
+        const posts = await res.json();
+        
+        // ... Kodun geri kalanı (postMap, roots, sort, activeEditId kontrolleri) AYNEN KALSIN ...
+        // Sadece fetch satırını değiştirsen yeterli ama kafa karışmasın diye kısa tutuyorum.
+        // Eğer fonksiyonun içini değiştirmeyi biliyorsan sadece fetch URL'ini değiştir.
+        // Bilmiyorsan eski loadMessages'ı komple silip bana söyle, tam halini atayım.
+        
+        // KISA YOL: loadMessages içindeki fetch satırını bul ve şununla değiştir:
+        // const res = await fetch(`${API_URL}/posts?topic=${currentTopic}`, { credentials: 'include' });
+        
+        // --- DEVAMI MEVCUT KODUNDAKİ GİBİ ---
+        const feed = document.getElementById('chat-feed');
+        const currentDataString = JSON.stringify(posts);
+        if (currentDataString === lastPostsString && !activeEditId) return;
+        lastPostsString = currentDataString;
 
-            // Görünüm Modu Ayarla
-            if (category === 'general') {
-                currentViewMode = 'chat';
-                document.getElementById('general-compose-area').style.display = 'block'; // Inputu göster
-            } else {
-                currentViewMode = 'forum-list';
-                document.getElementById('general-compose-area').style.display = 'none'; // Inputu gizle
-            }
+        if (posts.length === 0) {
+            feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'><i class='fa-solid fa-ghost fa-2x'></i><br><br>Bu konuda henüz mesaj yok.</div>";
+            return;
+        }
+        
+        // (Geri kalan buildPostHTML vs. aynı...)
+        const postMap = {};
+        posts.forEach(p => postMap[p.id] = { ...p, children: [] });
+        const roots = [];
+        posts.forEach(p => {
+            if (p.parent_id && postMap[p.parent_id]) postMap[p.parent_id].children.push(postMap[p.id]);
+            else roots.push(postMap[p.id]);
+        });
+        roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-            // İçeriği Yenile
-            lastPostsString = ""; // Cache temizle ki yeniden çeksin
-            document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
+        if (!activeEditId) {
+            feed.innerHTML = roots.map(root => buildPostHTML(root)).join('');
+            openRepliesSet.forEach(id => {
+                const c = document.getElementById(`replies-${id}`);
+                if (c) c.classList.add('show');
+            });
+        }
+    } catch (e) { console.error(e); }
+}
+
+// MAIN SEND BUTONUNU GÜNCELLE (Sadece onclick kısmını):
+mainSendBtn.onclick = async () => {
+    if (isGuest) { window.openAuthModal('login'); return; }
+    const content = mainInput.value;
+    if (!content.trim()) return;
+    mainSendBtn.disabled = true;
+    mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+    try {
+        const res = await fetch(`${API_URL}/posts`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            // 👇 BURASI DEĞİŞTİ: topic eklendi
+            body: JSON.stringify({ content: content, parent_id: null, topic: currentTopic }),
+            credentials: 'include'
+        });
+
+        if (res.ok) {
+            mainInput.value = '';
+            mainInput.style.height = 'auto';
+            lastMessageTime = Date.now();
+            lastPostsString = "";
             loadMessages();
+            if (currentUserRank !== 'admin') startButtonCooldown(3);
+            else resetButton();
+        } else {
+            alert("Hata oluştu.");
+            resetButton();
         }
+    } catch (e) {
+        alert("Bağlantı hatası.");
+        resetButton();
+    }
+}
 
-        // --- MESAJLARI / KONULARI ÇEKME ---
-        async function loadMessages() {
-            try {
-                // Kategoriye göre fetch atıyoruz
-                const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
-                const posts = await res.json();
-                const feed = document.getElementById('chat-feed');
-                
-                const currentDataString = JSON.stringify(posts);
-                if (currentDataString === lastPostsString && !activeEditId) return;
-                lastPostsString = currentDataString;
-
-                feed.innerHTML = '';
-
-                if (posts.length === 0) {
-                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'>Henüz bu kategoride bir konu yok. İlkini sen aç! (+ Butonu)</div>";
-                    return;
-                }
-
-                // GÖRÜNÜM 1: GENEL AKIŞ (CHAT TARZI)
-                if (currentViewMode === 'chat') {
-                    // Eski chat render mantığı (Chat balonları)
-                    // Sadece parent_id'si olmayanları ana mesaj olarak bas, varsa altını doldur
-                    // (Mevcut kodundaki buildPostHTML mantığını buraya uyarlıyoruz, ama sadece general için)
-                    const postMap = {};
-                    posts.forEach(p => postMap[p.id] = { ...p, children: [] });
-                    const roots = [];
-                    posts.forEach(p => {
-                        if (p.parent_id && postMap[p.parent_id]) {
-                            postMap[p.parent_id].children.push(postMap[p.id]);
-                        } else if (!p.parent_id) { // Sadece kök mesajlar
-                            roots.push(postMap[p.id]);
-                        }
-                    });
-                    // Chat'te eskiden yeniye veya tam tersi. Genelde Chat en alttadır.
-                    // Ama senin kodunda sıralama: order_by(Post.created_at.desc()) geliyor.
-                    let html = roots.map(root => buildPostHTML(root)).join('');
-                    feed.innerHTML = html;
-                } 
-                
-                // GÖRÜNÜM 2: FORUM LİSTESİ (KONU KARTLARI)
-                else if (currentViewMode === 'forum-list') {
-                    // Sadece ana konular listelenir (Title, Author, Reply Count)
-                    let html = '';
-                    posts.forEach(p => {
-                        // Sadece ana konuları listele (Cevapları değil)
-                        if (!p.parent_id) {
-                            html += `
-                            <div class="message" style="cursor:pointer; flex-direction:row; align-items:center; padding:15px;" onclick="viewTopic(${p.id})">
-                                <div class="msg-avatar" style="margin-bottom:0; width:40px; height:40px; font-size:16px;">
-                                    ${(p.author_email || 'A').charAt(0).toUpperCase()}
-                                </div>
-
-                                <div class="konu-basligi" style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
-                                    ${p.title || 'Başlıksız Konu'}
-                                </div>
-
-                                <div style="font-size:12px; color:var(--text-muted);">
-                                    @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
-                                </div>
-
-                                <div class="text-clamp-2" style="font-size:13px; color:#d4d4d8; margin-top:6px;">
-                                    ${escapeHTML(p.content)}
-                                </div>
-
-                            </div>
-                                <div style="text-align:center; min-width:60px;">
-                                    <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
-                                    <div style="font-size:12px; color:var(--text-muted);">${p.reply_count || 0}</div>
-                                </div>
-                            </div>`;
-                        }
-                    });
-                    feed.innerHTML = html;
-                }
-
-            } catch (e) { console.error(e); }
-        }
-        // --- KONU DETAY GÖRÜNTÜLEME (FORUM İÇİN) ---
-        // Bu kısım biraz trick gerektirir. Backend şu an tüm category postlarını çekiyor.
-        // İleride tek post çeken endpoint yazılabilir ama şimdilik client-side filtre yapalım.
-        function viewTopic(topicId) {
-            // Burada o konunun içine girince "Genel Akış" gibi ama sadece o konuyu ve cevaplarını göstereceğiz.
-            // Şimdilik basit tutmak için:
-            alert("Konu detay sayfası yapım aşamasında! (Burada o konuya ait sohbet açılacak)");
-            // Normalde burada currentViewMode = 'forum-detail' yapıp, sadece o ID ve çocuklarını filtreleyip ekrana basardık.
-        }
-
-        // --- YENİ KONU MODAL ---
-        function openNewTopicModal() {
-            // Modal açılırken inputları TEMİZLE
-            document.getElementById('topic-title').value = '';
-            document.getElementById('topic-content').value = '';
-            document.getElementById('topic-category').selectedIndex = 0;
-            
-            // Sayacı sıfırla
-            document.getElementById('char-count-display').innerText = "0 / 2000";
-            document.getElementById('char-count-display').className = "char-counter"; // Renkleri sıfırla
-
-            document.getElementById('new-topic-modal').classList.add('active');
-        }
-
-        function closeNewTopicModal() {
-            document.getElementById('new-topic-modal').classList.remove('active');
-        }
-
-        async function submitNewTopic() {
-            const category = document.getElementById('topic-category').value;
-            const title = document.getElementById('topic-title').value;
-            const content = document.getElementById('topic-content').value;
-
-            if(!title || !content) { alert("Başlık ve içerik gerekli!"); return; }
-
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content, category, parent_id: null }),
-                    credentials: 'include'
-                });
-                if(res.ok) {
-                    closeNewTopicModal();
-                    // Hemen o kategoriye git
-                    switchCategory(category, null); 
-                    // (Sidebar'daki active class'ı manuel bulup yakmak gerekir ama şimdilik basit kalsın)
-                } else {
-                    alert("Hata oluştu");
-                }
-            } catch(e) { alert("Hata"); }
-        }
         function buildPostHTML(post) {
             let html = `<div class="message-wrapper">`;
             html += renderSingleMessage(post, post.parent_id !== null);
@@ -1570,46 +1405,7 @@
             }
         });
 
-        mainSendBtn.onclick = async () => {
-            if (isGuest) { window.openAuthModal('login'); return; }
-
-            const content = mainInput.value;
-            if (!content.trim()) return;
-
-            mainSendBtn.disabled = true;
-            mainSendBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-
-            try {
-                const res = await fetch(`${API_URL}/posts`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: content, parent_id: null }),
-                    credentials: 'include'
-                });
-
-                if (res.ok) {
-                    // BAŞARILI: Temizle
-                    mainInput.value = '';
-                    mainInput.style.height = 'auto';
-
-                    lastMessageTime = Date.now();
-                    lastPostsString = "";
-                    loadMessages();
-
-                    if (currentUserRank !== 'admin') {
-                        startButtonCooldown(3);
-                    } else {
-                        resetButton(); // Adminse butonu hemen aktif et
-                    }
-
-                } else {
-                    alert("Hata oluştu.");
-                    resetButton();
-                }
-            } catch (e) {
-                alert("Bağlantı hatası.");
-                resetButton();
-            }
-        }
+    
 
         function startButtonCooldown(seconds) {
             let counter = seconds;
@@ -1912,40 +1708,107 @@ async function loadAllUsers() {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
     }
 }
-        // Karakter Sayacı Fonksiyonu
-        function updateCharCount(textarea) {
-            const maxLength = textarea.getAttribute('maxlength');
-            const currentLength = textarea.value.length;
-            const counterEl = document.getElementById('char-count-display');
-            
-            counterEl.innerText = `${currentLength} / ${maxLength}`;
-
-            // Görsel uyarılar (Renk değişimi)
-            if (currentLength >= maxLength) {
-                counterEl.classList.add('limit-reached');
-            } else if (currentLength >= maxLength * 0.9) {
-                counterEl.classList.add('limit-near');
-                counterEl.classList.remove('limit-reached');
-            } else {
-                counterEl.classList.remove('limit-near', 'limit-reached');
-            }
-        }
         
         document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const icon = this;
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+    const passwordInput = document.getElementById('password');
+    const icon = this;
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+// --- YENİ KONU SİSTEMİ FONKSİYONLARI ---
+
+function changeTopic(topicName) {
+    currentTopic = topicName;
+    lastPostsString = ""; 
+    document.getElementById('chat-feed').innerHTML = '<div style="text-align:center; padding:50px; color:#555;">Yükleniyor...</div>';
+    
+    // Aktif sınıfını güncelle
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    
+    if(topicName === 'genel') {
+        document.getElementById('nav-genel').classList.add('active');
+        document.querySelector('.channel-info').innerHTML = '<i class="fa-solid fa-earth-americas channel-icon"></i> Genel Akış';
+    } else {
+        const el = document.getElementById(`topic-${topicName}`);
+        if(el) el.classList.add('active');
+        document.querySelector('.channel-info').innerHTML = `<i class="fa-solid fa-hashtag channel-icon"></i> ${topicName}`;
+    }
+    loadMessages();
+}
+
+async function loadSidebarTopics() {
+    try {
+        const res = await fetch(`${API_URL}/topics`);
+        const topics = await res.json();
+        const container = document.getElementById('dynamic-topic-list');
+        container.innerHTML = '';
+        
+        topics.forEach(t => {
+            const isActive = (t === currentTopic) ? 'active' : '';
+            const html = `
+                <div id="topic-${t}" class="nav-item ${isActive}" onclick="changeTopic('${t}')">
+                    <i class="fa-solid fa-hashtag"></i> ${t}
+                </div>`;
+            container.innerHTML += html;
+        });
+    } catch (e) { console.error("Konular yüklenemedi"); }
+}
+
+function openTopicModal() {
+    if(isGuest) { openAuthModal('login'); return; }
+    document.getElementById('topic-modal').classList.add('active');
+}
+function closeTopicModal() { document.getElementById('topic-modal').classList.remove('active'); }
+
+function toggleCustomTopicInput() {
+    const val = document.getElementById('topic-select').value;
+    const group = document.getElementById('custom-topic-group');
+    if (val === 'custom') group.classList.remove('hidden');
+    else group.classList.add('hidden');
+}
+
+async function submitNewTopic() {
+    const select = document.getElementById('topic-select');
+    let topicName = select.value;
+    
+    if (topicName === 'custom') {
+        const customInput = document.getElementById('custom-topic-input').value.trim();
+        if (!customInput) { alert("Konu başlığı yazın."); return; }
+        // Türkçe karakterleri ve boşlukları düzelt
+        topicName = customInput.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-çğıöşü]/g, '');
+    }
+
+    const message = document.getElementById('new-topic-message').value.trim();
+    if (!message) { alert("İlk mesajı yazın."); return; }
+
+    try {
+        const res = await fetch(`${API_URL}/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: message, parent_id: null, topic: topicName }),
+            credentials: 'include'
         });
 
+        if (res.ok) {
+            closeTopicModal();
+            document.getElementById('new-topic-message').value = '';
+            await loadSidebarTopics(); 
+            changeTopic(topicName);
+        } else { alert("Hata."); }
+    } catch (e) { alert("Hata."); }
+}
+
+// Başlangıçta konuları çek ve her 10 saniyede bir yenile
+loadSidebarTopics();
+setInterval(loadSidebarTopics, 10000);
     </script>
 </body>
 </html>
