@@ -968,20 +968,20 @@
     <div class="nav-item" onclick="switchCategory('siber-guvenlik', this)">
         <i class="fa-solid fa-shield-halved"></i> Siber Güvenlik
     </div>
-    <div class="nav-item" onclick="switchCategory('bug-bounty', this)">
-        <i class="fa-solid fa-sack-dollar"></i> Bug Bounty
-    </div>
     <div class="nav-item" onclick="switchCategory('pentesting', this)">
         <i class="fa-solid fa-chess-knight"></i> Pentesting
     </div>
-    <div class="nav-item" onclick="switchCategory('etik-hukuk', this)">
-        <i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk
+    <div class="nav-item" onclick="switchCategory('bug-bounty', this)">
+        <i class="fa-solid fa-sack-dollar"></i> Bug Bounty
     </div>
     <div class="nav-item" onclick="switchCategory('donanim', this)">
-        <i class="fa-solid fa-microchip"></i> Donanım
+        <i class="fa-solid fa-laptop-code"></i> Yazılım & Donanım
     </div>
     <div class="nav-item" onclick="switchCategory('tool-paylasim', this)">
         <i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı
+    </div>
+    <div class="nav-item" onclick="switchCategory('etik-hukuk', this)">
+        <i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk
     </div>
     <div class="nav-item" onclick="switchCategory('diger', this)">
         <i class="fa-solid fa-mug-hot"></i> Diğer Konular
@@ -1031,11 +1031,11 @@
                 <select id="topic-category" class="form-input" style="background-color:#09090b;">
                     <option value="soru-cevap">❓ Soru - Cevap</option>
                     <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
-                    <option value="bug-bounty">💰 Bug Bounty</option>
                     <option value="pentesting">⚔️ Pentesting</option>
-                    <option value="etik-hukuk">⚖️ Etik & Hukuk</option>
-                    <option value="donanim">💻 Donanım</option>
+                    <option value="bug-bounty">💰 Bug Bounty</option>
+                    <option value="donanim">💻 Yazılım & Donanım</option>
                     <option value="tool-paylasim">🛠️ Tool Paylaşımı</option>
+                    <option value="etik-hukuk">⚖️ Etik & Hukuk</option>
                     <option value="diger">☕ Diğer Konular</option>
                 </select>
             </div>
@@ -1211,11 +1211,11 @@
                 'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
                 'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
                 'siber-guvenlik': '<i class="fa-solid fa-shield-halved"></i> Siber Güvenlik',
-                'bug-bounty': '<i class="fa-solid fa-sack-dollar"></i> Bug Bounty',
                 'pentesting': '<i class="fa-solid fa-chess-knight"></i> Pentesting',
-                'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
-                'donanim': '<i class="fa-solid fa-microchip"></i> Donanım',
+                'bug-bounty': '<i class="fa-solid fa-sack-dollar"></i> Bug Bounty',
+                'donanim': '<i class="fa-solid fa-laptop-code"></i> Yazılım & Donanım',
                 'tool-paylasim': '<i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı',
+                'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
                 'diger': '<i class="fa-solid fa-mug-hot"></i> Diğer Konular'
             };
             document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
@@ -1525,7 +1525,10 @@
                 } catch (e) { console.error(e); }
             }
 
-            const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
+            // Sadece cevapların altında Yanıtla butonu olsun, ana konuda olmasın
+            const replyBtn = isReply 
+                ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` 
+                : '';
             
             // --- BURASI DÜZELTİLDİ ---
             const isAdmin = currentUserRank === 'admin';
@@ -1748,8 +1751,13 @@
                     <div style="font-size:12px; color:var(--primary); margin-bottom:5px;">
                         <i class="fa-solid fa-share"></i> @${authorName} kullanıcısına yanıt veriyorsun
                     </div>
+                    
                     <textarea id="inline-input-${id}" class="form-input" 
-                        placeholder="Yanıtını buraya yaz..." maxlength="500" style="min-height:80px; resize:none; overflow-y:auto;"></textarea>
+                        placeholder="Yanıtını buraya yaz... (Enter: Gönder, Shift+Enter: Alt Satır)" 
+                        maxlength="500" 
+                        style="min-height:80px; resize:none; overflow-y:auto;"
+                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitInlineReply(${id}); }"></textarea>
+                    
                     <div class="inline-footer">
                         <button onclick="closeReplyBox()" class="send-btn-modern" style="background:transparent; border:1px solid #555; width:auto; padding: 8px 20px;">Vazgeç</button>
                         <button id="btn-reply-${id}" onclick="submitInlineReply(${id})" class="send-btn-modern" style="width:auto; padding: 8px 20px;">Yanıtla</button>
