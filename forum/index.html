@@ -914,66 +914,119 @@
     </div>
 
     <div class="sidebar">
-        <a href="/forum" class="brand">
-            <img src="pp2.png" width="48" style="border-radius:10%">
-            <span>DarkSec</span>Forum
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px;">
+        <a href="/forum" class="brand" style="margin-bottom:0;">
+            <img src="pp2.png" width="40" style="border-radius:10%">
+            <span>DarkSec</span>
         </a>
-        <div class="user-profile">
-            <div class="avatar" id="avatar-initial">?</div>
-            <div class="user-info">
-                <h4 id="user-name">Ziyaretçi</h4>
-                <p>● Çevrimiçi</p>
-            </div>
+        <div onclick="openNewTopicModal()" style="cursor:pointer; width:30px; height:30px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; box-shadow:0 0 10px rgba(139,92,246,0.4);">
+            <i class="fa-solid fa-plus"></i>
         </div>
-        <div class="nav-label">KONULAR</div>
-        <div class="nav-item active"><i class="fa-solid fa-earth-americas"></i> Genel Akış</div>
-        <div class="nav-item"><i class="fa-solid fa-bug"></i> Zafiyet Raporları</div>
-        <div class="nav-item"><i class="fa-solid fa-shield-halved"></i> Defansif Güvenlik</div>
-        <div class="nav-item"><i class="fa-solid fa-terminal"></i> CTF Çözümleri</div>
+    </div>
 
-        
-        <div class="sidebar-footer">
-            <div id="admin-panel-btn" class="nav-item" onclick="openUserListModal()" style="display:none; color: #f472b6;">
-                <i class="fa-solid fa-users-gear"></i> Kullanıcı Yönetimi
-            </div>
-
-            <div id="logout-btn" class="nav-item" style="color:var(--danger);"><i
-                    class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
-            </div>
+    <div class="user-profile">
+        <div class="avatar" id="avatar-initial">?</div>
+        <div class="user-info">
+            <h4 id="user-name">Ziyaretçi</h4>
+            <p>● Çevrimiçi</p>
         </div>
+    </div>
+    
+    <div class="nav-label">KANALLAR</div>
+    <div class="nav-item active" onclick="switchCategory('general', this)">
+        <i class="fa-solid fa-earth-americas"></i> Genel Akış
+    </div>
+    <div class="nav-item" onclick="switchCategory('soru-cevap', this)">
+        <i class="fa-solid fa-circle-question"></i> Soru - Cevap
+    </div>
+    <div class="nav-item" onclick="switchCategory('siber-guvenlik', this)">
+        <i class="fa-solid fa-shield-halved"></i> Siber Güvenlik
+    </div>
+    <div class="nav-item" onclick="switchCategory('bug-bounty', this)">
+        <i class="fa-solid fa-sack-dollar"></i> Bug Bounty
+    </div>
+    <div class="nav-item" onclick="switchCategory('pentesting', this)">
+        <i class="fa-solid fa-chess-knight"></i> Pentesting
+    </div>
+    <div class="nav-item" onclick="switchCategory('etik-hukuk', this)">
+        <i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk
+    </div>
+    <div class="nav-item" onclick="switchCategory('donanim', this)">
+        <i class="fa-solid fa-microchip"></i> Donanım
+    </div>
+    <div class="nav-item" onclick="switchCategory('tool-paylasim', this)">
+        <i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı
+    </div>
+    <div class="nav-item" onclick="switchCategory('diger', this)">
+        <i class="fa-solid fa-mug-hot"></i> Diğer Konular
+    </div>
+
+    <div class="sidebar-footer">
+        <div id="admin-panel-btn" class="nav-item" onclick="openUserListModal()" style="display:none; color: #f472b6;">
+            <i class="fa-solid fa-users-gear"></i> Kullanıcı Yönetimi
+        </div>
+        <div id="logout-btn" class="nav-item" style="color:var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
+    </div>
+</div>
 
     <div class="main">
         <div class="header">
-            <div class="channel-info">
-                <i class="fa-solid fa-hashtag channel-icon"></i>
+            <div class="channel-info" id="channel-header-info">
+                <i class="fa-solid fa-earth-americas channel-icon"></i>
                 Genel Akış
             </div>
         </div>
 
-        <div class="compose-area">
+        <div class="compose-area" id="general-compose-area">
             <div class="compose-wrapper">
-                <textarea id="main-chat-input" class="compose-input" placeholder="Bugün neler keşfettin? Paylaş..."
-                    maxlength="500"></textarea>
-
+                <textarea id="main-chat-input" class="compose-input" placeholder="Genel sohbete yaz..." maxlength="500"></textarea>
                 <div class="compose-footer">
                     <div class="action-icons">
-                        <i class="fa-regular fa-image" title="Resim Ekle"></i>
-                        <i class="fa-solid fa-code" title="Kod Bloğu"></i>
-                        <i class="fa-solid fa-paperclip" title="Dosya Ekle"></i>
+                        <i class="fa-solid fa-code"></i>
                     </div>
-                    <button id="main-send-btn" class="send-btn-modern">Paylaş <i
-                            class="fa-solid fa-paper-plane"></i></button>
+                    <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
 
         <div class="chat-area" id="chat-feed">
-            <div
-                style="display:flex; justify-content:center; align-items:center; height:100%; color:var(--text-muted); flex-direction:column;">
-                <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="margin-bottom:15px;"></i>
-                <span>Veriler şifreli kanaldan çekiliyor...</span>
             </div>
+    </div>
+
+    <div id="new-topic-modal" class="modal-overlay">
+        <div class="modal-box" style="width: 600px; max-width:90%;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h3>Yeni Konu Başlat</h3>
+                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeNewTopicModal()"></i>
+            </div>
+            
+            <div class="input-group">
+                <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:5px;">Kategori Seç</label>
+                <select id="topic-category" class="form-input" style="background:#09090b;">
+                    <option value="soru-cevap">Soru - Cevap</option>
+                    <option value="siber-guvenlik">Siber Güvenlik</option>
+                    <option value="bug-bounty">Bug Bounty</option>
+                    <option value="pentesting">Pentesting</option>
+                    <option value="etik-hukuk">Etik & Hukuk</option>
+                    <option value="donanim">Donanım</option>
+                    <option value="tool-paylasim">Tool Paylaşımı</option>
+                    <option value="diger">Diğer Konular</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="topic-title" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="100">
+            </div>
+
+            <div class="input-group">
+                <textarea id="topic-content" class="form-input" placeholder="İlk mesajını yaz..." style="min-height:150px; resize:vertical;"></textarea>
+            </div>
+
+            <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%; padding:12px; font-size:14px; background:var(--primary);">Konuyu Başlat</button>
         </div>
+    </div>
+
+
     </div>
     <div id="user-list-modal" class="modal-overlay">
     <div class="modal-box" style="max-width: 800px;">
@@ -1007,6 +1060,8 @@
         let lastMessageTime = 0;
         let openRepliesSet = new Set();
         let lastPostsString = "";
+        let currentCategory = 'general';
+        let currentViewMode = 'chat'; // 'chat', 'forum-list', 'forum-detail'
 
         // --- AUTH & SESSION ---
         async function checkSession() {
@@ -1113,53 +1168,159 @@
                 if (btn) btn.disabled = false;
             }
         }
+        // --- KATEGORİ DEĞİŞTİRME ---
+        function switchCategory(category, element) {
+            currentCategory = category;
+            
+            // Sidebar active class güncelle
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(element) element.classList.add('active');
 
-        // --- LOAD MESSAGES ---
+            // Header güncelle
+            const headerTitle = {
+                'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
+                'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
+                'siber-guvenlik': '<i class="fa-solid fa-shield-halved"></i> Siber Güvenlik',
+                'bug-bounty': '<i class="fa-solid fa-sack-dollar"></i> Bug Bounty',
+                'pentesting': '<i class="fa-solid fa-chess-knight"></i> Pentesting',
+                'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
+                'donanim': '<i class="fa-solid fa-microchip"></i> Donanım',
+                'tool-paylasim': '<i class="fa-solid fa-screwdriver-wrench"></i> Tool Paylaşımı',
+                'diger': '<i class="fa-solid fa-mug-hot"></i> Diğer Konular'
+            };
+            document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
+
+            // Görünüm Modu Ayarla
+            if (category === 'general') {
+                currentViewMode = 'chat';
+                document.getElementById('general-compose-area').style.display = 'block'; // Inputu göster
+            } else {
+                currentViewMode = 'forum-list';
+                document.getElementById('general-compose-area').style.display = 'none'; // Inputu gizle
+            }
+
+            // İçeriği Yenile
+            lastPostsString = ""; // Cache temizle ki yeniden çeksin
+            document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
+            loadMessages();
+        }
+
+        // --- MESAJLARI / KONULARI ÇEKME ---
         async function loadMessages() {
             try {
-                const res = await fetch(`${API_URL}/posts`, { credentials: 'include' });
-                if (!res.ok) throw new Error("Sunucu Hatası");
+                // Kategoriye göre fetch atıyoruz
+                const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
                 const posts = await res.json();
                 const feed = document.getElementById('chat-feed');
-
+                
                 const currentDataString = JSON.stringify(posts);
-                if (currentDataString === lastPostsString && !activeEditId) {
-                    return;
-                }
+                if (currentDataString === lastPostsString && !activeEditId) return;
                 lastPostsString = currentDataString;
 
+                feed.innerHTML = '';
+
                 if (posts.length === 0) {
-                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'><i class='fa-solid fa-ghost fa-2x'></i><br><br>Burası çok sessiz... İlk mesajı sen at!</div>";
+                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'>Henüz bu kategoride bir konu yok. İlkini sen aç! (+ Butonu)</div>";
                     return;
                 }
 
-                const postMap = {};
-                posts.forEach(p => postMap[p.id] = { ...p, children: [] });
-                const roots = [];
-
-                posts.forEach(p => {
-                    if (p.parent_id && postMap[p.parent_id]) {
-                        postMap[p.parent_id].children.push(postMap[p.id]);
-                    } else {
-                        roots.push(postMap[p.id]);
-                    }
-                });
-
-                roots.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-                if (!activeEditId) {
+                // GÖRÜNÜM 1: GENEL AKIŞ (CHAT TARZI)
+                if (currentViewMode === 'chat') {
+                    // Eski chat render mantığı (Chat balonları)
+                    // Sadece parent_id'si olmayanları ana mesaj olarak bas, varsa altını doldur
+                    // (Mevcut kodundaki buildPostHTML mantığını buraya uyarlıyoruz, ama sadece general için)
+                    const postMap = {};
+                    posts.forEach(p => postMap[p.id] = { ...p, children: [] });
+                    const roots = [];
+                    posts.forEach(p => {
+                        if (p.parent_id && postMap[p.parent_id]) {
+                            postMap[p.parent_id].children.push(postMap[p.id]);
+                        } else if (!p.parent_id) { // Sadece kök mesajlar
+                            roots.push(postMap[p.id]);
+                        }
+                    });
+                    // Chat'te eskiden yeniye veya tam tersi. Genelde Chat en alttadır.
+                    // Ama senin kodunda sıralama: order_by(Post.created_at.desc()) geliyor.
                     let html = roots.map(root => buildPostHTML(root)).join('');
                     feed.innerHTML = html;
-
-                    openRepliesSet.forEach(id => {
-                        const container = document.getElementById(`replies-${id}`);
-                        if (container) container.classList.add('show');
+                } 
+                
+                // GÖRÜNÜM 2: FORUM LİSTESİ (KONU KARTLARI)
+                else if (currentViewMode === 'forum-list') {
+                    // Sadece ana konular listelenir (Title, Author, Reply Count)
+                    let html = '';
+                    posts.forEach(p => {
+                        // Sadece ana konuları listele (Cevapları değil)
+                        if (!p.parent_id) {
+                            html += `
+                            <div class="message" style="cursor:pointer; flex-direction:row; align-items:center; padding:15px;" onclick="viewTopic(${p.id})">
+                                <div class="msg-avatar" style="margin-bottom:0; width:40px; height:40px; font-size:16px;">
+                                    ${(p.author_email || 'A').charAt(0).toUpperCase()}
+                                </div>
+                                <div style="margin-left:15px; flex-grow:1;">
+                                    <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
+                                        ${p.title || 'Başlıksız Konu'}
+                                    </div>
+                                    <div style="font-size:12px; color:var(--text-muted);">
+                                        @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
+                                    </div>
+                                    <div style="font-size:13px; color:#d4d4d8; margin-top:6px; max-height:40px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                                        ${escapeHTML(p.content)}
+                                    </div>
+                                </div>
+                                <div style="text-align:center; min-width:60px;">
+                                    <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
+                                    <div style="font-size:12px; color:var(--text-muted);">${p.reply_count || 0}</div>
+                                </div>
+                            </div>`;
+                        }
                     });
+                    feed.innerHTML = html;
                 }
 
             } catch (e) { console.error(e); }
         }
+        // --- KONU DETAY GÖRÜNTÜLEME (FORUM İÇİN) ---
+        // Bu kısım biraz trick gerektirir. Backend şu an tüm category postlarını çekiyor.
+        // İleride tek post çeken endpoint yazılabilir ama şimdilik client-side filtre yapalım.
+        function viewTopic(topicId) {
+            // Burada o konunun içine girince "Genel Akış" gibi ama sadece o konuyu ve cevaplarını göstereceğiz.
+            // Şimdilik basit tutmak için:
+            alert("Konu detay sayfası yapım aşamasında! (Burada o konuya ait sohbet açılacak)");
+            // Normalde burada currentViewMode = 'forum-detail' yapıp, sadece o ID ve çocuklarını filtreleyip ekrana basardık.
+        }
 
+        // --- YENİ KONU MODAL ---
+        function openNewTopicModal() {
+            document.getElementById('new-topic-modal').classList.add('active');
+        }
+        function closeNewTopicModal() {
+            document.getElementById('new-topic-modal').classList.remove('active');
+        }
+
+        async function submitNewTopic() {
+            const category = document.getElementById('topic-category').value;
+            const title = document.getElementById('topic-title').value;
+            const content = document.getElementById('topic-content').value;
+
+            if(!title || !content) { alert("Başlık ve içerik gerekli!"); return; }
+
+            try {
+                const res = await fetch(`${API_URL}/posts`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content, category, parent_id: null }),
+                    credentials: 'include'
+                });
+                if(res.ok) {
+                    closeNewTopicModal();
+                    // Hemen o kategoriye git
+                    switchCategory(category, null); 
+                    // (Sidebar'daki active class'ı manuel bulup yakmak gerekir ama şimdilik basit kalsın)
+                } else {
+                    alert("Hata oluştu");
+                }
+            } catch(e) { alert("Hata"); }
+        }
         function buildPostHTML(post) {
             let html = `<div class="message-wrapper">`;
             html += renderSingleMessage(post, post.parent_id !== null);
