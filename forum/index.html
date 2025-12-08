@@ -16,10 +16,8 @@
             --bg-card: #27272a;
             --bg-input: #3f3f46;
             --primary: #8b5cf6;
-            /* Mor */
             --primary-hover: #7c3aed;
             --secondary: #06b6d4;
-            /* Turkuaz */
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: rgba(255, 255, 255, 0.08);
@@ -699,8 +697,6 @@
             position: relative;
         }
 
-        /* ↓↓↓ BURADAN SONRA EKLE ↓↓↓ */
-
         .input-with-icon {
             position: relative;
             display: flex;
@@ -847,33 +843,26 @@
             margin-top: 5px;
         }
 
-        /* --- GÜNCELLEMELER (Style etiketinin en altına ekle) --- */
-
-        /* 1. Mesajlar Arası Boşluk */
         .message {
-            margin-bottom: 20px !important; /* Kartları birbirinden ayırır */
+            margin-bottom: 20px !important;
         }
 
-        /* 2. Textarea Resize Kaldırma */
         textarea {
-            resize: none !important; /* Kullanıcı elle büyütmesin */
+            resize: none !important;
         }
 
-        /* 3. Kategori Seçim Kutusu (Select) Özelleştirme */
         select.form-input {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
             cursor: pointer;
-            /* Özel Ok İşareti (Gri renkli) */
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a1a1aa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
-            background-position: right 20px top 50%; /* Oku biraz daha sola aldık */
+            background-position: right 20px top 50%;
             background-size: 12px auto;
-            padding-right: 40px; /* Yazı okun üstüne binmesin diye boşluk */
+            padding-right: 40px;
         }
 
-        /* 4. Karakter Sayacı */
         .char-counter {
             font-size: 11px;
             color: var(--text-muted);
@@ -881,8 +870,8 @@
             margin-top: 4px;
             font-weight: 500;
         }
-        .char-counter.limit-near { color: #facc15; } /* Limite yaklaşınca sarı */
-        .char-counter.limit-reached { color: var(--danger); } /* Limit dolunca kırmızı */
+        .char-counter.limit-near { color: #facc15; }
+        .char-counter.limit-reached { color: var(--danger); }
         
     </style>
 </head>
@@ -1103,7 +1092,7 @@
         let openRepliesSet = new Set();
         let lastPostsString = "";
         let currentCategory = 'general';
-        let currentViewMode = 'chat'; // 'chat', 'forum-list', 'forum-detail'
+        let currentViewMode = 'chat';
 
         // --- AUTH & SESSION ---
         async function checkSession() {
@@ -1214,11 +1203,9 @@
         function switchCategory(category, element) {
             currentCategory = category;
             
-            // Sidebar active class güncelle
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(element) element.classList.add('active');
 
-            // Header güncelle
             const headerTitle = {
                 'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
                 'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
@@ -1232,7 +1219,6 @@
             };
             document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
 
-            // Görünüm Modu Ayarla
             if (category === 'general') {
                 currentViewMode = 'chat';
                 document.getElementById('general-compose-area').style.display = 'block'; // Inputu göster
@@ -1241,8 +1227,7 @@
                 document.getElementById('general-compose-area').style.display = 'none'; // Inputu gizle
             }
 
-            // İçeriği Yenile
-            lastPostsString = ""; // Cache temizle ki yeniden çeksin
+            lastPostsString = "";
             document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
             loadMessages();
         }
@@ -1251,7 +1236,6 @@
         async function loadMessages() {
             if (activeEditId || activeReplyId) return;
             try {
-                // Kategoriye göre fetch atıyoruz
                 const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
                 const posts = await res.json();
                 const feed = document.getElementById('chat-feed');
@@ -1269,21 +1253,16 @@
 
                 // GÖRÜNÜM 1: GENEL AKIŞ (CHAT TARZI)
                 if (currentViewMode === 'chat') {
-                    // Eski chat render mantığı (Chat balonları)
-                    // Sadece parent_id'si olmayanları ana mesaj olarak bas, varsa altını doldur
-                    // (Mevcut kodundaki buildPostHTML mantığını buraya uyarlıyoruz, ama sadece general için)
                     const postMap = {};
                     posts.forEach(p => postMap[p.id] = { ...p, children: [] });
                     const roots = [];
                     posts.forEach(p => {
                         if (p.parent_id && postMap[p.parent_id]) {
                             postMap[p.parent_id].children.push(postMap[p.id]);
-                        } else if (!p.parent_id) { // Sadece kök mesajlar
+                        } else if (!p.parent_id) {
                             roots.push(postMap[p.id]);
                         }
                     });
-                    // Chat'te eskiden yeniye veya tam tersi. Genelde Chat en alttadır.
-                    // Ama senin kodunda sıralama: order_by(Post.created_at.desc()) geliyor.
                     let html = roots.map(root => buildPostHTML(root)).join('');
                     feed.innerHTML = html;
                 } 
@@ -1332,7 +1311,9 @@
                             </div>
 
                             <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column; justify-content:flex-start;">
-                                <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
+                                <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:12px;">
+                                    ${p.title || 'Başlıksız Konu'}
+                                </div>
                                     ${p.title || 'Başlıksız Konu'}
                                 </div>
                                 <div style="font-size:12px; color:var(--text-muted);">
@@ -1340,7 +1321,7 @@
                                 </div>
                                 
                                 <div style="
-                                    font-size: 13px; 
+                                    font-size: 14px; 
                                     color: #a1a1aa; 
                                     margin-top: 20px; 
                                     display: -webkit-box;
@@ -1364,26 +1345,19 @@
             }
                             } catch (e) { console.error(e); }
                         }
+
         // --- KONU DETAY GÖRÜNTÜLEME (FORUM İÇİN) ---
-        // Bu kısım biraz trick gerektirir. Backend şu an tüm category postlarını çekiyor.
-        // İleride tek post çeken endpoint yazılabilir ama şimdilik client-side filtre yapalım.
         function viewTopic(topicId) {
-            // Burada o konunun içine girince "Genel Akış" gibi ama sadece o konuyu ve cevaplarını göstereceğiz.
-            // Şimdilik basit tutmak için:
-            alert("Konu detay sayfası yapım aşamasında! (Burada o konuya ait sohbet açılacak)");
-            // Normalde burada currentViewMode = 'forum-detail' yapıp, sadece o ID ve çocuklarını filtreleyip ekrana basardık.
+            alert("Konu detay sayfası yapım aşamasında!");
         }
 
         // --- YENİ KONU MODAL ---
         function openNewTopicModal() {
-            // Modal açılırken inputları TEMİZLE
             document.getElementById('topic-title').value = '';
             document.getElementById('topic-content').value = '';
             document.getElementById('topic-category').selectedIndex = 0;
-            
-            // Sayacı sıfırla
             document.getElementById('char-count-display').innerText = "0 / 2000";
-            document.getElementById('char-count-display').className = "char-counter"; // Renkleri sıfırla
+            document.getElementById('char-count-display').className = "char-counter";
 
             document.getElementById('new-topic-modal').classList.add('active');
         }
@@ -1407,9 +1381,8 @@
                 });
                 if(res.ok) {
                     closeNewTopicModal();
-                    // Hemen o kategoriye git
                     switchCategory(category, null); 
-                    // (Sidebar'daki active class'ı manuel bulup yakmak gerekir ama şimdilik basit kalsın)
+
                 } else {
                     alert("Hata oluştu");
                 }
@@ -1448,14 +1421,12 @@
             const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
             const date = formatTime(p.created_at);
 
-            // Düzenleme kontrolü
             let editedHtml = "";
             if (p.updated_at && p.updated_at !== p.created_at) {
                 const editDate = formatTime(p.updated_at);
                 editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
             }
 
-            // User stats
             const userStats = p.user_stats || {
                 rank: 'member',
                 message_count: 0,
@@ -1485,11 +1456,10 @@
             let banBtn = '';
 
             if (isAdmin && !p.is_mine) {
-                // Backend'den gelen veriye göre buton rengi ve yazısı
                 const isBanned = p.author_is_banned;
                 
                 const btnText = isBanned ? "Banı Aç" : "Banla";
-                const btnColor = isBanned ? "#10b981" : "#ef4444"; // Yeşil veya Kırmızı
+                const btnColor = isBanned ? "#10b981" : "#ef4444";
                 const btnIcon = isBanned ? "fa-lock-open" : "fa-gavel";
                 
                 banBtn = `<span class="action-btn" 
@@ -1586,7 +1556,7 @@
                 });
 
                 if (res.ok) {
-                    // BAŞARILI: Temizle
+
                     mainInput.value = '';
                     mainInput.style.height = 'auto';
 
@@ -1597,7 +1567,7 @@
                     if (currentUserRank !== 'admin') {
                         startButtonCooldown(3);
                     } else {
-                        resetButton(); // Adminse butonu hemen aktif et
+                        resetButton();
                     }
 
                 } else {
@@ -1835,13 +1805,8 @@
             const data = await res.json();
             
             if (res.ok) {
-                // alert(data.message); // İstersen alerti kaldır, daha seri olur
-                
-                // 1. Mesajları yenile (Buton rengi değişsin diye)
                 lastPostsString = "";
                 loadMessages();
-                
-                // 2. Eğer kullanıcı listesi açıksa, orayı da yenile
                 if (document.getElementById('user-list-modal').classList.contains('active')) {
                     loadAllUsers();
                 }
@@ -1878,12 +1843,11 @@ async function loadAllUsers() {
                 : '<span style="color:#10b981;">Aktif</span>';
             
             const btnText = isBanned ? "Banı Aç" : "Banla";
-            const btnClass = isBanned ? "success" : "danger"; // CSS olmadığı için inline style vereceğiz
+            const btnClass = isBanned ? "success" : "danger";
             const btnStyle = isBanned 
                 ? "background:rgba(16, 185, 129, 0.2); color:#10b981; border:1px solid #10b981;" 
                 : "background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444;";
 
-            // Kendimizi banlayamayız, butonu gizle
             const actionButton = (u.rank === 'admin') 
                 ? '<span style="font-size:10px; opacity:0.5;">İşlem Yok</span>'
                 : `<button onclick="banUser(${u.id}, '${u.username}')" 
@@ -1911,7 +1875,6 @@ async function loadAllUsers() {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
     }
 }
-        // Karakter Sayacı Fonksiyonu
         function updateCharCount(textarea) {
             const maxLength = textarea.getAttribute('maxlength');
             const currentLength = textarea.value.length;
@@ -1919,7 +1882,6 @@ async function loadAllUsers() {
             
             counterEl.innerText = `${currentLength} / ${maxLength}`;
 
-            // Görsel uyarılar (Renk değişimi)
             if (currentLength >= maxLength) {
                 counterEl.classList.add('limit-reached');
             } else if (currentLength >= maxLength * 0.9) {
