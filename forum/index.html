@@ -847,6 +847,42 @@
             margin-top: 5px;
         }
 
+        /* --- GÜNCELLEMELER (Style etiketinin en altına ekle) --- */
+
+        /* 1. Mesajlar Arası Boşluk */
+        .message {
+            margin-bottom: 20px !important; /* Kartları birbirinden ayırır */
+        }
+
+        /* 2. Textarea Resize Kaldırma */
+        textarea {
+            resize: none !important; /* Kullanıcı elle büyütmesin */
+        }
+
+        /* 3. Kategori Seçim Kutusu (Select) Özelleştirme */
+        select.form-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            /* Özel Ok İşareti (Gri renkli) */
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a1a1aa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px top 50%; /* Oku biraz daha sola aldık */
+            background-size: 12px auto;
+            padding-right: 40px; /* Yazı okun üstüne binmesin diye boşluk */
+        }
+
+        /* 4. Karakter Sayacı */
+        .char-counter {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .char-counter.limit-near { color: #facc15; } /* Limite yaklaşınca sarı */
+        .char-counter.limit-reached { color: var(--danger); } /* Limit dolunca kırmızı */
     </style>
 </head>
 
@@ -1002,15 +1038,15 @@
             
             <div class="input-group">
                 <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:5px;">Kategori Seç</label>
-                <select id="topic-category" class="form-input" style="background:#09090b;">
-                    <option value="soru-cevap">Soru - Cevap</option>
-                    <option value="siber-guvenlik">Siber Güvenlik</option>
-                    <option value="bug-bounty">Bug Bounty</option>
-                    <option value="pentesting">Pentesting</option>
-                    <option value="etik-hukuk">Etik & Hukuk</option>
-                    <option value="donanim">Donanım</option>
-                    <option value="tool-paylasim">Tool Paylaşımı</option>
-                    <option value="diger">Diğer Konular</option>
+                <select id="topic-category" class="form-input" style="background-color:#09090b;">
+                    <option value="soru-cevap">❓ Soru - Cevap</option>
+                    <option value="siber-guvenlik">🛡️ Siber Güvenlik</option>
+                    <option value="bug-bounty">💰 Bug Bounty</option>
+                    <option value="pentesting">⚔️ Pentesting</option>
+                    <option value="etik-hukuk">⚖️ Etik & Hukuk</option>
+                    <option value="donanim">💻 Donanım</option>
+                    <option value="tool-paylasim">🛠️ Tool Paylaşımı</option>
+                    <option value="diger">☕ Diğer Konular</option>
                 </select>
             </div>
 
@@ -1019,7 +1055,12 @@
             </div>
 
             <div class="input-group">
-                <textarea id="topic-content" class="form-input" placeholder="İlk mesajını yaz..." style="min-height:150px; resize:vertical;"></textarea>
+                <textarea id="topic-content" class="form-input" 
+                    placeholder="Konu içeriğini detaylıca yaz..." 
+                    style="min-height:150px; resize:none;" 
+                    maxlength="2000"
+                    oninput="updateCharCount(this)"></textarea>
+                <div id="char-count-display" class="char-counter">0 / 2000</div>
             </div>
 
             <button onclick="submitNewTopic()" class="send-btn-modern" style="width:100%; padding:12px; font-size:14px; background:var(--primary);">Konuyu Başlat</button>
@@ -1292,8 +1333,18 @@
 
         // --- YENİ KONU MODAL ---
         function openNewTopicModal() {
+            // Modal açılırken inputları TEMİZLE
+            document.getElementById('topic-title').value = '';
+            document.getElementById('topic-content').value = '';
+            document.getElementById('topic-category').selectedIndex = 0;
+            
+            // Sayacı sıfırla
+            document.getElementById('char-count-display').innerText = "0 / 2000";
+            document.getElementById('char-count-display').className = "char-counter"; // Renkleri sıfırla
+
             document.getElementById('new-topic-modal').classList.add('active');
         }
+
         function closeNewTopicModal() {
             document.getElementById('new-topic-modal').classList.remove('active');
         }
@@ -1817,21 +1868,39 @@ async function loadAllUsers() {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
     }
 }
+        // Karakter Sayacı Fonksiyonu
+        function updateCharCount(textarea) {
+            const maxLength = textarea.getAttribute('maxlength');
+            const currentLength = textarea.value.length;
+            const counterEl = document.getElementById('char-count-display');
+            
+            counterEl.innerText = `${currentLength} / ${maxLength}`;
+
+            // Görsel uyarılar (Renk değişimi)
+            if (currentLength >= maxLength) {
+                counterEl.classList.add('limit-reached');
+            } else if (currentLength >= maxLength * 0.9) {
+                counterEl.classList.add('limit-near');
+                counterEl.classList.remove('limit-reached');
+            } else {
+                counterEl.classList.remove('limit-near', 'limit-reached');
+            }
+        }
         
         document.getElementById('toggle-password').addEventListener('click', function() {
-    const passwordInput = document.getElementById('password');
-    const icon = this;
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-});
+            const passwordInput = document.getElementById('password');
+            const icon = this;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
 
     </script>
 </body>
