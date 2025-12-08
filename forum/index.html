@@ -1567,18 +1567,33 @@ function renderSingleMessage(p, showReplyBtn = true) {
         : '';
 
     // YENİ: Beğeni ve Kaydet Butonları (Sadece Genel Akış DIŞINDA görünür)
+    // YENİ: Beğeni ve Kaydet Butonları (Hafızadan Okumalı)
     let interactBtns = '';
     if (currentCategory !== 'general') {
-        // Backend'den veri gelmediği için varsayılan 0 veriyoruz.
-        // is_liked ve is_saved backend'den gelirse buraya p.is_liked ? 'liked' : '' yazılır.
-        const likeCount = p.like_count || 0; 
+        // 1. Hafızayı kontrol et: Bu ID listemizde var mı?
+        const likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]');
+        const savedPosts = JSON.parse(localStorage.getItem('saved_posts') || '[]');
         
+        const isLiked = likedPosts.includes(p.id);
+        const isSaved = savedPosts.includes(p.id);
+
+        // 2. Duruma göre ikon ve renk ayarla
+        const likeClass = isLiked ? 'liked' : '';
+        const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+        
+        const saveClass = isSaved ? 'saved' : '';
+        const saveIcon = isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
+
+        // 3. Eğer biz beğendiysek sayıyı yapay olarak 1 artır (Sunucudan 0 gelse bile 1 görünsün)
+        let displayCount = p.like_count || 0;
+        if (isLiked) displayCount++; 
+
         interactBtns = `
-            <span id="like-btn-${p.id}" class="action-btn" onclick="toggleLike(${p.id})">
-                <i class="fa-regular fa-heart"></i> <span id="like-count-${p.id}" style="margin-left:3px;">${likeCount}</span>
+            <span id="like-btn-${p.id}" class="action-btn ${likeClass}" onclick="toggleLike(${p.id})">
+                <i class="${likeIcon}"></i> <span id="like-count-${p.id}" style="margin-left:3px;">${displayCount}</span>
             </span>
-            <span id="save-btn-${p.id}" class="action-btn" onclick="toggleSave(${p.id})">
-                <i class="fa-regular fa-bookmark"></i>
+            <span id="save-btn-${p.id}" class="action-btn ${saveClass}" onclick="toggleSave(${p.id})">
+                <i class="${saveIcon}"></i>
             </span>
         `;
     }
@@ -2064,49 +2079,56 @@ async function loadAllUsers() {
         }
 
         // --- BEĞENİ VE KAYDETME SİSTEMİ (FRONTEND) ---
+// --- BEĞENİ VE KAYDETME SİSTEMİ (LOCAL STORAGE / HAFIZALI) ---
 function toggleLike(id) {
+    // Mevcut beğenilenleri hafızadan çek
+    let likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]');
+    
     const btn = document.getElementById(`like-btn-${id}`);
     const icon = btn.querySelector('i');
     const countSpan = document.getElementById(`like-count-${id}`);
     let count = parseInt(countSpan.innerText);
 
-    if (btn.classList.contains('liked')) {
-        // Beğeniyi Geri Al
-        btn.classList.remove('liked');
-        icon.classList.remove('fa-solid');
-        icon.classList.add('fa-regular'); // İçi boş kalp
+    if (likedPosts.includes(id)) {
+        // Zaten beğenmişiz -> Geri al
+        likedPosts = likedPosts.filter(itemId => itemId !== id); // Listeden çıkar
         count--;
+        btn.classList.remove('liked');
+        icon.className = 'fa-regular fa-heart';
     } else {
-        // Beğen
-        btn.classList.add('liked');
-        icon.classList.remove('fa-regular');
-        icon.classList.add('fa-solid'); // İçi dolu kalp
+        // Yeni beğeniyoruz -> Ekle
+        likedPosts.push(id); // Listeye ekle
         count++;
+        btn.classList.add('liked');
+        icon.className = 'fa-solid fa-heart';
     }
+
+    // Güncel listeyi tekrar hafızaya yaz
+    localStorage.setItem('liked_posts', JSON.stringify(likedPosts));
     countSpan.innerText = count;
-    
-    // BURAYA İLERİDE FETCH KODU GELECEK:
-    // fetch(`${API_URL}/posts/${id}/like`, { method: 'POST' ... });
 }
 
 function toggleSave(id) {
+    // Mevcut kaydedilenleri hafızadan çek
+    let savedPosts = JSON.parse(localStorage.getItem('saved_posts') || '[]');
+    
     const btn = document.getElementById(`save-btn-${id}`);
     const icon = btn.querySelector('i');
 
-    if (btn.classList.contains('saved')) {
-        // Kaydetmeyi Kaldır
+    if (savedPosts.includes(id)) {
+        // Kaydetmeyi kaldır
+        savedPosts = savedPosts.filter(itemId => itemId !== id);
         btn.classList.remove('saved');
-        icon.classList.remove('fa-solid');
-        icon.classList.add('fa-regular'); // İçi boş bayrak
+        icon.className = 'fa-regular fa-bookmark';
     } else {
         // Kaydet
+        savedPosts.push(id);
         btn.classList.add('saved');
-        icon.classList.remove('fa-regular');
-        icon.classList.add('fa-solid'); // İçi dolu bayrak
+        icon.className = 'fa-solid fa-bookmark';
     }
-    
-    // BURAYA İLERİDE FETCH KODU GELECEK:
-    // fetch(`${API_URL}/posts/${id}/save`, { method: 'POST' ... });
+
+    // Güncel listeyi tekrar hafızaya yaz
+    localStorage.setItem('saved_posts', JSON.stringify(savedPosts));
 }
 
         document.getElementById('toggle-password').addEventListener('click', function() {
