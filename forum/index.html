@@ -931,11 +931,16 @@
         <div class="nav-item"><i class="fa-solid fa-shield-halved"></i> Defansif Güvenlik</div>
         <div class="nav-item"><i class="fa-solid fa-terminal"></i> CTF Çözümleri</div>
 
+        
         <div class="sidebar-footer">
+            <div id="admin-panel-btn" class="nav-item" onclick="openUserListModal()" style="display:none; color: #f472b6;">
+                <i class="fa-solid fa-users-gear"></i> Kullanıcı Yönetimi
+            </div>
+
             <div id="logout-btn" class="nav-item" style="color:var(--danger);"><i
                     class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
+            </div>
         </div>
-    </div>
 
     <div class="main">
         <div class="header">
@@ -970,7 +975,29 @@
             </div>
         </div>
     </div>
-
+    <div id="user-list-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 800px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="margin:0;">Kullanıcı Listesi</h2>
+            <i class="fa-solid fa-xmark fa-lg" style="cursor:pointer;" onclick="closeUserListModal()"></i>
+        </div>
+        
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table style="width:100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
+                        <th style="padding: 10px;">Kullanıcı</th>
+                        <th style="padding: 10px;">Rütbe</th>
+                        <th style="padding: 10px;">Durum</th>
+                        <th style="padding: 10px; text-align:right;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="user-list-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
     <script>
         const API_URL = 'https://admin3131.pythonanywhere.com';
         let currentUserRank = 'member';
@@ -988,6 +1015,9 @@
                 const data = await res.json();
                 if (data.is_logged_in) {
                     isGuest = false;
+                    if (data.user.rank === 'admin') {
+                        document.getElementById('admin-panel-btn').style.display = 'flex';
+                    }
                     currentUserRank = data.user.rank || 'member';
                     document.getElementById('auth-screen').classList.remove('active');
                     document.getElementById('guest-bar').classList.remove('active');
@@ -1203,8 +1233,20 @@
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
             const isAdmin = currentUserRank === 'admin';
             let banBtn = '';
+
             if (isAdmin && !p.is_mine) {
-                banBtn = `<span class="action-btn action-delete" style="color: #ff0000; border-color: #ff0000;" onclick="banUser(${p.author_id}, '${name}')"><i class="fa-solid fa-gavel"></i> Banla</span>`;
+                // Backend'den gelen veriye göre buton rengi ve yazısı
+                const isBanned = p.author_is_banned; // Python'da bunu eklemiştik
+                
+                const btnText = isBanned ? "Banı Aç" : "Banla";
+                const btnColor = isBanned ? "#10b981" : "#ef4444"; // Yeşil veya Kırmızı
+                const btnIcon = isBanned ? "fa-lock-open" : "fa-gavel";
+                
+                banBtn = `<span class="action-btn" 
+                            style="color: ${btnColor}; border-color: ${btnColor};" 
+                            onclick="banUser(${p.author_id}, '${name}')">
+                            <i class="fa-solid ${btnIcon}"></i> ${btnText}
+                        </span>`;
             }
 
             const canDelete = p.is_mine || isAdmin;
@@ -1530,27 +1572,93 @@
             }
         }
         async function banUser(userId, username) {
-        if (!confirm(`DİKKAT! @${username} kullanıcısını banlamak (veya banını açmak) üzeresin. Emin misin?`)) return;
-            try {
-                const res = await fetch(`${API_URL}/users/${userId}/ban`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include'
-                });
-                const data = await res.json();
+        if (!confirm(`@${username} kullanıcısının durumunu değiştirmek istiyor musun?`)) return;
+
+        try {
+            const res = await fetch(`${API_URL}/users/${userId}/ban`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                // alert(data.message); // İstersen alerti kaldır, daha seri olur
                 
-                if (res.ok) {
-                    alert(data.message);
-                    // Sayfayı yenilemeye gerek yok ama mesajları tazelemek iyi olur
-                    lastPostsString = "";
-                    loadMessages();
-                } else {
-                    alert("Hata: " + data.error);
+                // 1. Mesajları yenile (Buton rengi değişsin diye)
+                lastPostsString = "";
+                loadMessages();
+                
+                // 2. Eğer kullanıcı listesi açıksa, orayı da yenile
+                if (document.getElementById('user-list-modal').classList.contains('active')) {
+                    loadAllUsers();
                 }
-            } catch (e) {
-                alert("Bağlantı hatası.");
+            } else {
+                alert("Hata: " + data.error);
             }
+        } catch (e) {
+            alert("Bağlantı hatası.");
         }
+    }
+        function openUserListModal() {
+    document.getElementById('user-list-modal').classList.add('active');
+    loadAllUsers();
+}
+
+function closeUserListModal() {
+    document.getElementById('user-list-modal').classList.remove('active');
+}
+
+async function loadAllUsers() {
+    const tbody = document.getElementById('user-list-body');
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Yükleniyor...</td></tr>';
+
+    try {
+        const res = await fetch(`${API_URL}/users`, { credentials: 'include' });
+        if (!res.ok) throw new Error("Yetkisiz");
+        const users = await res.json();
+
+        tbody.innerHTML = '';
+        users.forEach(u => {
+            const isBanned = u.is_banned;
+            const statusBadge = isBanned 
+                ? '<span style="background:#ef4444; padding:2px 6px; border-radius:4px; font-size:10px; color:white;">BANLI</span>' 
+                : '<span style="color:#10b981;">Aktif</span>';
+            
+            const btnText = isBanned ? "Banı Aç" : "Banla";
+            const btnClass = isBanned ? "success" : "danger"; // CSS olmadığı için inline style vereceğiz
+            const btnStyle = isBanned 
+                ? "background:rgba(16, 185, 129, 0.2); color:#10b981; border:1px solid #10b981;" 
+                : "background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444;";
+
+            // Kendimizi banlayamayız, butonu gizle
+            const actionButton = (u.rank === 'admin') 
+                ? '<span style="font-size:10px; opacity:0.5;">İşlem Yok</span>'
+                : `<button onclick="banUser(${u.id}, '${u.username}')" 
+                    style="${btnStyle} cursor:pointer; padding:4px 8px; border-radius:4px; font-weight:600; font-size:11px;">
+                    ${btnText}
+                   </button>`;
+
+            const row = `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 12px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div class="avatar" style="width:30px; height:30px; font-size:12px;">${u.username.charAt(0).toUpperCase()}</div>
+                            <span>${u.username}</span>
+                        </div>
+                    </td>
+                    <td style="padding: 12px;"><span class="user-rank ${u.rank}">${u.rank}</span></td>
+                    <td style="padding: 12px;">${statusBadge}</td>
+                    <td style="padding: 12px; text-align:right;">${actionButton}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Hata oluştu.</td></tr>';
+    }
+}
         
         document.getElementById('toggle-password').addEventListener('click', function() {
     const passwordInput = document.getElementById('password');
@@ -1566,6 +1674,7 @@
         icon.classList.add('fa-eye');
     }
 });
+
     </script>
 </body>
 </html>
