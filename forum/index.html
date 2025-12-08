@@ -884,65 +884,45 @@
         .char-counter.limit-near { color: #facc15; } /* Limite yaklaşınca sarı */
         .char-counter.limit-reached { color: var(--danger); } /* Limit dolunca kırmızı */
 
-
-        /* --- YAZI BOYUTU VE OKUNABİLİRLİK GÜNCELLEMESİ --- */
-        
-        /* 1. Genel Yazı Boyutunu Artır */
-        body {
-            font-size: 16px; /* Eskisi muhtemelen 14px idi */
+        /* SADECE konu listesindeki veya mesaj alanındaki yazılar etkilenir */
+        .activity-feed .message-content { 
+            /* Metni kırma ve gizleme özellikleri */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word; /* Uzun asdasd... yazısını kırmak için */
         }
 
-        /* 2. Sidebar (Yan Menü) İyileştirmesi */
-        .nav-item {
-            font-size: 16px !important; /* Menü linkleri */
-            padding: 12px 14px; /* Tıklama alanını da genişletelim */
-        }
-        .nav-label {
-            font-size: 12px !important; /* "KANALLAR" gibi başlıklar */
-            margin-top: 15px;
-        }
-        .user-info h4 {
-            font-size: 16px !important; /* Kullanıcı adı */
-        }
-        .user-info p {
-            font-size: 13px !important; /* "Çevrimiçi" yazısı */
+        /* Genel Kullanım İçin Yardımcı Sınıf */
+        .text-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 2 Satır sınırı */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            
+            /* Uzun 'asdasd' gibi yazıları kırmak için kritik kod: */
+            word-break: break-word; 
+            overflow-wrap: break-word; 
         }
 
-        /* 3. Mesaj Kartları ve İçerik */
-        .msg-text {
-            font-size: 16px !important; /* Mesajın kendisi */
-            line-height: 1.6 !important; /* Satır aralığını açtık, gözü yormaz */
-            color: #e4e4e7; /* Yazı rengini bir tık daha parlak yaptık */
-        }
-        .msg-author {
-            font-size: 15px !important; /* Yazar ismi */
-        }
-        .msg-date {
-            font-size: 13px !important; /* Tarih */
+        .konu-basligi {
+            white-space: nowrap; /* Alt satıra inmesini engeller */
+            overflow: hidden;    /* Taşan kısmı gizler */
+            text-overflow: ellipsis; /* Sonuna ... ekler */
+            max-width: 100%;     /* Kapsayıcısından geniş olamaz */
+            display: block;      /* Block element gibi davranmalı */
         }
 
-        /* 4. Formlar ve Input Alanları */
-        .form-input, 
-        .compose-input, 
-        textarea, 
-        select.form-input {
-            font-size: 16px !important; /* Yazı yazarkenki boyut */
-        }
-
-        /* 5. Butonlar ve Linkler */
-        .send-btn-modern {
-            font-size: 14px !important;
-        }
-        .view-replies-btn {
-            font-size: 14px !important;
-        }
-        .action-btn {
-            font-size: 13px !important; /* Düzenle/Sil butonları */
-        }
-
-        /* 6. Modal Başlıkları */
-        .modal-box h3, .modal-box h2 {
-            font-size: 20px !important;
+        /* Sadece post-card içindeki ozet-icerik etkilensin */
+        .post-card .ozet-icerik {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
         }
     </style>
 </head>
@@ -1112,7 +1092,7 @@
             </div>
 
             <div class="input-group">
-                <input type="text" id="topic-title" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="100">
+                <input type="text" id="topic-title" class="form-input" placeholder="Konu başlığı giriniz..." maxlength="50">
             </div>
 
             <div class="input-group">
@@ -1359,17 +1339,20 @@
                                 <div class="msg-avatar" style="margin-bottom:0; width:40px; height:40px; font-size:16px;">
                                     ${(p.author_email || 'A').charAt(0).toUpperCase()}
                                 </div>
-                                <div style="margin-left:15px; flex-grow:1;">
-                                    <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
-                                        ${p.title || 'Başlıksız Konu'}
-                                    </div>
-                                    <div style="font-size:12px; color:var(--text-muted);">
-                                        @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
-                                    </div>
-                                    <div style="font-size:13px; color:#d4d4d8; margin-top:6px; max-height:40px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
-                                        ${escapeHTML(p.content)}
-                                    </div>
+
+                                <div class="konu-basligi" style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
+                                    ${p.title || 'Başlıksız Konu'}
                                 </div>
+
+                                <div style="font-size:12px; color:var(--text-muted);">
+                                    @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
+                                </div>
+
+                                <div class="text-clamp-2" style="font-size:13px; color:#d4d4d8; margin-top:6px;">
+                                    ${escapeHTML(p.content)}
+                                </div>
+
+                            </div>
                                 <div style="text-align:center; min-width:60px;">
                                     <div style="font-size:18px; color:var(--primary);"><i class="fa-regular fa-comments"></i></div>
                                     <div style="font-size:12px; color:var(--text-muted);">${p.reply_count || 0}</div>
