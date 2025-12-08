@@ -1200,43 +1200,38 @@
                 editedHtml = `<span class="msg-edited">(düzenlendi: ${editDate})</span>`;
             }
 
-            // User stats varsa göster, yoksa default
+            // User stats
             const userStats = p.user_stats || {
                 rank: 'member',
                 message_count: 0,
                 join_date: null
             };
 
-            // Rütbe türkçe çevirisi
             const rankText = {
                 'admin': 'Admin',
                 'moderator': 'Moderatör', 
                 'member': 'Üye'
             }[userStats.rank] || 'Üye';
 
-            // Tarih formatla - Güvenli şekilde
             let joinDate = 'Bilinmiyor';
             if (userStats.join_date) {
                 try {
                     const date = new Date(userStats.join_date);
                     if (!isNaN(date.getTime())) {
-                        joinDate = date.toLocaleDateString('tr-TR', {
-                            year: 'numeric',
-                            month: 'short'
-                        });
+                        joinDate = date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'short' });
                     }
-                } catch (e) {
-                    console.error('Tarih formatla hatası:', e);
-                }
+                } catch (e) { console.error(e); }
             }
 
             const replyBtn = `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>`;
+            
+            // --- BURASI DÜZELTİLDİ ---
             const isAdmin = currentUserRank === 'admin';
             let banBtn = '';
 
             if (isAdmin && !p.is_mine) {
                 // Backend'den gelen veriye göre buton rengi ve yazısı
-                const isBanned = p.author_is_banned; // Python'da bunu eklemiştik
+                const isBanned = p.author_is_banned;
                 
                 const btnText = isBanned ? "Banı Aç" : "Banla";
                 const btnColor = isBanned ? "#10b981" : "#ef4444"; // Yeşil veya Kırmızı
@@ -1248,6 +1243,8 @@
                             <i class="fa-solid ${btnIcon}"></i> ${btnText}
                         </span>`;
             }
+            // (Eski kod bloğu buradan silindi)
+            // ---------------------------
 
             const canDelete = p.is_mine || isAdmin;
             const deleteBtn = canDelete ? `<span class="action-btn action-delete" onclick="deletePost(${p.id})"><i class="fa-regular fa-trash-can"></i> Sil</span>` : '';
