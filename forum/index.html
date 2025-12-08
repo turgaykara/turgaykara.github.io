@@ -1234,13 +1234,12 @@
         }
         // Konunun içine girme fonksiyonu
         function viewTopic(id) {
-            currentTopicId = id;
+            currentTopicId = parseInt(id); // ID'yi sayıya çeviriyoruz ki hata olmasın
             currentViewMode = 'forum-detail';
             
-            // Genel mesaj yazma kutusunu gizle (zaten gizliydi ama garanti olsun)
             document.getElementById('general-compose-area').style.display = 'none'; 
             
-            lastPostsString = ""; // İçeriği yenilemeye zorla
+            lastPostsString = ""; 
             loadMessages();
         }
 
@@ -1403,27 +1402,27 @@
         html += `<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
     }
 
-    // --- E. CEVAP YAZMA KUTUSU (HİZALANDI VE ENTER EKLENDİ) ---
-    html += `
-        <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-            <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
-            
-            <textarea id="detail-reply-input" class="form-input" 
-                placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
-                style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
-                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
-            
-            <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-                <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
-                    Yanıtla <i class="fa-solid fa-paper-plane"></i>
-                </button>
+        // --- E. CEVAP YAZMA KUTUSU (HİZALANDI VE ENTER EKLENDİ) ---
+        html += `
+            <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+                <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
+                
+                <textarea id="detail-reply-input" class="form-input" 
+                    placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
+                    style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
+                    onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
+                
+                <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                    <button id="btn-detail-reply" onclick="sendDetailReply(${topic.id})" class="send-btn-modern" style="width:auto; padding:10px 24px;">
+                        Yanıtla <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div style="height: 50px;"></div>
-    `;
+            <div style="height: 50px;"></div>
+        `;
 
-    feed.innerHTML = html;
-}
+        feed.innerHTML = html;
+    }
                             } catch (e) { console.error(e); }
                         }
 
@@ -1983,17 +1982,23 @@ async function loadAllUsers() {
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
             try {
+                // --- BURASI DEĞİŞTİ (Category eklendi) ---
                 const res = await fetch(`${API_URL}/posts`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: content, parent_id: topicId }),
+                    body: JSON.stringify({ 
+                        content: content, 
+                        parent_id: topicId,
+                        category: currentCategory // <--- İŞTE BU EKSİKTİ!
+                    }),
                     credentials: 'include'
                 });
+                // -----------------------------------------
 
                 if (res.ok) {
                     input.value = ''; // Kutuyu temizle
                     lastPostsString = ""; // Verileri yenile
-                    loadMessages(); // Sayfayı güncelle (Cevabın düştüğünü gör)
+                    loadMessages(); // Sayfayı güncelle
                 } else {
                     alert("Hata oluştu.");
                 }
@@ -2002,6 +2007,8 @@ async function loadAllUsers() {
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Yanıtla <i class="fa-solid fa-paper-plane"></i>';
+                // Odaklanmayı tekrar inputa ver ki seri yazabilsin
+                if(input) input.focus(); 
             }
         }
         document.getElementById('toggle-password').addEventListener('click', function() {
