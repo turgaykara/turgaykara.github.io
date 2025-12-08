@@ -2202,6 +2202,26 @@ function toggleSave(id) {
     // Güncel listeyi tekrar hafızaya yaz
     localStorage.setItem('saved_posts', JSON.stringify(savedPosts));
 }
+// --- KARAKTER SAYACI ---
+function updateCharCount(textarea, displayId) {
+    const maxLength = textarea.getAttribute('maxlength');
+    const currentLength = textarea.value.length;
+    const counterEl = document.getElementById(displayId);
+    
+    if (!counterEl) return;
+
+    counterEl.innerText = `${currentLength} / ${maxLength}`;
+
+    if (currentLength >= maxLength) {
+        counterEl.classList.add('limit-reached'); // CSS'te kırmızı yapmıştık
+        counterEl.classList.remove('limit-near');
+    } else if (currentLength >= maxLength * 0.9) {
+        counterEl.classList.add('limit-near'); // CSS'te sarı yapmıştık (%90 dolunca)
+        counterEl.classList.remove('limit-reached');
+    } else {
+        counterEl.classList.remove('limit-near', 'limit-reached');
+    }
+}
 
         document.getElementById('toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
