@@ -1459,7 +1459,7 @@
                 <div style="max-width: 1000px; margin: 30px auto 0 auto; background: #09090b; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
                     <div style="margin-bottom:10px; font-size:14px; font-weight:600; color:#fff;">Bu konuya yanıt ver:</div>
                     <textarea id="detail-reply-input" class="form-input" 
-                        placeholder="Düşüncelerini paylaş... (Enter: Gönder, Shift+Enter: Alt Satır)" 
+                        placeholder="Düşüncelerini paylaş..." 
                         style="min-height:100px; resize:vertical; background: #18181b; border-color: rgba(255,255,255,0.1);"
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendDetailReply(${topic.id}); }"></textarea>
                     
@@ -1506,14 +1506,16 @@
                     body: JSON.stringify({ title, content, category, parent_id: null }),
                     credentials: 'include'
                 });
+                
                 if(res.ok) {
                     closeNewTopicModal();
                     switchCategory(category, null); 
-
                 } else {
-                    alert("Hata oluştu");
+                    // Backend'den gelen "X saniye bekle" mesajını burada yakalıyoruz
+                    const data = await res.json();
+                    alert(data.error || "Hata oluştu");
                 }
-            } catch(e) { alert("Hata"); }
+            } catch(e) { alert("Bağlantı hatası"); }
         }
         function buildPostHTML(post) {
             let html = `<div class="message-wrapper">`;
@@ -1543,8 +1545,6 @@
         }
 
         // --- MESAJ KUTUSU TASARIMI ---
-// --- MESAJ KUTUSU TASARIMI ---
-// --- MESAJ KUTUSU TASARIMI ---
 function renderSingleMessage(p, showReplyBtn = true) {
     const initial = (p.author_email || 'A').charAt(0).toUpperCase();
     const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
