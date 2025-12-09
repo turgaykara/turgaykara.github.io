@@ -1311,15 +1311,13 @@
         }
 
         // Listeye geri dönme fonksiyonu
-        // Listeye geri dönme fonksiyonu
         function backToForum() {
-            currentTopicId = null;
-            currentViewMode = 'forum-list';
+            // currentTopicId'yi null yapmaya gerek yok, switchCategory tüm akışı kontrol ediyor.
+            // currentCategory zaten doğru kategoriyi tutuyor.
             
-            document.getElementById('general-compose-area').style.display = 'none'; // Listede de input yok
-            
-            lastPostsString = ""; // <-- BU ÇOK ÖNEMLİ!
-            loadMessages();
+            // switchCategory çağrısı ile hem view mode 'forum-list' olur
+            // hem de URL'den &topic=ID kısmı temizlenir.
+            switchCategory(currentCategory, null, true);
         }
 
         // --- MESAJLARI / KONULARI ÇEKME ---
