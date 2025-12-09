@@ -1022,23 +1022,23 @@
         </div>
 
 <div class="compose-area" id="general-compose-area">
-            <div class="compose-wrapper">
-                <textarea id="main-chat-input" class="compose-input" 
-                    placeholder="Genel sohbete yaz..." 
-                    maxlength="500" 
-                    oninput="updateCharCount(this, 'main-char-count')"></textarea>
-                
-                <div class="compose-footer">
-                    <div class="action-icons">
-                        <i class="fa-solid fa-code"></i>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <div id="main-char-count" class="char-counter">0 / 500</div>
-                        <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                </div>
+    <div class="compose-wrapper">
+        <textarea id="main-chat-input" class="compose-input" 
+            placeholder="Genel sohbete yaz..." 
+            maxlength="500" 
+            oninput="updateCharCount(this, 'main-char-count')"></textarea>
+        
+        <div class="compose-footer">
+            <div class="action-icons">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div id="main-char-count" class="char-counter">0 / 500</div>
+                <button id="main-send-btn" class="send-btn-modern">Gönder <i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
+    </div>
+</div>
 
         <div class="chat-area" id="chat-feed">
             </div>
@@ -1254,7 +1254,7 @@
                 'etik-hukuk': '<i class="fa-solid fa-scale-balanced"></i> Etik & Hukuk',
                 'diger': '<i class="fa-solid fa-mug-hot"></i> Diğer Konular'
             };
-            document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
+            document.getElementById('channel-header-info').innerHTML = headerTitle[category] || escapeHTML(category);
 
             // 3. Görünüm Modunu Ayarla (Chat mi Liste mi?)
             if (category === 'general') {
@@ -1423,7 +1423,7 @@
 
                             <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column; justify-content:flex-start;">
                                 <div style="font-weight:700; color:#fff; font-size:16px; margin-bottom:4px;">
-                                    ${p.title || 'Başlıksız Konu'}
+                                    ${escapeHTML(p.title || 'Başlıksız Konu')}
                                 </div>
                                 <div style="font-size:12px; color:var(--text-muted);">
                                     @${p.author_email.split('@')[0]} · ${formatTime(p.created_at)}
