@@ -1253,13 +1253,37 @@
             loadMessages();
         }
         // Konunun içine girme fonksiyonu
-        function viewTopic(id) {
-            currentTopicId = parseInt(id); // ID'yi sayıya çevir
+        // Konunun içine girme fonksiyonu (Güncellendi)
+        function viewTopic(id, category, pushHistory = true) {
+            currentTopicId = parseInt(id); 
+            
+            // Eğer kategori geldiyse (Linkten veya tıklamadan), onu ayarla
+            if (category) {
+                currentCategory = category;
+                // Sidebar'daki aktifliği güncelle (Görsel düzelmesi için)
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                // Basit bir eşleştirme ile butonu bulup yakalım
+                const navItems = document.querySelectorAll('.nav-item');
+                for (let btn of navItems) {
+                    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(category)) {
+                        btn.classList.add('active');
+                        break;
+                    }
+                }
+            }
+
             currentViewMode = 'forum-detail';
-            
             document.getElementById('general-compose-area').style.display = 'none'; 
+            lastPostsString = ""; 
             
-            lastPostsString = ""; // <-- BU ÇOK ÖNEMLİ! Bunu demezsek ekran yenilenmez.
+            // --- URL GÜNCELLEME (Hem Kategori Hem Topic ID) ---
+            if (pushHistory) {
+                // Örnek: ?category=pentesting&topic=123
+                const newUrl = `${window.location.pathname}?category=${currentCategory}&topic=${id}`;
+                window.history.pushState({ mode: 'topic', val: id, cat: currentCategory }, '', newUrl);
+            }
+            // --------------------------------------------------
+
             loadMessages();
         }
 
@@ -1354,7 +1378,7 @@
                              </div>` : '';
 
                         html += `
-                        <div class="message" style="cursor:pointer; flex-direction:row; padding:0; align-items:stretch;" onclick="viewTopic(${p.id})">
+                        <div class="message" style="cursor:pointer; flex-direction:row; padding:0; align-items:stretch;" onclick="viewTopic(${p.id}, '${p.category}')">
                             
                             <div class="msg-left" style="width: 110px; padding: 15px 5px; border-right: 1px solid rgba(255,255,255,0.05); background: transparent; flex-shrink:0; display:flex; flex-direction:column; justify-content:center;">
                                 <div class="msg-avatar" style="width:40px; height:40px; font-size:16px; margin-bottom:10px;">
@@ -1806,7 +1830,10 @@ function renderSingleMessage(p, showReplyBtn = true) {
         const escapeHTML = (str) => str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
         const unescapeHTML = (str) => str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"');
 
-        checkSession();
+        checkSession().then(() => {
+            handleInitialLoad();
+        });
+
         setInterval(loadMessages, POLL_INTERVAL);
 
         // --- YENİ: SATIR İÇİ YANIT SİSTEMİ ---
@@ -2213,6 +2240,24 @@ function updateCharCount(textarea, displayId) {
         counterEl.classList.remove('limit-near', 'limit-reached');
     }
 }
+
+// 2. Sayfa İlk Açıldığında URL'i Kontrol Et
+        function handleInitialLoad() {
+            const params = new URLSearchParams(window.location.search);
+            const topicId = params.get('topic');
+            const category = params.get('category'); // Kategoriyi de al
+
+            if (topicId && category) {
+                // İkisi de varsa direkt nokta atışı yap
+                viewTopic(topicId, category, false);
+            } else if (category) {
+                switchCategory(category, null, false);
+            } else {
+                switchCategory('general', null, false); 
+            }
+        }
+        // 👆 ---------------------------------- 👆
+
 
         document.getElementById('toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
