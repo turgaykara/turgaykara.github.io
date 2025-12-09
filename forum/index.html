@@ -1335,20 +1335,17 @@
             // -----------------------
 
             try {
-                const res = await fetch(`${API_URL}/posts?category=${currentCategory}`, { credentials: 'include' });
-                const posts = await res.json();
-                const feed = document.getElementById('chat-feed');
-                
-                const currentDataString = JSON.stringify(posts);
-                if (currentDataString === lastPostsString && !activeEditId) return;
-                lastPostsString = currentDataString;
+                // 👇👇 YENİ AJAX URL OLUŞTURMA MANTIĞI 👇👇
+                let urlParams = `category=${currentCategory}`;
 
-                feed.innerHTML = '';
-
-                if (posts.length === 0) {
-                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'>Henüz bu kategoride bir konu yok. İlkini sen aç! (+ Butonu)</div>";
-                    return;
+                // Eğer topic modundaysak, topic ID'sini de ekle
+                if (currentViewMode === 'forum-detail' && currentTopicId) {
+                    urlParams += `&topic=${currentTopicId}`;
                 }
+
+                const res = await fetch(`${API_URL}/posts?${urlParams}`, { credentials: 'include' });
+                const posts = await res.json();
+                const feed = document.getElementById('chat-feed');
 
                 // GÖRÜNÜM 1: GENEL AKIŞ (CHAT TARZI)
                 if (currentViewMode === 'chat') {
