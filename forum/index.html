@@ -2284,6 +2284,21 @@ function updateCharCount(textarea, displayId) {
         }
         // 👆 ---------------------------------- 👆
 
+        // --- TARAYICI GEÇMİŞİ VE URL YÖNETİMİ ---
+        
+        // Geri/İleri Tuşuna Basıldığında Çalışır
+        window.addEventListener('popstate', function(event) {
+            const params = new URLSearchParams(window.location.search);
+            const topicId = params.get('topic');
+            const category = params.get('category');
+
+            // pushHistory: false parametresini gönderiyoruz ki bu işlem tekrar geçmişe eklenmesin
+            if (topicId) {
+                viewTopic(topicId, category || 'general', false);
+            } else {
+                switchCategory(category || 'general', null, false);
+            }
+        });
 
         document.getElementById('toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
