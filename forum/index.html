@@ -1625,9 +1625,14 @@
 // --- MESAJ KUTUSU TASARIMI ---
 function renderSingleMessage(p, showReplyBtn = true) {
     const initial = (p.author_email || 'A').charAt(0).toUpperCase();
-    const name = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
-    const date = formatTime(p.created_at);
+    
+    // --- GÜVENLİK AYARLARI (BURASI YENİLENDİ) ---
+    let rawName = p.author_email ? p.author_email.split('@')[0] : 'Anonim';
+    const displayName = escapeHTML(rawName); // Ekranda güvenli göster
+    const safeJsName = rawName.replace(/'/g, "\\'").replace(/"/g, '&quot;'); // JS fonksiyonu için güvenli yap
+    // -------------------------------------------
 
+    const date = formatTime(p.created_at);
     let editedHtml = "";
     if (p.updated_at && p.updated_at !== p.created_at) {
         editedHtml = `<span class="msg-edited">(düzenlendi: ${formatTime(p.updated_at)})</span>`;
@@ -1642,24 +1647,21 @@ function renderSingleMessage(p, showReplyBtn = true) {
     }
 
     const replyBtn = showReplyBtn 
-        ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${name}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` 
+        ? `<span class="action-btn action-reply" onclick="toggleReplyBox(${p.id}, '${safeJsName}')"><i class="fa-regular fa-comment"></i> Yanıtla</span>` 
         : '';
 
-    // --- YENİ: SADECE BEĞENİ BUTONU (KAYDETME YOK) ---
     let interactBtns = '';
     if (currentCategory !== 'general') {
-        const isLiked = p.is_liked; // Backend'den gelen gerçek veri
+        const isLiked = p.is_liked;
         const likeClass = isLiked ? 'liked' : '';
         const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-        const displayCount = p.like_count || 0; // Backend'den gelen gerçek sayı
-
+        const displayCount = p.like_count || 0;
         interactBtns = `
             <span id="like-btn-${p.id}" class="action-btn ${likeClass}" onclick="toggleLike(${p.id})">
                 <i class="${likeIcon}"></i> <span id="like-count-${p.id}" style="margin-left:3px;">${displayCount}</span>
             </span>
         `;
     }
-    // ------------------------------------------------
 
     const isAdmin = currentUserRank === 'admin';
     let banBtn = '';
@@ -1668,7 +1670,7 @@ function renderSingleMessage(p, showReplyBtn = true) {
         const btnText = isBanned ? "Banı Aç" : "Banla";
         const btnColor = isBanned ? "#10b981" : "#ef4444";
         const btnIcon = isBanned ? "fa-lock-open" : "fa-gavel";
-        banBtn = `<span class="action-btn" style="color: ${btnColor}; border-color: ${btnColor};" onclick="banUser(${p.author_id}, '${name}')"><i class="fa-solid ${btnIcon}"></i> ${btnText}</span>`;
+        banBtn = `<span class="action-btn" style="color: ${btnColor}; border-color: ${btnColor};" onclick="banUser(${p.author_id}, '${safeJsName}')"><i class="fa-solid ${btnIcon}"></i> ${btnText}</span>`;
     }
 
     const canDelete = p.is_mine || isAdmin;
@@ -1691,7 +1693,7 @@ function renderSingleMessage(p, showReplyBtn = true) {
         </div>
         <div class="msg-right">
             <div class="msg-header">
-                <span class="msg-author">@${name}</span>
+                <span class="msg-author">@${displayName}</span>
                 <span class="msg-date">· ${date} ${editedHtml}</span>
             </div>
             <div class="msg-text">${escapeHTML(p.content)}</div>
