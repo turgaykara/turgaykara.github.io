@@ -1221,12 +1221,28 @@
             }
         }
         // --- KATEGORİ DEĞİŞTİRME ---
-        function switchCategory(category, element) {
+        // --- KATEGORİ DEĞİŞTİRME (URL GÜNCELLEMELİ) ---
+        function switchCategory(category, element, pushHistory = true) {
             currentCategory = category;
             
+            // 1. Sidebar'daki aktif sınıfını güncelle
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(element) element.classList.add('active');
+            
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // Eğer element yoksa (linkten geldiyse) doğru butonu bulup yak
+                const navItems = document.querySelectorAll('.nav-item');
+                for (let btn of navItems) {
+                    // Butonun onclick değerine bakarak eşleştirme yap
+                    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`'${category}'`)) {
+                        btn.classList.add('active');
+                        break;
+                    }
+                }
+            }
 
+            // 2. Başlık İkonlarını Ayarla
             const headerTitle = {
                 'general': '<i class="fa-solid fa-earth-americas"></i> Genel Akış',
                 'soru-cevap': '<i class="fa-solid fa-circle-question"></i> Soru - Cevap',
@@ -1240,6 +1256,7 @@
             };
             document.getElementById('channel-header-info').innerHTML = headerTitle[category] || category;
 
+            // 3. Görünüm Modunu Ayarla (Chat mi Liste mi?)
             if (category === 'general') {
                 currentViewMode = 'chat';
                 document.getElementById('general-compose-area').style.display = 'block';
@@ -1248,6 +1265,13 @@
                 document.getElementById('general-compose-area').style.display = 'none';
             }
 
+            // 4. URL GÜNCELLEME KISMI (Burası Eksikti)
+            if (pushHistory) {
+                const newUrl = `${window.location.pathname}?category=${category}`;
+                window.history.pushState({ mode: 'category', val: category }, '', newUrl);
+            }
+
+            // 5. Verileri Çek
             lastPostsString = "";
             document.getElementById('chat-feed').innerHTML = '<div style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>';
             loadMessages();
