@@ -1344,6 +1344,18 @@
                 const posts = await res.json();
                 const feed = document.getElementById('chat-feed');
 
+                const currentDataString = JSON.stringify(posts);
+                if (currentDataString === lastPostsString && !activeEditId) return;
+                lastPostsString = currentDataString; // <-- Bu satır, hızlı yenilemeyi engeller.
+
+                feed.innerHTML = ''; // Ekranı temizle
+
+                // BOŞ KATEGORİ KONTROLÜ
+                if (posts.length === 0) {
+                    feed.innerHTML = "<div style='text-align:center; color:#555; margin-top:50px;'>Henüz bu kategoride bir konu yok. İlkini sen aç! (+ Butonu)</div>";
+                    return;
+                }
+
                 // GÖRÜNÜM 1: GENEL AKIŞ (CHAT TARZI)
                 if (currentViewMode === 'chat') {
                     const postMap = {};
