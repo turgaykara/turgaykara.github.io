@@ -1122,6 +1122,27 @@
         let currentCategory = 'general';
         let currentViewMode = 'chat';
 
+
+        // 👇 YENİ: COOKIE OKUMA FONKSİYONU (EKLE) 👇
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        // 👆 COOKIE OKUMA BİTİŞİ 👆
+
+        // 👇 YENİ: DEBOUNCE FONKSİYONU 👇
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+        // 👆 DEBOUNCE SONU 👆
+
         // --- AUTH & SESSION ---
         async function checkSession() {
             try {
@@ -1147,6 +1168,18 @@
             }
         }
 
+        let pollInterval = null;
+        window.addEventListener('load', () => {
+            // 1. Session ve initial load işlemleri zaten yapılıyor.
+            // 2. Poll interval'i burada başlatıyoruz.
+            if (pollInterval) clearInterval(pollInterval); // Yanlışlıkla birden fazla kez yüklenmeyi engellemek için
+            pollInterval = setInterval(debouncedLoadMessages, POLL_INTERVAL);
+        });
+
+        // Sayfa kapatılırken veya yenilenirken interval'i temizle
+        window.addEventListener('beforeunload', () => {
+            if (pollInterval) clearInterval(pollInterval);
+        });
         async function handleAuth(endpoint, btnId) {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -1159,6 +1192,14 @@
             // 1. Boş alan kontrolü
             if (!email || (!password && endpoint !== 'forgot-password')) {
                 errEl.innerText = "Lütfen tüm alanları doldurun.";
+                errEl.style.display = 'block';
+                return;
+            }
+            
+            const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!emailRegex.test(email)) {
+                errEl.innerText = "Lütfen geçerli bir e-posta adresi formatı girin.";
                 errEl.style.display = 'block';
                 return;
             }
@@ -1193,7 +1234,11 @@
             try {
                 const res = await fetch(`${API_URL}/${endpoint}`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrf_token') // <<< BU SATIRI EKLE
+
+                    },
                     body: JSON.stringify({ email, password }),
                     credentials: 'include'
                 });
@@ -1557,9 +1602,22 @@
 
             feed.innerHTML = html;
         }
-            } catch (e) { console.error(e); }
+            } 
+            catch (e) {
+                // ✅ DÜZELTME: Kullanıcıya hata bildirimi
+                const feed = document.getElementById('chat-feed');
+                feed.innerHTML = `
+                    <div style="text-align:center; color:var(--danger); padding:50px; background:rgba(239, 68, 68, 0.05); border-radius:10px; margin-top:20px;">
+                        <i class="fa-solid fa-triangle-exclamation fa-lg"></i><br><br>
+                        <strong>KRİTİK HATA!</strong> Sunucuya ulaşılamıyor veya bağlantı koptu.<br>
+                        Lütfen internet bağlantınızı kontrol edin ve sayfayı yenileyin.
+                    </div>
+                `;
+                console.error("Bağlantı/Sunucu Hatası:", e);
+            }
         }
 
+        const debouncedLoadMessages = debounce(loadMessages, 300);
 
         // --- YENİ KONU MODAL ---
         function openNewTopicModal() {
@@ -1835,21 +1893,21 @@ function renderSingleMessage(p, showReplyBtn = true) {
         document.getElementById('logout-btn').onclick = async () => { await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' }); location.reload(); };
 
         async function deletePost(id) {
-    try {
-        const res = await fetch(`${API_URL}/posts/${id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include'
-        });
+            try {
+                const res = await fetch(`${API_URL}/posts/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
 
-        if (res.ok) {
-            lastPostsString = "";
-            loadMessages();
+                if (res.ok) {
+                    lastPostsString = "";
+                    debouncedLoadMessages();
+                }
+            } catch (e) {
+                alert("Hata.");
+            }
         }
-    } catch (e) {
-        alert("Hata.");
-    }
-}
 
         const formatTime = (dateStr) => {
             let date = new Date(dateStr); date.setHours(date.getHours() + 3);
@@ -1865,8 +1923,6 @@ function renderSingleMessage(p, showReplyBtn = true) {
         checkSession().then(() => {
             handleInitialLoad();
         });
-
-        setInterval(loadMessages, POLL_INTERVAL);
 
         // --- YENİ: SATIR İÇİ YANIT SİSTEMİ ---
         let activeReplyId = null;
@@ -1928,7 +1984,8 @@ function renderSingleMessage(p, showReplyBtn = true) {
                 if (res.ok) {
                     closeReplyBox();
                     if (parentId) openRepliesSet.add(parseInt(parentId));
-                    lastPostsString = ""; loadMessages();
+                    lastPostsString = ""; 
+                    debouncedLoadMessages();
                     startGlobalReplyCooldown();
                 } else {
                     alert("Hata oluştu.");
@@ -1988,7 +2045,7 @@ function renderSingleMessage(p, showReplyBtn = true) {
 
                 cancelEdit(id);
                 lastPostsString = "";
-                loadMessages();
+                debouncedLoadMessages();
             } catch (e) { alert("Hata"); }
         }
 
@@ -2307,8 +2364,12 @@ function updateCharCount(textarea, displayId) {
         });
 
         document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
             const icon = this;
+            const passwordInput = document.getElementById('password');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+            passwordInput.focus(); // Focus'u koru
             
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
