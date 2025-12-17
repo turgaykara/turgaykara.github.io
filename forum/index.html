@@ -2315,16 +2315,10 @@
         document.getElementById('toggle-password').addEventListener('click', function () {
             const icon = this;
             const passwordInput = document.getElementById('password');
-            
-            // Şifre tipini kontrol et
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            
-            // İkonu değiştir
             icon.classList.toggle('fa-eye');
             icon.classList.toggle('fa-eye-slash');
-            
-            // Input'a tekrar odaklan (kullanıcı yazmaya devam edebilsin diye)
             passwordInput.focus();
         });
 
