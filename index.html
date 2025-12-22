@@ -2174,7 +2174,7 @@ Body: { "email": "victim@target.com" }</pre>
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Parametre Taraması:</strong> <code>?redirect=</code>, <code>?next=</code>, <code>?target=</code>, <code>?url=</code>, <code>?continue=</code>, <code>?returnTo=</code> gibi parametreleri arayın. Otomatik tarama için <code>ParamSpider</code> veya <code>waybackurls</code> çıktısını grepleyin.</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: Temel PoC:</strong> Parametre değerine <code>https://google.com</code> gibi bir harici URL verip yönlenip yönlenmediğini kontrol edin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//google.com</code> veya <code>/\/google.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//google.com</code> veya <code>/%5C/google.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
             </ul>`
           },
           {
@@ -5303,3 +5303,4 @@ view</textarea>
 </body>
 
 </html>
+
