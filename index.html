@@ -1364,19 +1364,219 @@
         ]
       },
 
-      baslangic: {
+baslangic: {
         menuName: 'Giriş',
         icon: 'icon-rocket',
-        title: 'Siber Güvenlik Kariyer Alanları ve Uzmanlıklar',
-        description: 'Saldırı (Offensive) ve Savunma (Defensive) odaklı başlıca rollere ve uzmanlık alanlarına genel bakış.',
-        "sections": [
+        title: 'Web Nasıl Çalışır? (How The Web Works)',
+        description: 'Süslü tanımları unut. Bir URL\'e tıkladığında arka planda gerçekleşen nanosaniyelik olayların teknik anatomisi. Sızma testi, bu akıştaki kör noktaları bulma sanatıdır.',
+        sections: [
           {
-            "title": "Ana Disiplinler ve Görevler",
-            "content": " \n\t\t\t \t<div class=\"tool-grid-container\" style=\"grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 10px;\">\n\t\t\t \t\t\t<div class=\"tool-card\" style=\"border: 1px solid #8b5cf6;\">\n\t\t\t \t\t\t\t<h3 class=\"tool-title\" style=\"color:#06b6d4; font-size: 1.2em;\">OFFENSIVE SECURITY (Saldırı)</h3>\n\t\t\t \t\t\t\t<p class=\"tool-description\" style=\"color: #cbd5e1;\">Sistemlerdeki zafiyetleri bulma, istismar etme ve açıkları gerçek saldırılardan önce ortaya çıkarma odaklıdır. Amaç, bir saldırgan gibi düşünmektir.</p>\n\t\t\t \t\t\t\t<h4 style=\"margin:10px 0 6px 0; font-size:14px; color:#9aa4b2\">Temel Odak Alanları:</h4>\n\t\t\t \t\t\t\t<ul style=\"list-style:disc; padding-left: 20px; font-size:13px; color:#6b7280;\">\n\t\t\t \t\t\t\t\t<li><strong>Web Uygulama Testi (Bug Bounty)</strong></li>\n\t\t\t \t\t\t\t\t<li><strong>Ağ ve Sistem Zafiyet Taraması</strong></li>\n\t\t\t \t\t\t\t\t<li><strong>Sosyal Mühendislik Simülasyonları</strong></li>\n\t\t\t \t\t\t\t</ul>\n\t\t\t \t\t\t</div>\n\t\t\t \t\t\t<div class=\"tool-card\" style=\"border: 1px solid #8b5cf6;\">\n\t\t\t \t\t\t\t<h3 class=\"tool-title\" style=\"color:#34d399; font-size: 1.2em;\">DEFENSIVE SECURITY (Savunma)</h3>\n\t\t\t \t\t\t\t<p class=\"tool-description\" style=\"color: #cbd5e1;\">Ağları, sistemleri ve verileri saldırılara karşı koruma, 7/24 izleme ve olaylara hızlı müdahale etme odaklıdır.</p>\n\t\t\t \t\t\t\t<h4 style=\"margin:10px 0 6px 0; font-size:14px; color:#9aa4b2\">Temel Odak Alanları:</h4>\n\t\t\t \t\t\t\t<ul style=\"list-style:disc; padding-left: 20px; font-size:13px; color:#6b7280;\">\n\t\t\t \t\t\t\t\t<li><strong>Sürekli Güvenlik İzleme (SIEM)</strong></li>\n\t\t\t \t\t\t\t\t<li><strong>Olay Yanıtı ve Kurtarma (IR)</strong></li>\n\t\t\t \t\t\t\t\t<li><strong>Firewall/IDS/IPS Yönetimi</strong></li>\n\t\t\t \t\t\t\t</ul>\n\t\t\t \t\t\t</div>\n\t\t\t \t</div>\n\t\t\t "
+            title: "🌐 1. DNS Çözümleme ve Altyapı Katmanı",
+            content: `
+              <p class="small">Bir URL tarayıcıya girildiğinde, uygulama katmanından ağ katmanına kadar bir dizi sorgu başlar. Bu süreçte güvenliği etkileyen en büyük faktör 'Güven Çizgisi'nin nerede başladığıdır.</p>
+              <div class="card" style="border-left: 2px solid var(--accent);">
+                <h4 style="font-size:14px; margin-top:0;">Hiyerarşik DNS Sorgu Akışı</h4>
+                <p class="small" style="line-height:1.6">
+                  1. <b>Browser Cache:</b> Tarayıcı kendi belleğine bakar (tipik olarak 60 saniye TTL).<br>
+                  2. <b>OS Cache:</b> <code>hosts</code> dosyası ve işletim sistemi çözücüsü kontrol edilir.<br>
+                  3. <b>Recursive Resolver:</b> ISS'nizin DNS sunucusu sorguyu üstlenir.<br>
+                  4. <b>Root Name Server:</b> TLD (.com, .net) yönlendirmesini yapar (13 root server cluster).<br>
+                  5. <b>Authoritative Name Server:</b> IP adresinin (A kaydı) nihai kaynağıdır.
+                </p>
+                <div style="background:#071226; padding:10px; border-radius:6px; font-family:monospace; font-size:12px; color:#00ff88; margin-top:10px; border:1px solid rgba(255,255,255,0.1);">
+                  $ dig +trace darksecurity.academy
+                </div>
+              </div>
+              <div class="card" style="margin-top:10px; background:rgba(239,68,68,0.05); border-left: 2px solid #ef4444;">
+                <h4 style="font-size:13px; color:#ef4444; margin-top:0;">⚠️ Saldırı Yüzeyi</h4>
+                <ul style="padding-left:15px; font-size:12px; line-height:1.8;">
+                  <li><b>DNS Rebinding:</b> Tarayıcıyı kandırarak saldırganın domainini kurbanın localhost'una (127.0.0.1) çözümletmek.</li>
+                  <li><b>Subdomain Takeover:</b> Silinmiş hizmetlere (AWS, GitHub Pages) işaret eden unutulmuş CNAME kayıtları.</li>
+                </ul>
+              </div>
+            `
           },
           {
-            "title": "Uzmanlık Alanları",
-            "content": " \n\t\t\t \t<div class=\"tool-grid-container\" style=\"grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 10px;\">\n\n\t\t\t \t\t\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">RED TEAMER</div>\n\t\t\t \t\t\t<p class=\"small\">Gelişmiş, gerçekçi saldırı senaryoları uygulayarak savunmayı test eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">PENETRATION TESTER</div>\n\t\t\t \t\t\t<p class=\"small\">İzinli saldırı simülasyonları yaparak güvenlik açıklarını bulur ve raporlar.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">MOBILE SECURITY</div>\n\t\t\t \t\t\t<p class=\"small\">Mobil uygulamalardaki (iOS/Android) zafiyetleri ve API zayıflıklarını test eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">HARDWARE & IoT</div>\n\t\t\t \t\t\t<p class=\"small\">Donanım, firmware ve fiziksel cihazlardaki zafiyetleri inceler.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#06b6d4; margin-bottom: 4px; font-weight: 600;\">ADVERSARY SIMULATION (YENİ)</div>\n\t\t\t \t\t\t<p class=\"small\">Belirli tehdit gruplarının taktiklerini taklit ederek savunma sistemlerini test eder.</p>\n\t\t\t \t\t</div>\n\n\t\t\t \t\t\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">SECURITY ANALYST (SOC)</div>\n\t\t\t \t\t\t<p class=\"small\">Güvenlik olaylarını 7/24 izler, logları analiz eder ve tehditleri tespit eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">INCIDENT RESPONDER</div>\n\t\t\t \t\t\t<p class=\"small\">Siber saldırılara anında müdahale eder, hasarı sınırlar ve sistemi kurtarır.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">DFIR / FORENSICS EXAMINER</div>\n\t\t\t \t\t\t<p class=\"small\">Saldırı sonrası dijital kanıtları toplar ve olayların hukuki analizini yapar.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">VULNERABILITY MANAGEMENT</div>\n\t\t\t \t\t\t<p class=\"small\">Zafiyet taramalarını yönetir, önceliklendirir ve kapatma süreçlerini koordine eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#34d399; margin-bottom: 4px; font-weight: 600;\">SECURITY ARCHITECT</div>\n\t\t\t \t\t\t<p class=\"small\">Büyük ölçekli sistemler ve ağlar için uçtan uca güvenlik mimarilerini tasarlar.</p>\n\t\t\t \t\t</div>\n\n\t\t\t \t\t\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">APPLICATION SECURITY (AppSec)</div>\n\t\t\t \t\t\t<p class=\"small\">Uygulama geliştirme yaşam döngüsüne (SDLC) güvenliği entegre eder (Offensive/Defensive hibrid).</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">GRC SPECIALIST</div>\n\t\t\t \t\t\t<p class=\"small\">Yönetişim, risk yönetimi ve yasal uyumluluk süreçlerini denetler (ISO 27001, KVKK).</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">MALWARE ANALYST</div>\n\t\t\t \t\t\t<p class=\"small\">Zararlı yazılımların (virüs) çalışma mantığını ve yayılma yöntemlerini inceler.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">THREAT INTELLIGENCE</div>\n\t\t\t \t\t\t<p class=\"small\">Potansiyel tehditler hakkında bilgi toplar ve savunma stratejilerine entegre eder.</p>\n\t\t\t \t\t</div>\n\t\t\t \t\t<div class=\"stat-card\" style=\"padding: 15px; border-left: 3px solid #8b5cf6;\">\n\t\t\t \t\t\t<div class=\"stat-label\" style=\"color:#9aa4b2; margin-bottom: 4px; font-weight: 600;\">CLOUD SECURITY ENGINEER</div>\n\t\t\t \t\t\t<p class=\"small\">Bulut ortamlarının (AWS, Azure) güvenliğini sağlar ve politikaları uygular.</p>\n\t\t\t \t\t</div>\n\t\t\t \t</div>\n\t\t\t "
+            title: "🔌 2. OSI ve TCP/IP Model Katmanları",
+            content: `
+              <p class="small">DNS çözümlemesi bittikten sonra, veri paketleri hiyerarşik katmanlara göre işlenir.</p>
+              
+              <div class="tool-io-grid">
+                <div class="card" style="margin-bottom:0; border: 1px solid rgba(139,92,246,0.3);">
+                  <h4 style="font-size:13px; color:var(--accent);">OSI Model</h4>
+                  <ul style="padding-left:15px; font-size:11px; line-height:1.7;">
+                    <li><b>7. Application:</b> HTTP, DNS, SMTP</li>
+                    <li><b>4. Transport:</b> TCP/UDP (Portlar burada devreye girer)</li>
+                    <li><b>3. Network:</b> IP, Routing (IP Spoofing burada olur)</li>
+                    <li><b>2. Data Link:</b> MAC, Ethernet (ARP Poisoning burada olur)</li>
+                  </ul>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid rgba(139,92,246,0.3);">
+                  <h4 style="font-size:13px; color:var(--accent);">Enkapsülasyon</h4>
+                  <div style="background:rgba(0,0,0,0.4); padding:12px; border-radius:6px; font-size:11px; font-family:monospace; color:#00ff88;">
+                    [Ethernet Header] [IP Header] [TCP Header] [HTTP Data]
+                  </div>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "📡 3. TCP ve TLS El Sıkışması (Handshake)",
+            content: `
+              <p class="small">IP bulunduktan sonra ham veri gönderilemez. Önce güvenilir bir hat kurulmalıdır.</p>
+              <div class="tool-io-grid">
+                <div class="card" style="margin-bottom:0; border: 1px solid rgba(255,255,255,0.05);">
+                  <h4 style="font-size:13px; color:var(--accent);">TCP 3-Way Handshake</h4>
+                  <ul style="padding-left:15px; font-size:12px; line-height:1.8;">
+                    <li><b>SYN:</b> Bağlantı başlatma (Ben seninle konuşmak istiyorum).</li>
+                    <li><b>SYN-ACK:</b> Onay ve yanıt (Tamam, konuşalım).</li>
+                    <li><b>ACK:</b> Bağlantı kuruldu (Anlaştık).</li>
+                  </ul>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid rgba(255,255,255,0.05);">
+                  <h4 style="font-size:13px; color:var(--secondary);">TLS 1.3 Şifreleme</h4>
+                  <p style="font-size:11px;">TCP tüneli kurulduktan sonra SSL/TLS sertifikaları değiş tokuş edilir. Asimetrik şifreleme ile simetrik anahtar üretilir.</p>
+                  <p style="font-size:11px; color:#ef4444; margin-top:5px;"><b>Risk:</b> SSL Stripping (HSTS yoksa), Downgrade Attacks.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "📦 4. HTTP Protokolü: İstek ve Yanıt Anatomisi",
+            content: `
+              <p class="small">Bağlantı kuruldu. Artık Web Sunucusu (Nginx/Apache) ve Tarayıcı konuşmaya başlar. HTTP "Stateless" (durumsuz) bir protokoldür.</p>
+              <div class="card" style="border-left: 2px solid var(--accent);">
+                <pre style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; margin:0; font-size:12px; line-height:1.5; color:#d6f4ff; font-family:monospace; border:1px solid rgba(255,255,255,0.05);">
+<span style="color:#f472b6">POST</span> /api/v1/login <span style="color:#60a5fa">HTTP/1.1</span>
+<span style="color:#a78bfa">Host:</span> api.target.com
+<span style="color:#a78bfa">User-Agent:</span> Mozilla/5.0...
+<span style="color:#a78bfa">Content-Type:</span> application/json
+<span style="color:#a78bfa">Content-Length:</span> 45
+<span style="color:#a78bfa">Authorization:</span> Bearer eyJhbG...
+
+<span style="color:#00ff88">{"username": "admin", "password": "123"}</span></pre>
+                <div style="border-top:1px solid rgba(255,255,255,0.1); margin-top:10px; padding-top:10px;">
+                   <h4 style="font-size:13px; margin:0; color:var(--accent);">Kritik Saldırı Vektörleri</h4>
+                   <ul style="padding-left:15px; font-size:11px; line-height:1.7; margin-bottom:0;">
+                     <li><b>HTTP Smuggling:</b> Frontend ve Backend sunucularının paket boyutu (Content-Length vs Transfer-Encoding) yorum farkı.</li>
+                     <li><b>Host Header Injection:</b> Host başlığına güvenen backend sistemlerini kandırma (Password Reset Poisoning).</li>
+                   </ul>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "🍪 5. State Yönetimi: Cookie, Session ve Token",
+            content: `
+              <p class="small">HTTP stateless olduğu için kullanıcı kimliğini korumak üzere state yönetimi kullanılır.</p>
+              <div class="card" style="border-left: 2px solid var(--secondary);">
+                <h4 style="font-size:13px; color:var(--secondary);">🍪 Güvenli Cookie</h4>
+                <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; font-family:monospace; font-size:11px; color:#00ff88;">
+                  Set-Cookie: session=abc123; <b>HttpOnly; Secure; SameSite=Strict</b>
+                </div>
+                <ul style="padding-left:15px; font-size:11px; margin-top:10px;">
+                  <li><b>Session ID:</b> Sunucuda tutulan durumun anahtarıdır.</li>
+                  <li><b>JWT (Token):</b> İmzalı, sunucuda tutulmayan durum bilgisidir (Stateless Auth).</li>
+                </ul>
+              </div>
+            `
+          },
+          {
+            title: "⚙️ 6. Tarayıcı Motoru: DOM ve Rendering Pipeline",
+            content: `
+              <p class="small">Sunucudan HTML metni geldiğinde iş bitmez, yeni başlar. Tarayıcı bu metni "Render" eder.</p>
+              <div class="card" style="border-left: 2px solid var(--accent);">
+                <h4 style="font-size:14px; margin-top:0;">Critical Rendering Path</h4>
+                <p class="small" style="line-height:1.6">
+                  1. <b>DOM Tree:</b> HTML etiketleri nesnelere (node) dönüştürülür.<br>
+                  2. <b>CSSOM Tree:</b> Stil dosyaları işlenir.<br>
+                  3. <b>Render Tree:</b> DOM + CSSOM birleşir (Görünmez elemanlar atılır).<br>
+                  4. <b>Layout (Reflow):</b> Her nesnenin ekrandaki koordinatları hesaplanır.<br>
+                  5. <b>Paint:</b> Pikseller ekrana çizilir.
+                </p>
+                <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:6px; margin-top:10px; border:1px solid rgba(255,255,255,0.05);">
+                  <strong style="color:#ef4444; font-size:12px;">XSS Burada Doğar!</strong>
+                  <p style="font-size:11px; margin:5px 0 0 0;">JavaScript, DOM ağacına müdahale edebilir. Eğer kullanıcı girdisi filtrelenmeden DOM'a eklenirse (innerHTML), tarayıcı bunu kod sanıp çalıştırır.</p>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "⚡ 7. JavaScript Motoru ve Event Loop",
+            content: `
+              <p class="small">JavaScript 'Single Threaded' (Tek iş parçacıklı) çalışır. Yani aynı anda sadece bir iş yapabilir. Bloklanmayı önlemek için Asenkron yapıdadır.</p>
+              
+              <div class="card" style="border-left: 2px solid var(--accent);">
+                <h4 style="font-size:13px; color:#fff;">V8 Engine Bellek Yönetimi</h4>
+                <ul style="padding-left:15px; font-size:12px; line-height:1.8;">
+                  <li><b>Call Stack:</b> Fonksiyonların sırayla çalıştırıldığı yer (LIFO).</li>
+                  <li><b>Heap:</b> Nesnelerin ve değişkenlerin saklandığı dağınık bellek.</li>
+                  <li><b>Microtask Queue:</b> Promise.then() callback'leri (Yüksek Öncelik).</li>
+                  <li><b>Task Queue:</b> setTimeout, setInterval (Düşük Öncelik).</li>
+                </ul>
+                <div class="card" style="margin-top:15px; background:rgba(239,68,68,0.05); border-left: 2px solid #ef4444;">
+                  <h4 style="font-size:13px; color:#ef4444; margin-top:0;">⚠️ Güvenlik Etkisi</h4>
+                  <ul style="padding-left:15px; font-size:11px; line-height:1.7;">
+                    <li><b>Race Conditions:</b> Asenkron işlemlerin beklenmeyen sırayla tamamlanması sonucu oluşan veri tutarsızlığı.</li>
+                    <li><b>Blocking DoS:</b> Main thread'i uzun süre meşgul eden ağır döngüler tarayıcıyı dondurur.</li>
+                  </ul>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "🛡️ 8. Web Güvenlik Sınırları (The Boundary)",
+            content: `
+              <p class="small">Web mimarisi, sitelerin birbirini yemesini engellemek için iki temel yasaya dayanır:</p>
+              <div class="tool-grid-container">
+                <div class="stat-card" style="text-align:left; background: rgba(139,92,246,0.05); padding: 15px; border-radius: 8px;">
+                  <div class="stat-label" style="color:var(--accent); font-weight:bold;">Same-Origin Policy (SOP)</div>
+                  <p style="font-size:11px; line-height:1.6;">
+                    En temel kuraldır. Protokol, Host ve Port aynı değilse, tarayıcı bir sitenin JS'inin diğer sitenin DOM'unu veya verisini okumasına izin vermez.
+                  </p>
+                </div>
+                <div class="stat-card" style="text-align:left; background: rgba(139,92,246,0.05); padding: 15px; border-radius: 8px;">
+                  <div class="stat-label" style="color:var(--accent); font-weight:bold;">CORS</div>
+                  <p style="font-size:11px; line-height:1.6;">
+                    SOP'u esnetmek için sunucu iznidir. "Access-Control-Allow-Origin" başlığı ile dışarıya izin verilir. Yanlış yapılandırılırsa (<code>Origin: *</code> + Credentials) tüm veriler çalınır.
+                  </p>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "📊 9. Web Performance ve Core Web Vitals",
+            content: `
+              <p class="small">Performans artık sadece hız değil, kullanıcı deneyimi metriğidir.</p>
+              <div class="tool-io-grid">
+                <div class="card" style="margin-bottom:0;">
+                  <h4 style="font-size:13px; color:var(--accent);">Metrikler</h4>
+                  <ul style="padding-left:15px; font-size:11px;">
+                    <li><b>LCP (Largest Contentful Paint):</b> En büyük içerik çizimi (yükleme hızı).</li>
+                    <li><b>FID (First Input Delay):</b> İlk etkileşim gecikmesi (cevap verebilirlik).</li>
+                    <li><b>CLS (Cumulative Layout Shift):</b> Sayfa kayma oranı (görsel kararlılık).</li>
+                  </ul>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: "🔄 10. Caching (Önbellek) Mekanizması",
+            content: `
+              <p class="small">Sunucu yükünü azaltmak için veriler tarayıcıda, CDN'de veya Proxy'de saklanır. En sinsi zafiyetlerin olduğu yerdir.</p>
+              <div class="card" style="border-left: 2px solid var(--secondary);">
+                <h4 style="font-size:13px; color:var(--secondary);">Web Cache Poisoning</h4>
+                <p class="small" style="line-height:1.6">
+                  Eğer saldırgan, önbelleğe alınan bir yanıta zararlı bir girdi (örn: XSS) enjekte edebilirse, bu zararlı yanıt önbellekten silinene kadar o sayfayı ziyaret eden <b>herkese</b> sunulur.
+                </p>
+                <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; margin-top:8px; font-family:monospace; font-size:11px;">
+                  Cache-Control: public, max-age=3600
+                </div>
+                <p class="small" style="margin-top:5px; font-size:11px;">
+                  <b>Risk:</b> Kişisel verilerin (session token vb.) yanlışlıkla "public" cache'e alınması (Web Cache Deception).
+                </p>
+              </div>
+            `
           }
         ]
       },
@@ -5352,5 +5552,4 @@ view</textarea>
   <div id="chat-widget-container">
   </div>
 </body>
-
 </html>
