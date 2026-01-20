@@ -4135,7 +4135,6 @@ function showPage(pageId) {
         </div>`;
         }
 
-        // Tıklama olaylarını yeniden bağla
         const container1 = document.querySelector('.hero').nextElementSibling.nextElementSibling.nextElementSibling;
         if (container1) {
           document.querySelectorAll('div[data-page]').forEach(el => {
@@ -4143,7 +4142,6 @@ function showPage(pageId) {
           });
         }
 
-        // Arama Çubuğu Mantığı
         const searchInput = document.getElementById('searchInput');
         const suggestionsDiv = document.getElementById('searchSuggestions');
         
