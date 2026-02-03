@@ -4101,7 +4101,7 @@ POST /api/users/update
               <div style="margin-top:6px;font-size:13px;color:#64748b">Belirtilen URL'de 200, 302 ve 403 durum kodlarına sahip endpointleri keşfeder.</div>
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
-              <strong>3- Parametre Keşfi (Arjun):</strong><br>
+              <strong>4- Parametre Keşfi (Arjun):</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
                 <pre style="margin:0;white-space:pre-wrap">arjun -u https://target.com/index.php -w top-parameters.txt</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
@@ -4110,7 +4110,7 @@ POST /api/users/update
               <div style="margin-top:6px;font-size:13px;color:#64748b">Belirtilen URL üzerinde verilen wordlist'i kullanarak geçerli HTTP parametrelerini keşfeder.</div>
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
-              <strong>4- JS dosyalari ile Endpoint Çekme</strong><br>
+              <strong>5- JS dosyalari ile Endpoint Çekme</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
                 <pre style="margin:0;white-space:pre-wrap">python linkfinder.py -i https://assets.example.com/a18f612bc208/551ac0da9716/launch-1df223c5538b.min.js -r ^/ -o cli</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
@@ -4119,7 +4119,7 @@ POST /api/users/update
               <div style="margin-top:6px;font-size:13px;color:#64748b">JS dosyasından endpointleri çıkarır (kaynak kodunda .js dosyalarını bulmak için CTRL + U kullanın).</div>
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
-              <strong>5- Google Dork ile PDF Arama:</strong><br>
+              <strong>6- Google Dork ile PDF Arama:</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
                 <pre style="margin:0;white-space:pre-wrap">site:example.com ext:pdf -www</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
@@ -4128,7 +4128,7 @@ POST /api/users/update
               <div style="margin-top:6px;font-size:13px;color:#64748b">Hedef sitedeki PDF dosyalarını bulur, www ile başlayanları hariç tutar.</div>
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
-              <strong>6- Wayback Machine ile URL Keşfi:</strong><br>
+              <strong>7- Wayback Machine ile URL Keşfi:</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
                 <pre style="margin:0;white-space:pre-wrap">http://web.archive.org/cdx/search/cdx?url=example.com/*&output=txt&fl=original&collapse=urlkey</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
@@ -5919,3 +5919,4 @@ view</textarea>
 </body>
 
 </html>
+
