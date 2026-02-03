@@ -4094,11 +4094,20 @@ POST /api/users/update
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>3- Endpoint Keşfi (FFUF):</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
-                <pre style="margin:0;white-space:pre-wrap">ffuf -u https://message.example.com/FUZZ -w ../wordlist.txt -mc 200,302,403</pre>
+                <pre style="margin:0;white-space:pre-wrap">ffuf -u https://message.example.com/FUZZ -w ../wordlist.txt -mc 200,204,301,302,307,401,403,405,415 -fc 404 -fs 4512 -recursion</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                   onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
               </div>
               <div style="margin-top:6px;font-size:13px;color:#64748b">Belirtilen URL'de 200, 302 ve 403 durum kodlarına sahip endpointleri keşfeder.</div>
+            </li>
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <strong>3- Parametre Keşfi (Arjun):</strong><br>
+              <div style="display:flex;align-items:center;gap:8px">
+                <pre style="margin:0;white-space:pre-wrap">arjun -u https://target.com/index.php -w top-parameters.txt</pre>
+                <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
+                  onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
+              </div>
+              <div style="margin-top:6px;font-size:13px;color:#64748b">Belirtilen URL üzerinde verilen wordlist'i kullanarak geçerli HTTP parametrelerini keşfeder.</div>
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>4- JS dosyalari ile Endpoint Çekme</strong><br>
@@ -4159,7 +4168,7 @@ POST /api/users/update
             content: `
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
-              <strong style="color:#cbd5e1;">Domainlere Göre Açık Bulma Olasılıkları:</strong><br>
+              <strong style="color:#cbd5e1;">Subdomainlere Göre Açık Bulma Olasılıkları:</strong><br>
               - asdf.twitter.com: %15 (kısa subdomain, unutulma ihtimali düşük)<br>
               - ad.sdaf.dsa.twitter.com: %25 (uzun subdomain, unutulma ihtimali yüksek)
             </li>
