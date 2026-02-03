@@ -4169,29 +4169,29 @@ POST /api/users/update
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
               <strong style="color:#cbd5e1;">Subdomainlere Göre Açık Bulma Olasılıkları:</strong><br>
-              - asdf.twitter.com: %15 (kısa subdomain, unutulma ihtimali düşük)<br>
-              - ad.sdaf.dsa.twitter.com: %25 (uzun subdomain, unutulma ihtimali yüksek)
+              asdf.twitter.com: %15 (kısa subdomain, unutulma ihtimali düşük)<br>
+              ad.sdaf.dsa.twitter.com: %25 (uzun subdomain, unutulma ihtimali yüksek)
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
               <strong style="color:#cbd5e1;">Bilgi Toplama Araçları:</strong><br>
-              - <a href="https://bgp.he.net" target="_blank" style="color:#a78bfa;text-decoration:none">bgp.he.net</a>: IP bloklarını getirir.<br>
-              - <a href="https://search.censys.io" target="_blank" style="color:#a78bfa;text-decoration:none">search.censys.io</a>: IP ve sertifika tarama.<br>
-              - <a href="https://sitereport.netcraft.com" target="_blank" style="color:#a78bfa;text-decoration:none">sitereport.netcraft.com</a>: Site analizi ve trafik raporu.<br>
-              - <a href="https://builtwith.com" target="_blank" style="color:#a78bfa;text-decoration:none">builtwith.com</a>: Sitedeki teknolojileri gösterir.<br><br>
-              - <strong style="color:#cbd5e1;">Whois Lookup</strong>: Domain kayıt bilgileri (<a href="https://whois.com/whois" target="_blank" style="color:#a78bfa;text-decoration:none">whois.com</a>, <a href="https://whois.domaintools.com" target="_blank" style="color:#a78bfa;text-decoration:none">whois.domaintools.com</a>).<br>
-              - <strong style="color:#cbd5e1;">DNS Lookup</strong>: DNS kayıtları ve IP yönlendirmeleri (<a href="https://mxtoolbox.com/DNSLookup.aspx" target="_blank" style="color:#a78bfa;text-decoration:none">mxtoolbox.com</a>, <a href="https://robtex.com" target="_blank" style="color:#a78bfa;text-decoration:none">robtex.com</a>).<br>
-              - <strong style="color:#cbd5e1;">Bing IP Arama</strong>: <code>ip:160.153.129.3</code> ile IP bazlı arama.<br><br>
-              - <strong style="color:#cbd5e1;">WAF Kontrolü</strong>: <code>wafw00f example.com</code><br>
-              - <strong style="color:#cbd5e1;">Firewall Bypass</strong>: <a href="https://medium.com/@rajeevranjancom/waf-web-application-firewall-beeeb6d905c1" target="_blank" style="color:#a78bfa;text-decoration:none">WAF bypass rehberi</a>.
+              <a href="https://bgp.he.net" target="_blank" style="color:#a78bfa;text-decoration:none">bgp.he.net</a>: IP bloklarını getirir.<br>
+              <a href="https://search.censys.io" target="_blank" style="color:#a78bfa;text-decoration:none">search.censys.io</a>: IP ve sertifika tarama.<br>
+              <a href="https://sitereport.netcraft.com" target="_blank" style="color:#a78bfa;text-decoration:none">sitereport.netcraft.com</a>: Site analizi ve trafik raporu.<br>
+              <a href="https://builtwith.com" target="_blank" style="color:#a78bfa;text-decoration:none">builtwith.com</a>: Sitedeki teknolojileri gösterir.<br><br>
+              <strong style="color:#cbd5e1;">Whois Lookup</strong>: Domain kayıt bilgileri (<a href="https://whois.com/whois" target="_blank" style="color:#a78bfa;text-decoration:none">whois.com</a>, <a href="https://whois.domaintools.com" target="_blank" style="color:#a78bfa;text-decoration:none">whois.domaintools.com</a>).<br>
+              <strong style="color:#cbd5e1;">DNS Lookup</strong>: DNS kayıtları ve IP yönlendirmeleri (<a href="https://mxtoolbox.com/DNSLookup.aspx" target="_blank" style="color:#a78bfa;text-decoration:none">mxtoolbox.com</a>, <a href="https://robtex.com" target="_blank" style="color:#a78bfa;text-decoration:none">robtex.com</a>).<br>
+              <strong style="color:#cbd5e1;">Bing IP Arama</strong>: <code>ip:160.153.129.3</code> ile IP bazlı arama.<br><br>
+              <strong style="color:#cbd5e1;">WAF Kontrolü</strong>: <code>wafw00f example.com</code><br>
+              <strong style="color:#cbd5e1;">Firewall Bypass</strong>: <a href="https://medium.com/@rajeevranjancom/waf-web-application-firewall-beeeb6d905c1" target="_blank" style="color:#a78bfa;text-decoration:none">WAF bypass rehberi</a>.
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
               <strong style="color:#cbd5e1;">İncelenmesi Gereken Status Codelar:</strong><br>
-              - <strong style="color:#cbd5e1;">200</strong>: Dosya var, içeriği incele.<br>
-              - <strong style="color:#cbd5e1;">301/302</strong>: Yönlendirme, login sayfası olabilir.<br>
-              - <strong style="color:#cbd5e1;">401</strong>: Auth token gerekir, incele.<br>
-              - <strong style="color:#cbd5e1;">403</strong>: Erişim yok ama bir şey var, test et.<br>
-              - <strong style="color:#cbd5e1;">404</strong>: Farklı boyutlarda yanıtlar şüpheli, bruteforce (gobuster, ffuf) dene.<br>
-              - <strong style="color:#cbd5e1;">500</strong>: Injection zafiyetleri için input dene.
+              <strong style="color:#cbd5e1;">200</strong>: Dosya var, içeriği incele.<br>
+              <strong style="color:#cbd5e1;">301/302</strong>: Yönlendirme, login sayfası olabilir.<br>
+              <strong style="color:#cbd5e1;">401</strong>: Auth token gerekir, incele.<br>
+              <strong style="color:#cbd5e1;">403</strong>: Erişim yok ama bir şey var, test et.<br>
+              <strong style="color:#cbd5e1;">404</strong>: Farklı boyutlarda yanıtlar şüpheli, bruteforce (gobuster, ffuf) dene.<br>
+              <strong style="color:#cbd5e1;">500</strong>: Injection zafiyetleri için input dene.
             </li>
           </ul>
         `
@@ -5919,4 +5919,3 @@ view</textarea>
 </body>
 
 </html>
-
