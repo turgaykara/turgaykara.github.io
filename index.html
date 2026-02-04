@@ -3445,7 +3445,7 @@ POST /api/users/update
 {
     "id": "USER_ID",
     "username": "new_name",
-    "role": "admin" // KRİTİK EKLEME
+    "role": "admin" // KRİTİK İSTEK
 }</pre>`
           }
         ]
@@ -4094,11 +4094,21 @@ POST /api/users/update
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>3- Endpoint Keşfi (FFUF):</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
-                <pre style="margin:0;white-space:pre-wrap">ffuf -u https://message.example.com/FUZZ -w ../wordlist.txt -mc 200,204,301,302,307,401,403,405,415 -fc 404 -fs 4512 -recursion</pre>
+                <pre style="margin:0;white-space:pre-wrap">ffuf -u https://message.example.com/FUZZ -w ../wordlist.txt -mc 200,403 -fc 404 -fs 1234 -recursion</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                   onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
               </div>
-              <div style="margin-top:6px;font-size:13px;color:#64748b">Belirtilen URL'de 200, 302 ve 403 durum kodlarına sahip endpointleri keşfeder.</div>
+              <div style="margin-top:6px;font-size:13px;color:#64748b">
+              Bu araç, hedef URL altında gizli veya erişimi kısıtlı endpointleri keşfetmek için kullanılır.
+              <br><br>
+              <code>-mc</code> parametresi ile 200, 3xx ve 4xx gibi istenilen durum kodları yakalanır.<br>
+              <code>-fc</code> parametresi ile 200, 3xx ve 4xx gibi istenmeyen durum kodları elenir.<br>
+              <code>-fs 4512</code> ile belirli boyuttaki (false-positive) cevaplar elenir.<br>
+              <code>-recursion</code> sayesinde bulunan dizinlerin altındaki endpointler de otomatik olarak taranır.<br>
+              <code>-e .php,.json,.bak</code> ile belirli dosya uzantıları hedeflenebilir.<br>
+              <code>-H "Authorization: Bearer TOKEN"</code> eklenerek yetkili (authenticated) endpoint keşfi yapılabilir.<br>
+              <code>-X POST</code> gibi HTTP methodları değiştirilerek method-based erişim kontrolleri test edilebilir.
+              </div>
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>4- Parametre Keşfi (Arjun):</strong><br>
