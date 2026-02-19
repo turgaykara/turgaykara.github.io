@@ -1129,6 +1129,11 @@
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2m-6 9c-1.1 0-2-.9-2-2s.9-2 2-2s2 .9 2 2s-.9 2-2 2M9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3h-1c0-1.11-.89-2-2-2s-2 .89-2 2v2z'/%3E%3C/svg%3E");
     }
 
+    .icon-unlocked-skull::before {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M6 22q-.825 0-1.412-.587T4 20V10q0-.825.588-1.412T6 8h9V6q0-1.25-.875-2.125T12 3q-1.25 0-2.125.875T9 6H7q0-2.075 1.463-3.537T12 1q2.075 0 3.538 1.463T17 6v2h1q.825 0 1.413.588T20 10v10q0 .825-.587 1.413T18 22H6Zm6-5q.825 0 1.413-.587T14 15q0-.825-.587-1.412T12 13q-.825 0-1.412.588T10 15q0 .825.588 1.413T12 17Z'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M6 22q-.825 0-1.412-.587T4 20V10q0-.825.588-1.412T6 8h9V6q0-1.25-.875-2.125T12 3q-1.25 0-2.125.875T9 6H7q0-2.075 1.463-3.537T12 1q2.075 0 3.538 1.463T17 6v2h1q.825 0 1.413.588T20 10v10q0 .825-.587 1.413T18 22H6Zm6-5q.825 0 1.413-.587T14 15q0-.825-.587-1.412T12 13q-.825 0-1.412.588T10 15q0 .825.588 1.413T12 17Z'/%3E%3C/svg%3E");
+    }
+
     .icon-database::before {
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4s8-1.79 8-4s-3.58-4-8-4m0 9c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4m0 5c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4'/%3E%3C/svg%3E");
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4s8-1.79 8-4s-3.58-4-8-4m0 9c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4m0 5c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4'/%3E%3C/svg%3E");
@@ -1614,7 +1619,7 @@ baslangic: {
             title: "5. State Yönetimi: Cookie, Session ve Token",
             content: `
               <p class="small">HTTP stateless olduğu için kullanıcı kimliğini korumak üzere state yönetimi kullanılır.</p>
-              <div class="card" style="border-left: 2px solid var(--secondary);">
+              <div class="card" style="border-left: 2px solid var(--accent);">
                 <h4 style="font-size:13px; color:var(--secondary);">🍪 Güvenli Cookie</h4>
                 <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; font-family:monospace; font-size:11px; color:#00ff88;">
                   Set-Cookie: session=abc123; <b>HttpOnly; Secure; SameSite=Strict</b>
@@ -1709,7 +1714,7 @@ baslangic: {
             title: "10. Caching (Önbellek) Mekanizması",
             content: `
               <p class="small">Sunucu yükünü azaltmak için veriler tarayıcıda, CDN'de veya Proxy'de saklanır. En sinsi zafiyetlerin olduğu yerdir.</p>
-              <div class="card" style="border-left: 2px solid var(--secondary);">
+              <div class="card" style="border-left: 2px solid var(--accent);">
                 <h4 style="font-size:13px; color:var(--secondary);">Web Cache Poisoning</h4>
                 <p class="small" style="line-height:1.6">
                   Eğer saldırgan, önbelleğe alınan bir yanıta zararlı bir girdi (örn: XSS) enjekte edebilirse, bu zararlı yanıt önbellekten silinene kadar o sayfayı ziyaret eden <b>herkese</b> sunulur.
@@ -1769,15 +1774,15 @@ baslangic: {
         sections: [
           {
             "title": "🚫 Eksik Olduğunda Zafiyet Yaratan Başlıklar",
-            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Strict-Transport-Security (HSTS)</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Tarayıcıyı sadece HTTPS kullanmaya zorlar.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>curl -I https://site.com</code> veya DevTools'ta başlığın olmaması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (SSL Stripping):</strong> Başlık yoksa, saldırgan (MITM) kullanıcıyı HTTPS'den HTTP'ye düşürüp trafiği dinler. HSTS bu 'düşürmeyi' engeller.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>X-Frame-Options</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Sitenin <code>&lt;iframe&gt;</code> içine gömülmesini engeller.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması (Alternatifi CSP: <code>frame-ancestors</code>).<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Clickjacking):</strong> Saldırgan, siteni şeffaf bir <code>&lt;iframe&gt;</code> içine gömer. Kullanıcı sahte bir butona tıklarken aslında görünmez 'Hesabı Sil' butonuna basar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Content-Security-Policy (CSP)</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Hangi kaynakların (script, style) yükleneceğini kısıtlar.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması veya <code>'unsafe-inline'</code>, <code>'unsafe-eval'</code> gibi tehlikeli direktifler içermesi.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (XSS):</strong> CSP olmazsa, saldırganın XSS payload'ı (örn: <code>&lt;img src=x onerror=...&gt;</code>) veya harici script'i (<code>&lt;script src='http://attacker.com/p.js'&gt;</code>) engellenmez ve çalışır.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>X-Content-Type-Options</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> <code>nosniff</code> değeri ile tarayıcının MIME-type 'koklamasını' engeller.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması veya <code>nosniff</code> değerine sahip olmaması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (MIME-Type Sniffing XSS):</strong> Saldırgan <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> içerikli <code>kedi.txt</code> dosyası yükler. Tarayıcı uzantıya güvenmez, içeriği 'koklar' ve JS olarak çalıştırır. <code>nosniff</code> bunu engeller.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Referrer-Policy</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Başka sitelere giderken ne kadar 'referrer' bilgisi gönderileceğini kontrol eder.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması veya <code>unsafe-url</code> gibi zayıf bir politika kullanması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Bilgi Sızması):</strong> Kullanıcı <code>site.com/reset?token=ABC123</code> URL'indeyken başka bir linke tıklarsa, bu hassas 'token' bilgisi <code>Referer</code> başlığı ile o siteye sızar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Permissions-Policy</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Tarayıcı özelliklerinin (kamera, mikrofon) kullanımını kısıtlar.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Özelliklerin Kötüye Kullanımı):</strong> Gömülü bir 3. parti <code>&lt;iframe&gt;</code> (örn: reklam), siten adına kullanıcıdan kamera veya mikrofon izni isteyebilir. Bu başlık bunu engeller.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>COOP (Cross-Origin-Opener-Policy)</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Dökümanı ayrı bir 'browsing context' grubunda açar.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın <code>same-origin</code> olmaması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Tabnabbing):</strong> Siten <code>target=_blank</code> ile başka site açarsa, o sekme <code>window.opener.location</code> komutuyla senin siteni (arkada kalan sekmeyi) sahte bir login sayfasına yönlendirebilir.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>COEP & CORP</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cross-origin kaynakların yüklenmesini kısıtlar.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> COEP için <code>require-corp</code>, CORP için <code>same-origin</code> olmaması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Spectre/Veri Sızıntısı):</strong> Başka sitelerin, senin kaynaklarını (örn: <code>/api/user.json</code>) çağırıp Spectre tipi yan kanal saldırılarıyla veri sızdırmasını zorlaştırır.</div></details></li>\n\t\t\t</ul>"
+            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Strict-Transport-Security (HSTS)</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Tarayıcıyı sadece HTTPS kullanmaya zorlar.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>curl -I https://site.com</code> veya DevTools'ta başlığın olmaması.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (SSL Stripping):</strong> Başlık yoksa, saldırgan (MITM) kullanıcıyı HTTPS'den HTTP'ye düşürüp trafiği dinler. HSTS bu 'düşürmeyi' engeller.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>X-Frame-Options</summary><div style='margin-top:10px;'><strong style='color:#34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Sitenin <code>&lt;iframe&gt;</code> içine gömülmesini engeller.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması (Alternatifi CSP: <code>frame-ancestors</code>).<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Clickjacking):</strong> Saldırgan, siteni şeffaf bir <code>&lt;iframe&gt;</code> içine gömer. Kullanıcı sahte bir butona tıklarken aslında görünmez 'Hesabı Sil' butonuna basar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Content-Security-Policy (CSP)</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Hangi kaynakların (script, style) yükleneceğini kısıtlar.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması veya <code>'unsafe-inline'</code>, <code>'unsafe-eval'</code> gibi tehlikeli direktifler içermesi.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (XSS):</strong> CSP olmazsa, saldırganın XSS payload'ı (örn: <code>&lt;img src=x onerror=...&gt;</code>) veya harici script'i (<code>&lt;script src='http://attacker.com/p.js'&gt;</code>) engellenmez ve çalışır.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>X-Content-Type-Options</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> <code>nosniff</code> değeri ile tarayıcının MIME-type 'koklamasını' engeller.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması veya <code>nosniff</code> değerine sahip olmaması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (MIME-Type Sniffing XSS):</strong> Saldırgan <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> içerikli <code>kedi.txt</code> dosyası yükler. Tarayıcı uzantıya güvenmez, içeriği 'koklar' ve JS olarak çalıştırır. <code>nosniff</code> bunu engeller.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Referrer-Policy</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Başka sitelere giderken ne kadar 'referrer' bilgisi gönderileceğini kontrol eder.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması veya <code>unsafe-url</code> gibi zayıf bir politika kullanması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Bilgi Sızması):</strong> Kullanıcı <code>site.com/reset?token=ABC123</code> URL'indeyken başka bir linke tıklarsa, bu hassas 'token' bilgisi <code>Referer</code> başlığı ile o siteye sızar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Permissions-Policy</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Tarayıcı özelliklerinin (kamera, mikrofon) kullanımını kısıtlar.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın olmaması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Özelliklerin Kötüye Kullanımı):</strong> Gömülü bir 3. parti <code>&lt;iframe&gt;</code> (örn: reklam), siten adına kullanıcıdan kamera veya mikrofon izni isteyebilir. Bu başlık bunu engeller.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>COOP (Cross-Origin-Opener-Policy)</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Dökümanı ayrı bir 'browsing context' grubunda açar.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın <code>same-origin</code> olmaması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Tabnabbing):</strong> Siten <code>target=_blank</code> ile başka site açarsa, o sekme <code>window.opener.location</code> komutuyla senin siteni (arkada kalan sekmeyi) sahte bir login sayfasına yönlendirebilir.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>COEP & CORP</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cross-origin kaynakların yüklenmesini kısıtlar.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> COEP için <code>require-corp</code>, CORP için <code>same-origin</code> olmaması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Spectre/Veri Sızıntısı):</strong> Başka sitelerin, senin kaynaklarını (örn: <code>/api/user.json</code>) çağırıp Spectre tipi yan kanal saldırılarıyla veri sızdırmasını zorlaştırır.</div></details></li>\n\t\t\t</ul>"
           },
           {
             "title": "🍪 Başlık İçeriği Eksik Olduğunda Zafiyet Yaratanlar (Set-Cookie)",
-            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>HttpOnly (Flag)</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cookie'nin JavaScript tarafından (<code>document.cookie</code>) okunmasını engeller.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>Set-Cookie</code> başlığında <code>HttpOnly</code> bayrağının eksik olması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (XSS ile Session Hijacking):</strong> XSS zafiyeti varsa, saldırgan <code>document.cookie</code> ile kurbanın 'session' cookie'sini çalar. <code>HttpOnly</code> olsaydı, XSS çalışsa bile <code>document.cookie</code> bu cookie'yi göremezdi.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Secure (Flag)</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cookie'nin sadece HTTPS üzerinden gönderilmesini zorunlu kılar.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>Set-Cookie</code> başlığında <code>Secure</code> bayrağının eksik olması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Ağda (MITM) Cookie Sızması):</strong> Kullanıcı güvensiz bir Wi-Fi (kafe) ağındayken, <code>http://</code> bir istek atarsa tarayıcı <code>Secure</code> olmayan cookie'yi şifresiz gönderir. Saldırgan ağı dinleyerek cookie'yi çalar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>SameSite (Attribute)</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cookie'nin siteler arası (cross-site) gönderilmesini kısıtlar (<code>Lax</code> veya <code>Strict</code> olmalı).<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>Set-Cookie</code> başlığında <code>SameSite=None</code> olması veya hiç ayarlanmamış olması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Cross-Site Request Forgery - CSRF):</strong> Kurban <code>bankam.com</code>'da login iken, saldırgan sitedeki <code>&lt;img src='https://bankam.com/transfer?para=1000'&gt;</code> isteğiyle kurbanın cookie'sini kullanarak ondan habersiz transfer yapar. <code>SameSite=Lax</code> bunu engeller.</div></details></li>\n\t\t\t</ul>"
+            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>HttpOnly (Flag)</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cookie'nin JavaScript tarafından (<code>document.cookie</code>) okunmasını engeller.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>Set-Cookie</code> başlığında <code>HttpOnly</code> bayrağının eksik olması.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (XSS ile Session Hijacking):</strong> XSS zafiyeti varsa, saldırgan <code>document.cookie</code> ile kurbanın 'session' cookie'sini çalar. <code>HttpOnly</code> olsaydı, XSS çalışsa bile <code>document.cookie</code> bu cookie'yi göremezdi.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Secure (Flag)</summary><div style='margin-top:10px;'><strong style='color:#34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cookie'nin sadece HTTPS üzerinden gönderilmesini zorunlu kılar.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>Set-Cookie</code> başlığında <code>Secure</code> bayrağının eksik olması.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Ağda (MITM) Cookie Sızması):</strong> Kullanıcı güvensiz bir Wi-Fi (kafe) ağındayken, <code>http://</code> bir istek atarsa tarayıcı <code>Secure</code> olmayan cookie'yi şifresiz gönderir. Saldırgan ağı dinleyerek cookie'yi çalar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>SameSite (Attribute)</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-bottom:2px;'>🛡️ Görevi:</strong> Cookie'nin siteler arası (cross-site) gönderilmesini kısıtlar (<code>Lax</code> veya <code>Strict</code> olmalı).<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>Set-Cookie</code> başlığında <code>SameSite=None</code> olması veya hiç ayarlanmamış olması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Cross-Site Request Forgery - CSRF):</strong> Kurban <code>bankam.com</code>'da login iken, saldırgan sitedeki <code>&lt;img src='https://bankam.com/transfer?para=1000'&gt;</code> isteğiyle kurbanın cookie'sini kullanarak ondan habersiz transfer yapar. <code>SameSite=Lax</code> bunu engeller.</div></details></li>\n\t\t\t</ul>"
           },
           {
             "title": "✅ Fazla / Hatalı Olduğunda Zafiyet Yaratan Başlıklar",
-            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Server / X-Powered-By</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> DevTools'ta <code>Server: Apache/2.4.18</code> veya <code>X-Powered-By: PHP/7.4.1</code> gibi bilgilerin görünmesi.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Bilgi Sızması / Keşif):</strong> Saldırgan, sunucunun <code>PHP/7.4.1</code> kullandığını öğrenince, o versiyona ait bilinen zafiyetleri (CVE'leri) arar ve hedefe yönelik saldırı yapar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Access-Control-Allow-Origin: *</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Yanıtta <code>Access-Control-Allow-Origin: *</code> veya <code>Origin</code> başlığının yansıtılması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Hatalı CORS):</strong> <code>kotu-site.com</code>'daki JavaScript, <code>fetch()</code> ile <code>site.com/api/hesabim</code> adresine istek atar. Sunucu <code>Allow-Origin: *</code> dönerse, tarayıcı 'İzin var' der ve <code>kotu-site.com</code>'un, kurbanın API verilerini okumasına izin verir.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Access-Control-Allow-Credentials: true</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın <code>true</code> olarak dönmesi.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Kritik Hatalı CORS):</strong> Saldırgan, <code>kotu-site.com</code>'dan kurbanın cookie'lerini (<code>Credentials: true</code>) kullanarak istek atar ve sunucu da bu isteğe yansıtma (<code>Allow-Origin: kotu-site.com</code>) yaparak izin verir. Sonuç: Kurbanın tüm oturum bilgileri çalınır.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Cache-Control: public</summary><div style='margin-top:10px;'><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>/hesabim</code> gibi kişisel bir sayfada <code>Cache-Control: public</code> başlığının olması.<br><br><strong style='color:var(--accent);font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Web Cache Sızıntısı):</strong> Aradaki bir CDN veya Proxy, 'Turgay' için oluşturulmuş <code>/hesabim</code> sayfasını 'public' olarak cache'ler. 'Ahmet' <code>/hesabim</code> sayfasına girdiğinde, cache sunucusu Ahmet'e Turgay'ın hesap bilgilerini gösterir.</div></details></li>\n\t\t\t</ul>"
+            "content": "<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Server / X-Powered-By</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> DevTools'ta <code>Server: Apache/2.4.18</code> veya <code>X-Powered-By: PHP/7.4.1</code> gibi bilgilerin görünmesi.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Bilgi Sızması / Keşif):</strong> Saldırgan, sunucunun <code>PHP/7.4.1</code> kullandığını öğrenince, o versiyona ait bilinen zafiyetleri (CVE'leri) arar ve hedefe yönelik saldırı yapar.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Access-Control-Allow-Origin: *</summary><div style='margin-top:10px;'><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Yanıtta <code>Access-Control-Allow-Origin: *</code> veya <code>Origin</code> başlığının yansıtılması.<br><br><strong style='color:#34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Hatalı CORS):</strong> <code>kotu-site.com</code>'daki JavaScript, <code>fetch()</code> ile <code>site.com/api/hesabim</code> adresine istek atar. Sunucu <code>Allow-Origin: *</code> dönerse, tarayıcı 'İzin var' der ve <code>kotu-site.com</code>'un, kurbanın API verilerini okumasına izin verir.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Access-Control-Allow-Credentials: true</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> Başlığın <code>true</code> olarak dönmesi.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Kritik Hatalı CORS):</strong> Saldırgan, <code>kotu-site.com</code>'dan kurbanın cookie'lerini (<code>Credentials: true</code>) kullanarak istek atar ve sunucu da bu isteğe yansıtma (<code>Allow-Origin: kotu-site.com</code>) yaparak izin verir. Sonuç: Kurbanın tüm oturum bilgileri çalınır.</div></details></li>\n\t\t\t\t<li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'><details><summary style='cursor:pointer;font-weight:bold;'>Cache-Control: public</summary><div style='margin-top:10px;'><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>🕵️ Tespit:</strong> <code>/hesabim</code> gibi kişisel bir sayfada <code>Cache-Control: public</code> başlığının olması.<br><br><strong style='color:34d399;font-size:13px;display:block;margin-top:5px;margin-bottom:2px;'>💥 Zafiyet (Web Cache Sızıntısı):</strong> Aradaki bir CDN veya Proxy, 'Turgay' için oluşturulmuş <code>/hesabim</code> sayfasını 'public' olarak cache'ler. 'Ahmet' <code>/hesabim</code> sayfasına girdiğinde, cache sunucusu Ahmet'e Turgay'ın hesap bilgilerini gösterir.</div></details></li>\n\t\t\t</ul>"
           }
         ]
       },
@@ -1823,7 +1828,7 @@ baslangic: {
           {
             title: "IDOR Kontrol Listesi (Nerede Aranır?)",
             content: `<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; font-size:13px;">
-                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #3498db;">
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #9b59b6;">
                     <strong style="color:#fff; display:block; margin-bottom:8px;">🛒 Sepet & Sipariş</strong>
                     <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
                         <li>Sepet görüntüleme/ekleme/silme</li>
@@ -1856,7 +1861,7 @@ baslangic: {
                         <li>Favori/İstek listesi işlemleri</li>
                     </ul>
                 </div>
-                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #f1c40f;">
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #e67e22;">
                     <strong style="color:#fff; display:block; margin-bottom:8px;">🎫 Destek & Dosya</strong>
                     <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
                         <li>Ticket oluşturma/mesajlaşma</li>
@@ -1864,7 +1869,7 @@ baslangic: {
                         <li>Yüklenen medyayı silme/görüntüleme</li>
                     </ul>
                 </div>
-                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #e74c3c;">
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #2ecc71;">
                     <strong style="color:#fff; display:block; margin-bottom:8px;">🔑 Yetki & API</strong>
                     <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
                         <li>Kullanıcı rol/grup güncellemeleri</li>
@@ -3410,48 +3415,128 @@ Cookie: session=...; isAdmin=true;</pre>
         ]
       },
 
-      header_injection: {
-        menuName: 'Header Injection',
-        icon: 'icon-code',
-        parent: 'vulnerabilities',
-        title: 'HTTP Header Injection (CRLF) ve Response Splitting',
-        description: 'Kullanıcı girdisine CRLF (\r\n) enjekte ederek sunucu yanıtına ekstra başlıklar veya içerik ekleme tekniği.',
-        sections: [
-          {
-            title: 'Özet Bilgi ve Kritik Etki',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Amaç:</strong> Yanıtı bölerek (Response Splitting) tarayıcıya yepyeni, kötü amaçlı bir HTTP yanıtı (veya HTML) göndermek.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>En Kritik Etki:</strong> Cache Poisoning (Önbellek Zehirlenmesi) ve Oturum Çerezinin Enjekte Edilmesi (Cookie Injection).</li>
-            </ul>`
-          },
-          {
-            title: 'Hızlı Tespit ve Payloadlar',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Parametreler:</strong> <code>Location</code>, <code>Set-Cookie</code> veya kullanıcı girdisini yansıtan herhangi bir HTTP başlığı.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Temel Payloadlar:</strong>
-                <ul>
-                    <li>Yeni Başlık Ekleme: <code>%0d%0aNew-Header: Injected-Value</code></li>
-                    <li>Response Splitting (Yeni Yanıt Başlatma): <code>%0d%0a%0d%0a&lt;html&gt;Kötü Amaçlı İçerik&lt;/html&gt;</code></li>
-                </ul></li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Dönüşümler:</strong> <code>%0d%0a</code> (URL Encoded CRLF) veya <code>\r\n</code> (Raw CRLF). Burp Repeater ile test edilmelidir.</li>
-            </ul>`
-          },
-          {
-            title: 'PoC Örnekleri (Cookie Enjeksiyonu)',
-            content: `<pre>
-GET /redirect?url=/safe/page%0d%0aSet-Cookie:hijacked=true HTTP/1.1
-Host: target.com</pre>
-<p class="small">Sunucu, <code>Location: /safe/page</code> başlığını oluştururken URL parametresini kullanıyorsa, yanıt header'larına <code>Set-Cookie: hijacked=true</code> eklenir ve kurbanın tarayıcısına yazılır.</p>`
-          },
-          {
-            title: 'Dikkat Edilmesi Gerekenler',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Filtre Kontrolü:</strong> Modern uygulamalar CRLF'i filtreler. Çift kodlama (Double Encoding) deneyin: <code>%250d%250a</code>.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Zincirleme:</strong> Cache Poisoning için enjekte edilen yanıta <code>Cache-Control: public</code> gibi caching başlıkları eklenmelidir.</li>
-            </ul>`
-          }
-        ]
-      },
+two_fa_bypass: {
+  menuName: '2FA Bypass',
+  icon: 'icon-unlocked-skull',
+  parent: 'vulnerabilities',
+  title: '2FA / MFA Bypass (İki Aşamalı Doğrulama Atlatma)',
+  description: 'Account Takeover saldırılarının en kritik aşaması. Sunucu tarafındaki mantık hatalarını sömürerek 2FA atlatma metodolojisi.',
+  sections: [
+    {
+      title: '1. Response & Status Code Manipulation',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Uygulama doğrulamayı istemci tarafında (client-side) bitiriyorsa, sadece yanıtı değiştirerek geçilebilir.
+            <br><br><b>Senaryo:</b> Yanlış kod girilir, Burp Suite ile sunucudan gelen yanıt yakalanır.
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; margin-top:8px; font-family:monospace; font-size:12px;">
+              <span style="color:#ef4444;">Yanıt:</span> {"success":false, "error":"invalid_code"}<br>
+              <span style="color:#34d399;">Değiştir:</span> {"success":true}<br><br>
+              <span style="color:#ef4444;">Status:</span> 401 Unauthorized -> <span style="color:#34d399;">200 OK</span>
+            </div>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: '2. Lack of Rate Limit & Brute Force',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Kodlar genelde 4 veya 6 hanelidir. Eğer deneme sınırı (Rate Limit) yoksa, saniyeler içinde kırılabilir.
+            <br><br><b>FFUF ile Test:</b>
+            <pre style="margin-top:5px;">ffuf -w 2fa-payload-list.txt -u https://target.com/api/verify -d "otp=FUZZ" -H "Cookie: session=..." -mr "Success"</pre>
+            <div class="small" style="margin-top:5px; color:#facc15;">⚠️ İpucu: Bazen rate limit sadece IP bazlıdır. Header'a <code>X-Forwarded-For: 127.0.0.1</code> ekleyerek veya IP rotasyonu yaparak atlatmayı dene.</div>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: '3. 2FA Code Leakage (Bilgi Sızıntısı)',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            En saçma ama sık görülen hatadır. Sunucu, kodu oluşturur ve yanlışlıkla yanıt gövdesinde veya bir cookie içinde istemciye gönderir.
+            <br><br><b>Kontrol Et:</b> 1- Kodu istediğinde dönen HTTP yanıtının içeriğine bak. 2- Browser Console / Network tabını izle. 3- <code>Set-Cookie</code> başlıklarını incele.
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: '4. OAuth & Login Flow Flaws (Mantık Hataları)',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Direct Access:</strong> 2FA ekranına geldiğinde URL'yi doğrudan <code>/dashboard</code> veya <code>/profile</code> olarak değiştirmeyi dene. Bazı uygulamalar "login" session'ını 2FA'dan önce oluşturur.
+          </li>
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Re-usable Tokens:</strong> Kullanılmış bir kodu tekrar kullanmayı dene. Bazı sistemler kodu "zaman aşımı" (TTL) dolana kadar silmez.
+          </li>
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Cross-Account Code Reuse:</strong> Kendi hesabın için gelen kodu, kurbanın hesabındaki 2FA ekranında dene. Sunucu "Kod doğru mu?" diye bakıyor ama "Kime ait?" diye bakmıyor olabilir.
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: '5. Advanced Bypass (CSRF & Clickjacking Chain)',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>2FA Disable via CSRF:</strong> Eğer 2FA'yı kapatma (Disable) isteğinde CSRF koruması yoksa, kurbana bir link tıklatarak 2FA'sını kapattırabilirsin.
+          </li>
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            <strong>Remember Me Bypass:</strong> "Beni hatırla" çerezini manipüle etmeyi dene. Eğer bu çerez 2FA'yı tamamen bypass ediyorsa ve tahmin edilebilir bir yapısı varsa (base64(user_id) gibi), tehlikelidir.
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: '6. Parameter & Type Juggling (Back-end Confusion)',
+      content: `
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+          <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+            Sunucu tarafındaki zayıf karşılaştırmaları (özellikle PHP ve NodeJS) kullanarak kodu manipüle etme.
+            <br><br><b>JSON Array Trick:</b> Sayı bekleyen yere dizi göndererek kontrolü boz:
+            <pre style="margin-top:5px;">{"otp": 1234} -> {"otp": [1234, true]} veya {"otp": true}</pre>
+            <b>Null/Empty Bypass:</b> Parametreyi boş göndererek "if (code == null)" kontrolünü tetikle:
+            <pre style="margin-top:5px;">{"otp": null} veya {"otp": ""}</pre>
+          </li>
+        </ul>
+      `
+    },
+    {
+      title: '2FA Kontrol Listesi (Nerede Aranır?)',
+      content: `
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; font-size:13px;">
+            <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #3498db;">
+                <strong style="color:#fff; display:flex; align-items:center; gap:8px; margin-bottom:8px;">📧 Hesap & Giriş</strong>
+                <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li>Şifre/E-posta değişimi</li>
+                    <li>Login/Signup akışları</li>
+                    <li>Sosyal medya ile giriş</li>
+                </ul>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #3498db;">
+                <strong style="color:#fff; display:flex; align-items:center; gap:8px; margin-bottom:8px;">🔑 Hassas İşlemler</strong>
+                <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li>Admin panel erişimi</li>
+                    <li>API Key görüntüleme</li>
+                    <li>2FA kapatma isteği</li>
+                </ul>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border-left:3px solid #3498db;">
+                <strong style="color:#fff; display:flex; align-items:center; gap:8px; margin-bottom:8px;">🛠️ Kurtarma & Yedek</strong>
+                <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li>Yedek kod kullanımı</li>
+                    <li>"Kodum gelmedi" adımları</li>
+                    <li>Güvenlik soruları</li>
+                </ul>
+            </div>
+        </div>`
+    }
+  ]
+},
       html_injection: {
         menuName: 'HTML Injection',
         icon: 'icon-refresh',
@@ -3513,7 +3598,7 @@ Host: target.com</pre>
       },
       session_management: {
         menuName: 'Session Management',
-        icon: 'icon-cookie',
+        icon: 'icon-shield-bolt',
         parent: 'vulnerabilities',
         title: 'Broken Session Management (Oturum Yönetimi Hataları)',
         description: 'Oturum kimliklerinin (Session ID) tahmin edilebilir olması, sızdırılması veya sunucu tarafında düzgün sonlandırılmaması sonucu yetkisiz erişime izin verme.',
@@ -4324,29 +4409,20 @@ POST /api/users/update
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
               <strong style="color:#cbd5e1;">Subdomainlere Göre Açık Bulma Olasılıkları:</strong><br>
-              asdf.twitter.com: %15 (kısa subdomain, unutulma ihtimali düşük)<br>
-              ad.sdaf.dsa.twitter.com: %25 (uzun subdomain, unutulma ihtimali yüksek)
+              asdf.example.com: %15 (kısa subdomain, unutulma ihtimali düşük)<br>
+              ad.sdaf.dsa.example.com: %25 (uzun subdomain, unutulma ihtimali yüksek)
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
               <strong style="color:#cbd5e1;">Bilgi Toplama Araçları:</strong><br>
-              <a href="https://bgp.he.net" target="_blank" style="color:#a78bfa;text-decoration:none">bgp.he.net</a>: IP bloklarını getirir.<br>
-              <a href="https://search.censys.io" target="_blank" style="color:#a78bfa;text-decoration:none">search.censys.io</a>: IP ve sertifika tarama.<br>
-              <a href="https://sitereport.netcraft.com" target="_blank" style="color:#a78bfa;text-decoration:none">sitereport.netcraft.com</a>: Site analizi ve trafik raporu.<br>
-              <a href="https://builtwith.com" target="_blank" style="color:#a78bfa;text-decoration:none">builtwith.com</a>: Sitedeki teknolojileri gösterir.<br><br>
-              <strong style="color:#cbd5e1;">Whois Lookup</strong>: Domain kayıt bilgileri (<a href="https://whois.com/whois" target="_blank" style="color:#a78bfa;text-decoration:none">whois.com</a>, <a href="https://whois.domaintools.com" target="_blank" style="color:#a78bfa;text-decoration:none">whois.domaintools.com</a>).<br>
-              <strong style="color:#cbd5e1;">DNS Lookup</strong>: DNS kayıtları ve IP yönlendirmeleri (<a href="https://mxtoolbox.com/DNSLookup.aspx" target="_blank" style="color:#a78bfa;text-decoration:none">mxtoolbox.com</a>, <a href="https://robtex.com" target="_blank" style="color:#a78bfa;text-decoration:none">robtex.com</a>).<br>
+              <a href="https://bgp.he.net" target="_blank" style="color:#34d399;text-decoration:none">bgp.he.net</a>: IP bloklarını getirir.<br>
+              <a href="https://search.censys.io" target="_blank" style="color:#34d399;text-decoration:none">search.censys.io</a>: IP ve sertifika tarama.<br>
+              <a href="https://sitereport.netcraft.com" target="_blank" style="color:#34d399;text-decoration:none">sitereport.netcraft.com</a>: Site analizi ve trafik raporu.<br>
+              <a href="https://builtwith.com" target="_blank" style="color:#34d399;text-decoration:none">builtwith.com</a>: Sitedeki teknolojileri gösterir.<br><br>
+              <strong style="color:#cbd5e1;">Whois Lookup</strong>: Domain kayıt bilgileri (<a href="https://whois.com/whois" target="_blank" style="color:#34d399;text-decoration:none">whois.com</a>, <a href="https://whois.domaintools.com" target="_blank" style="color:#34d399;text-decoration:none">whois.domaintools.com</a>).<br>
+              <strong style="color:#cbd5e1;">DNS Lookup</strong>: DNS kayıtları ve IP yönlendirmeleri (<a href="https://mxtoolbox.com/DNSLookup.aspx" target="_blank" style="color:#34d399;text-decoration:none">mxtoolbox.com</a>, <a href="https://robtex.com" target="_blank" style="color:#34d399;text-decoration:none">robtex.com</a>).<br>
               <strong style="color:#cbd5e1;">Bing IP Arama</strong>: <code>ip:160.153.129.3</code> ile IP bazlı arama.<br><br>
               <strong style="color:#cbd5e1;">WAF Kontrolü</strong>: <code>wafw00f example.com</code><br>
-              <strong style="color:#cbd5e1;">Firewall Bypass</strong>: <a href="https://medium.com/@rajeevranjancom/waf-web-application-firewall-beeeb6d905c1" target="_blank" style="color:#a78bfa;text-decoration:none">WAF bypass rehberi</a>.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#94a3b8;font-size:14px">
-              <strong style="color:#cbd5e1;">İncelenmesi Gereken Status Codelar:</strong><br>
-              <strong style="color:#cbd5e1;">200</strong>: Dosya var, içeriği incele.<br>
-              <strong style="color:#cbd5e1;">301/302</strong>: Yönlendirme, login sayfası olabilir.<br>
-              <strong style="color:#cbd5e1;">401</strong>: Auth token gerekir, incele.<br>
-              <strong style="color:#cbd5e1;">403</strong>: Erişim yok ama bir şey var, test et.<br>
-              <strong style="color:#cbd5e1;">404</strong>: Farklı boyutlarda yanıtlar şüpheli, bruteforce (gobuster, ffuf) dene.<br>
-              <strong style="color:#cbd5e1;">500</strong>: Injection zafiyetleri için input dene.
+              <strong style="color:#cbd5e1;">Firewall Bypass</strong>: <a href="https://medium.com/@rajeevranjancom/waf-web-application-firewall-beeeb6d905c1" target="_blank" style="color:#34d399;text-decoration:none">WAF bypass rehberi</a>.
             </li>
           </ul>
         `
@@ -6111,4 +6187,3 @@ view</textarea>
   </button>
 </body>
 </html>
-
