@@ -2406,9 +2406,8 @@ Password: anything</pre>
               </div>`
           },
           {
-            title: "2. Kapsamlı '49' Test Listesi (Full Poliglot)",
-            content: `<p class="small" style="margin-bottom:15px;">Dili tahmin ettiysen ilgili butona basıp yükü kopyala. Sonuç <b>49</b> dönerse zafiyeti buldun demektir:</p>
-              
+            title: "2. Kapsamlı Test Listesi (Full Poliglot)",
+            content: `<p class="small" style="margin-bottom:15px;">Dili tahmin ettiysen ilgili butona basıp yükü kopyala. Sonuç <b>49</b> veya <b>7777777</b> dönerse zafiyeti buldun demektir:</p>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 ${[
                   {p: '{7*7}', m: 'Smarty / Mako'},
@@ -2418,11 +2417,15 @@ Password: anything</pre>
                   {p: '@(7*7)', m: 'ASP.NET Razor'},
                   {p: '&lt;?=7*7?&gt;', m: 'PHP (Short Tags)'},
                   {p: '<%= 7*7 %>', m: 'Ruby (ERB) / EJS'},
-                  {p: '\\${= 7*7}', m: 'Expression Language'},
+                  {p: '\\${= 7*7}', m: 'Expression Language (EL)'},
                   {p: '{{= 7*7}}', m: 'Handlebars / Mustache'},
+                  {p: '{{{7*7}}}', m: 'Handlebars (Unescaped)'},
+                  {p: '#set($x=7*7)$x', m: 'Velocity (Java)'},
                   {p: '\\$({7*7})', m: 'Custom Engines'},
-                  {p: '#{7*7}', m: 'Pug / Jade / Smarty'},
-                  {p: '[= 7*7]', m: 'Custom Tags'}
+                  {p: '#{7*7}', m: 'Pug / Jade / Slim'},
+                  {p: '[= 7*7]', m: 'Custom Tags'},
+                  {p: '{{ 7*7 }}', m: 'Smarty (Modern) / Jinja2'},
+                  {p: '&lt;% 7*7 %&gt;', m: 'ASP / Classic Ruby'}
                 ].map(item => `
                   <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:10px; border: 1px solid rgba(255,255,255,0.05);">
                     <div style="display:flex; flex-direction:column;">
@@ -2432,7 +2435,7 @@ Password: anything</pre>
                     <button class="copybtn" 
                             style="width:60px; height:24px; border-radius:5%; background:var(--glass); border:1px solid rgba(139, 92, 246, 0.3); color:var(--accent); display:flex; align-items:center; justify-content:center; cursor:pointer; transition: all 0.2s;" 
                             onclick="(function(btn){
-                                navigator.clipboard.writeText('${item.p.replace(/\\/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>')}');
+                                navigator.clipboard.writeText('${item.p.replace(/\\\\/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>')}');
                                 const original = btn.innerHTML;
                                 btn.innerHTML = 'Kopyalandı!';
                                 btn.style.borderColor = '#00ff88';
@@ -2448,7 +2451,6 @@ Password: anything</pre>
               </div>
               
               <div style="margin-top:20px; text-align:center;">
-                
               </div>`
           },
           {
@@ -6361,5 +6363,4 @@ view</textarea>
     </svg>
   </button>
 </body>
-
 </html>
